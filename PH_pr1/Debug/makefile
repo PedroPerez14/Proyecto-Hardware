@@ -44,7 +44,7 @@ all: PH_pr1.elf secondary-outputs
 PH_pr1.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM Sourcery Windows GCC C Linker'
-	arm-none-eabi-gcc -T"C:\workspace_eclipse\PH_pr1\common\ld_script.ld" -nostartfiles -L"C:\Users\pjper\OneDrive\Escritorio\Cosas\Universidad\Tercero\Proyecto Hardware\EclipseARM\sourcery-g++-lite-arm-2011.03\bin" -Wl,-Map,PH_pr1.map -mcpu=arm7tdmi -g3 -gdwarf-2 -o "PH_pr1.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -T"Y:\Proyecto-Hardware\PH_pr1\common\ld_script.ld" -nostartfiles -Wl,-Map,PH_pr1.map -mcpu=arm7tdmi -g3 -gdwarf-2 -o "PH_pr1.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
