@@ -78,6 +78,7 @@ static char fila=0,
 
 
 extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
+extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
@@ -221,6 +222,30 @@ int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF,
 	else
 		return NO_HAY_PATRON; // si no hay que voltear no hay patrón
 }
+
+int patron_volteo_test(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+{
+	int patron_c_c, patron_arm_c, patron_arm_arm;
+
+	patron_c_c = patron_volteo(tablero, longitud, FA, CA, SF, SC, color);
+	int longitud_c_c = *longitud;
+	*longitud = 0;
+
+	patron_arm_c = patron_volteo_arm_c(tablero, longitud, FA, CA, SF, SC, color);
+	int longitud_arm_c = *longitud;
+	*longitud = 0;
+
+	patron_arm_arm = patron_volteo_arm_arm(tablero, longitud, FA, CA, SF, SC, color);
+	int longitud_arm_arm = *longitud;
+
+	if (patron_c_c != patron_arm_c || patron_c_c != patron_arm_arm) {
+		while (1);
+	}
+	if (longitud_c_c != longitud_arm_c || longitud_c_c != longitud_arm_arm) {
+		while(1);
+	}
+	return patron_c_c;
+}
 ////////////////////////////////////////////////////////////////////////////////
 // voltea n fichas en la dirección que toque
 // SF y SC son las cantidades a sumar para movernos en la dirección que toque
@@ -255,7 +280,8 @@ int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         // flip: numero de fichas a voltear
         flip = 0;
         //patron = patron_volteo(tablero, &flip, f, c, SF, SC, color); //WASD
-        patron = patron_volteo_arm_c(tablero, &flip, f, c, SF, SC, color);
+        //patron = patron_volteo_arm_c(tablero, &flip, f, c, SF, SC, color);
+        patron = patron_volteo_test(tablero, &flip, f, c, SF, SC, color);
         //printf("Flip: %d \n", flip);
         if (patron == PATRON_ENCONTRADO )
         {
@@ -307,7 +333,8 @@ int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
                         // nos dice qué hay que voltear en cada dirección
                         longitud = 0;
                         //patron = patron_volteo(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA); //WASD
-                        patron = patron_volteo_arm_c(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        //patron = patron_volteo_arm_c(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        patron = patron_volteo_test(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
                         //  //printf("%d ", patron);
                         if (patron == PATRON_ENCONTRADO)
                         {
