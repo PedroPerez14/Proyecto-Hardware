@@ -1,3 +1,5 @@
+#include "timer2.h"
+
 // Tamaño del tablero
 enum { DIM=8 };
 
@@ -79,6 +81,7 @@ static char fila=0,
 
 extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
+extern int patron_volteo_arm_arm_opt(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
@@ -223,21 +226,47 @@ int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF,
 		return NO_HAY_PATRON; // si no hay que voltear no hay patrón
 }
 
+
 int patron_volteo_test(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
 {
 	int patron_c_c, patron_arm_c, patron_arm_arm;
 
+	int timeA;
+	int timeD;
+	int timeT;
+
+	timer2_inicializar();
+
+	// Ejecutar patron_volteo
+	timer2_empezar();
+	timeA = timer2_leer();
 	patron_c_c = patron_volteo(tablero, longitud, FA, CA, SF, SC, color);
+	timeD = timer2_parar();
+	timeT = timeD - timeA;
+
 	int longitud_c_c = *longitud;
 	*longitud = 0;
 
+	// Ejecutar patron_volteo_arm_c
+	timer2_empezar();
+	timeA = timer2_leer();
 	patron_arm_c = patron_volteo_arm_c(tablero, longitud, FA, CA, SF, SC, color);
+	timeD = timer2_parar();
+	timeT = timeD - timeA;
+
 	int longitud_arm_c = *longitud;
 	*longitud = 0;
 
+	// Ejecutar patron_volteo_arm_arm
+	timer2_empezar();
+	timeA = timer2_leer();
 	patron_arm_arm = patron_volteo_arm_arm(tablero, longitud, FA, CA, SF, SC, color);
+	timeD = timer2_parar();
+	timeT = timeD - timeA;
+
 	int longitud_arm_arm = *longitud;
 
+	// Comprobar que los resultados de todas las funciones sean iguales
 	if (patron_c_c != patron_arm_c || patron_c_c != patron_arm_arm) {
 		while (1);
 	}
@@ -246,6 +275,8 @@ int patron_volteo_test(char tablero[][DIM], int *longitud, char FA, char CA, cha
 	}
 	return patron_c_c;
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // voltea n fichas en la dirección que toque
 // SF y SC son las cantidades a sumar para movernos en la dirección que toque
@@ -460,6 +491,7 @@ void reversi8()
                   // y luego la máquina tampoco puede
     char f, c;    // fila y columna elegidas por la máquina para su movimiento
 
+    timer2_inicializar();
     init_table(tablero, candidatas);
 
     while (fin == 0)
@@ -490,4 +522,43 @@ void reversi8()
         }
     }
     contar(tablero, &blancas, &negras);
+}
+
+
+
+
+// Pruebas patron_volteo
+
+void comprobarFicha(char tablero[][DIM], char f, char c) {
+	int k, patron;
+	char SF, SC;
+	for (k=0; k < DIM; k++) {
+		int longitud = 0;
+		 SF = vSF[k];    // k representa la dirección que miramos
+		 SC = vSC[k];    // 1 es norte, 2 NE, 3 E ...
+		 patron = patron_volteo_test(tablero, &longitud, f, c, SF, SC, FICHA_NEGRA);
+	}
+}
+
+
+void patron_volteo_prueba(void)
+{
+	static char __attribute__ ((aligned (8))) tablero1[DIM][DIM] = {
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
+		        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
+		    };
+
+	int i, j;
+
+	for (i=0; i < DIM; i++) {
+		for (j=0; j < DIM; i++) {
+			comprobarFicha(tablero1, i, j);
+		}
+	}
 }
