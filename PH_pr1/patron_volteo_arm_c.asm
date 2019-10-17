@@ -166,7 +166,7 @@ WHILE_COND_ASM: @(posicion_valida == 1) && (casilla != color)
 IF_ASM: 		cmp r9, #1   @posicion_valida==1
 				cmpeq r7, r6 @casilla==color
 				cmpeq r8, #0
-				movhi r0, #1
+				movhi r1, #1
 				movls r0, #0
 				str r8, [r1]	@ Almacenar longitud calculada
 				ldmdb fp,{r4-r10, fp, sp, pc}
