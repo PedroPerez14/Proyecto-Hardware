@@ -1,0 +1,199 @@
+   1              	# 1 "../patron_volteo_arm_c.asm"
+   1              					.section .text
+   0              	
+   0              	
+   0              	
+   2              					.global patron_volteo_arm_c
+   3              					.global patron_volteo_arm_arm
+   4              					.global patron_volteo_arm_arm_opt
+   5              	
+   6              	.equ DIM, 8
+   7              	.equ DESPL, 3   @2^DESPL = DIM
+   8              	
+   9              	.equ CASILLA_VACIA, 0
+  10              	.equ NO_HAY_PATRON, 0
+  11              	.equ PATRON_ENCONTRADO, 1
+  12              	
+  13              					
+  14              	
+  15              	
+  16              	patron_volteo_arm_c:
+  17 0000 0DC0A0E1 					mov ip, sp
+  18 0004 F0DF2DE9 					push {r4-r10, fp, ip, lr, pc}
+  19 0008 04B04CE2 					sub fp, ip, #4
+  20 000c 04D04DE2 					sub sp, #4
+  21              					@En r0 está @tablero
+  22              					@En r1, @longitud
+  23              					@En r2, FA
+  24              					@En r3, CA
+  25 0010 0040A0E1 					mov r4, r0 	@r4 = @tablero
+  26 0014 0150A0E1 					mov r5, r1 	@r5 = @longitud
+  27 0018 0260A0E1 					mov r6, r2	@r6 = FA
+  28 001c 0370A0E1 					mov r7, r3	@r7 = CA
+  29              					@Cargar parámetros pasados por la pila
+  30 0020 D480DBE1 					ldrsb r8,[fp,#4]	@r8 = SF
+  31 0024 D890DBE1 					ldrsb r9,[fp,#8]	@r9 = SC
+  32 0028 00A095E5 					ldr r10,[r5]		@Cargo longitud en r10
+  33              					
+  34 002c 086086E0 	WHILE_C:		add r6,r6,r8		@FA = FA + SF
+  35 0030 097087E0 					add r7, r7, r9		@CA = CA + SC
+  36              					@Llamada a la función ficha_valida
+  37 0034 0400A0E1 					mov r0, r4 			@r0 = @tablero
+  38 0038 0610A0E1 					mov r1, r6			@r1 = FA
+  39 003c 0720A0E1 					mov r2, r7			@r2 = CA
+  40 0040 24304BE2 					sub r3, fp, #36		@r3 = @ de posicion_valida
+  41 0044 FEFFFFEB 					bl ficha_valida		@ En r0 tenemos casilla y en fp - 36 posicion_valida
+  42 0048 24101BE5 					ldr r1,[fp,#-36]	@r1 = posicion_valida
+  43 004c 010051E3 					cmp r1, #1			@ver si la posicion es valida
+  44 0050 0400001A 					bne FIN_WHILE_C
+  45 0054 0C309BE5 					ldr r3,[fp, #12]    @r3 = color
+  46 0058 030050E1 					cmp r0, r3			@comparar casilla con color
+  47 005c 0100000A 					beq FIN_WHILE_C
+  48 0060 01A08AE2 					add r10,r10,#1		@Incrementar longitud
+  49 0064 F0FFFFEA 					b WHILE_C
+  50              	
+  51 0068 010051E3 	FIN_WHILE_C:	cmp r1,#1			@posicion_valida == 1
+  52 006c 03005001 					cmpeq r0, r3		@casilla == color
+  53 0070 00005A03 					cmpeq r10, #0		@longitud > 0
+  54 0074 0100A083 					movhi r0, #PATRON_ENCONTRADO
+  55 0078 0000A093 					movls r0, #NO_HAY_PATRON
+  56 007c 00A085E5 					str	r10,[r5]		@Guardar longitud
+  57 0080 F0AF1BE9 					ldmdb fp,{r4-r10, fp, sp, pc}
+  58              	
+  59              	
+  60              	/*Función optimizada*/
+  61              	patron_volteo_arm_arm_opt:
+  62 0084 0DC0A0E1 					mov ip, sp
+  63 0088 F0DF2DE9 					push {r4-r10, fp, ip, lr, pc}
+  64 008c 04B04CE2 					sub fp, ip, #4
+  65              					@ r0=@tablero
+  66              					@ r1=@longitud
+  67              					@ r2=FA
+  68              					@ r3=CA
+  69 0090 D440DBE1 					ldrsb r4,[fp,#4]	@r4 = SF
+  70 0094 D850DBE1 					ldrsb r5,[fp,#8]	@r5 = SC
+  71 0098 0C60DBE5 					ldrb r6,[fp,#12]	@r6 = color
+  72              					
+  73 009c 0090A0E3 					mov r9, #NO_HAY_PATRON	@r9=resultado de la subrutina
+  74 00a0 008091E5 					ldr r8, [r1] @ r8 = longitud inicial
+  75              	
+  76              					@ FA = FA + SF
+  77 00a4 042082E0 	WHILE_ASM_OPT:		add r2, r2, r4
+  78              					@ CA = CA + SC
+  79 00a8 053083E0 					add r3, r3, r5
+  80              					
+  81 00ac 82A180E0 					add r10, r0, r2, LSL #DESPL @añadir fila
+  82 00b0 03A08AE0 					add r10, r10, r3	@añadir columna
+  83              					
+  84              					@ ficha válida
+  85              					@ FA < DIM && FA >= 0 && CA < DIM && CA >= 0 && (tablero[FA][CA] != CASILLA_VACIA)
+  86 00b4 080052E3 					cmp r2, #DIM
+  87 00b8 0E0000AA 					bge FIN_ASM_OPT 	@ FA >= DIM
+  88 00bc 000052E3 					cmp r2, #0	
+  89 00c0 0C0000BA 					blt FIN_ASM_OPT		@ FA < 0
+  90 00c4 080053E3 					cmp r3, #DIM
+  91 00c8 0A0000AA 					bge FIN_ASM_OPT		@ CA >= DIM
+  92 00cc 000053E3 					cmp r3, #0
+  93 00d0 080000BA 					blt FIN_ASM_OPT		@ CA < 0
+  94              	
+  95 00d4 0070DAE5 					ldrb r7, [r10]	@ r7=tablero[FA][CA]
+  96 00d8 000057E3 					cmp r7, #CASILLA_VACIA
+  97 00dc 0500000A 					beq FIN_ASM_OPT		@r7=CASILLA_VACIA
+  98              					
+  99              					
+ 100              					@ En este punto la posición es válida
+ 101 00e0 060057E1 					cmp r7, r6
+ 102 00e4 0100000A 					beq FIN_VALIDA_ASM_OPT		@ tablero[FA][CA] == color
+ 103              					@ sumar 1 a longitud
+ 104 00e8 018088E2 					add r8, r8, #1
+ 105 00ec ECFFFFEA 					b WHILE_ASM_OPT
+ 106              					
+ 107 00f0 000058E3 	FIN_VALIDA_ASM_OPT: cmp r8, #0
+ 108 00f4 0190A013 					movne r9, #PATRON_ENCONTRADO
+ 109              					
+ 110 00f8 008081E5 	FIN_ASM_OPT:		str r8, [r1]	@ Almacenar longitud calculada
+ 111 00fc 0900A0E1 					mov r0, r9		@ Mover resultado de la subrutina a r0
+ 112 0100 F0AF1BE9 					ldmdb fp,{r4-r10, fp, sp, pc}
+ 113              	
+ 114              	/* Respetando el código */
+ 115              	patron_volteo_arm_arm:
+ 116 0104 0DC0A0E1 					mov ip, sp
+ 117 0108 F0DF2DE9 					push {r4-r10, fp, ip, lr, pc}
+ 118 010c 04B04CE2 					sub fp, ip, #4
+ 119              					@ r0=@tablero
+ 120              					@ r1=@longitud
+ 121              					@ r2=FA
+ 122              					@ r3=CA
+ 123 0110 D440DBE1 					ldrsb r4,[fp,#4]	@r4 = SF
+ 124 0114 D850DBE1 					ldrsb r5,[fp,#8]	@r5 = SC
+ 125 0118 0C60DBE5 					ldrb r6,[fp,#12]	@r6 = color
+ 126              	
+ 127 011c 008091E5 					ldr r8, [r1] @ r8 = longitud inicial
+ 128              	
+ 129              					@ FA = FA + SF
+ 130 0120 042082E0 	WHILE_ASM:		add r2, r2, r4
+ 131              					@ CA = CA + SC
+ 132 0124 053083E0 					add r3, r3, r5
+ 133              	
+ 134              					@ Llamada a ficha válida
+ 135              					@ r7=tablero[FA][CA] (casilla), r9=posicion_valida
+ 136              					@ FA < DIM && FA >= 0 && CA < DIM && CA >= 0 && (tablero[FA][CA] != CASILLA_VACIA)
+ 137 0128 080052E3 					cmp r2, #DIM
+ 138 012c 0B0000AA 					bge NO_VALIDA 		@ FA >= DIM
+ 139 0130 000052E3 					cmp r2, #0
+ 140 0134 090000BA 					blt NO_VALIDA		@ FA < 0
+ 141 0138 080053E3 					cmp r3, #DIM
+ 142 013c 070000AA 					bge NO_VALIDA		@ CA >= DIM
+ 143 0140 000053E3 					cmp r3, #0
+ 144 0144 050000BA 					blt NO_VALIDA		@ CA < 0
+ 145              					@ r10=@ de la posicion en el tablero a analizar
+ 146 0148 82A180E0 					add r10, r0, r2, LSL #DESPL @añadir fila
+ 147 014c 03A08AE0 					add r10, r10, r3	@añadir columna
+ 148 0150 0070DAE5 					ldrb r7, [r10]		@ r7=tablero[FA][CA]
+ 149 0154 000057E3 					cmp r7, #CASILLA_VACIA
+ 150 0158 0190A0E3 					mov r9, #1
+ 151 015c 0100001A 					bne WHILE_COND_ASM		@r7 != CASILLA_VACIA
+ 152              	
+ 153 0160 0090A0E3 	NO_VALIDA:		mov r9, #0			@posicion_valida=0
+ 154 0164 0070A0E3 					mov r7, #CASILLA_VACIA
+ 155              	
+ 156              	WHILE_COND_ASM: @(posicion_valida == 1) && (casilla != color)
+ 157 0168 010059E3 					cmp r9, #1
+ 158 016c 0300001A 					bne IF_ASM
+ 159 0170 060057E1 					cmp r7, r6
+ 160 0174 0100000A 					beq IF_ASM		@ tablero[FA][CA] == color
+ 161              					@ sumar 1 a longitud
+ 162 0178 018088E2 					add r8, r8, #1
+ 163 017c E7FFFFEA 					b WHILE_ASM
+ 164              	
+ 165              	
+ 166 0180 010059E3 	IF_ASM: 		cmp r9, #1   @posicion_valida==1
+ 167 0184 06005701 					cmpeq r7, r6 @casilla==color
+ 168 0188 00005803 					cmpeq r8, #0
+ 169 018c 0100A083 					movhi r0, #1
+ 170 0190 0000A093 					movls r0, #0
+ 171 0194 008081E5 					str r8, [r1]	@ Almacenar longitud calculada
+ 172 0198 F0AF1BE9 					ldmdb fp,{r4-r10, fp, sp, pc}
+DEFINED SYMBOLS
+../patron_volteo_arm_c.asm:16     .text:00000000 patron_volteo_arm_c
+../patron_volteo_arm_c.asm:115    .text:00000104 patron_volteo_arm_arm
+../patron_volteo_arm_c.asm:61     .text:00000084 patron_volteo_arm_arm_opt
+../patron_volteo_arm_c.asm:6      *ABS*:00000008 DIM
+../patron_volteo_arm_c.asm:7      *ABS*:00000003 DESPL
+../patron_volteo_arm_c.asm:9      *ABS*:00000000 CASILLA_VACIA
+../patron_volteo_arm_c.asm:10     *ABS*:00000000 NO_HAY_PATRON
+../patron_volteo_arm_c.asm:11     *ABS*:00000001 PATRON_ENCONTRADO
+../patron_volteo_arm_c.asm:17     .text:00000000 $a
+../patron_volteo_arm_c.asm:34     .text:0000002c WHILE_C
+../patron_volteo_arm_c.asm:51     .text:00000068 FIN_WHILE_C
+../patron_volteo_arm_c.asm:77     .text:000000a4 WHILE_ASM_OPT
+../patron_volteo_arm_c.asm:110    .text:000000f8 FIN_ASM_OPT
+../patron_volteo_arm_c.asm:107    .text:000000f0 FIN_VALIDA_ASM_OPT
+../patron_volteo_arm_c.asm:130    .text:00000120 WHILE_ASM
+../patron_volteo_arm_c.asm:153    .text:00000160 NO_VALIDA
+../patron_volteo_arm_c.asm:156    .text:00000168 WHILE_COND_ASM
+../patron_volteo_arm_c.asm:166    .text:00000180 IF_ASM
+                   .debug_aranges:0000000c $d
+
+UNDEFINED SYMBOLS
+ficha_valida

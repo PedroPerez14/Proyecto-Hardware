@@ -1,0 +1,756 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.file	"main.c"
+  21              	.Ltext0:
+  22              		.file 1 "../main.c"
+ 1914              		.align	2
+ 1915              		.global	ficha_valida
+ 1917              	ficha_valida:
+ 1918              	.LFB0:
+   1:../main.c     **** /*********************************************************************************************
+   2:../main.c     **** * Fichero:	main.c
+   3:../main.c     **** * Autor:
+   4:../main.c     **** * Descrip:	punto de entrada de C
+   5:../main.c     **** * Version:  <P4-ARM.timer-leds>
+   6:../main.c     **** *********************************************************************************************/
+   7:../main.c     **** 
+   8:../main.c     **** /*--- ficheros de cabecera ---*/
+   9:../main.c     **** #include "8led.h"
+  10:../main.c     **** #include "button.h"
+  11:../main.c     **** #include "led.h"
+  12:../main.c     **** #include "timer.h"
+  13:../main.c     **** #include "44blib.h"
+  14:../main.c     **** #include "44b.h"
+  15:../main.c     **** 
+  16:../main.c     **** #include "timer2.h"
+  17:../main.c     **** 
+  18:../main.c     **** /*--- variables globales ---*/
+  19:../main.c     **** 
+  20:../main.c     **** // Tamaño del tablero
+  21:../main.c     **** enum { DIM=8 };
+  22:../main.c     **** 
+  23:../main.c     **** // Valores que puede devolver la función patron_volteo())
+  24:../main.c     **** enum {
+  25:../main.c     **** 	NO_HAY_PATRON = 0,
+  26:../main.c     **** 	PATRON_ENCONTRADO = 1
+  27:../main.c     **** };
+  28:../main.c     **** 
+  29:../main.c     **** // Estados de las casillas del tablero
+  30:../main.c     **** // deberia ser enum, lo dejamos como const para usar char...
+  31:../main.c     **** //const char CASILLA_VACIA = 0;
+  32:../main.c     **** //const char FICHA_BLANCA  = 1;
+  33:../main.c     **** //const char FICHA_NEGRA   = 2;
+  34:../main.c     **** 
+  35:../main.c     **** enum {
+  36:../main.c     **** 	CASILLA_VACIA = 0,
+  37:../main.c     **** 	FICHA_BLANCA = 1,
+  38:../main.c     **** 	FICHA_NEGRA = 2
+  39:../main.c     **** };
+  40:../main.c     **** 
+  41:../main.c     **** const char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
+  42:../main.c     **** const char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
+  43:../main.c     **** 
+  44:../main.c     **** 
+  45:../main.c     **** 
+  46:../main.c     **** 
+  47:../main.c     **** char ficha_valida(char tablero[][DIM], char f, char c, int *posicion_valida)
+  48:../main.c     **** {
+ 1919              		.loc 1 48 0
+ 1920              		.cfi_startproc
+ 1921              		@ Function supports interworking.
+ 1922              		@ args = 0, pretend = 0, frame = 0
+ 1923              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1924              		@ link register save eliminated.
+ 1925              	.LVL0:
+  49:../main.c     ****     char ficha;
+  50:../main.c     **** 
+  51:../main.c     ****     // ficha = tablero[f][c];
+  52:../main.c     ****     // no puede accederse a tablero[f][c]
+  53:../main.c     ****     // ya que algún índice puede ser negativo
+  54:../main.c     **** 
+  55:../main.c     ****     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ 1926              		.loc 1 55 0
+ 1927 0000 070052E3 		cmp	r2, #7
+ 1928 0004 07005193 		cmpls	r1, #7
+ 1929 0008 0600008A 		bhi	.L2
+ 1930              		.loc 1 55 0 is_stmt 0 discriminator 1
+ 1931 000c 810180E0 		add	r0, r0, r1, asl #3
+ 1932              	.LVL1:
+ 1933 0010 0210D0E7 		ldrb	r1, [r0, r2]	@ zero_extendqisi2
+ 1934              	.LVL2:
+ 1935 0014 000051E3 		cmp	r1, #0
+  56:../main.c     ****     {
+  57:../main.c     ****         *posicion_valida = 1;
+ 1936              		.loc 1 57 0 is_stmt 1 discriminator 1
+ 1937 0018 0110A013 		movne	r1, #1
+ 1938 001c 00108315 		strne	r1, [r3, #0]
+  58:../main.c     ****         ficha = tablero[f][c];
+ 1939              		.loc 1 58 0 discriminator 1
+ 1940 0020 0200D017 		ldrneb	r0, [r0, r2]	@ zero_extendqisi2
+  55:../main.c     ****     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ 1941              		.loc 1 55 0 discriminator 1
+ 1942 0024 1EFF2F11 		bxne	lr
+ 1943              	.L2:
+  59:../main.c     ****     }
+  60:../main.c     ****     else
+  61:../main.c     ****     {
+  62:../main.c     ****         *posicion_valida = 0;
+ 1944              		.loc 1 62 0
+ 1945 0028 0000A0E3 		mov	r0, #0
+ 1946 002c 000083E5 		str	r0, [r3, #0]
+ 1947              	.LVL3:
+  63:../main.c     ****         ficha = CASILLA_VACIA;
+  64:../main.c     ****     }
+  65:../main.c     ****     return ficha;
+  66:../main.c     **** }
+ 1948              		.loc 1 66 0
+ 1949 0030 1EFF2FE1 		bx	lr
+ 1950              		.cfi_endproc
+ 1951              	.LFE0:
+ 1953              		.align	2
+ 1954              		.global	patron_volteo
+ 1956              	patron_volteo:
+ 1957              	.LFB1:
+  67:../main.c     **** 
+  68:../main.c     **** ////////////////////////////////////////////////////////////////////////////////
+  69:../main.c     **** // La función patrón volteo comprueba si hay que actualizar una determinada direccion,
+  70:../main.c     **** // busca el patrón de volteo (n fichas del rival seguidas de una ficha del jugador actual)
+  71:../main.c     **** // en una dirección determinada
+  72:../main.c     **** // SF y SC son las cantidades a sumar para movernos en la dirección que toque
+  73:../main.c     **** // color indica el color de la pieza que se acaba de colocar
+  74:../main.c     **** // la función devuelve PATRON_ENCONTRADO (1) si encuentra patrón y NO_HAY_PATRON (0) en caso contra
+  75:../main.c     **** // FA y CA son la fila y columna a analizar
+  76:../main.c     **** // longitud es un parámetro por referencia. Sirve para saber la longitud del patrón que se está ana
+  77:../main.c     **** //          Se usa para saber cuantas fichas habría que voltear
+  78:../main.c     **** int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char colo
+  79:../main.c     **** {
+ 1958              		.loc 1 79 0
+ 1959              		.cfi_startproc
+ 1960              		@ Function supports interworking.
+ 1961              		@ args = 12, pretend = 0, frame = 8
+ 1962              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1963              	.LVL4:
+ 1964 0034 0DC0A0E1 		mov	ip, sp
+ 1965              	.LCFI0:
+ 1966              		.cfi_def_cfa_register 12
+ 1967 0038 F0DF2DE9 		stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
+ 1968 003c 04B04CE2 		sub	fp, ip, #4
+ 1969              		.cfi_offset 14, -8
+ 1970              		.cfi_offset 13, -12
+ 1971              		.cfi_offset 11, -16
+ 1972              		.cfi_offset 10, -20
+ 1973              		.cfi_offset 9, -24
+ 1974              		.cfi_offset 8, -28
+ 1975              		.cfi_offset 7, -32
+ 1976              		.cfi_offset 6, -36
+ 1977              		.cfi_offset 5, -40
+ 1978              		.cfi_offset 4, -44
+ 1979              	.LCFI1:
+ 1980              		.cfi_def_cfa 11, 4
+ 1981 0040 0CD04DE2 		sub	sp, sp, #12
+ 1982              		.loc 1 79 0
+ 1983 0044 0470DBE5 		ldrb	r7, [fp, #4]	@ zero_extendqisi2
+ 1984 0048 0880DBE5 		ldrb	r8, [fp, #8]	@ zero_extendqisi2
+  80:../main.c     **** 	int posicion_valida; // indica si la posición es valida y contiene una ficha de algún jugador
+  81:../main.c     **** 	char casilla;   // casilla es la casilla que se lee del tablero
+  82:../main.c     **** 
+  83:../main.c     **** 	FA = FA + SF;
+ 1985              		.loc 1 83 0
+ 1986 004c 022087E0 		add	r2, r7, r2
+ 1987              	.LVL5:
+  84:../main.c     **** 	CA = CA + SC;
+ 1988              		.loc 1 84 0
+ 1989 0050 033088E0 		add	r3, r8, r3
+ 1990              	.LVL6:
+  79:../main.c     **** {
+ 1991              		.loc 1 79 0
+ 1992 0054 0090A0E1 		mov	r9, r0
+ 1993 0058 0160A0E1 		mov	r6, r1
+ 1994 005c 0CA0DBE5 		ldrb	sl, [fp, #12]	@ zero_extendqisi2
+  83:../main.c     **** 	FA = FA + SF;
+ 1995              		.loc 1 83 0
+ 1996 0060 FF5002E2 		and	r5, r2, #255
+ 1997              	.LVL7:
+ 1998              		.loc 1 84 0
+ 1999 0064 FF4003E2 		and	r4, r3, #255
+ 2000              	.LVL8:
+ 2001 0068 070000EA 		b	.L9
+ 2002              	.LVL9:
+ 2003              	.L6:
+  85:../main.c     **** 	casilla = ficha_valida(tablero, FA, CA, &posicion_valida);
+  86:../main.c     **** 	while ((posicion_valida == 1) && (casilla != color))
+  87:../main.c     **** 	// mientras la casilla está en el tablero, no está vací­a,
+  88:../main.c     **** 	// y es del color rival seguimos buscando el patron de volteo
+  89:../main.c     **** 	{
+  90:../main.c     **** 		FA = FA + SF;
+  91:../main.c     **** 		CA = CA + SC;
+  92:../main.c     **** 		*longitud = *longitud + 1;
+ 2004              		.loc 1 92 0
+ 2005 006c 003096E5 		ldr	r3, [r6, #0]
+ 2006 0070 013083E2 		add	r3, r3, #1
+  90:../main.c     **** 		FA = FA + SF;
+ 2007              		.loc 1 90 0
+ 2008 0074 075085E0 		add	r5, r5, r7
+ 2009              	.LVL10:
+  91:../main.c     **** 		CA = CA + SC;
+ 2010              		.loc 1 91 0
+ 2011 0078 084084E0 		add	r4, r4, r8
+ 2012              	.LVL11:
+ 2013              		.loc 1 92 0
+ 2014 007c 003086E5 		str	r3, [r6, #0]
+  90:../main.c     **** 		FA = FA + SF;
+ 2015              		.loc 1 90 0
+ 2016 0080 FF5005E2 		and	r5, r5, #255
+ 2017              	.LVL12:
+  91:../main.c     **** 		CA = CA + SC;
+ 2018              		.loc 1 91 0
+ 2019 0084 FF4004E2 		and	r4, r4, #255
+ 2020              	.LVL13:
+  93:../main.c     **** 		casilla = ficha_valida(tablero, FA, CA, &posicion_valida);
+ 2021              		.loc 1 93 0
+ 2022 0088 0900A0E1 		mov	r0, r9
+ 2023              	.LVL14:
+ 2024              	.L9:
+ 2025 008c 0420A0E1 		mov	r2, r4
+ 2026 0090 30304BE2 		sub	r3, fp, #48
+ 2027 0094 0510A0E1 		mov	r1, r5
+ 2028 0098 FEFFFFEB 		bl	ficha_valida
+ 2029              	.LVL15:
+  86:../main.c     **** 	while ((posicion_valida == 1) && (casilla != color))
+ 2030              		.loc 1 86 0
+ 2031 009c 30301BE5 		ldr	r3, [fp, #-48]
+ 2032 00a0 012043E2 		sub	r2, r3, #1
+ 2033 00a4 003072E2 		rsbs	r3, r2, #0
+ 2034 00a8 0230A3E0 		adc	r3, r3, r2
+ 2035 00ac 0A0050E1 		cmp	r0, sl
+ 2036 00b0 0020A003 		moveq	r2, #0
+ 2037 00b4 01200312 		andne	r2, r3, #1
+ 2038 00b8 000052E3 		cmp	r2, #0
+ 2039 00bc EAFFFF1A 		bne	.L6
+  94:../main.c     **** 	}
+  95:../main.c     ****     // si la ultima posición era válida y la ficha es del jugador actual,
+  96:../main.c     ****     // entonces hemos encontrado el patrón
+  97:../main.c     **** 	if ((posicion_valida == 1) && (casilla == color) && (*longitud >0))
+ 2040              		.loc 1 97 0
+ 2041 00c0 0A0050E1 		cmp	r0, sl
+ 2042 00c4 0000A013 		movne	r0, #0
+ 2043 00c8 01000302 		andeq	r0, r3, #1
+ 2044              	.LVL16:
+ 2045 00cc 000050E3 		cmp	r0, #0
+ 2046 00d0 0300000A 		beq	.L7
+  78:../main.c     **** int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char colo
+ 2047              		.loc 1 78 0 discriminator 1
+ 2048 00d4 000096E5 		ldr	r0, [r6, #0]
+ 2049 00d8 000050E3 		cmp	r0, #0
+ 2050 00dc 0000A0D3 		movle	r0, #0
+ 2051 00e0 0100A0C3 		movgt	r0, #1
+ 2052              	.L7:
+  98:../main.c     **** 		return PATRON_ENCONTRADO; // si hay que voltear una ficha o más hemos encontrado el patrón
+  99:../main.c     **** 	else
+ 100:../main.c     **** 		return NO_HAY_PATRON; // si no hay que voltear no hay patrón
+ 101:../main.c     **** }
+ 2053              		.loc 1 101 0
+ 2054 00e4 28D04BE2 		sub	sp, fp, #40
+ 2055 00e8 F06F9DE8 		ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
+ 2056 00ec 1EFF2FE1 		bx	lr
+ 2057              		.cfi_endproc
+ 2058              	.LFE1:
+ 2060              		.align	2
+ 2061              		.global	Main
+ 2063              	Main:
+ 2064              	.LFB2:
+ 102:../main.c     **** 
+ 103:../main.c     **** extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char S
+ 104:../main.c     **** extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char
+ 105:../main.c     **** extern int patron_volteo_arm_arm_opt(char tablero[][DIM], int *longitud,char FA, char CA, char SF, 
+ 106:../main.c     **** 
+ 107:../main.c     **** /*--- codigo de funciones ---*/
+ 108:../main.c     **** void Main(void)
+ 109:../main.c     **** {
+ 2065              		.loc 1 109 0
+ 2066              		.cfi_startproc
+ 2067              		@ Function supports interworking.
+ 2068              		@ args = 0, pretend = 0, frame = 24
+ 2069              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2070 00f0 0DC0A0E1 		mov	ip, sp
+ 2071              	.LCFI2:
+ 2072              		.cfi_def_cfa_register 12
+ 2073 00f4 F0D92DE9 		stmfd	sp!, {r4, r5, r6, r7, r8, fp, ip, lr, pc}
+ 2074 00f8 04B04CE2 		sub	fp, ip, #4
+ 2075              		.cfi_offset 14, -8
+ 2076              		.cfi_offset 13, -12
+ 2077              		.cfi_offset 11, -16
+ 2078              		.cfi_offset 8, -20
+ 2079              		.cfi_offset 7, -24
+ 2080              		.cfi_offset 6, -28
+ 2081              		.cfi_offset 5, -32
+ 2082              		.cfi_offset 4, -36
+ 2083              	.LCFI3:
+ 2084              		.cfi_def_cfa 11, 4
+ 2085 00fc 2CD04DE2 		sub	sp, sp, #44
+ 110:../main.c     **** 	
+ 111:../main.c     **** 	//Inicializa controladores
+ 112:../main.c     **** 	sys_init();         // Inicializacion de la placa, interrupciones y puertos
+ 113:../main.c     **** 	timer_init();	    // Inicializacion del temporizador
+ 114:../main.c     **** 	Eint4567_init();	// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en el 8l
+ 115:../main.c     **** 	D8Led_init();       // inicializamos el 8led
+ 116:../main.c     **** 
+ 117:../main.c     **** 	static char __attribute__ ((aligned (8))) tablero1[DIM][DIM] = {
+ 118:../main.c     **** 			{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VAC
+ 119:../main.c     **** 			{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VAC
+ 120:../main.c     **** 		    {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VA
+ 121:../main.c     **** 		    {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VAC
+ 122:../main.c     **** 	        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_
+ 123:../main.c     **** 	        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASIL
+ 124:../main.c     **** 	        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASIL
+ 125:../main.c     **** 	        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASIL
+ 126:../main.c     **** 		};
+ 127:../main.c     **** 
+ 128:../main.c     **** 	volatile int patron_c_c, patron_arm_c, patron_arm_arm;
+ 129:../main.c     **** 
+ 130:../main.c     **** 	volatile unsigned int timeA;
+ 131:../main.c     **** 	volatile unsigned int timeD;
+ 132:../main.c     **** 	volatile unsigned int timeT;
+ 133:../main.c     **** 
+ 134:../main.c     **** 	int longitud = 0;
+ 2086              		.loc 1 134 0
+ 2087 0100 0080A0E3 		mov	r8, #0
+ 112:../main.c     **** 	sys_init();         // Inicializacion de la placa, interrupciones y puertos
+ 2088              		.loc 1 112 0
+ 2089 0104 FEFFFFEB 		bl	sys_init
+ 113:../main.c     **** 	timer_init();	    // Inicializacion del temporizador
+ 2090              		.loc 1 113 0
+ 2091 0108 FEFFFFEB 		bl	timer_init
+ 114:../main.c     **** 	Eint4567_init();	// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en el 8l
+ 2092              		.loc 1 114 0
+ 2093 010c FEFFFFEB 		bl	Eint4567_init
+ 115:../main.c     **** 	D8Led_init();       // inicializamos el 8led
+ 2094              		.loc 1 115 0
+ 2095 0110 FEFFFFEB 		bl	D8Led_init
+ 2096              		.loc 1 134 0
+ 2097 0114 38800BE5 		str	r8, [fp, #-56]
+ 2098              	.LVL17:
+ 135:../main.c     **** 
+ 136:../main.c     **** 	timer2_inicializar();
+ 2099              		.loc 1 136 0
+ 2100 0118 FEFFFFEB 		bl	timer2_inicializar
+ 137:../main.c     **** 
+ 138:../main.c     **** 	timer2_empezar();
+ 2101              		.loc 1 138 0
+ 2102 011c FEFFFFEB 		bl	timer2_empezar
+ 139:../main.c     **** 	timeA = timer2_leer();
+ 2103              		.loc 1 139 0
+ 2104 0120 FEFFFFEB 		bl	timer2_leer
+ 140:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, -1, 0, 2);
+ 2105              		.loc 1 140 0
+ 2106 0124 40529FE5 		ldr	r5, .L11
+ 2107 0128 0240A0E3 		mov	r4, #2
+ 2108 012c FF70A0E3 		mov	r7, #255
+ 2109 0130 38104BE2 		sub	r1, fp, #56
+ 2110 0134 0420A0E1 		mov	r2, r4
+ 2111 0138 0330A0E3 		mov	r3, #3
+ 2112              	.LVL18:
+ 139:../main.c     **** 	timeA = timer2_leer();
+ 2113              		.loc 1 139 0
+ 2114 013c 2C000BE5 		str	r0, [fp, #-44]
+ 2115              		.loc 1 140 0
+ 2116 0140 0500A0E1 		mov	r0, r5
+ 2117              	.LVL19:
+ 2118 0144 80018DE8 		stmia	sp, {r7, r8}	@ phole stm
+ 2119 0148 08408DE5 		str	r4, [sp, #8]
+ 2120 014c FEFFFFEB 		bl	patron_volteo
+ 2121              	.LVL20:
+ 2122 0150 28000BE5 		str	r0, [fp, #-40]
+ 141:../main.c     **** 	timeD = timer2_parar();
+ 2123              		.loc 1 141 0
+ 2124 0154 FEFFFFEB 		bl	timer2_parar
+ 2125              	.LVL21:
+ 2126 0158 30000BE5 		str	r0, [fp, #-48]
+ 142:../main.c     **** 	timeT = timeD - timeA;
+ 2127              		.loc 1 142 0
+ 2128 015c 30201BE5 		ldr	r2, [fp, #-48]
+ 2129 0160 2C301BE5 		ldr	r3, [fp, #-44]
+ 2130 0164 023063E0 		rsb	r3, r3, r2
+ 2131              	.LVL22:
+ 2132 0168 34300BE5 		str	r3, [fp, #-52]
+ 2133              	.LVL23:
+ 143:../main.c     **** 
+ 144:../main.c     **** 	timer2_empezar();
+ 2134              		.loc 1 144 0
+ 2135 016c FEFFFFEB 		bl	timer2_empezar
+ 2136              	.LVL24:
+ 145:../main.c     **** 	timeA = timer2_leer();
+ 2137              		.loc 1 145 0
+ 2138 0170 FEFFFFEB 		bl	timer2_leer
+ 146:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, -1, 1, 2);
+ 2139              		.loc 1 146 0
+ 2140 0174 0160A0E3 		mov	r6, #1
+ 2141 0178 38104BE2 		sub	r1, fp, #56
+ 2142 017c 0420A0E1 		mov	r2, r4
+ 2143 0180 0330A0E3 		mov	r3, #3
+ 145:../main.c     **** 	timeA = timer2_leer();
+ 2144              		.loc 1 145 0
+ 2145 0184 2C000BE5 		str	r0, [fp, #-44]
+ 2146              		.loc 1 146 0
+ 2147 0188 0500A0E1 		mov	r0, r5
+ 2148 018c 00708DE5 		str	r7, [sp, #0]
+ 2149 0190 04608DE5 		str	r6, [sp, #4]
+ 2150 0194 08408DE5 		str	r4, [sp, #8]
+ 2151 0198 FEFFFFEB 		bl	patron_volteo
+ 2152 019c 28000BE5 		str	r0, [fp, #-40]
+ 147:../main.c     **** 	timeD = timer2_parar();
+ 2153              		.loc 1 147 0
+ 2154 01a0 FEFFFFEB 		bl	timer2_parar
+ 2155 01a4 30000BE5 		str	r0, [fp, #-48]
+ 148:../main.c     **** 	timeT = timeD - timeA;
+ 2156              		.loc 1 148 0
+ 2157 01a8 30201BE5 		ldr	r2, [fp, #-48]
+ 2158 01ac 2C301BE5 		ldr	r3, [fp, #-44]
+ 2159 01b0 023063E0 		rsb	r3, r3, r2
+ 2160              	.LVL25:
+ 2161 01b4 34300BE5 		str	r3, [fp, #-52]
+ 2162              	.LVL26:
+ 149:../main.c     **** 
+ 150:../main.c     **** 	timer2_empezar();
+ 2163              		.loc 1 150 0
+ 2164 01b8 FEFFFFEB 		bl	timer2_empezar
+ 2165              	.LVL27:
+ 151:../main.c     **** 	timeA = timer2_leer();
+ 2166              		.loc 1 151 0
+ 2167 01bc FEFFFFEB 		bl	timer2_leer
+ 152:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, 0, 1, 2);
+ 2168              		.loc 1 152 0
+ 2169 01c0 38104BE2 		sub	r1, fp, #56
+ 2170 01c4 0420A0E1 		mov	r2, r4
+ 2171 01c8 0330A0E3 		mov	r3, #3
+ 151:../main.c     **** 	timeA = timer2_leer();
+ 2172              		.loc 1 151 0
+ 2173 01cc 2C000BE5 		str	r0, [fp, #-44]
+ 2174              		.loc 1 152 0
+ 2175 01d0 0500A0E1 		mov	r0, r5
+ 2176 01d4 00808DE5 		str	r8, [sp, #0]
+ 2177 01d8 04608DE5 		str	r6, [sp, #4]
+ 2178 01dc 08408DE5 		str	r4, [sp, #8]
+ 2179 01e0 FEFFFFEB 		bl	patron_volteo
+ 2180 01e4 28000BE5 		str	r0, [fp, #-40]
+ 153:../main.c     **** 	timeD = timer2_parar();
+ 2181              		.loc 1 153 0
+ 2182 01e8 FEFFFFEB 		bl	timer2_parar
+ 2183 01ec 30000BE5 		str	r0, [fp, #-48]
+ 154:../main.c     **** 	timeT = timeD - timeA;
+ 2184              		.loc 1 154 0
+ 2185 01f0 30201BE5 		ldr	r2, [fp, #-48]
+ 2186 01f4 2C301BE5 		ldr	r3, [fp, #-44]
+ 2187 01f8 023063E0 		rsb	r3, r3, r2
+ 2188              	.LVL28:
+ 2189 01fc 34300BE5 		str	r3, [fp, #-52]
+ 2190              	.LVL29:
+ 155:../main.c     **** 
+ 156:../main.c     **** 	timer2_empezar();
+ 2191              		.loc 1 156 0
+ 2192 0200 FEFFFFEB 		bl	timer2_empezar
+ 2193              	.LVL30:
+ 157:../main.c     **** 	timeA = timer2_leer();
+ 2194              		.loc 1 157 0
+ 2195 0204 FEFFFFEB 		bl	timer2_leer
+ 158:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, 1, 1, 2);
+ 2196              		.loc 1 158 0
+ 2197 0208 38104BE2 		sub	r1, fp, #56
+ 2198 020c 0420A0E1 		mov	r2, r4
+ 2199 0210 0330A0E3 		mov	r3, #3
+ 157:../main.c     **** 	timeA = timer2_leer();
+ 2200              		.loc 1 157 0
+ 2201 0214 2C000BE5 		str	r0, [fp, #-44]
+ 2202              		.loc 1 158 0
+ 2203 0218 0500A0E1 		mov	r0, r5
+ 2204 021c 00608DE5 		str	r6, [sp, #0]
+ 2205 0220 04608DE5 		str	r6, [sp, #4]
+ 2206 0224 08408DE5 		str	r4, [sp, #8]
+ 2207 0228 FEFFFFEB 		bl	patron_volteo
+ 2208 022c 28000BE5 		str	r0, [fp, #-40]
+ 159:../main.c     **** 	timeD = timer2_parar();
+ 2209              		.loc 1 159 0
+ 2210 0230 FEFFFFEB 		bl	timer2_parar
+ 2211 0234 30000BE5 		str	r0, [fp, #-48]
+ 160:../main.c     **** 	timeT = timeD - timeA;
+ 2212              		.loc 1 160 0
+ 2213 0238 30201BE5 		ldr	r2, [fp, #-48]
+ 2214 023c 2C301BE5 		ldr	r3, [fp, #-44]
+ 2215 0240 023063E0 		rsb	r3, r3, r2
+ 2216              	.LVL31:
+ 2217 0244 34300BE5 		str	r3, [fp, #-52]
+ 2218              	.LVL32:
+ 161:../main.c     **** 
+ 162:../main.c     **** 	timer2_empezar();
+ 2219              		.loc 1 162 0
+ 2220 0248 FEFFFFEB 		bl	timer2_empezar
+ 2221              	.LVL33:
+ 163:../main.c     **** 	timeA = timer2_leer();
+ 2222              		.loc 1 163 0
+ 2223 024c FEFFFFEB 		bl	timer2_leer
+ 164:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, 1, 0, 2);
+ 2224              		.loc 1 164 0
+ 2225 0250 38104BE2 		sub	r1, fp, #56
+ 2226 0254 0420A0E1 		mov	r2, r4
+ 2227 0258 0330A0E3 		mov	r3, #3
+ 163:../main.c     **** 	timeA = timer2_leer();
+ 2228              		.loc 1 163 0
+ 2229 025c 2C000BE5 		str	r0, [fp, #-44]
+ 2230              		.loc 1 164 0
+ 2231 0260 0500A0E1 		mov	r0, r5
+ 2232 0264 40018DE8 		stmia	sp, {r6, r8}	@ phole stm
+ 2233 0268 08408DE5 		str	r4, [sp, #8]
+ 2234 026c FEFFFFEB 		bl	patron_volteo
+ 2235 0270 28000BE5 		str	r0, [fp, #-40]
+ 165:../main.c     **** 	timeD = timer2_parar();
+ 2236              		.loc 1 165 0
+ 2237 0274 FEFFFFEB 		bl	timer2_parar
+ 2238 0278 30000BE5 		str	r0, [fp, #-48]
+ 166:../main.c     **** 	timeT = timeD - timeA;
+ 2239              		.loc 1 166 0
+ 2240 027c 30201BE5 		ldr	r2, [fp, #-48]
+ 2241 0280 2C301BE5 		ldr	r3, [fp, #-44]
+ 2242 0284 023063E0 		rsb	r3, r3, r2
+ 2243              	.LVL34:
+ 2244 0288 34300BE5 		str	r3, [fp, #-52]
+ 2245              	.LVL35:
+ 167:../main.c     **** 
+ 168:../main.c     **** 	timer2_empezar();
+ 2246              		.loc 1 168 0
+ 2247 028c FEFFFFEB 		bl	timer2_empezar
+ 2248              	.LVL36:
+ 169:../main.c     **** 	timeA = timer2_leer();
+ 2249              		.loc 1 169 0
+ 2250 0290 FEFFFFEB 		bl	timer2_leer
+ 170:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, 1, -1, 2);
+ 2251              		.loc 1 170 0
+ 2252 0294 38104BE2 		sub	r1, fp, #56
+ 2253 0298 0420A0E1 		mov	r2, r4
+ 2254 029c 0330A0E3 		mov	r3, #3
+ 169:../main.c     **** 	timeA = timer2_leer();
+ 2255              		.loc 1 169 0
+ 2256 02a0 2C000BE5 		str	r0, [fp, #-44]
+ 2257              		.loc 1 170 0
+ 2258 02a4 0500A0E1 		mov	r0, r5
+ 2259 02a8 C0008DE8 		stmia	sp, {r6, r7}	@ phole stm
+ 2260 02ac 08408DE5 		str	r4, [sp, #8]
+ 2261 02b0 FEFFFFEB 		bl	patron_volteo
+ 2262 02b4 28000BE5 		str	r0, [fp, #-40]
+ 171:../main.c     **** 	timeD = timer2_parar();
+ 2263              		.loc 1 171 0
+ 2264 02b8 FEFFFFEB 		bl	timer2_parar
+ 2265 02bc 30000BE5 		str	r0, [fp, #-48]
+ 172:../main.c     **** 	timeT = timeD - timeA;
+ 2266              		.loc 1 172 0
+ 2267 02c0 30201BE5 		ldr	r2, [fp, #-48]
+ 2268 02c4 2C301BE5 		ldr	r3, [fp, #-44]
+ 2269 02c8 023063E0 		rsb	r3, r3, r2
+ 2270              	.LVL37:
+ 2271 02cc 34300BE5 		str	r3, [fp, #-52]
+ 2272              	.LVL38:
+ 173:../main.c     **** 
+ 174:../main.c     **** 	timer2_empezar();
+ 2273              		.loc 1 174 0
+ 2274 02d0 FEFFFFEB 		bl	timer2_empezar
+ 2275              	.LVL39:
+ 175:../main.c     **** 	timeA = timer2_leer();
+ 2276              		.loc 1 175 0
+ 2277 02d4 FEFFFFEB 		bl	timer2_leer
+ 176:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, 0, -1, 2);
+ 2278              		.loc 1 176 0
+ 2279 02d8 38104BE2 		sub	r1, fp, #56
+ 2280 02dc 0420A0E1 		mov	r2, r4
+ 2281 02e0 0330A0E3 		mov	r3, #3
+ 175:../main.c     **** 	timeA = timer2_leer();
+ 2282              		.loc 1 175 0
+ 2283 02e4 2C000BE5 		str	r0, [fp, #-44]
+ 2284              		.loc 1 176 0
+ 2285 02e8 0500A0E1 		mov	r0, r5
+ 2286 02ec 00808DE5 		str	r8, [sp, #0]
+ 2287 02f0 04708DE5 		str	r7, [sp, #4]
+ 2288 02f4 08408DE5 		str	r4, [sp, #8]
+ 2289 02f8 FEFFFFEB 		bl	patron_volteo
+ 2290 02fc 28000BE5 		str	r0, [fp, #-40]
+ 177:../main.c     **** 	timeD = timer2_parar();
+ 2291              		.loc 1 177 0
+ 2292 0300 FEFFFFEB 		bl	timer2_parar
+ 2293 0304 30000BE5 		str	r0, [fp, #-48]
+ 178:../main.c     **** 	timeT = timeD - timeA;
+ 2294              		.loc 1 178 0
+ 2295 0308 30201BE5 		ldr	r2, [fp, #-48]
+ 2296 030c 2C301BE5 		ldr	r3, [fp, #-44]
+ 2297 0310 023063E0 		rsb	r3, r3, r2
+ 2298              	.LVL40:
+ 2299 0314 34300BE5 		str	r3, [fp, #-52]
+ 2300              	.LVL41:
+ 179:../main.c     **** 
+ 180:../main.c     **** 	timer2_empezar();
+ 2301              		.loc 1 180 0
+ 2302 0318 FEFFFFEB 		bl	timer2_empezar
+ 2303              	.LVL42:
+ 181:../main.c     **** 	timeA = timer2_leer();
+ 2304              		.loc 1 181 0
+ 2305 031c FEFFFFEB 		bl	timer2_leer
+ 182:../main.c     **** 	patron_arm_c = patron_volteo(tablero1, &longitud, 2, 3, -1, -1, 2);
+ 2306              		.loc 1 182 0
+ 2307 0320 0420A0E1 		mov	r2, r4
+ 2308 0324 0330A0E3 		mov	r3, #3
+ 181:../main.c     **** 	timeA = timer2_leer();
+ 2309              		.loc 1 181 0
+ 2310 0328 2C000BE5 		str	r0, [fp, #-44]
+ 2311              		.loc 1 182 0
+ 2312 032c 38104BE2 		sub	r1, fp, #56
+ 2313 0330 0500A0E1 		mov	r0, r5
+ 2314 0334 00708DE5 		str	r7, [sp, #0]
+ 2315 0338 04708DE5 		str	r7, [sp, #4]
+ 2316 033c 08408DE5 		str	r4, [sp, #8]
+ 2317 0340 FEFFFFEB 		bl	patron_volteo
+ 2318 0344 28000BE5 		str	r0, [fp, #-40]
+ 183:../main.c     **** 	timeD = timer2_parar();
+ 2319              		.loc 1 183 0
+ 2320 0348 FEFFFFEB 		bl	timer2_parar
+ 2321 034c 30000BE5 		str	r0, [fp, #-48]
+ 184:../main.c     **** 	timeT = timeD - timeA;
+ 2322              		.loc 1 184 0
+ 2323 0350 30201BE5 		ldr	r2, [fp, #-48]
+ 2324 0354 2C301BE5 		ldr	r3, [fp, #-44]
+ 2325 0358 023063E0 		rsb	r3, r3, r2
+ 2326              	.LVL43:
+ 2327 035c 34300BE5 		str	r3, [fp, #-52]
+ 2328              	.LVL44:
+ 185:../main.c     **** 
+ 186:../main.c     **** 
+ 187:../main.c     **** }
+ 2329              		.loc 1 187 0
+ 2330 0360 20D04BE2 		sub	sp, fp, #32
+ 2331 0364 F0699DE8 		ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, lr}
+ 2332 0368 1EFF2FE1 		bx	lr
+ 2333              	.L12:
+ 2334              		.align	2
+ 2335              	.L11:
+ 2336 036c 00000000 		.word	.LANCHOR0
+ 2337              		.cfi_endproc
+ 2338              	.LFE2:
+ 2340              		.global	vSF
+ 2341              		.global	vSC
+ 2342              		.comm	switch_leds,4,4
+ 2343              		.section	.rodata
+ 2346              	vSF:
+ 2347 0000 FF       		.byte	-1
+ 2348 0001 FF       		.byte	-1
+ 2349 0002 00       		.byte	0
+ 2350 0003 01       		.byte	1
+ 2351 0004 01       		.byte	1
+ 2352 0005 01       		.byte	1
+ 2353 0006 00       		.byte	0
+ 2354 0007 FF       		.byte	-1
+ 2357              	vSC:
+ 2358 0008 00       		.byte	0
+ 2359 0009 01       		.byte	1
+ 2360 000a 01       		.byte	1
+ 2361 000b 01       		.byte	1
+ 2362 000c 00       		.byte	0
+ 2363 000d FF       		.byte	-1
+ 2364 000e FF       		.byte	-1
+ 2365 000f FF       		.byte	-1
+ 2366              		.data
+ 2367              		.align	3
+ 2368              		.set	.LANCHOR0,. + 0
+ 2371              	tablero1.4046:
+ 2372 0000 00       		.byte	0
+ 2373 0001 00       		.byte	0
+ 2374 0002 00       		.byte	0
+ 2375 0003 00       		.byte	0
+ 2376 0004 00       		.byte	0
+ 2377 0005 00       		.byte	0
+ 2378 0006 00       		.byte	0
+ 2379 0007 00       		.byte	0
+ 2380 0008 00       		.byte	0
+ 2381 0009 00       		.byte	0
+ 2382 000a 00       		.byte	0
+ 2383 000b 00       		.byte	0
+ 2384 000c 00       		.byte	0
+ 2385 000d 00       		.byte	0
+ 2386 000e 00       		.byte	0
+ 2387 000f 00       		.byte	0
+ 2388 0010 00       		.byte	0
+ 2389 0011 00       		.byte	0
+ 2390 0012 00       		.byte	0
+ 2391 0013 02       		.byte	2
+ 2392 0014 00       		.byte	0
+ 2393 0015 00       		.byte	0
+ 2394 0016 00       		.byte	0
+ 2395 0017 00       		.byte	0
+ 2396 0018 00       		.byte	0
+ 2397 0019 00       		.byte	0
+ 2398 001a 00       		.byte	0
+ 2399 001b 01       		.byte	1
+ 2400 001c 02       		.byte	2
+ 2401 001d 00       		.byte	0
+ 2402 001e 00       		.byte	0
+ 2403 001f 00       		.byte	0
+ 2404 0020 00       		.byte	0
+ 2405 0021 00       		.byte	0
+ 2406 0022 00       		.byte	0
+ 2407 0023 02       		.byte	2
+ 2408 0024 01       		.byte	1
+ 2409 0025 00       		.byte	0
+ 2410 0026 00       		.byte	0
+ 2411 0027 00       		.byte	0
+ 2412 0028 00       		.byte	0
+ 2413 0029 00       		.byte	0
+ 2414 002a 00       		.byte	0
+ 2415 002b 00       		.byte	0
+ 2416 002c 00       		.byte	0
+ 2417 002d 00       		.byte	0
+ 2418 002e 00       		.byte	0
+ 2419 002f 00       		.byte	0
+ 2420 0030 00       		.byte	0
+ 2421 0031 00       		.byte	0
+ 2422 0032 00       		.byte	0
+ 2423 0033 00       		.byte	0
+ 2424 0034 00       		.byte	0
+ 2425 0035 00       		.byte	0
+ 2426 0036 00       		.byte	0
+ 2427 0037 00       		.byte	0
+ 2428 0038 00       		.byte	0
+ 2429 0039 00       		.byte	0
+ 2430 003a 00       		.byte	0
+ 2431 003b 00       		.byte	0
+ 2432 003c 00       		.byte	0
+ 2433 003d 00       		.byte	0
+ 2434 003e 00       		.byte	0
+ 2435 003f 00       		.byte	0
+ 2436              		.text
+ 2437              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:1914   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:1917   .text:00000000 ficha_valida
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:1956   .text:00000034 patron_volteo
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:2063   .text:000000f0 Main
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:2336   .text:0000036c $d
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:2346   .rodata:00000000 vSF
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:2357   .rodata:00000008 vSC
+                            *COM*:00000004 switch_leds
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:2367   .data:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccEq0uKd.s:2371   .data:00000000 tablero1.4046
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+sys_init
+timer_init
+Eint4567_init
+D8Led_init
+timer2_inicializar
+timer2_empezar
+timer2_leer
+timer2_parar

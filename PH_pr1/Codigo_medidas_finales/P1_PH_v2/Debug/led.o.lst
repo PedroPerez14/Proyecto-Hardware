@@ -1,0 +1,351 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.file	"led.c"
+  21              	.Ltext0:
+  22              		.file 1 "../led.c"
+ 1882              		.align	2
+ 1883              		.global	Led_Display
+ 1885              	Led_Display:
+ 1886              	.LFB7:
+   1:../led.c      **** /*********************************************************************************************
+   2:../led.c      **** * Fichero:		led.c
+   3:../led.c      **** * Autor:
+   4:../led.c      **** * Descrip:		funciones de control de los LED de la placa
+   5:../led.c      **** * Version:
+   6:../led.c      **** *********************************************************************************************/
+   7:../led.c      **** 
+   8:../led.c      **** /*--- ficheros de cabecera ---*/
+   9:../led.c      **** #include "led.h"
+  10:../led.c      **** #include "44b.h"
+  11:../led.c      **** #include "44blib.h"
+  12:../led.c      **** 
+  13:../led.c      **** /*--- variables globales del módulo ---*/
+  14:../led.c      **** static int led_state = 0;		/* estado del LED */
+  15:../led.c      **** 
+  16:../led.c      **** /*--- codigo de las funciones públicas ---*/
+  17:../led.c      **** void leds_on()
+  18:../led.c      **** {
+  19:../led.c      **** 	Led_Display(0x3);
+  20:../led.c      **** }
+  21:../led.c      **** 
+  22:../led.c      **** void leds_off()
+  23:../led.c      **** {
+  24:../led.c      **** 	Led_Display(0x0);
+  25:../led.c      **** }
+  26:../led.c      **** 
+  27:../led.c      **** void led1_on()
+  28:../led.c      **** {
+  29:../led.c      **** 	led_state = led_state | 0x1;
+  30:../led.c      **** 	Led_Display(led_state);
+  31:../led.c      **** }
+  32:../led.c      **** 
+  33:../led.c      **** void led1_off()
+  34:../led.c      **** {
+  35:../led.c      **** 	led_state = led_state & 0xfe;
+  36:../led.c      **** 	Led_Display(led_state);
+  37:../led.c      **** }
+  38:../led.c      **** 
+  39:../led.c      **** void led2_on()
+  40:../led.c      **** {
+  41:../led.c      **** 	led_state = led_state | 0x2;
+  42:../led.c      **** 	Led_Display(led_state);
+  43:../led.c      **** }
+  44:../led.c      **** 
+  45:../led.c      **** void led2_off()
+  46:../led.c      **** {
+  47:../led.c      **** 	led_state = led_state & 0xfd;
+  48:../led.c      **** 	Led_Display(led_state);
+  49:../led.c      **** }
+  50:../led.c      **** 
+  51:../led.c      **** void leds_switch()
+  52:../led.c      **** {
+  53:../led.c      **** 	led_state ^= 0x03;
+  54:../led.c      **** 	Led_Display(led_state);
+  55:../led.c      **** 
+  56:../led.c      **** }
+  57:../led.c      **** 
+  58:../led.c      **** void Led_Display(int LedStatus)
+  59:../led.c      **** {
+ 1887              		.loc 1 59 0
+ 1888              		.cfi_startproc
+ 1889              		@ Function supports interworking.
+ 1890              		@ args = 0, pretend = 0, frame = 0
+ 1891              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1892              		@ link register save eliminated.
+ 1893              	.LVL0:
+  60:../led.c      **** 	led_state = LedStatus;
+ 1894              		.loc 1 60 0
+ 1895 0000 3C309FE5 		ldr	r3, .L8
+ 1896 0004 000083E5 		str	r0, [r3, #0]
+ 1897 0008 38309FE5 		ldr	r3, .L8+4
+  61:../led.c      **** 
+  62:../led.c      **** 	if ((LedStatus & 0x01) == 0x01)
+ 1898              		.loc 1 62 0
+ 1899 000c 010010E3 		tst	r0, #1
+  63:../led.c      **** 		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ 1900              		.loc 1 63 0
+ 1901 0010 0C109315 		ldrne	r1, [r3, #12]
+  64:../led.c      **** 	else
+  65:../led.c      **** 		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ 1902              		.loc 1 65 0
+ 1903 0014 0C209305 		ldreq	r2, [r3, #12]
+  63:../led.c      **** 		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ 1904              		.loc 1 63 0
+ 1905 0018 2C209F15 		ldrne	r2, .L8+8
+ 1906              		.loc 1 65 0
+ 1907 001c 022C8203 		orreq	r2, r2, #512
+  63:../led.c      **** 		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ 1908              		.loc 1 63 0
+ 1909 0020 02200110 		andne	r2, r1, r2
+ 1910              		.loc 1 65 0
+ 1911 0024 0C2083E5 		str	r2, [r3, #12]
+  66:../led.c      **** 
+  67:../led.c      **** 	if ((LedStatus & 0x02) == 0x02)
+  68:../led.c      **** 		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ 1912              		.loc 1 68 0
+ 1913 0028 0C2093E5 		ldr	r2, [r3, #12]
+  67:../led.c      **** 	if ((LedStatus & 0x02) == 0x02)
+ 1914              		.loc 1 67 0
+ 1915 002c 020010E3 		tst	r0, #2
+ 1916              		.loc 1 68 0
+ 1917 0030 022BA011 		movne	r2, r2, asl #22
+ 1918 0034 222BA011 		movne	r2, r2, lsr #22
+  69:../led.c      **** 	else
+  70:../led.c      **** 		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ 1919              		.loc 1 70 0
+ 1920 0038 012B8203 		orreq	r2, r2, #1024
+ 1921 003c 0C2083E5 		str	r2, [r3, #12]
+ 1922 0040 1EFF2FE1 		bx	lr
+ 1923              	.L9:
+ 1924              		.align	2
+ 1925              	.L8:
+ 1926 0044 00000000 		.word	.LANCHOR0
+ 1927 0048 0000D201 		.word	30539776
+ 1928 004c FF050000 		.word	1535
+ 1929              		.cfi_endproc
+ 1930              	.LFE7:
+ 1932              		.align	2
+ 1933              		.global	leds_switch
+ 1935              	leds_switch:
+ 1936              	.LFB6:
+  52:../led.c      **** {
+ 1937              		.loc 1 52 0
+ 1938              		.cfi_startproc
+ 1939              		@ Function supports interworking.
+ 1940              		@ args = 0, pretend = 0, frame = 0
+ 1941              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1942              		@ link register save eliminated.
+  53:../led.c      **** 	led_state ^= 0x03;
+ 1943              		.loc 1 53 0
+ 1944 0050 0C309FE5 		ldr	r3, .L11
+ 1945 0054 000093E5 		ldr	r0, [r3, #0]
+ 1946 0058 030020E2 		eor	r0, r0, #3
+ 1947 005c 000083E5 		str	r0, [r3, #0]
+  56:../led.c      **** }
+ 1948              		.loc 1 56 0
+  54:../led.c      **** 	Led_Display(led_state);
+ 1949              		.loc 1 54 0
+ 1950 0060 FEFFFFEA 		b	Led_Display
+ 1951              	.L12:
+ 1952              		.align	2
+ 1953              	.L11:
+ 1954 0064 00000000 		.word	.LANCHOR0
+ 1955              		.cfi_endproc
+ 1956              	.LFE6:
+ 1958              		.align	2
+ 1959              		.global	led2_off
+ 1961              	led2_off:
+ 1962              	.LFB5:
+  46:../led.c      **** {
+ 1963              		.loc 1 46 0
+ 1964              		.cfi_startproc
+ 1965              		@ Function supports interworking.
+ 1966              		@ args = 0, pretend = 0, frame = 0
+ 1967              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1968              		@ link register save eliminated.
+  47:../led.c      **** 	led_state = led_state & 0xfd;
+ 1969              		.loc 1 47 0
+ 1970 0068 0C309FE5 		ldr	r3, .L14
+ 1971 006c 000093E5 		ldr	r0, [r3, #0]
+ 1972 0070 FD0000E2 		and	r0, r0, #253
+ 1973 0074 000083E5 		str	r0, [r3, #0]
+  49:../led.c      **** }
+ 1974              		.loc 1 49 0
+  48:../led.c      **** 	Led_Display(led_state);
+ 1975              		.loc 1 48 0
+ 1976 0078 FEFFFFEA 		b	Led_Display
+ 1977              	.L15:
+ 1978              		.align	2
+ 1979              	.L14:
+ 1980 007c 00000000 		.word	.LANCHOR0
+ 1981              		.cfi_endproc
+ 1982              	.LFE5:
+ 1984              		.align	2
+ 1985              		.global	led2_on
+ 1987              	led2_on:
+ 1988              	.LFB4:
+  40:../led.c      **** {
+ 1989              		.loc 1 40 0
+ 1990              		.cfi_startproc
+ 1991              		@ Function supports interworking.
+ 1992              		@ args = 0, pretend = 0, frame = 0
+ 1993              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1994              		@ link register save eliminated.
+  41:../led.c      **** 	led_state = led_state | 0x2;
+ 1995              		.loc 1 41 0
+ 1996 0080 0C309FE5 		ldr	r3, .L17
+ 1997 0084 000093E5 		ldr	r0, [r3, #0]
+ 1998 0088 020080E3 		orr	r0, r0, #2
+ 1999 008c 000083E5 		str	r0, [r3, #0]
+  43:../led.c      **** }
+ 2000              		.loc 1 43 0
+  42:../led.c      **** 	Led_Display(led_state);
+ 2001              		.loc 1 42 0
+ 2002 0090 FEFFFFEA 		b	Led_Display
+ 2003              	.L18:
+ 2004              		.align	2
+ 2005              	.L17:
+ 2006 0094 00000000 		.word	.LANCHOR0
+ 2007              		.cfi_endproc
+ 2008              	.LFE4:
+ 2010              		.align	2
+ 2011              		.global	led1_off
+ 2013              	led1_off:
+ 2014              	.LFB3:
+  34:../led.c      **** {
+ 2015              		.loc 1 34 0
+ 2016              		.cfi_startproc
+ 2017              		@ Function supports interworking.
+ 2018              		@ args = 0, pretend = 0, frame = 0
+ 2019              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2020              		@ link register save eliminated.
+  35:../led.c      **** 	led_state = led_state & 0xfe;
+ 2021              		.loc 1 35 0
+ 2022 0098 0C309FE5 		ldr	r3, .L20
+ 2023 009c 000093E5 		ldr	r0, [r3, #0]
+ 2024 00a0 FE0000E2 		and	r0, r0, #254
+ 2025 00a4 000083E5 		str	r0, [r3, #0]
+  37:../led.c      **** }
+ 2026              		.loc 1 37 0
+  36:../led.c      **** 	Led_Display(led_state);
+ 2027              		.loc 1 36 0
+ 2028 00a8 FEFFFFEA 		b	Led_Display
+ 2029              	.L21:
+ 2030              		.align	2
+ 2031              	.L20:
+ 2032 00ac 00000000 		.word	.LANCHOR0
+ 2033              		.cfi_endproc
+ 2034              	.LFE3:
+ 2036              		.align	2
+ 2037              		.global	led1_on
+ 2039              	led1_on:
+ 2040              	.LFB2:
+  28:../led.c      **** {
+ 2041              		.loc 1 28 0
+ 2042              		.cfi_startproc
+ 2043              		@ Function supports interworking.
+ 2044              		@ args = 0, pretend = 0, frame = 0
+ 2045              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2046              		@ link register save eliminated.
+  29:../led.c      **** 	led_state = led_state | 0x1;
+ 2047              		.loc 1 29 0
+ 2048 00b0 0C309FE5 		ldr	r3, .L23
+ 2049 00b4 000093E5 		ldr	r0, [r3, #0]
+ 2050 00b8 010080E3 		orr	r0, r0, #1
+ 2051 00bc 000083E5 		str	r0, [r3, #0]
+  31:../led.c      **** }
+ 2052              		.loc 1 31 0
+  30:../led.c      **** 	Led_Display(led_state);
+ 2053              		.loc 1 30 0
+ 2054 00c0 FEFFFFEA 		b	Led_Display
+ 2055              	.L24:
+ 2056              		.align	2
+ 2057              	.L23:
+ 2058 00c4 00000000 		.word	.LANCHOR0
+ 2059              		.cfi_endproc
+ 2060              	.LFE2:
+ 2062              		.align	2
+ 2063              		.global	leds_off
+ 2065              	leds_off:
+ 2066              	.LFB1:
+  23:../led.c      **** {
+ 2067              		.loc 1 23 0
+ 2068              		.cfi_startproc
+ 2069              		@ Function supports interworking.
+ 2070              		@ args = 0, pretend = 0, frame = 0
+ 2071              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2072              		@ link register save eliminated.
+  24:../led.c      **** 	Led_Display(0x0);
+ 2073              		.loc 1 24 0
+ 2074 00c8 0000A0E3 		mov	r0, #0
+  25:../led.c      **** }
+ 2075              		.loc 1 25 0
+  24:../led.c      **** 	Led_Display(0x0);
+ 2076              		.loc 1 24 0
+ 2077 00cc FEFFFFEA 		b	Led_Display
+ 2078              		.cfi_endproc
+ 2079              	.LFE1:
+ 2081              		.align	2
+ 2082              		.global	leds_on
+ 2084              	leds_on:
+ 2085              	.LFB0:
+  18:../led.c      **** {
+ 2086              		.loc 1 18 0
+ 2087              		.cfi_startproc
+ 2088              		@ Function supports interworking.
+ 2089              		@ args = 0, pretend = 0, frame = 0
+ 2090              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2091              		@ link register save eliminated.
+  19:../led.c      **** 	Led_Display(0x3);
+ 2092              		.loc 1 19 0
+ 2093 00d0 0300A0E3 		mov	r0, #3
+  20:../led.c      **** }
+ 2094              		.loc 1 20 0
+  19:../led.c      **** 	Led_Display(0x3);
+ 2095              		.loc 1 19 0
+ 2096 00d4 FEFFFFEA 		b	Led_Display
+ 2097              		.cfi_endproc
+ 2098              	.LFE0:
+ 2100              		.bss
+ 2101              		.align	2
+ 2102              		.set	.LANCHOR0,. + 0
+ 2105              	led_state:
+ 2106 0000 00000000 		.space	4
+ 2107              		.text
+ 2108              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 led.c
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1882   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1885   .text:00000000 Led_Display
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1926   .text:00000044 $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1932   .text:00000050 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1935   .text:00000050 leds_switch
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1954   .text:00000064 $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1958   .text:00000068 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1961   .text:00000068 led2_off
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1980   .text:0000007c $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1984   .text:00000080 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:1987   .text:00000080 led2_on
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2006   .text:00000094 $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2010   .text:00000098 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2013   .text:00000098 led1_off
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2032   .text:000000ac $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2036   .text:000000b0 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2039   .text:000000b0 led1_on
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2058   .text:000000c4 $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2062   .text:000000c8 $a
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2065   .text:000000c8 leds_off
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2084   .text:000000d0 leds_on
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2101   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\cc3f68KC.s:2105   .bss:00000000 led_state
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS
