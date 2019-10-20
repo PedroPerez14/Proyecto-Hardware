@@ -1,0 +1,31 @@
+/*********************************************************************************************
+* Fichero:	Descripcion_ficheros.txt
+* Autor:	Fernando Peña Bes (NIA: 756012)
+		Pedro José Pérez García (NIA: 756642)
+* Descrip:	Descipción de los archivos del proyecto
+* Version:
+* Fecha: octubre 2019
+*********************************************************************************************/
+
+Estos son los ficheros correspondientes a la práctica 1 de Proyecto Hardware
+
+En main.c se encuentran comentadas diferentes funciones. Hace falta descomentar las que sean
+necesarias para usarlas:
+
+	reversi8()
+	----------
+	Sirve para lanzar el juego
+
+	pruebas_timer2()
+	----------------
+	Contiene una serie de pruebas para comprobar el correcto funcionamiento de timer2
+
+	patron_volteo_prueba_resultado_igual() y patron_volteo_prueba_resultado_correcto()
+	----------------------------------------------------------------------------------
+	Contienen diferentes pruebas para comprobar el correcto funcionamiento de las
+	implementaciones de patron_volteo()
+
+
+Se incluye, además, un archivo main adicional llamado main_medidas_optimizaciones.c. Este fichero
+fue utilizado para medir los tiempos de ejecución de las implentaciones de reversi8() utilizando
+las opciones de optimización -O2, -O3 y -Os.
