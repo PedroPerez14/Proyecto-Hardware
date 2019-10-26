@@ -2,7 +2,7 @@
 * Fichero:		timer2.h
 * Autor:		Fernando Peña Bes (NIA: 756012)
 * 				Pedro José Pérez García (NIA: 756642)
-* Descrip:		Funciones de control del timer0 del s3c44b0x
+* Descrip:		Funciones de control del timer2 del s3c44b0x
 *********************************************************************************************/
 
 #ifndef _TIMER2_H_

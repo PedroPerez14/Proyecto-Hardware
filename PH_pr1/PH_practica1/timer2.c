@@ -54,8 +54,18 @@ void timer2_empezar(void)
 
 unsigned int timer2_leer(void)
 {
-	return timer2_num_int * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
-	//Si queremos optimizar, como la multiplicaci�n es por 2048, se pueden mover los bits 16 lugares a al izquierda y en la divisi�n, al ser por 32, se pueden mover 5 a la derecha.
+	unsigned int num_int_1 = timer2_num_int;
+	unsigned int num_int_2 = timer2_num_int;
+	if(num_int_2 > num_int_1) //Con esto, evitamos posibles incrementos no deseados en timer2_num_int
+	{
+		return num_int2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+		//Si queremos optimizar, como la multiplicaci�n es por 2048, se pueden mover los bits 16 lugares a al izquierda y en la divisi�n, al ser por 32, se pueden mover 5 a la derecha.
+	}
+	else
+	{
+		return num_int1 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+		//Si queremos optimizar, como la multiplicaci�n es por 2048, se pueden mover los bits 16 lugares a al izquierda y en la divisi�n, al ser por 32, se pueden mover 5 a la derecha.
+	}
 }
 
 unsigned int timer2_parar(void)
