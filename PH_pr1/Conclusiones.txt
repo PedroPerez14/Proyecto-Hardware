@@ -1,0 +1,7 @@
+CONCLUSIÓN
+Esta primera parte del proyecto de la asignatura ha servido muy bien como herramienta para recordar algunos conceptos de la arquitectura de computadores, en concreto las asignaturas ya cursadas, o para introducir los entornos de desarrollo cruzados entre C y lenguaje ensamblador ARM.
+No obstante, se han encontrado dificultades por el camino que gracias a la documentación se han sabido solucionar de forma solvente, aprendiendo siempre algo acerca de la arquitectura con la que se estaba trabajando y aplicándolo en el proyecto.
+También ha servido para aprender a manejar bien los tiempos de un desarrollo sobre un hardware que no siempre está disponible, a redactar una memoria técnica y a optimizar.
+
+En cuanto al código desarrollado, su comportamiento es el deseado y funciona de forma óptima sobre la placa de desarrollo, con unas medidas de coste en tiempo que permiten ver el trabajo de optimización que ha habido detrás, así como el calibrado correcto de timer2 de acuerdo con las especificaciones del enunciado.
+Para finalizar, resaltar que aunque la mayoría del código se haya desarrollado de forma satisfactoria, durante la sesión de corrección presencial se detectaron pequeños fallos, como que timer2 debería medir dos veces el tiempo para evitar posibles subidas en timer2_num_int entre la lectura de interrupciones y la de ticks (Ver apartado {num_apartado}), o como la declaración innecesaria de los tableros de reversi como static, dos pequeños errores que ya han sido solucionados modificando ligeramente el código presentado en la entrega.
