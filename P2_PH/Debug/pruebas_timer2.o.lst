@@ -1,0 +1,376 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"pruebas_timer2.c"
+  21              	.Ltext0:
+  22              		.file 1 "../pruebas_timer2.c"
+ 1022              		.align	2
+ 1023              	timer2_num_int:
+ 1024 0000 00000000 		.space	4
+ 1025              		.text
+ 1026              		.align	2
+ 1027              		.global	pruebas_timer2
+ 1029              	pruebas_timer2:
+ 1030              	.LFB0:
+   1:../pruebas_timer2.c **** /*********************************************************************************************
+   2:../pruebas_timer2.c **** * Fichero:	pruebas_timer2.c
+   3:../pruebas_timer2.c **** * Autor:	Fernando Peña Bes (NIA: 756012)
+   4:../pruebas_timer2.c **** 			Pedro José Pérez García (NIA: 756642)
+   5:../pruebas_timer2.c **** * Descrip:	Fichero de pruebas para el timer2. Realiza 10 medidas de tiempo para los casos de 1ms, 1
+   6:../pruebas_timer2.c **** 			También calcula el valor medio de las 10 mediciones de cada caso
+   7:../pruebas_timer2.c **** * Version:
+   8:../pruebas_timer2.c **** *********************************************************************************************/
+   9:../pruebas_timer2.c **** 
+  10:../pruebas_timer2.c **** /*--- ficheros de cabecera ---*/
+  11:../pruebas_timer2.c **** #include "pruebas_timer2.h"
+  12:../pruebas_timer2.c **** 
+  13:../pruebas_timer2.c **** /*--- codigo de funciones ---*/
+  14:../pruebas_timer2.c **** void pruebas_timer2(void) {
+ 1031              		.loc 1 14 0
+ 1032              		.cfi_startproc
+ 1033              		@ Function supports interworking.
+ 1034              		@ args = 0, pretend = 0, frame = 232
+ 1035              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1036 0000 0DC0A0E1 		mov	ip, sp
+ 1037              	.LCFI0:
+ 1038              		.cfi_def_cfa_register 12
+ 1039 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1040 0008 04B04CE2 		sub	fp, ip, #4
+ 1041              		.cfi_offset 14, -8
+ 1042              		.cfi_offset 13, -12
+ 1043              		.cfi_offset 11, -16
+ 1044              	.LCFI1:
+ 1045              		.cfi_def_cfa 11, 4
+ 1046 000c E8D04DE2 		sub	sp, sp, #232
+  15:../pruebas_timer2.c **** 	timer2_inicializar();	//Para la prueba se inicializa el timer2
+ 1047              		.loc 1 15 0
+ 1048 0010 FEFFFFEB 		bl	timer2_inicializar
+  16:../pruebas_timer2.c **** 
+  17:../pruebas_timer2.c **** 	int i;
+  18:../pruebas_timer2.c **** 	unsigned int suma_1ms = 0;
+ 1049              		.loc 1 18 0
+ 1050 0014 0030A0E3 		mov	r3, #0
+ 1051 0018 14300BE5 		str	r3, [fp, #-20]
+  19:../pruebas_timer2.c **** 	unsigned int medidas_1ms[10];
+  20:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1052              		.loc 1 20 0
+ 1053 001c 0030A0E3 		mov	r3, #0
+ 1054 0020 10300BE5 		str	r3, [fp, #-16]
+ 1055 0024 1D0000EA 		b	.L2
+ 1056              	.L3:
+ 1057              	.LBB2:
+  21:../pruebas_timer2.c **** 	{
+  22:../pruebas_timer2.c **** 		timer2_empezar();
+ 1058              		.loc 1 22 0 discriminator 2
+ 1059 0028 FEFFFFEB 		bl	timer2_empezar
+  23:../pruebas_timer2.c **** 		unsigned int t_0 = timer2_leer();
+ 1060              		.loc 1 23 0 discriminator 2
+ 1061 002c FEFFFFEB 		bl	timer2_leer
+ 1062 0030 24000BE5 		str	r0, [fp, #-36]
+  24:../pruebas_timer2.c **** 		Delay(10);
+ 1063              		.loc 1 24 0 discriminator 2
+ 1064 0034 0A00A0E3 		mov	r0, #10
+ 1065 0038 FEFFFFEB 		bl	Delay
+  25:../pruebas_timer2.c **** 		unsigned int t_1 = timer2_parar();
+ 1066              		.loc 1 25 0 discriminator 2
+ 1067 003c FEFFFFEB 		bl	timer2_parar
+ 1068 0040 28000BE5 		str	r0, [fp, #-40]
+  26:../pruebas_timer2.c **** 		medidas_1ms[i] = t_1 - t_0;
+ 1069              		.loc 1 26 0 discriminator 2
+ 1070 0044 28201BE5 		ldr	r2, [fp, #-40]
+ 1071 0048 24301BE5 		ldr	r3, [fp, #-36]
+ 1072 004c 022063E0 		rsb	r2, r3, r2
+ 1073 0050 10101BE5 		ldr	r1, [fp, #-16]
+ 1074 0054 6B30E0E3 		mvn	r3, #107
+ 1075 0058 0111A0E1 		mov	r1, r1, asl #2
+ 1076 005c 0C004BE2 		sub	r0, fp, #12
+ 1077 0060 011080E0 		add	r1, r0, r1
+ 1078 0064 033081E0 		add	r3, r1, r3
+ 1079 0068 002083E5 		str	r2, [r3, #0]
+  27:../pruebas_timer2.c **** 		suma_1ms += medidas_1ms[i];
+ 1080              		.loc 1 27 0 discriminator 2
+ 1081 006c 10201BE5 		ldr	r2, [fp, #-16]
+ 1082 0070 6B30E0E3 		mvn	r3, #107
+ 1083 0074 0221A0E1 		mov	r2, r2, asl #2
+ 1084 0078 0C104BE2 		sub	r1, fp, #12
+ 1085 007c 022081E0 		add	r2, r1, r2
+ 1086 0080 033082E0 		add	r3, r2, r3
+ 1087 0084 003093E5 		ldr	r3, [r3, #0]
+ 1088 0088 14201BE5 		ldr	r2, [fp, #-20]
+ 1089 008c 033082E0 		add	r3, r2, r3
+ 1090 0090 14300BE5 		str	r3, [fp, #-20]
+ 1091              	.LBE2:
+  20:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1092              		.loc 1 20 0 discriminator 2
+ 1093 0094 10301BE5 		ldr	r3, [fp, #-16]
+ 1094 0098 013083E2 		add	r3, r3, #1
+ 1095 009c 10300BE5 		str	r3, [fp, #-16]
+ 1096              	.L2:
+  20:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1097              		.loc 1 20 0 is_stmt 0 discriminator 1
+ 1098 00a0 10301BE5 		ldr	r3, [fp, #-16]
+ 1099 00a4 090053E3 		cmp	r3, #9
+ 1100 00a8 DEFFFFDA 		ble	.L3
+  28:../pruebas_timer2.c **** 	}
+  29:../pruebas_timer2.c **** 	unsigned int media_1ms = suma_1ms / 10;
+ 1101              		.loc 1 29 0 is_stmt 1
+ 1102 00ac 14201BE5 		ldr	r2, [fp, #-20]
+ 1103 00b0 18329FE5 		ldr	r3, .L10
+ 1104 00b4 920383E0 		umull	r0, r3, r2, r3
+ 1105 00b8 A331A0E1 		mov	r3, r3, lsr #3
+ 1106 00bc 2C300BE5 		str	r3, [fp, #-44]
+  30:../pruebas_timer2.c **** 
+  31:../pruebas_timer2.c **** 	unsigned int suma_10ms = 0;
+ 1107              		.loc 1 31 0
+ 1108 00c0 0030A0E3 		mov	r3, #0
+ 1109 00c4 18300BE5 		str	r3, [fp, #-24]
+  32:../pruebas_timer2.c **** 	unsigned int medidas_10ms[10];
+  33:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1110              		.loc 1 33 0
+ 1111 00c8 0030A0E3 		mov	r3, #0
+ 1112 00cc 10300BE5 		str	r3, [fp, #-16]
+ 1113 00d0 1D0000EA 		b	.L4
+ 1114              	.L5:
+ 1115              	.LBB3:
+  34:../pruebas_timer2.c **** 	{
+  35:../pruebas_timer2.c **** 		timer2_empezar();
+ 1116              		.loc 1 35 0 discriminator 2
+ 1117 00d4 FEFFFFEB 		bl	timer2_empezar
+  36:../pruebas_timer2.c **** 		unsigned int t_0 = timer2_leer();
+ 1118              		.loc 1 36 0 discriminator 2
+ 1119 00d8 FEFFFFEB 		bl	timer2_leer
+ 1120 00dc 30000BE5 		str	r0, [fp, #-48]
+  37:../pruebas_timer2.c **** 		Delay(100);
+ 1121              		.loc 1 37 0 discriminator 2
+ 1122 00e0 6400A0E3 		mov	r0, #100
+ 1123 00e4 FEFFFFEB 		bl	Delay
+  38:../pruebas_timer2.c **** 		unsigned int t_1 = timer2_parar();
+ 1124              		.loc 1 38 0 discriminator 2
+ 1125 00e8 FEFFFFEB 		bl	timer2_parar
+ 1126 00ec 34000BE5 		str	r0, [fp, #-52]
+  39:../pruebas_timer2.c **** 		medidas_10ms[i] = t_1 - t_0;
+ 1127              		.loc 1 39 0 discriminator 2
+ 1128 00f0 34201BE5 		ldr	r2, [fp, #-52]
+ 1129 00f4 30301BE5 		ldr	r3, [fp, #-48]
+ 1130 00f8 022063E0 		rsb	r2, r3, r2
+ 1131 00fc 10101BE5 		ldr	r1, [fp, #-16]
+ 1132 0100 9330E0E3 		mvn	r3, #147
+ 1133 0104 0111A0E1 		mov	r1, r1, asl #2
+ 1134 0108 0C004BE2 		sub	r0, fp, #12
+ 1135 010c 011080E0 		add	r1, r0, r1
+ 1136 0110 033081E0 		add	r3, r1, r3
+ 1137 0114 002083E5 		str	r2, [r3, #0]
+  40:../pruebas_timer2.c **** 		suma_10ms += medidas_10ms[i];
+ 1138              		.loc 1 40 0 discriminator 2
+ 1139 0118 10201BE5 		ldr	r2, [fp, #-16]
+ 1140 011c 9330E0E3 		mvn	r3, #147
+ 1141 0120 0221A0E1 		mov	r2, r2, asl #2
+ 1142 0124 0C104BE2 		sub	r1, fp, #12
+ 1143 0128 022081E0 		add	r2, r1, r2
+ 1144 012c 033082E0 		add	r3, r2, r3
+ 1145 0130 003093E5 		ldr	r3, [r3, #0]
+ 1146 0134 18201BE5 		ldr	r2, [fp, #-24]
+ 1147 0138 033082E0 		add	r3, r2, r3
+ 1148 013c 18300BE5 		str	r3, [fp, #-24]
+ 1149              	.LBE3:
+  33:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1150              		.loc 1 33 0 discriminator 2
+ 1151 0140 10301BE5 		ldr	r3, [fp, #-16]
+ 1152 0144 013083E2 		add	r3, r3, #1
+ 1153 0148 10300BE5 		str	r3, [fp, #-16]
+ 1154              	.L4:
+  33:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1155              		.loc 1 33 0 is_stmt 0 discriminator 1
+ 1156 014c 10301BE5 		ldr	r3, [fp, #-16]
+ 1157 0150 090053E3 		cmp	r3, #9
+ 1158 0154 DEFFFFDA 		ble	.L5
+  41:../pruebas_timer2.c **** 	}
+  42:../pruebas_timer2.c **** 	unsigned int media_10ms = suma_10ms / 10;
+ 1159              		.loc 1 42 0 is_stmt 1
+ 1160 0158 18201BE5 		ldr	r2, [fp, #-24]
+ 1161 015c 6C319FE5 		ldr	r3, .L10
+ 1162 0160 920383E0 		umull	r0, r3, r2, r3
+ 1163 0164 A331A0E1 		mov	r3, r3, lsr #3
+ 1164 0168 38300BE5 		str	r3, [fp, #-56]
+  43:../pruebas_timer2.c **** 
+  44:../pruebas_timer2.c **** 	unsigned int suma_1s = 0;
+ 1165              		.loc 1 44 0
+ 1166 016c 0030A0E3 		mov	r3, #0
+ 1167 0170 1C300BE5 		str	r3, [fp, #-28]
+  45:../pruebas_timer2.c **** 	unsigned int medidas_1s[10];
+  46:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1168              		.loc 1 46 0
+ 1169 0174 0030A0E3 		mov	r3, #0
+ 1170 0178 10300BE5 		str	r3, [fp, #-16]
+ 1171 017c 1D0000EA 		b	.L6
+ 1172              	.L7:
+ 1173              	.LBB4:
+  47:../pruebas_timer2.c **** 	{
+  48:../pruebas_timer2.c **** 		timer2_empezar();
+ 1174              		.loc 1 48 0 discriminator 2
+ 1175 0180 FEFFFFEB 		bl	timer2_empezar
+  49:../pruebas_timer2.c **** 		unsigned int t_0 = timer2_leer();
+ 1176              		.loc 1 49 0 discriminator 2
+ 1177 0184 FEFFFFEB 		bl	timer2_leer
+ 1178 0188 3C000BE5 		str	r0, [fp, #-60]
+  50:../pruebas_timer2.c **** 		Delay(10000);
+ 1179              		.loc 1 50 0 discriminator 2
+ 1180 018c 40019FE5 		ldr	r0, .L10+4
+ 1181 0190 FEFFFFEB 		bl	Delay
+  51:../pruebas_timer2.c **** 		unsigned int t_1 = timer2_parar();
+ 1182              		.loc 1 51 0 discriminator 2
+ 1183 0194 FEFFFFEB 		bl	timer2_parar
+ 1184 0198 40000BE5 		str	r0, [fp, #-64]
+  52:../pruebas_timer2.c **** 		medidas_1s[i] = t_1 - t_0;
+ 1185              		.loc 1 52 0 discriminator 2
+ 1186 019c 40201BE5 		ldr	r2, [fp, #-64]
+ 1187 01a0 3C301BE5 		ldr	r3, [fp, #-60]
+ 1188 01a4 022063E0 		rsb	r2, r3, r2
+ 1189 01a8 10101BE5 		ldr	r1, [fp, #-16]
+ 1190 01ac BB30E0E3 		mvn	r3, #187
+ 1191 01b0 0111A0E1 		mov	r1, r1, asl #2
+ 1192 01b4 0C004BE2 		sub	r0, fp, #12
+ 1193 01b8 011080E0 		add	r1, r0, r1
+ 1194 01bc 033081E0 		add	r3, r1, r3
+ 1195 01c0 002083E5 		str	r2, [r3, #0]
+  53:../pruebas_timer2.c **** 		suma_1s += medidas_1s[i];
+ 1196              		.loc 1 53 0 discriminator 2
+ 1197 01c4 10201BE5 		ldr	r2, [fp, #-16]
+ 1198 01c8 BB30E0E3 		mvn	r3, #187
+ 1199 01cc 0221A0E1 		mov	r2, r2, asl #2
+ 1200 01d0 0C104BE2 		sub	r1, fp, #12
+ 1201 01d4 022081E0 		add	r2, r1, r2
+ 1202 01d8 033082E0 		add	r3, r2, r3
+ 1203 01dc 003093E5 		ldr	r3, [r3, #0]
+ 1204 01e0 1C201BE5 		ldr	r2, [fp, #-28]
+ 1205 01e4 033082E0 		add	r3, r2, r3
+ 1206 01e8 1C300BE5 		str	r3, [fp, #-28]
+ 1207              	.LBE4:
+  46:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1208              		.loc 1 46 0 discriminator 2
+ 1209 01ec 10301BE5 		ldr	r3, [fp, #-16]
+ 1210 01f0 013083E2 		add	r3, r3, #1
+ 1211 01f4 10300BE5 		str	r3, [fp, #-16]
+ 1212              	.L6:
+  46:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1213              		.loc 1 46 0 is_stmt 0 discriminator 1
+ 1214 01f8 10301BE5 		ldr	r3, [fp, #-16]
+ 1215 01fc 090053E3 		cmp	r3, #9
+ 1216 0200 DEFFFFDA 		ble	.L7
+  54:../pruebas_timer2.c **** 	}
+  55:../pruebas_timer2.c **** 	unsigned int media_1s = suma_1s / 10;
+ 1217              		.loc 1 55 0 is_stmt 1
+ 1218 0204 1C201BE5 		ldr	r2, [fp, #-28]
+ 1219 0208 C0309FE5 		ldr	r3, .L10
+ 1220 020c 920383E0 		umull	r0, r3, r2, r3
+ 1221 0210 A331A0E1 		mov	r3, r3, lsr #3
+ 1222 0214 44300BE5 		str	r3, [fp, #-68]
+  56:../pruebas_timer2.c **** 
+  57:../pruebas_timer2.c **** 	unsigned int suma_10s = 0;
+ 1223              		.loc 1 57 0
+ 1224 0218 0030A0E3 		mov	r3, #0
+ 1225 021c 20300BE5 		str	r3, [fp, #-32]
+  58:../pruebas_timer2.c **** 	unsigned int medidas_10s[10];
+  59:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1226              		.loc 1 59 0
+ 1227 0220 0030A0E3 		mov	r3, #0
+ 1228 0224 10300BE5 		str	r3, [fp, #-16]
+ 1229 0228 1D0000EA 		b	.L8
+ 1230              	.L9:
+ 1231              	.LBB5:
+  60:../pruebas_timer2.c **** 	{
+  61:../pruebas_timer2.c **** 		timer2_empezar();
+ 1232              		.loc 1 61 0 discriminator 2
+ 1233 022c FEFFFFEB 		bl	timer2_empezar
+  62:../pruebas_timer2.c **** 		unsigned int t_0 = timer2_leer();
+ 1234              		.loc 1 62 0 discriminator 2
+ 1235 0230 FEFFFFEB 		bl	timer2_leer
+ 1236 0234 48000BE5 		str	r0, [fp, #-72]
+  63:../pruebas_timer2.c **** 		Delay(100000);
+ 1237              		.loc 1 63 0 discriminator 2
+ 1238 0238 98009FE5 		ldr	r0, .L10+8
+ 1239 023c FEFFFFEB 		bl	Delay
+  64:../pruebas_timer2.c **** 		unsigned int t_1 = timer2_parar();
+ 1240              		.loc 1 64 0 discriminator 2
+ 1241 0240 FEFFFFEB 		bl	timer2_parar
+ 1242 0244 4C000BE5 		str	r0, [fp, #-76]
+  65:../pruebas_timer2.c **** 		medidas_10s[i] = t_1 - t_0;
+ 1243              		.loc 1 65 0 discriminator 2
+ 1244 0248 4C201BE5 		ldr	r2, [fp, #-76]
+ 1245 024c 48301BE5 		ldr	r3, [fp, #-72]
+ 1246 0250 022063E0 		rsb	r2, r3, r2
+ 1247 0254 10101BE5 		ldr	r1, [fp, #-16]
+ 1248 0258 E330E0E3 		mvn	r3, #227
+ 1249 025c 0111A0E1 		mov	r1, r1, asl #2
+ 1250 0260 0C004BE2 		sub	r0, fp, #12
+ 1251 0264 011080E0 		add	r1, r0, r1
+ 1252 0268 033081E0 		add	r3, r1, r3
+ 1253 026c 002083E5 		str	r2, [r3, #0]
+  66:../pruebas_timer2.c **** 		suma_10s += medidas_10s[i];
+ 1254              		.loc 1 66 0 discriminator 2
+ 1255 0270 10201BE5 		ldr	r2, [fp, #-16]
+ 1256 0274 E330E0E3 		mvn	r3, #227
+ 1257 0278 0221A0E1 		mov	r2, r2, asl #2
+ 1258 027c 0C104BE2 		sub	r1, fp, #12
+ 1259 0280 022081E0 		add	r2, r1, r2
+ 1260 0284 033082E0 		add	r3, r2, r3
+ 1261 0288 003093E5 		ldr	r3, [r3, #0]
+ 1262 028c 20201BE5 		ldr	r2, [fp, #-32]
+ 1263 0290 033082E0 		add	r3, r2, r3
+ 1264 0294 20300BE5 		str	r3, [fp, #-32]
+ 1265              	.LBE5:
+  59:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1266              		.loc 1 59 0 discriminator 2
+ 1267 0298 10301BE5 		ldr	r3, [fp, #-16]
+ 1268 029c 013083E2 		add	r3, r3, #1
+ 1269 02a0 10300BE5 		str	r3, [fp, #-16]
+ 1270              	.L8:
+  59:../pruebas_timer2.c **** 	for(i=0; i < 10; i = i + 1)
+ 1271              		.loc 1 59 0 is_stmt 0 discriminator 1
+ 1272 02a4 10301BE5 		ldr	r3, [fp, #-16]
+ 1273 02a8 090053E3 		cmp	r3, #9
+ 1274 02ac DEFFFFDA 		ble	.L9
+  67:../pruebas_timer2.c **** 	}
+  68:../pruebas_timer2.c **** 	unsigned int media_10s = suma_10s / 10;
+ 1275              		.loc 1 68 0 is_stmt 1
+ 1276 02b0 20201BE5 		ldr	r2, [fp, #-32]
+ 1277 02b4 14309FE5 		ldr	r3, .L10
+ 1278 02b8 920383E0 		umull	r0, r3, r2, r3
+ 1279 02bc A331A0E1 		mov	r3, r3, lsr #3
+ 1280 02c0 50300BE5 		str	r3, [fp, #-80]
+  69:../pruebas_timer2.c **** }
+ 1281              		.loc 1 69 0
+ 1282 02c4 0CD04BE2 		sub	sp, fp, #12
+ 1283 02c8 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1284 02cc 1EFF2FE1 		bx	lr
+ 1285              	.L11:
+ 1286              		.align	2
+ 1287              	.L10:
+ 1288 02d0 CDCCCCCC 		.word	-858993459
+ 1289 02d4 10270000 		.word	10000
+ 1290 02d8 A0860100 		.word	100000
+ 1291              		.cfi_endproc
+ 1292              	.LFE0:
+ 1294              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 pruebas_timer2.c
+C:\Users\guest\AppData\Local\Temp\ccnFP0DB.s:1022   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccnFP0DB.s:1023   .bss:00000000 timer2_num_int
+C:\Users\guest\AppData\Local\Temp\ccnFP0DB.s:1026   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccnFP0DB.s:1029   .text:00000000 pruebas_timer2
+C:\Users\guest\AppData\Local\Temp\ccnFP0DB.s:1288   .text:000002d0 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+timer2_inicializar
+timer2_empezar
+timer2_leer
+Delay
+timer2_parar
