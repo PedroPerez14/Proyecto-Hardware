@@ -6,15 +6,16 @@
 C_SRCS += \
 ../8led.c \
 ../button.c \
+../cola_depuracion.c \
 ../led.c \
 ../main.c \
 ../main_medidas_optimizaciones.c \
-../pila_depuracion.c \
 ../pruebas_patron_volteo.c \
 ../pruebas_timer2.c \
 ../reversi8_2019.c \
 ../reversi8_2019_arm_c.c \
 ../reversi8_2019_c.c \
+../reversi_main.c \
 ../rutinas_excepciones.c \
 ../timer.c \
 ../timer2.c 
@@ -27,18 +28,19 @@ ASM_SRCS += \
 OBJS += \
 ./8led.o \
 ./button.o \
+./cola_depuracion.o \
 ./led.o \
 ./main.o \
 ./main_medidas_optimizaciones.o \
 ./patron_volteo_arm_arm.o \
 ./patron_volteo_arm_arm_opt.o \
 ./patron_volteo_arm_c.o \
-./pila_depuracion.o \
 ./pruebas_patron_volteo.o \
 ./pruebas_timer2.o \
 ./reversi8_2019.o \
 ./reversi8_2019_arm_c.o \
 ./reversi8_2019_c.o \
+./reversi_main.o \
 ./rutinas_excepciones.o \
 ./timer.o \
 ./timer2.o 
@@ -46,15 +48,16 @@ OBJS += \
 C_DEPS += \
 ./8led.d \
 ./button.d \
+./cola_depuracion.d \
 ./led.d \
 ./main.d \
 ./main_medidas_optimizaciones.d \
-./pila_depuracion.d \
 ./pruebas_patron_volteo.d \
 ./pruebas_timer2.d \
 ./reversi8_2019.d \
 ./reversi8_2019_arm_c.d \
 ./reversi8_2019_c.d \
+./reversi_main.d \
 ./rutinas_excepciones.d \
 ./timer.d \
 ./timer2.d 

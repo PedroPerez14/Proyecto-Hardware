@@ -8,16 +8,16 @@
    8              		.eabi_attribute 26, 1
    9              		.eabi_attribute 30, 6
   10              		.eabi_attribute 18, 4
-  11              		.file	"pila_depuracion.c"
+  11              		.file	"cola_depuracion.c"
   21              	.Ltext0:
-  22              		.file 1 "../pila_depuracion.c"
+  22              		.file 1 "../cola_depuracion.c"
  1225              		.align	2
  1226              	timer2_num_int:
  1227 0000 00000000 		.space	4
- 1228              		.global	LIMITE_INF_PILA_DEBUG
+ 1228              		.global	LIMITE_INF_COLA_DEBUG
  1229              		.section	.rodata
  1230              		.align	2
- 1233              	LIMITE_INF_PILA_DEBUG:
+ 1233              	LIMITE_INF_COLA_DEBUG:
  1234 0000 00FE770C 		.word	209190400
  1235              		.bss
  1236              		.align	2
@@ -37,34 +37,35 @@
  1250 0014 00000000 		.space	4
  1251              		.text
  1252              		.align	2
- 1253              		.global	pila_depuracion_inicializar
- 1255              	pila_depuracion_inicializar:
+ 1253              		.global	cola_depuracion_inicializar
+ 1255              	cola_depuracion_inicializar:
  1256              	.LFB0:
-   1:../pila_depuracion.c **** /*********************************************************************************************
-   2:../pila_depuracion.c **** * Fichero:		pila_depuracion.c
-   3:../pila_depuracion.c **** * Autor:		Fernando PeÃ±a Bes (NIA: 756012)
-   4:../pila_depuracion.c **** * 				Pedro JosÃ© PÃ©rez GarcÃ­a (NIA: 756642)
-   5:../pila_depuracion.c **** * Descrip:		Pila para depurar los eventos que llegan por los periféricos,
-   6:../pila_depuracion.c **** * 				gestionada de forma circular
-   7:../pila_depuracion.c **** *********************************************************************************************/
-   8:../pila_depuracion.c **** 
-   9:../pila_depuracion.c **** /*--- ficheros de cabecera ---*/
-  10:../pila_depuracion.c **** #include "pila_depuracion.h"
-  11:../pila_depuracion.c **** #include "timer2.h"
-  12:../pila_depuracion.c **** #include <stdint.h>
-  13:../pila_depuracion.c **** //Variables para la gestión circular de la pila
-  14:../pila_depuracion.c **** const int LIMITE_INF_PILA_DEBUG = 0x0c77fe00;
-  15:../pila_depuracion.c **** 
-  16:../pila_depuracion.c **** static volatile uint32_t * cima;
-  17:../pila_depuracion.c **** static volatile uint32_t * base;
-  18:../pila_depuracion.c **** static volatile int limite_sup;
-  19:../pila_depuracion.c **** static volatile int numElem;
-  20:../pila_depuracion.c **** static volatile int maxAsignado;
-  21:../pila_depuracion.c **** 
-  22:../pila_depuracion.c **** //Cada elemento de la pila es una tupla <Evento,Timestamp> que ocupa 8 Bytes
-  23:../pila_depuracion.c **** void pila_depuracion_inicializar(int maxElem)
-  24:../pila_depuracion.c **** {
- 1257              		.loc 1 24 0
+   1:../cola_depuracion.c **** /*********************************************************************************************
+   2:../cola_depuracion.c **** * Fichero:		cola_depuracion.c
+   3:../cola_depuracion.c **** * Autor:		Fernando PeÃ±a Bes (NIA: 756012)
+   4:../cola_depuracion.c **** * 				Pedro JosÃ© PÃ©rez GarcÃ­a (NIA: 756642)
+   5:../cola_depuracion.c **** * Descrip:		Cola para depurar los eventos que llegan por los periféricos,
+   6:../cola_depuracion.c **** * 				gestionada de forma circular
+   7:../cola_depuracion.c **** *********************************************************************************************/
+   8:../cola_depuracion.c **** 
+   9:../cola_depuracion.c **** /*--- ficheros de cabecera ---*/
+  10:../cola_depuracion.c **** #include "cola_depuracion.h"
+  11:../cola_depuracion.c **** #include "timer2.h"
+  12:../cola_depuracion.c **** #include <stdint.h>
+  13:../cola_depuracion.c **** //Variables para la gestión circular de la cola
+  14:../cola_depuracion.c **** const int LIMITE_INF_COLA_DEBUG = 0x0c77fe00;
+  15:../cola_depuracion.c **** 
+  16:../cola_depuracion.c **** static volatile uint32_t * cima;
+  17:../cola_depuracion.c **** static volatile uint32_t * base;
+  18:../cola_depuracion.c **** static volatile int limite_sup;
+  19:../cola_depuracion.c **** static volatile int numElem;
+  20:../cola_depuracion.c **** static volatile int maxAsignado;
+  21:../cola_depuracion.c **** 
+  22:../cola_depuracion.c **** //Cada elemento de la cola es una tupla <Evento,Timestamp> que ocupa 8 Bytes
+  23:../cola_depuracion.c **** //Por lo que se pasa como parámetro el número de tuplas que se desean almacenar.
+  24:../cola_depuracion.c **** void cola_depuracion_inicializar(int maxElem)
+  25:../cola_depuracion.c **** {
+ 1257              		.loc 1 25 0
  1258              		.cfi_startproc
  1259              		@ Function supports interworking.
  1260              		@ args = 0, pretend = 0, frame = 8
@@ -81,22 +82,22 @@
  1271              		.cfi_def_cfa 11, 4
  1272 000c 08D04DE2 		sub	sp, sp, #8
  1273 0010 10000BE5 		str	r0, [fp, #-16]
-  25:../pila_depuracion.c **** 	cima = (uint32_t*)LIMITE_INF_PILA_DEBUG;
- 1274              		.loc 1 25 0
+  26:../cola_depuracion.c **** 	cima = (uint32_t*)LIMITE_INF_COLA_DEBUG;
+ 1274              		.loc 1 26 0
  1275 0014 78309FE5 		ldr	r3, .L2
  1276 0018 003093E5 		ldr	r3, [r3, #0]
  1277 001c 0320A0E1 		mov	r2, r3
  1278 0020 70309FE5 		ldr	r3, .L2+4
  1279 0024 002083E5 		str	r2, [r3, #0]
-  26:../pila_depuracion.c **** 	base = (uint32_t*)LIMITE_INF_PILA_DEBUG;
- 1280              		.loc 1 26 0
+  27:../cola_depuracion.c **** 	base = (uint32_t*)LIMITE_INF_COLA_DEBUG;
+ 1280              		.loc 1 27 0
  1281 0028 64309FE5 		ldr	r3, .L2
  1282 002c 003093E5 		ldr	r3, [r3, #0]
  1283 0030 0320A0E1 		mov	r2, r3
  1284 0034 60309FE5 		ldr	r3, .L2+8
  1285 0038 002083E5 		str	r2, [r3, #0]
-  27:../pila_depuracion.c **** 	limite_sup = LIMITE_INF_PILA_DEBUG - 8 * maxElem;
- 1286              		.loc 1 27 0
+  28:../cola_depuracion.c **** 	limite_sup = LIMITE_INF_COLA_DEBUG - 8 * maxElem;
+ 1286              		.loc 1 28 0
  1287 003c 10201BE5 		ldr	r2, [fp, #-16]
  1288 0040 0230A0E1 		mov	r3, r2
  1289 0044 833EA0E1 		mov	r3, r3, asl #29
@@ -108,31 +109,31 @@
  1295 005c 032082E0 		add	r2, r2, r3
  1296 0060 38309FE5 		ldr	r3, .L2+12
  1297 0064 002083E5 		str	r2, [r3, #0]
-  28:../pila_depuracion.c **** 	numElem = 0;
- 1298              		.loc 1 28 0
+  29:../cola_depuracion.c **** 	numElem = 0;
+ 1298              		.loc 1 29 0
  1299 0068 34309FE5 		ldr	r3, .L2+16
  1300 006c 0020A0E3 		mov	r2, #0
  1301 0070 002083E5 		str	r2, [r3, #0]
-  29:../pila_depuracion.c **** 	maxAsignado = maxElem;
- 1302              		.loc 1 29 0
+  30:../cola_depuracion.c **** 	maxAsignado = maxElem;
+ 1302              		.loc 1 30 0
  1303 0074 2C309FE5 		ldr	r3, .L2+20
  1304 0078 10201BE5 		ldr	r2, [fp, #-16]
  1305 007c 002083E5 		str	r2, [r3, #0]
-  30:../pila_depuracion.c **** 	timer2_inicializar();
- 1306              		.loc 1 30 0
+  31:../cola_depuracion.c **** 	timer2_inicializar();
+ 1306              		.loc 1 31 0
  1307 0080 FEFFFFEB 		bl	timer2_inicializar
-  31:../pila_depuracion.c **** 	timer2_empezar();
- 1308              		.loc 1 31 0
+  32:../cola_depuracion.c **** 	timer2_empezar();
+ 1308              		.loc 1 32 0
  1309 0084 FEFFFFEB 		bl	timer2_empezar
-  32:../pila_depuracion.c **** }
- 1310              		.loc 1 32 0
+  33:../cola_depuracion.c **** }
+ 1310              		.loc 1 33 0
  1311 0088 0CD04BE2 		sub	sp, fp, #12
  1312 008c 00689DE8 		ldmfd	sp, {fp, sp, lr}
  1313 0090 1EFF2FE1 		bx	lr
  1314              	.L3:
  1315              		.align	2
  1316              	.L2:
- 1317 0094 00000000 		.word	LIMITE_INF_PILA_DEBUG
+ 1317 0094 00000000 		.word	LIMITE_INF_COLA_DEBUG
  1318 0098 04000000 		.word	cima
  1319 009c 08000000 		.word	base
  1320 00a0 0C000000 		.word	limite_sup
@@ -144,10 +145,10 @@
  1327              		.global	push_debug
  1329              	push_debug:
  1330              	.LFB1:
-  33:../pila_depuracion.c **** 
-  34:../pila_depuracion.c **** void push_debug(uint8_t ID_evento, uint32_t auxData)
-  35:../pila_depuracion.c **** {
- 1331              		.loc 1 35 0
+  34:../cola_depuracion.c **** 
+  35:../cola_depuracion.c **** void push_debug(uint8_t ID_evento, uint32_t auxData)
+  36:../cola_depuracion.c **** {
+ 1331              		.loc 1 36 0
  1332              		.cfi_startproc
  1333              		@ Function supports interworking.
  1334              		@ args = 0, pretend = 0, frame = 16
@@ -167,35 +168,35 @@
  1348 00bc 0030A0E1 		mov	r3, r0
  1349 00c0 24100BE5 		str	r1, [fp, #-36]
  1350 00c4 1D304BE5 		strb	r3, [fp, #-29]
-  36:../pila_depuracion.c **** 	uint32_t dato = (uint32_t) ID_evento << 24;
- 1351              		.loc 1 36 0
+  37:../cola_depuracion.c **** 	uint32_t dato = (uint32_t) ID_evento << 24;
+ 1351              		.loc 1 37 0
  1352 00c8 1D305BE5 		ldrb	r3, [fp, #-29]	@ zero_extendqisi2
  1353 00cc 033CA0E1 		mov	r3, r3, asl #24
  1354 00d0 18300BE5 		str	r3, [fp, #-24]
-  37:../pila_depuracion.c **** 	auxData &= 0x00FFFFFF;
- 1355              		.loc 1 37 0
+  38:../cola_depuracion.c **** 	auxData &= 0x00FFFFFF;
+ 1355              		.loc 1 38 0
  1356 00d4 24301BE5 		ldr	r3, [fp, #-36]
  1357 00d8 FF34C3E3 		bic	r3, r3, #-16777216
  1358 00dc 24300BE5 		str	r3, [fp, #-36]
-  38:../pila_depuracion.c **** 	dato |= auxData;
- 1359              		.loc 1 38 0
+  39:../cola_depuracion.c **** 	dato |= auxData;
+ 1359              		.loc 1 39 0
  1360 00e0 18201BE5 		ldr	r2, [fp, #-24]
  1361 00e4 24301BE5 		ldr	r3, [fp, #-36]
  1362 00e8 033082E1 		orr	r3, r2, r3
  1363 00ec 18300BE5 		str	r3, [fp, #-24]
-  39:../pila_depuracion.c **** 	if(numElem < maxAsignado)	//Si no hay que gestionar de forma circular
- 1364              		.loc 1 39 0
+  40:../cola_depuracion.c **** 	if(numElem < maxAsignado)	//Si no hay que gestionar de forma circular
+ 1364              		.loc 1 40 0
  1365 00f0 50319FE5 		ldr	r3, .L8
  1366 00f4 002093E5 		ldr	r2, [r3, #0]
  1367 00f8 4C319FE5 		ldr	r3, .L8+4
  1368 00fc 003093E5 		ldr	r3, [r3, #0]
  1369 0100 030052E1 		cmp	r2, r3
  1370 0104 240000AA 		bge	.L5
-  40:../pila_depuracion.c **** 	{
-  41:../pila_depuracion.c **** 		//apilar en cima y cima -=8
-  42:../pila_depuracion.c **** 		//Y numElem--
-  43:../pila_depuracion.c **** 		if((int)cima <= limite_sup)
- 1371              		.loc 1 43 0
+  41:../cola_depuracion.c **** 	{
+  42:../cola_depuracion.c **** 		//encolar en cima y cima -=8
+  43:../cola_depuracion.c **** 		//Y numElem--
+  44:../cola_depuracion.c **** 		if((int)cima <= limite_sup)
+ 1371              		.loc 1 44 0
  1372 0108 40319FE5 		ldr	r3, .L8+8
  1373 010c 003093E5 		ldr	r3, [r3, #0]
  1374 0110 0320A0E1 		mov	r2, r3
@@ -203,45 +204,45 @@
  1376 0118 003093E5 		ldr	r3, [r3, #0]
  1377 011c 030052E1 		cmp	r2, r3
  1378 0120 040000CA 		bgt	.L6
-  44:../pila_depuracion.c **** 		{
-  45:../pila_depuracion.c **** 			cima = (uint32_t *)LIMITE_INF_PILA_DEBUG;
- 1379              		.loc 1 45 0
+  45:../cola_depuracion.c **** 		{
+  46:../cola_depuracion.c **** 			cima = (uint32_t *)LIMITE_INF_COLA_DEBUG;
+ 1379              		.loc 1 46 0
  1380 0124 2C319FE5 		ldr	r3, .L8+16
  1381 0128 003093E5 		ldr	r3, [r3, #0]
  1382 012c 0320A0E1 		mov	r2, r3
  1383 0130 18319FE5 		ldr	r3, .L8+8
  1384 0134 002083E5 		str	r2, [r3, #0]
  1385              	.L6:
-  46:../pila_depuracion.c **** 		}
-  47:../pila_depuracion.c **** 		*cima = dato;
- 1386              		.loc 1 47 0
+  47:../cola_depuracion.c **** 		}
+  48:../cola_depuracion.c **** 		*cima = dato;
+ 1386              		.loc 1 48 0
  1387 0138 10319FE5 		ldr	r3, .L8+8
  1388 013c 003093E5 		ldr	r3, [r3, #0]
  1389 0140 18201BE5 		ldr	r2, [fp, #-24]
  1390 0144 002083E5 		str	r2, [r3, #0]
-  48:../pila_depuracion.c **** 		cima -= 1;
- 1391              		.loc 1 48 0
+  49:../cola_depuracion.c **** 		cima -= 1;
+ 1391              		.loc 1 49 0
  1392 0148 00319FE5 		ldr	r3, .L8+8
  1393 014c 003093E5 		ldr	r3, [r3, #0]
  1394 0150 042043E2 		sub	r2, r3, #4
  1395 0154 F4309FE5 		ldr	r3, .L8+8
  1396 0158 002083E5 		str	r2, [r3, #0]
-  49:../pila_depuracion.c **** 		*cima = timer2_leer();
- 1397              		.loc 1 49 0
+  50:../cola_depuracion.c **** 		*cima = timer2_leer();
+ 1397              		.loc 1 50 0
  1398 015c EC309FE5 		ldr	r3, .L8+8
  1399 0160 004093E5 		ldr	r4, [r3, #0]
  1400 0164 FEFFFFEB 		bl	timer2_leer
  1401 0168 0030A0E1 		mov	r3, r0
  1402 016c 003084E5 		str	r3, [r4, #0]
-  50:../pila_depuracion.c **** 		cima -= 1;
- 1403              		.loc 1 50 0
+  51:../cola_depuracion.c **** 		cima -= 1;
+ 1403              		.loc 1 51 0
  1404 0170 D8309FE5 		ldr	r3, .L8+8
  1405 0174 003093E5 		ldr	r3, [r3, #0]
  1406 0178 042043E2 		sub	r2, r3, #4
  1407 017c CC309FE5 		ldr	r3, .L8+8
  1408 0180 002083E5 		str	r2, [r3, #0]
-  51:../pila_depuracion.c **** 		numElem += 1;
- 1409              		.loc 1 51 0
+  52:../cola_depuracion.c **** 		numElem += 1;
+ 1409              		.loc 1 52 0
  1410 0184 BC309FE5 		ldr	r3, .L8
  1411 0188 003093E5 		ldr	r3, [r3, #0]
  1412 018c 012083E2 		add	r2, r3, #1
@@ -249,55 +250,55 @@
  1414 0194 002083E5 		str	r2, [r3, #0]
  1415 0198 270000EA 		b	.L4
  1416              	.L5:
-  52:../pila_depuracion.c **** 	}
-  53:../pila_depuracion.c **** 	else
-  54:../pila_depuracion.c **** 	{
-  55:../pila_depuracion.c **** 		//base-=8
-  56:../pila_depuracion.c **** 		//apilar en base vieja
-  57:../pila_depuracion.c **** 		//Y si base se ha desbordado, corregimos
-  58:../pila_depuracion.c **** 
-  59:../pila_depuracion.c **** 		cima = base;
- 1417              		.loc 1 59 0
+  53:../cola_depuracion.c **** 	}
+  54:../cola_depuracion.c **** 	else
+  55:../cola_depuracion.c **** 	{
+  56:../cola_depuracion.c **** 		//base-=8
+  57:../cola_depuracion.c **** 		//encolar en base vieja
+  58:../cola_depuracion.c **** 		//Y si base se ha desbordado, corregimos
+  59:../cola_depuracion.c **** 
+  60:../cola_depuracion.c **** 		cima = base;
+ 1417              		.loc 1 60 0
  1418 019c B8309FE5 		ldr	r3, .L8+20
  1419 01a0 002093E5 		ldr	r2, [r3, #0]
  1420 01a4 A4309FE5 		ldr	r3, .L8+8
  1421 01a8 002083E5 		str	r2, [r3, #0]
-  60:../pila_depuracion.c **** 		base -= 2;
- 1422              		.loc 1 60 0
+  61:../cola_depuracion.c **** 		base -= 2;
+ 1422              		.loc 1 61 0
  1423 01ac A8309FE5 		ldr	r3, .L8+20
  1424 01b0 003093E5 		ldr	r3, [r3, #0]
  1425 01b4 082043E2 		sub	r2, r3, #8
  1426 01b8 9C309FE5 		ldr	r3, .L8+20
  1427 01bc 002083E5 		str	r2, [r3, #0]
-  61:../pila_depuracion.c **** 		*cima = dato;
- 1428              		.loc 1 61 0
+  62:../cola_depuracion.c **** 		*cima = dato;
+ 1428              		.loc 1 62 0
  1429 01c0 88309FE5 		ldr	r3, .L8+8
  1430 01c4 003093E5 		ldr	r3, [r3, #0]
  1431 01c8 18201BE5 		ldr	r2, [fp, #-24]
  1432 01cc 002083E5 		str	r2, [r3, #0]
-  62:../pila_depuracion.c **** 		cima -= 1;
- 1433              		.loc 1 62 0
+  63:../cola_depuracion.c **** 		cima -= 1;
+ 1433              		.loc 1 63 0
  1434 01d0 78309FE5 		ldr	r3, .L8+8
  1435 01d4 003093E5 		ldr	r3, [r3, #0]
  1436 01d8 042043E2 		sub	r2, r3, #4
  1437 01dc 6C309FE5 		ldr	r3, .L8+8
  1438 01e0 002083E5 		str	r2, [r3, #0]
-  63:../pila_depuracion.c **** 		*cima = timer2_leer();
- 1439              		.loc 1 63 0
+  64:../cola_depuracion.c **** 		*cima = timer2_leer();
+ 1439              		.loc 1 64 0
  1440 01e4 64309FE5 		ldr	r3, .L8+8
  1441 01e8 004093E5 		ldr	r4, [r3, #0]
  1442 01ec FEFFFFEB 		bl	timer2_leer
  1443 01f0 0030A0E1 		mov	r3, r0
  1444 01f4 003084E5 		str	r3, [r4, #0]
-  64:../pila_depuracion.c **** 		cima -= 1;
- 1445              		.loc 1 64 0
+  65:../cola_depuracion.c **** 		cima -= 1;
+ 1445              		.loc 1 65 0
  1446 01f8 50309FE5 		ldr	r3, .L8+8
  1447 01fc 003093E5 		ldr	r3, [r3, #0]
  1448 0200 042043E2 		sub	r2, r3, #4
  1449 0204 44309FE5 		ldr	r3, .L8+8
  1450 0208 002083E5 		str	r2, [r3, #0]
-  65:../pila_depuracion.c **** 		if((int)base <= limite_sup)
- 1451              		.loc 1 65 0
+  66:../cola_depuracion.c **** 		if((int)base <= limite_sup)
+ 1451              		.loc 1 66 0
  1452 020c 48309FE5 		ldr	r3, .L8+20
  1453 0210 003093E5 		ldr	r3, [r3, #0]
  1454 0214 0320A0E1 		mov	r2, r3
@@ -305,19 +306,19 @@
  1456 021c 003093E5 		ldr	r3, [r3, #0]
  1457 0220 030052E1 		cmp	r2, r3
  1458 0224 040000CA 		bgt	.L4
-  66:../pila_depuracion.c **** 		{
-  67:../pila_depuracion.c **** 			base = (uint32_t *)LIMITE_INF_PILA_DEBUG;
- 1459              		.loc 1 67 0
+  67:../cola_depuracion.c **** 		{
+  68:../cola_depuracion.c **** 			base = (uint32_t *)LIMITE_INF_COLA_DEBUG;
+ 1459              		.loc 1 68 0
  1460 0228 28309FE5 		ldr	r3, .L8+16
  1461 022c 003093E5 		ldr	r3, [r3, #0]
  1462 0230 0320A0E1 		mov	r2, r3
  1463 0234 20309FE5 		ldr	r3, .L8+20
  1464 0238 002083E5 		str	r2, [r3, #0]
  1465              	.L4:
-  68:../pila_depuracion.c **** 		}
-  69:../pila_depuracion.c **** 	}
-  70:../pila_depuracion.c **** }
- 1466              		.loc 1 70 0
+  69:../cola_depuracion.c **** 		}
+  70:../cola_depuracion.c **** 	}
+  71:../cola_depuracion.c **** }
+ 1466              		.loc 1 71 0
  1467 023c 10D04BE2 		sub	sp, fp, #16
  1468 0240 10689DE8 		ldmfd	sp, {r4, fp, sp, lr}
  1469 0244 1EFF2FE1 		bx	lr
@@ -328,7 +329,7 @@
  1474 024c 14000000 		.word	maxAsignado
  1475 0250 04000000 		.word	cima
  1476 0254 0C000000 		.word	limite_sup
- 1477 0258 00000000 		.word	LIMITE_INF_PILA_DEBUG
+ 1477 0258 00000000 		.word	LIMITE_INF_COLA_DEBUG
  1478 025c 08000000 		.word	base
  1479              		.cfi_endproc
  1480              	.LFE1:
@@ -336,10 +337,13 @@
  1483              		.global	pop_debug
  1485              	pop_debug:
  1486              	.LFB2:
-  71:../pila_depuracion.c **** 
-  72:../pila_depuracion.c **** uint32_t pop_debug()
-  73:../pila_depuracion.c **** {
- 1487              		.loc 1 73 0
+  72:../cola_depuracion.c **** 
+  73:../cola_depuracion.c **** 
+  74:../cola_depuracion.c **** //Subimos la base y restamos un elemento de la cola.
+  75:../cola_depuracion.c **** //Si desborda la base por el límite superior, la corregimos
+  76:../cola_depuracion.c **** uint32_t pop_debug(void)
+  77:../cola_depuracion.c **** {
+ 1487              		.loc 1 77 0
  1488              		.cfi_startproc
  1489              		@ Function supports interworking.
  1490              		@ args = 0, pretend = 0, frame = 8
@@ -355,28 +359,28 @@
  1500              	.LCFI5:
  1501              		.cfi_def_cfa 11, 4
  1502 026c 08D04DE2 		sub	sp, sp, #8
-  74:../pila_depuracion.c **** 	if(esVacia() == -1)
- 1503              		.loc 1 74 0
+  78:../cola_depuracion.c **** 	if(esVacia() == -1)
+ 1503              		.loc 1 78 0
  1504 0270 FEFFFFEB 		bl	esVacia
  1505 0274 0030A0E1 		mov	r3, r0
  1506 0278 010073E3 		cmn	r3, #1
  1507 027c 1B00001A 		bne	.L11
  1508              	.LBB2:
-  75:../pila_depuracion.c **** 	{
-  76:../pila_depuracion.c **** 		uint32_t * aux = base;
- 1509              		.loc 1 76 0
+  79:../cola_depuracion.c **** 	{
+  80:../cola_depuracion.c **** 		uint32_t * aux = base;
+ 1509              		.loc 1 80 0
  1510 0280 7C309FE5 		ldr	r3, .L14
  1511 0284 003093E5 		ldr	r3, [r3, #0]
  1512 0288 10300BE5 		str	r3, [fp, #-16]
-  77:../pila_depuracion.c **** 		base -= 2;
- 1513              		.loc 1 77 0
+  81:../cola_depuracion.c **** 		base -= 2;
+ 1513              		.loc 1 81 0
  1514 028c 70309FE5 		ldr	r3, .L14
  1515 0290 003093E5 		ldr	r3, [r3, #0]
  1516 0294 082043E2 		sub	r2, r3, #8
  1517 0298 64309FE5 		ldr	r3, .L14
  1518 029c 002083E5 		str	r2, [r3, #0]
-  78:../pila_depuracion.c **** 		if((int)base <= limite_sup)
- 1519              		.loc 1 78 0
+  82:../cola_depuracion.c **** 		if((int)base <= limite_sup)
+ 1519              		.loc 1 82 0
  1520 02a0 5C309FE5 		ldr	r3, .L14
  1521 02a4 003093E5 		ldr	r3, [r3, #0]
  1522 02a8 0320A0E1 		mov	r2, r3
@@ -384,37 +388,37 @@
  1524 02b0 003093E5 		ldr	r3, [r3, #0]
  1525 02b4 030052E1 		cmp	r2, r3
  1526 02b8 040000CA 		bgt	.L12
-  79:../pila_depuracion.c **** 		{
-  80:../pila_depuracion.c **** 			base = (uint32_t *)LIMITE_INF_PILA_DEBUG;
- 1527              		.loc 1 80 0
+  83:../cola_depuracion.c **** 		{
+  84:../cola_depuracion.c **** 			base = (uint32_t *)LIMITE_INF_COLA_DEBUG;
+ 1527              		.loc 1 84 0
  1528 02bc 48309FE5 		ldr	r3, .L14+8
  1529 02c0 003093E5 		ldr	r3, [r3, #0]
  1530 02c4 0320A0E1 		mov	r2, r3
  1531 02c8 34309FE5 		ldr	r3, .L14
  1532 02cc 002083E5 		str	r2, [r3, #0]
  1533              	.L12:
-  81:../pila_depuracion.c **** 		}
-  82:../pila_depuracion.c **** 		numElem -= 1;
- 1534              		.loc 1 82 0
+  85:../cola_depuracion.c **** 		}
+  86:../cola_depuracion.c **** 		numElem -= 1;
+ 1534              		.loc 1 86 0
  1535 02d0 38309FE5 		ldr	r3, .L14+12
  1536 02d4 003093E5 		ldr	r3, [r3, #0]
  1537 02d8 012043E2 		sub	r2, r3, #1
  1538 02dc 2C309FE5 		ldr	r3, .L14+12
  1539 02e0 002083E5 		str	r2, [r3, #0]
-  83:../pila_depuracion.c **** 		return *aux;
- 1540              		.loc 1 83 0
+  87:../cola_depuracion.c **** 		return *aux;
+ 1540              		.loc 1 87 0
  1541 02e4 10301BE5 		ldr	r3, [fp, #-16]
  1542 02e8 003093E5 		ldr	r3, [r3, #0]
  1543 02ec 000000EA 		b	.L13
  1544              	.L11:
  1545              	.LBE2:
-  84:../pila_depuracion.c **** 	}
-  85:../pila_depuracion.c **** 	return 0;
- 1546              		.loc 1 85 0
+  88:../cola_depuracion.c **** 	}
+  89:../cola_depuracion.c **** 	return 0;
+ 1546              		.loc 1 89 0
  1547 02f0 0030A0E3 		mov	r3, #0
  1548              	.L13:
-  86:../pila_depuracion.c **** }
- 1549              		.loc 1 86 0
+  90:../cola_depuracion.c **** }
+ 1549              		.loc 1 90 0
  1550 02f4 0300A0E1 		mov	r0, r3
  1551 02f8 0CD04BE2 		sub	sp, fp, #12
  1552 02fc 00689DE8 		ldmfd	sp, {fp, sp, lr}
@@ -424,7 +428,7 @@
  1556              	.L14:
  1557 0304 08000000 		.word	base
  1558 0308 0C000000 		.word	limite_sup
- 1559 030c 00000000 		.word	LIMITE_INF_PILA_DEBUG
+ 1559 030c 00000000 		.word	LIMITE_INF_COLA_DEBUG
  1560 0310 10000000 		.word	numElem
  1561              		.cfi_endproc
  1562              	.LFE2:
@@ -432,11 +436,11 @@
  1565              		.global	esVacia
  1567              	esVacia:
  1568              	.LFB3:
-  87:../pila_depuracion.c **** 
-  88:../pila_depuracion.c **** 
-  89:../pila_depuracion.c **** int esVacia(void)
-  90:../pila_depuracion.c **** {
- 1569              		.loc 1 90 0
+  91:../cola_depuracion.c **** 
+  92:../cola_depuracion.c **** //1 si es vacía y -1 si no
+  93:../cola_depuracion.c **** int esVacia(void)
+  94:../cola_depuracion.c **** {
+ 1569              		.loc 1 94 0
  1570              		.cfi_startproc
  1571              		@ Function supports interworking.
  1572              		@ args = 0, pretend = 0, frame = 0
@@ -451,28 +455,28 @@
  1581              		.cfi_offset 11, -16
  1582              	.LCFI7:
  1583              		.cfi_def_cfa 11, 4
-  91:../pila_depuracion.c **** 	if(numElem == 0)
- 1584              		.loc 1 91 0
+  95:../cola_depuracion.c **** 	if(numElem == 0)
+ 1584              		.loc 1 95 0
  1585 0320 24309FE5 		ldr	r3, .L19
  1586 0324 003093E5 		ldr	r3, [r3, #0]
  1587 0328 000053E3 		cmp	r3, #0
  1588 032c 0100001A 		bne	.L17
-  92:../pila_depuracion.c **** 	{
-  93:../pila_depuracion.c **** 		return 1;
- 1589              		.loc 1 93 0
+  96:../cola_depuracion.c **** 	{
+  97:../cola_depuracion.c **** 		return 1;
+ 1589              		.loc 1 97 0
  1590 0330 0130A0E3 		mov	r3, #1
  1591 0334 000000EA 		b	.L18
  1592              	.L17:
-  94:../pila_depuracion.c **** 	}
-  95:../pila_depuracion.c **** 	else
-  96:../pila_depuracion.c **** 	{
-  97:../pila_depuracion.c **** 		return -1;
- 1593              		.loc 1 97 0
+  98:../cola_depuracion.c **** 	}
+  99:../cola_depuracion.c **** 	else
+ 100:../cola_depuracion.c **** 	{
+ 101:../cola_depuracion.c **** 		return -1;
+ 1593              		.loc 1 101 0
  1594 0338 0030E0E3 		mvn	r3, #0
  1595              	.L18:
-  98:../pila_depuracion.c **** 	}
-  99:../pila_depuracion.c **** }
- 1596              		.loc 1 99 0
+ 102:../cola_depuracion.c **** 	}
+ 103:../cola_depuracion.c **** }
+ 1596              		.loc 1 103 0
  1597 033c 0300A0E1 		mov	r0, r3
  1598 0340 0CD04BE2 		sub	sp, fp, #12
  1599 0344 00689DE8 		ldmfd	sp, {fp, sp, lr}
@@ -485,28 +489,28 @@
  1606              	.LFE3:
  1608              	.Letext0:
 DEFINED SYMBOLS
-                            *ABS*:00000000 pila_depuracion.c
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1225   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1226   .bss:00000000 timer2_num_int
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1233   .rodata:00000000 LIMITE_INF_PILA_DEBUG
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1230   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1237   .bss:00000004 cima
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1240   .bss:00000008 base
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1243   .bss:0000000c limite_sup
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1246   .bss:00000010 numElem
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1249   .bss:00000014 maxAsignado
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1252   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1255   .text:00000000 pila_depuracion_inicializar
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1317   .text:00000094 $d
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1326   .text:000000ac $a
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1329   .text:000000ac push_debug
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1473   .text:00000248 $d
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1482   .text:00000260 $a
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1485   .text:00000260 pop_debug
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1567   .text:00000314 esVacia
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1557   .text:00000304 $d
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1564   .text:00000314 $a
-C:\Users\guest\AppData\Local\Temp\ccSYlD0c.s:1604   .text:0000034c $d
+                            *ABS*:00000000 cola_depuracion.c
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1225   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1226   .bss:00000000 timer2_num_int
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1233   .rodata:00000000 LIMITE_INF_COLA_DEBUG
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1230   .rodata:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1237   .bss:00000004 cima
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1240   .bss:00000008 base
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1243   .bss:0000000c limite_sup
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1246   .bss:00000010 numElem
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1249   .bss:00000014 maxAsignado
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1252   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1255   .text:00000000 cola_depuracion_inicializar
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1317   .text:00000094 $d
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1326   .text:000000ac $a
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1329   .text:000000ac push_debug
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1473   .text:00000248 $d
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1482   .text:00000260 $a
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1485   .text:00000260 pop_debug
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1567   .text:00000314 esVacia
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1557   .text:00000304 $d
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1564   .text:00000314 $a
+C:\Users\guest\AppData\Local\Temp\ccVrZm3p.s:1604   .text:0000034c $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

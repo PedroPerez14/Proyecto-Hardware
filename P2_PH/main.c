@@ -17,7 +17,8 @@
 #include "reversi8_2019.h"
 #include "pruebas_timer2.h"
 #include "rutinas_excepciones.h"
-#include "pila_depuracion.h"
+#include "cola_depuracion.h"
+#include "reversi_main.h"
 #include <stdint.h>
 /*--- variables globales ---*/
 
@@ -26,13 +27,16 @@
 void Main(void)
 {
 	/* Inicializa controladores */
-	sys_init();         // Inicializacion de la placa, interrupciones y puertos
-	timer_init();	    // Inicializacion del temporizador
-	Eint4567_init();	// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en el 8led
-	D8Led_init();       // inicializamos el 8led
-	pila_depuracion_inicializar(5);
+	sys_init();         			// Inicializacion de la placa, interrupciones y puertos
+	//timer_init();	    			// Inicializacion del temporizador
+	button_iniciar();				// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en el 8led
+	D8Led_init();      				// inicializamos el 8led
+	cola_depuracion_inicializar(32);// Debe darse un tamaño suficiente para almacenar todos los eventos de un ciclo
+	//Gestion_excepciones_init();	// Inicializa la gestión de excepciones SWI, UNDEF y DABORT
 
-	//Gestion_excepciones_init();
+
+	reversi_main();
+	/// Pruebas de excepciones ///
 	//asm volatile ("SWI 0x55");			//lanzar SWI
 	//asm volatile ("mov r3, #3");
 	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
@@ -51,46 +55,17 @@ void Main(void)
 
 
 	/* Valor inicial de los leds */
-	leds_off();
-	led1_on();
+	//leds_off();
+	//led1_on();
 
-
-	pop_debug();
-	push_debug(0xFF,0xAAAAAAAA);
-	pop_debug();
-	pop_debug();
-	push_debug(0xFF,0xAAAAAAAA);
-	push_debug(0xFF,0xAAAAAAAA);
-	push_debug(0xFF,0xAAAAAAAA);
-	push_debug(0xFF,0xAAAAAAAA);
-	push_debug(0xFF,0xAAAAAAAA);
-	push_debug(0xFF,0xBBBBBBBB);
-	pop_debug();
-	push_debug(0xFF,0xBBBBBBBB);
-	push_debug(0xFF,0xBBBBBBBB);
-	push_debug(0xFF,0xBBBBBBBB);
-	push_debug(0xFF,0xBBBBBBBB);
-	pop_debug();
-	pop_debug();
-	pop_debug();
-	pop_debug();
-	pop_debug();
-	push_debug(0xFF,0xCCCCCCCC);
-	push_debug(0xFF,0xCCCCCCCC);
-	push_debug(0xFF,0xCCCCCCCC);
-	push_debug(0xFF,0xCCCCCCCC);
-	push_debug(0xFF,0xCCCCCCCC);
-	push_debug(0xFF,0xCCCCCCCC);
-
-
-
-	while (1)
+	//Bucle obsoleto porque hemos cambiado timer0
+	/*while (1)
 	{
-		/* Cambia los leds con cada interrupcion del temporizador */
+		 //Cambia los leds con cada interrupcion del temporizador
 		if (switch_leds == 1)
 		{
 			leds_switch();
 			switch_leds = 0;
 		}
-	}
+	}*/
 }

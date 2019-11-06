@@ -19,11 +19,12 @@ static unsigned int int_count = 0;
 
 /* declaración de función que es rutina de servicio de interrupción
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
-void Eint4567_ISR(void) __attribute__((interrupt("IRQ")));
+void button_ISR(void) __attribute__((interrupt("IRQ")));
 
 /*--- codigo de funciones ---*/
-void Eint4567_ISR(void)
+void button_ISR(void)
 {
+	//HAY QUE APILAR EN LA COLA DE DEPURACION
 	/* Identificar la interrupcion (hay dos pulsadores)*/
 	int which_int = rEXTINTPND;
 	switch (which_int)
@@ -37,7 +38,6 @@ void Eint4567_ISR(void)
 		default:
 			break;
 	}
-	// }
 	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (módulo 16)
 
 	/* Finalizar ISR */
@@ -45,10 +45,11 @@ void Eint4567_ISR(void)
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
 }
 
-void Eint4567_init(void)
+void button_iniciar(void)
 {
 	/* Configuracion del controlador de interrupciones pensando SOLO en usar los bits
 	 * 6 y 7 para los pulsadores. Estos registros están definidos en 44b.h */
+
 	rI_ISPC    |= BIT_EINT4567;		// Borra INTPND escribiendo 1s en I_ISPC
 	rEXTINTPND = 0xf;       		// Borra EXTINTPND escribiendo 1s en el propio registro
 	rINTMOD    &= ~(BIT_EINT4567);	// Configura la linea EINT4567 como de tipo IRQ
@@ -56,15 +57,26 @@ void Eint4567_init(void)
 	rINTMSK    &= ~(BIT_EINT4567); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
 
 	/* Establece la rutina de servicio para Eint4567 */
-	pISR_EINT4567 = (int) Eint4567_ISR;
+	pISR_EINT4567 = (int) button_ISR;
 
 	/* Configuracion del puerto G */
-	rPCONG  |= 0xf000;      // Establece la funcion de los pines (EINT6-7)
-	rPUPG   &= 0x3f;        // Habilita el "pull up" de los pines 6 y 7, de los pulsadores
-	rEXTINT &= 0x00ffffff;	//
-	rEXTINT |= 0x22000000;	// Configura las lineas de int. de los pulsadores como de flanco de bajada
+	rPCONG  |= 0xf000;      		// Establece la funcion de los pines (EINT6-7)
+	rPUPG   &= 0x3f;        		// Habilita el "pull up" de los pines 6 y 7, de los pulsadores
+	rEXTINT &= 0x00ffffff;			//
+	rEXTINT |= 0x22000000;			// Configura las lineas de int. de los pulsadores como de flanco de bajada
 
 	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
 	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+}
+
+void button_resetear(void)			//Reactiva int y deja button listo para uso otra vez
+{
+
+}
+
+									//Devuelve el estado de los botones
+enum estado_button button_estado(void)
+{
+	return estado;
 }

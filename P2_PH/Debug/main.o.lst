@@ -11,14 +11,16 @@
   11              		.file	"main.c"
   21              	.Ltext0:
   22              		.file 1 "../main.c"
- 2188              		.align	2
- 2189              	timer2_num_int:
- 2190 0000 00000000 		.space	4
- 2191              		.text
- 2192              		.align	2
- 2193              		.global	Main
- 2195              	Main:
- 2196              	.LFB0:
+ 2195              	estado:
+ 2196 0000 00       		.space	1
+ 2197 0001 000000   		.align	2
+ 2198              	timer2_num_int:
+ 2199 0004 00000000 		.space	4
+ 2200              		.text
+ 2201              		.align	2
+ 2202              		.global	Main
+ 2204              	Main:
+ 2205              	.LFB0:
    1:../main.c     **** /*********************************************************************************************
    2:../main.c     **** * Fichero:	main.c
    3:../main.c     **** * Autor:	Profesores de la asignatura
@@ -38,247 +40,103 @@
   17:../main.c     **** #include "reversi8_2019.h"
   18:../main.c     **** #include "pruebas_timer2.h"
   19:../main.c     **** #include "rutinas_excepciones.h"
-  20:../main.c     **** #include "pila_depuracion.h"
-  21:../main.c     **** #include <stdint.h>
-  22:../main.c     **** /*--- variables globales ---*/
-  23:../main.c     **** 
+  20:../main.c     **** #include "cola_depuracion.h"
+  21:../main.c     **** #include "reversi_main.h"
+  22:../main.c     **** #include <stdint.h>
+  23:../main.c     **** /*--- variables globales ---*/
   24:../main.c     **** 
-  25:../main.c     **** /*--- codigo de funciones ---*/
-  26:../main.c     **** void Main(void)
-  27:../main.c     **** {
- 2197              		.loc 1 27 0
- 2198              		.cfi_startproc
- 2199              		@ Function supports interworking.
- 2200              		@ args = 0, pretend = 0, frame = 0
- 2201              		@ frame_needed = 1, uses_anonymous_args = 0
- 2202 0000 0DC0A0E1 		mov	ip, sp
- 2203              	.LCFI0:
- 2204              		.cfi_def_cfa_register 12
- 2205 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2206 0008 04B04CE2 		sub	fp, ip, #4
- 2207              		.cfi_offset 14, -8
- 2208              		.cfi_offset 13, -12
- 2209              		.cfi_offset 11, -16
- 2210              	.LCFI1:
- 2211              		.cfi_def_cfa 11, 4
-  28:../main.c     **** 	/* Inicializa controladores */
-  29:../main.c     **** 	sys_init();         // Inicializacion de la placa, interrupciones y puertos
- 2212              		.loc 1 29 0
- 2213 000c FEFFFFEB 		bl	sys_init
-  30:../main.c     **** 	timer_init();	    // Inicializacion del temporizador
- 2214              		.loc 1 30 0
- 2215 0010 FEFFFFEB 		bl	timer_init
-  31:../main.c     **** 	Eint4567_init();	// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en el 8l
- 2216              		.loc 1 31 0
- 2217 0014 FEFFFFEB 		bl	Eint4567_init
-  32:../main.c     **** 	D8Led_init();       // inicializamos el 8led
- 2218              		.loc 1 32 0
- 2219 0018 FEFFFFEB 		bl	D8Led_init
-  33:../main.c     **** 	pila_depuracion_inicializar(5);
- 2220              		.loc 1 33 0
- 2221 001c 0500A0E3 		mov	r0, #5
- 2222 0020 FEFFFFEB 		bl	pila_depuracion_inicializar
-  34:../main.c     **** 
-  35:../main.c     **** 	//Gestion_excepciones_init();
-  36:../main.c     **** 	//asm volatile ("SWI 0x55");			//lanzar SWI
-  37:../main.c     **** 	//asm volatile ("mov r3, #3");
-  38:../main.c     **** 	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
-  39:../main.c     **** 	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
-  40:../main.c     **** 
-  41:../main.c     **** 
-  42:../main.c     **** 	//reversi8();	// función principal del juego
-  43:../main.c     **** 
+  25:../main.c     **** 
+  26:../main.c     **** /*--- codigo de funciones ---*/
+  27:../main.c     **** void Main(void)
+  28:../main.c     **** {
+ 2206              		.loc 1 28 0
+ 2207              		.cfi_startproc
+ 2208              		@ Function supports interworking.
+ 2209              		@ args = 0, pretend = 0, frame = 0
+ 2210              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2211 0000 0DC0A0E1 		mov	ip, sp
+ 2212              	.LCFI0:
+ 2213              		.cfi_def_cfa_register 12
+ 2214 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2215 0008 04B04CE2 		sub	fp, ip, #4
+ 2216              		.cfi_offset 14, -8
+ 2217              		.cfi_offset 13, -12
+ 2218              		.cfi_offset 11, -16
+ 2219              	.LCFI1:
+ 2220              		.cfi_def_cfa 11, 4
+  29:../main.c     **** 	/* Inicializa controladores */
+  30:../main.c     **** 	sys_init();         			// Inicializacion de la placa, interrupciones y puertos
+ 2221              		.loc 1 30 0
+ 2222 000c FEFFFFEB 		bl	sys_init
+  31:../main.c     **** 	//timer_init();	    			// Inicializacion del temporizador
+  32:../main.c     **** 	button_iniciar();				// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en e
+ 2223              		.loc 1 32 0
+ 2224 0010 FEFFFFEB 		bl	button_iniciar
+  33:../main.c     **** 	D8Led_init();      				// inicializamos el 8led
+ 2225              		.loc 1 33 0
+ 2226 0014 FEFFFFEB 		bl	D8Led_init
+  34:../main.c     **** 	cola_depuracion_inicializar(32);// Debe darse un tamaño suficiente para almacenar todos los evento
+ 2227              		.loc 1 34 0
+ 2228 0018 2000A0E3 		mov	r0, #32
+ 2229 001c FEFFFFEB 		bl	cola_depuracion_inicializar
+  35:../main.c     **** 	//Gestion_excepciones_init();	// Inicializa la gestión de excepciones SWI, UNDEF y DABORT
+  36:../main.c     **** 
+  37:../main.c     **** 
+  38:../main.c     **** 	reversi_main();
+ 2230              		.loc 1 38 0
+ 2231 0020 FEFFFFEB 		bl	reversi_main
+  39:../main.c     **** 	/// Pruebas de excepciones ///
+  40:../main.c     **** 	//asm volatile ("SWI 0x55");			//lanzar SWI
+  41:../main.c     **** 	//asm volatile ("mov r3, #3");
+  42:../main.c     **** 	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
+  43:../main.c     **** 	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
   44:../main.c     **** 
-  45:../main.c     **** 	//// pruebas automáticas de timer2 ////
-  46:../main.c     **** 	//pruebas_timer2();
+  45:../main.c     **** 
+  46:../main.c     **** 	//reversi8();	// función principal del juego
   47:../main.c     **** 
-  48:../main.c     **** 	//// pruebas automáticas de patron_volteo ////
-  49:../main.c     **** 	//patron_volteo_prueba_resultado_igual();
-  50:../main.c     **** 	//patron_volteo_prueba_resultado_correcto();
+  48:../main.c     **** 
+  49:../main.c     **** 	//// pruebas automáticas de timer2 ////
+  50:../main.c     **** 	//pruebas_timer2();
   51:../main.c     **** 
-  52:../main.c     **** 
-  53:../main.c     **** 	/* Valor inicial de los leds */
-  54:../main.c     **** 	leds_off();
- 2223              		.loc 1 54 0
- 2224 0024 FEFFFFEB 		bl	leds_off
-  55:../main.c     **** 	led1_on();
- 2225              		.loc 1 55 0
- 2226 0028 FEFFFFEB 		bl	led1_on
+  52:../main.c     **** 	//// pruebas automáticas de patron_volteo ////
+  53:../main.c     **** 	//patron_volteo_prueba_resultado_igual();
+  54:../main.c     **** 	//patron_volteo_prueba_resultado_correcto();
+  55:../main.c     **** 
   56:../main.c     **** 
-  57:../main.c     **** 
-  58:../main.c     **** 	pop_debug();
- 2227              		.loc 1 58 0
- 2228 002c FEFFFFEB 		bl	pop_debug
-  59:../main.c     **** 	push_debug(0xFF,0xAAAAAAAA);
- 2229              		.loc 1 59 0
- 2230 0030 FF00A0E3 		mov	r0, #255
- 2231 0034 0C119FE5 		ldr	r1, .L5
- 2232 0038 FEFFFFEB 		bl	push_debug
-  60:../main.c     **** 	pop_debug();
- 2233              		.loc 1 60 0
- 2234 003c FEFFFFEB 		bl	pop_debug
-  61:../main.c     **** 	pop_debug();
- 2235              		.loc 1 61 0
- 2236 0040 FEFFFFEB 		bl	pop_debug
-  62:../main.c     **** 	push_debug(0xFF,0xAAAAAAAA);
- 2237              		.loc 1 62 0
- 2238 0044 FF00A0E3 		mov	r0, #255
- 2239 0048 F8109FE5 		ldr	r1, .L5
- 2240 004c FEFFFFEB 		bl	push_debug
-  63:../main.c     **** 	push_debug(0xFF,0xAAAAAAAA);
- 2241              		.loc 1 63 0
- 2242 0050 FF00A0E3 		mov	r0, #255
- 2243 0054 EC109FE5 		ldr	r1, .L5
- 2244 0058 FEFFFFEB 		bl	push_debug
-  64:../main.c     **** 	push_debug(0xFF,0xAAAAAAAA);
- 2245              		.loc 1 64 0
- 2246 005c FF00A0E3 		mov	r0, #255
- 2247 0060 E0109FE5 		ldr	r1, .L5
- 2248 0064 FEFFFFEB 		bl	push_debug
-  65:../main.c     **** 	push_debug(0xFF,0xAAAAAAAA);
- 2249              		.loc 1 65 0
- 2250 0068 FF00A0E3 		mov	r0, #255
- 2251 006c D4109FE5 		ldr	r1, .L5
- 2252 0070 FEFFFFEB 		bl	push_debug
-  66:../main.c     **** 	push_debug(0xFF,0xAAAAAAAA);
- 2253              		.loc 1 66 0
- 2254 0074 FF00A0E3 		mov	r0, #255
- 2255 0078 C8109FE5 		ldr	r1, .L5
- 2256 007c FEFFFFEB 		bl	push_debug
-  67:../main.c     **** 	push_debug(0xFF,0xBBBBBBBB);
- 2257              		.loc 1 67 0
- 2258 0080 FF00A0E3 		mov	r0, #255
- 2259 0084 C0109FE5 		ldr	r1, .L5+4
- 2260 0088 FEFFFFEB 		bl	push_debug
-  68:../main.c     **** 	pop_debug();
- 2261              		.loc 1 68 0
- 2262 008c FEFFFFEB 		bl	pop_debug
-  69:../main.c     **** 	push_debug(0xFF,0xBBBBBBBB);
- 2263              		.loc 1 69 0
- 2264 0090 FF00A0E3 		mov	r0, #255
- 2265 0094 B0109FE5 		ldr	r1, .L5+4
- 2266 0098 FEFFFFEB 		bl	push_debug
-  70:../main.c     **** 	push_debug(0xFF,0xBBBBBBBB);
- 2267              		.loc 1 70 0
- 2268 009c FF00A0E3 		mov	r0, #255
- 2269 00a0 A4109FE5 		ldr	r1, .L5+4
- 2270 00a4 FEFFFFEB 		bl	push_debug
-  71:../main.c     **** 	push_debug(0xFF,0xBBBBBBBB);
- 2271              		.loc 1 71 0
- 2272 00a8 FF00A0E3 		mov	r0, #255
- 2273 00ac 98109FE5 		ldr	r1, .L5+4
- 2274 00b0 FEFFFFEB 		bl	push_debug
-  72:../main.c     **** 	push_debug(0xFF,0xBBBBBBBB);
- 2275              		.loc 1 72 0
- 2276 00b4 FF00A0E3 		mov	r0, #255
- 2277 00b8 8C109FE5 		ldr	r1, .L5+4
- 2278 00bc FEFFFFEB 		bl	push_debug
-  73:../main.c     **** 	pop_debug();
- 2279              		.loc 1 73 0
- 2280 00c0 FEFFFFEB 		bl	pop_debug
-  74:../main.c     **** 	pop_debug();
- 2281              		.loc 1 74 0
- 2282 00c4 FEFFFFEB 		bl	pop_debug
-  75:../main.c     **** 	pop_debug();
- 2283              		.loc 1 75 0
- 2284 00c8 FEFFFFEB 		bl	pop_debug
-  76:../main.c     **** 	pop_debug();
- 2285              		.loc 1 76 0
- 2286 00cc FEFFFFEB 		bl	pop_debug
-  77:../main.c     **** 	pop_debug();
- 2287              		.loc 1 77 0
- 2288 00d0 FEFFFFEB 		bl	pop_debug
-  78:../main.c     **** 	push_debug(0xFF,0xCCCCCCCC);
- 2289              		.loc 1 78 0
- 2290 00d4 FF00A0E3 		mov	r0, #255
- 2291 00d8 70109FE5 		ldr	r1, .L5+8
- 2292 00dc FEFFFFEB 		bl	push_debug
-  79:../main.c     **** 	push_debug(0xFF,0xCCCCCCCC);
- 2293              		.loc 1 79 0
- 2294 00e0 FF00A0E3 		mov	r0, #255
- 2295 00e4 64109FE5 		ldr	r1, .L5+8
- 2296 00e8 FEFFFFEB 		bl	push_debug
-  80:../main.c     **** 	push_debug(0xFF,0xCCCCCCCC);
- 2297              		.loc 1 80 0
- 2298 00ec FF00A0E3 		mov	r0, #255
- 2299 00f0 58109FE5 		ldr	r1, .L5+8
- 2300 00f4 FEFFFFEB 		bl	push_debug
-  81:../main.c     **** 	push_debug(0xFF,0xCCCCCCCC);
- 2301              		.loc 1 81 0
- 2302 00f8 FF00A0E3 		mov	r0, #255
- 2303 00fc 4C109FE5 		ldr	r1, .L5+8
- 2304 0100 FEFFFFEB 		bl	push_debug
-  82:../main.c     **** 	push_debug(0xFF,0xCCCCCCCC);
- 2305              		.loc 1 82 0
- 2306 0104 FF00A0E3 		mov	r0, #255
- 2307 0108 40109FE5 		ldr	r1, .L5+8
- 2308 010c FEFFFFEB 		bl	push_debug
-  83:../main.c     **** 	push_debug(0xFF,0xCCCCCCCC);
- 2309              		.loc 1 83 0
- 2310 0110 FF00A0E3 		mov	r0, #255
- 2311 0114 34109FE5 		ldr	r1, .L5+8
- 2312 0118 FEFFFFEB 		bl	push_debug
- 2313 011c 000000EA 		b	.L3
- 2314              	.L4:
-  84:../main.c     **** 
-  85:../main.c     **** 
-  86:../main.c     **** 
-  87:../main.c     **** 	while (1)
-  88:../main.c     **** 	{
-  89:../main.c     **** 		/* Cambia los leds con cada interrupcion del temporizador */
-  90:../main.c     **** 		if (switch_leds == 1)
-  91:../main.c     **** 		{
-  92:../main.c     **** 			leds_switch();
-  93:../main.c     **** 			switch_leds = 0;
-  94:../main.c     **** 		}
-  95:../main.c     **** 	}
- 2315              		.loc 1 95 0
- 2316 0120 0000A0E1 		mov	r0, r0	@ nop
- 2317              	.L3:
-  90:../main.c     **** 		if (switch_leds == 1)
- 2318              		.loc 1 90 0
- 2319 0124 28309FE5 		ldr	r3, .L5+12
- 2320 0128 003093E5 		ldr	r3, [r3, #0]
- 2321 012c 010053E3 		cmp	r3, #1
- 2322 0130 FAFFFF1A 		bne	.L4
-  92:../main.c     **** 			leds_switch();
- 2323              		.loc 1 92 0
- 2324 0134 FEFFFFEB 		bl	leds_switch
-  93:../main.c     **** 			switch_leds = 0;
- 2325              		.loc 1 93 0
- 2326 0138 14309FE5 		ldr	r3, .L5+12
- 2327 013c 0020A0E3 		mov	r2, #0
- 2328 0140 002083E5 		str	r2, [r3, #0]
- 2329              		.loc 1 95 0
- 2330 0144 F6FFFFEA 		b	.L3
- 2331              	.L6:
- 2332              		.align	2
- 2333              	.L5:
- 2334 0148 AAAAAAAA 		.word	-1431655766
- 2335 014c BBBBBBBB 		.word	-1145324613
- 2336 0150 CCCCCCCC 		.word	-858993460
- 2337 0154 00000000 		.word	switch_leds
- 2338              		.cfi_endproc
- 2339              	.LFE0:
- 2341              	.Letext0:
+  57:../main.c     **** 	/* Valor inicial de los leds */
+  58:../main.c     **** 	//leds_off();
+  59:../main.c     **** 	//led1_on();
+  60:../main.c     **** 
+  61:../main.c     **** 	//Bucle obsoleto porque hemos cambiado timer0
+  62:../main.c     **** 	/*while (1)
+  63:../main.c     **** 	{
+  64:../main.c     **** 		 //Cambia los leds con cada interrupcion del temporizador
+  65:../main.c     **** 		if (switch_leds == 1)
+  66:../main.c     **** 		{
+  67:../main.c     **** 			leds_switch();
+  68:../main.c     **** 			switch_leds = 0;
+  69:../main.c     **** 		}
+  70:../main.c     **** 	}*/
+  71:../main.c     **** }
+ 2232              		.loc 1 71 0
+ 2233 0024 0CD04BE2 		sub	sp, fp, #12
+ 2234 0028 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2235 002c 1EFF2FE1 		bx	lr
+ 2236              		.cfi_endproc
+ 2237              	.LFE0:
+ 2239              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-                            *COM*:00000004 switch_leds
-C:\Users\guest\AppData\Local\Temp\ccrhjCrA.s:2188   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccrhjCrA.s:2189   .bss:00000000 timer2_num_int
-C:\Users\guest\AppData\Local\Temp\ccrhjCrA.s:2192   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccrhjCrA.s:2195   .text:00000000 Main
-C:\Users\guest\AppData\Local\Temp\ccrhjCrA.s:2334   .text:00000148 $d
+C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2195   .bss:00000000 estado
+C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2196   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2198   .bss:00000004 timer2_num_int
+C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2201   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2204   .text:00000000 Main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
 sys_init
-timer_init
-Eint4567_init
+button_iniciar
 D8Led_init
-pila_depuracion_inicializar
-leds_off
-led1_on
-pop_debug
-push_debug
-leds_switch
+cola_depuracion_inicializar
+reversi_main
