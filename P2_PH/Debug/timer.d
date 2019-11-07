@@ -1,17 +1,20 @@
-timer.d timer.o: ../timer.c ../timer.h \
- C:\hlocal\workspace\P2_PH\common/44b.h \
- C:\hlocal\workspace\P2_PH\common/option.h \
- C:\hlocal\workspace\P2_PH\common/44blib.h ../cola_depuracion.h \
+timer.d timer.o: ../timer.c ../timer.h D:\workspace\P2_PH\common/44b.h \
+ D:\workspace\P2_PH\common/option.h D:\workspace\P2_PH\common/44blib.h \
+ ../cola_depuracion.h D:\workspace\P2_PH\common/option.h ../timer2.h \
  ../codigos_eventos.h
 
 ../timer.h:
 
-C:\hlocal\workspace\P2_PH\common/44b.h:
+D:\workspace\P2_PH\common/44b.h:
 
-C:\hlocal\workspace\P2_PH\common/option.h:
+D:\workspace\P2_PH\common/option.h:
 
-C:\hlocal\workspace\P2_PH\common/44blib.h:
+D:\workspace\P2_PH\common/44blib.h:
 
 ../cola_depuracion.h:
+
+D:\workspace\P2_PH\common/option.h:
+
+../timer2.h:
 
 ../codigos_eventos.h:

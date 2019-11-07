@@ -11,16 +11,14 @@
   11              		.file	"main.c"
   21              	.Ltext0:
   22              		.file 1 "../main.c"
- 2195              	estado:
- 2196 0000 00       		.space	1
- 2197 0001 000000   		.align	2
- 2198              	timer2_num_int:
- 2199 0004 00000000 		.space	4
- 2200              		.text
- 2201              		.align	2
- 2202              		.global	Main
- 2204              	Main:
- 2205              	.LFB0:
+ 2199              		.align	2
+ 2200              	timer2_num_int:
+ 2201 0000 00000000 		.space	4
+ 2202              		.text
+ 2203              		.align	2
+ 2204              		.global	Main
+ 2206              	Main:
+ 2207              	.LFB0:
    1:../main.c     **** /*********************************************************************************************
    2:../main.c     **** * Fichero:	main.c
    3:../main.c     **** * Autor:	Profesores de la asignatura
@@ -49,42 +47,42 @@
   26:../main.c     **** /*--- codigo de funciones ---*/
   27:../main.c     **** void Main(void)
   28:../main.c     **** {
- 2206              		.loc 1 28 0
- 2207              		.cfi_startproc
- 2208              		@ Function supports interworking.
- 2209              		@ args = 0, pretend = 0, frame = 0
- 2210              		@ frame_needed = 1, uses_anonymous_args = 0
- 2211 0000 0DC0A0E1 		mov	ip, sp
- 2212              	.LCFI0:
- 2213              		.cfi_def_cfa_register 12
- 2214 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2215 0008 04B04CE2 		sub	fp, ip, #4
- 2216              		.cfi_offset 14, -8
- 2217              		.cfi_offset 13, -12
- 2218              		.cfi_offset 11, -16
- 2219              	.LCFI1:
- 2220              		.cfi_def_cfa 11, 4
+ 2208              		.loc 1 28 0
+ 2209              		.cfi_startproc
+ 2210              		@ Function supports interworking.
+ 2211              		@ args = 0, pretend = 0, frame = 0
+ 2212              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2213 0000 0DC0A0E1 		mov	ip, sp
+ 2214              	.LCFI0:
+ 2215              		.cfi_def_cfa_register 12
+ 2216 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2217 0008 04B04CE2 		sub	fp, ip, #4
+ 2218              		.cfi_offset 14, -8
+ 2219              		.cfi_offset 13, -12
+ 2220              		.cfi_offset 11, -16
+ 2221              	.LCFI1:
+ 2222              		.cfi_def_cfa 11, 4
   29:../main.c     **** 	/* Inicializa controladores */
   30:../main.c     **** 	sys_init();         			// Inicializacion de la placa, interrupciones y puertos
- 2221              		.loc 1 30 0
- 2222 000c FEFFFFEB 		bl	sys_init
+ 2223              		.loc 1 30 0
+ 2224 000c FEFFFFEB 		bl	sys_init
   31:../main.c     **** 	//timer_init();	    			// Inicializacion del temporizador
   32:../main.c     **** 	button_iniciar();				// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en e
- 2223              		.loc 1 32 0
- 2224 0010 FEFFFFEB 		bl	button_iniciar
+ 2225              		.loc 1 32 0
+ 2226 0010 FEFFFFEB 		bl	button_iniciar
   33:../main.c     **** 	D8Led_init();      				// inicializamos el 8led
- 2225              		.loc 1 33 0
- 2226 0014 FEFFFFEB 		bl	D8Led_init
+ 2227              		.loc 1 33 0
+ 2228 0014 FEFFFFEB 		bl	D8Led_init
   34:../main.c     **** 	cola_depuracion_inicializar(32);// Debe darse un tamaño suficiente para almacenar todos los evento
- 2227              		.loc 1 34 0
- 2228 0018 2000A0E3 		mov	r0, #32
- 2229 001c FEFFFFEB 		bl	cola_depuracion_inicializar
+ 2229              		.loc 1 34 0
+ 2230 0018 2000A0E3 		mov	r0, #32
+ 2231 001c FEFFFFEB 		bl	cola_depuracion_inicializar
   35:../main.c     **** 	//Gestion_excepciones_init();	// Inicializa la gestión de excepciones SWI, UNDEF y DABORT
   36:../main.c     **** 
   37:../main.c     **** 
   38:../main.c     **** 	reversi_main();
- 2230              		.loc 1 38 0
- 2231 0020 FEFFFFEB 		bl	reversi_main
+ 2232              		.loc 1 38 0
+ 2233 0020 FEFFFFEB 		bl	reversi_main
   39:../main.c     **** 	/// Pruebas de excepciones ///
   40:../main.c     **** 	//asm volatile ("SWI 0x55");			//lanzar SWI
   41:../main.c     **** 	//asm volatile ("mov r3, #3");
@@ -118,20 +116,19 @@
   69:../main.c     **** 		}
   70:../main.c     **** 	}*/
   71:../main.c     **** }
- 2232              		.loc 1 71 0
- 2233 0024 0CD04BE2 		sub	sp, fp, #12
- 2234 0028 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2235 002c 1EFF2FE1 		bx	lr
- 2236              		.cfi_endproc
- 2237              	.LFE0:
- 2239              	.Letext0:
+ 2234              		.loc 1 71 0
+ 2235 0024 0CD04BE2 		sub	sp, fp, #12
+ 2236 0028 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2237 002c 1EFF2FE1 		bx	lr
+ 2238              		.cfi_endproc
+ 2239              	.LFE0:
+ 2241              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2195   .bss:00000000 estado
-C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2196   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2198   .bss:00000004 timer2_num_int
-C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2201   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccENx5Kq.s:2204   .text:00000000 Main
+C:\Users\guest\AppData\Local\Temp\ccglCCZw.s:2199   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccglCCZw.s:2200   .bss:00000000 timer2_num_int
+C:\Users\guest\AppData\Local\Temp\ccglCCZw.s:2203   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccglCCZw.s:2206   .text:00000000 Main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

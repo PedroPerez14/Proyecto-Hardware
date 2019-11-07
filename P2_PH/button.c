@@ -11,11 +11,12 @@
 #include "44blib.h"
 #include "44b.h"
 #include "def.h"
-
+#include "cola_depuracion.h"
+#include "codigos_eventos.h"
 /*--- variables globales del módulo ---*/
 /* int_count la utilizamos para sacar un número por el 8led.
   Cuando se pulsa un botón sumamos y con el otro restamos. ¡A veces hay rebotes! */
-static unsigned int int_count = 0;
+
 
 /* declaración de función que es rutina de servicio de interrupción
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
@@ -28,17 +29,16 @@ void button_ISR(void)
 	/* Identificar la interrupcion (hay dos pulsadores)*/
 	int which_int = rEXTINTPND;
 	switch (which_int)
-	{
-		case 4:
-			int_count++; // incrementamos el contador
-			break;
-		case 8:
-			int_count--; // decrementamos el contador
-			break;
-		default:
-			break;
-	}
-	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (módulo 16)
+		{
+			case 4:				//boton 6, izquierdo
+				push_debug(ev_button_int, button_izq);
+				break;
+			case 8:				//boton 7, derecho
+				push_debug(ev_button_int, button_der);
+				break;
+			default:
+				break;
+		}
 
 	/* Finalizar ISR */
 	rEXTINTPND |= 0xa;				// borra los bits 6 y 7 en EXTINTPND
@@ -68,25 +68,37 @@ void button_iniciar(void)
 	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
 	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+
 }
 
 void button_resetear(void)			//Reactiva int y deja button listo para uso otra vez
 {
-
+	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
+	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
+	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+	rINTMSK    &= ~(BIT_EINT4567); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
 }
 
-									//Devuelve el estado de los botones
+/* Devuelve el estado de los botones */
+// Se supone que nunca están los dos botones pulsados a la vez
 enum estado_button button_estado(void)
 {
-	return estado;
-}
+	rPCONG  &= 0x0fff;
+	int input_GPort = rPDATG;
+	rPCONG  |= 0xf000;
 
-void button_ev_pulsacion(enum estado_button boton)
-{
-
+	if ((input_GPort & 0x40) == 0) {
+		return button_iz;
+	}
+	else if ((input_GPort & 0x80) == 0) {
+		return button_dr;
+	}
+	else if ((input_GPort & 0xc0) == 0) {
+		return button_dr;
+		// Si los dos botones estuvieran a 1 (suponemos que no pasa) se devuelve que está pulsado el derecho
+	}
+	else {
+		return button_none;
+	}
 }
-
-void button_ev_tick0(void)
-{
-	
-}
+//TODO puede fallar, cuidado

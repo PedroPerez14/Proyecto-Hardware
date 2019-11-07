@@ -23,8 +23,8 @@
 #include "cola_depuracion.h"
 #include "reversi_main.h"
 #include "codigos_eventos.h"
+#include "botones_antirebotes.h"
 #include <stdint.h>
-#include "codigos_eventos.h"	//Hay que ponerse de acuerdo y hacerlo
 
 /*--- variables ---*/
 static int cuenta_int_latido;
@@ -72,28 +72,34 @@ void Latido_ev_new_tick(void)
 
 void reversi_main()
 {
-	static volatile int es_Vacia;
 	reversi_inicializar();
 	while(1)
 	{
-		es_Vacia = esVacia();
-		while( es_Vacia == -1)
+		while(!esVacia())
 		{
 			//procesar
-			uint32_t evento = pop_debug();
-			uint32_t info = evento & 0x00FFFFFF;	//Será necesario para procesar las pulsaciones de los botones
-			evento &= 0xFF000000;
-			evento = evento >> 24;
+			uint8_t evento;
+			uint32_t info;
+			pop_debug(&evento, &info);
 			switch(evento)
 			{
-			case tick_timer0 :
+			case ev_tick_timer0 :
 				Latido_ev_new_tick();
-				//button_ev_tick0();
+				button_ev_tick0();
+				break;
+			case ev_button_int :
+				if(info == button_izq)
+				{
+					button_ev_pulsacion(button_iz);
+				}
+				else
+				{
+					button_ev_pulsacion(button_der);
+				}
 				break;
 			default :
 				break;
 			}
-			es_Vacia = esVacia();
 		}
 		dormir_procesador();
 	}

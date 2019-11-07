@@ -20,7 +20,7 @@ void timer_ISR(void) __attribute__((interrupt("IRQ")));
 /*--- codigo de las funciones ---*/
 void timer_ISR(void)
 {
-	push_debug(tick_timer0, no_info);
+	//push_debug(tick_timer0, no_info);
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción*/
 	rI_ISPC |= BIT_TIMER0; // BIT_TIMER0 está definido en 44b.h y pone un uno en el bit 13 que correponde al Timer0
 }

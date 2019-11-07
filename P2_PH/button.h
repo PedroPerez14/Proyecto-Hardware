@@ -10,7 +10,7 @@
 
 /*--- Declaración del enum de estados posibles de los botones ---*/
 
-static enum estado_button {button_none, button_iz, button_dr} estado;
+enum estado_button {button_none, button_iz, button_dr};
 
 /*--- declaracion de funciones visibles del módulo button.c/button.h ---*/
 void button_iniciar(void);

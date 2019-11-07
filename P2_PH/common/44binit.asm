@@ -416,7 +416,7 @@ SMRDATA:
 	.long 0x20				/* MRSR6 CL=2clk                          */
 	.long 0x20				/* MRSR7                                  */
 
-
+.equ	DebugStack,	_ISR_STARTADDRESS-0xf00*2		/* c7fe100 */
 .equ 	UserStack,	_ISR_STARTADDRESS-0xf00    		/* c7ff000 */   	
 .equ	SVCStack,	_ISR_STARTADDRESS-0xf00+256    	/* c7ff100 */
 .equ	UndefStack,	_ISR_STARTADDRESS-0xf00+256*2   /* c7ff200 */

@@ -8,10 +8,10 @@
 
 /*--- ficheros de cabecera ---*/
 #include "cola_depuracion.h"
-#include "timer2.h"
-#include <stdint.h>
+
 //Variables para la gestión circular de la cola
-const int LIMITE_INF_COLA_DEBUG = 0x0c77fe00;
+//La dirección del límite inferior está en option.h, si no ha cambiado es 0x0c77fe00
+const int _COLA_DEP_STARTADDRESS = _ISR_STARTADDRESS-0xf00*2;		/* c7fe100 */
 
 static volatile uint32_t * cima;
 static volatile uint32_t * base;
@@ -23,9 +23,9 @@ static volatile int maxAsignado;
 //Por lo que se pasa como parámetro el número de tuplas que se desean almacenar.
 void cola_depuracion_inicializar(int maxElem)
 {
-	cima = (uint32_t*)LIMITE_INF_COLA_DEBUG;
-	base = (uint32_t*)LIMITE_INF_COLA_DEBUG;
-	limite_sup = LIMITE_INF_COLA_DEBUG - 8 * maxElem;
+	cima = (uint32_t*)_COLA_DEP_STARTADDRESS;
+	base = (uint32_t*)_COLA_DEP_STARTADDRESS;
+	limite_sup = _COLA_DEP_STARTADDRESS - 8 * maxElem;
 	numElem = 0;
 	maxAsignado = maxElem;
 	timer2_inicializar();
@@ -43,7 +43,7 @@ void push_debug(uint8_t ID_evento, uint32_t auxData)
 		//Y numElem--
 		if((int)cima <= limite_sup)
 		{
-			cima = (uint32_t *)LIMITE_INF_COLA_DEBUG;
+			cima = (uint32_t *)_COLA_DEP_STARTADDRESS;
 		}
 		*cima = dato;
 		cima -= 1;
@@ -65,7 +65,7 @@ void push_debug(uint8_t ID_evento, uint32_t auxData)
 		cima -= 1;
 		if((int)base <= limite_sup)
 		{
-			base = (uint32_t *)LIMITE_INF_COLA_DEBUG;
+			base = (uint32_t *)_COLA_DEP_STARTADDRESS;
 		}
 	}
 }
@@ -73,31 +73,26 @@ void push_debug(uint8_t ID_evento, uint32_t auxData)
 
 //Subimos la base y restamos un elemento de la cola.
 //Si desborda la base por el límite superior, la corregimos
-uint32_t pop_debug(void)
+void pop_debug(uint8_t *ID_evento, uint32_t  *auxData)
 {
-	if(esVacia() == -1)
+	if(!esVacia())
 	{
 		uint32_t * aux = base;
 		base -= 2;
 		if((int)base <= limite_sup)
 		{
-			base = (uint32_t *)LIMITE_INF_COLA_DEBUG;
+			base = (uint32_t *)_COLA_DEP_STARTADDRESS;
 		}
 		numElem -= 1;
-		return *aux;
+		uint32_t dato = *aux;
+		*auxData = dato & 0x00FFFFFF;
+		dato &= 0xFF000000;
+		*ID_evento = dato >> 24;
 	}
-	return 0;
 }
 
 //1 si es vacía y -1 si no
 int esVacia(void)
 {
-	if(numElem == 0)
-	{
-		return 1;
-	}
-	else
-	{
-		return -1;
-	}
+	return (numElem == 0);
 }
