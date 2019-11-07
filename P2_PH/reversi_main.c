@@ -24,7 +24,7 @@
 #include "reversi_main.h"
 #include "codigos_eventos.h"
 #include <stdint.h>
-//#include "codigos_eventos.h"	//Hay que ponerse de acuerdo y hacerlo
+#include "codigos_eventos.h"	//Hay que ponerse de acuerdo y hacerlo
 
 /*--- variables ---*/
 static int cuenta_int_latido;

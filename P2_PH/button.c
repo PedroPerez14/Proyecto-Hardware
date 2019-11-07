@@ -80,3 +80,13 @@ enum estado_button button_estado(void)
 {
 	return estado;
 }
+
+void button_ev_pulsacion(enum estado_button boton)
+{
+
+}
+
+void button_ev_tick0(void)
+{
+	
+}
