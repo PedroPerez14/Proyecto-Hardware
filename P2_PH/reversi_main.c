@@ -44,7 +44,7 @@ void reversi_inicializar(void)
 
 void dormir_procesador(void)
 {
-	;
+	;						//La función que más me ha costado hacer en toda mi vida
 }
 
 void Latido_ev_new_tick(void)

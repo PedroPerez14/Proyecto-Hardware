@@ -10,7 +10,7 @@
 
 /*--- declaracion los códigos en un enum ---*/
 
-//Los códigos de 8 bits representan eventos, y los de 24 representan info adicional
+//Los códigos de 8 bits representan eventos y empiezan por ev_ , y los de 24 representan info adicional
 enum {
     ev_tick_timer0			= 0xFF,
     ev_button_int			= 0xBB,

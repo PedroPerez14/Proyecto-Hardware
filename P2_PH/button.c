@@ -1,6 +1,6 @@
 /*********************************************************************************************
 * Fichero:	button.c
-* Autor:
+* Autor:	Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
 * Descrip:	Funciones de manejo de los pulsadores (EINT6-7)
 * Version:
 *********************************************************************************************/
@@ -30,10 +30,10 @@ void button_ISR(void)
 	int which_int = rEXTINTPND;
 	switch (which_int)
 		{
-			case 4:				//boton 6, izquierdo
+			case 4:					//boton 6, izquierdo
 				push_debug(ev_button_int, button_izq);
 				break;
-			case 8:				//boton 7, derecho
+			case 8:					//boton 7, derecho
 				push_debug(ev_button_int, button_der);
 				break;
 			default:
@@ -71,7 +71,16 @@ void button_iniciar(void)
 
 }
 
-void button_resetear(void)			//Reactiva int y deja button listo para uso otra vez
+void bloquear_IRQ_button(void)		//Bloquea las interrupciones para button
+{
+	rINTMSK    &= ~(BIT_EINT4567); 	// deshabilitamos interrupcion linea eint4567 en vector de mascaras
+	/* --- Creo que no es necesatio, pero por seguridad borro interrupciones pendientes de los botones --- */
+	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+	rINTMSK    &= ~(BIT_EINT4567); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
+}
+
+
+void button_resetear(void)			//Reactiva interrupciones y deja button listo para uso otra vez
 {
 	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
 	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND

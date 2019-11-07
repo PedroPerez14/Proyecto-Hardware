@@ -1,7 +1,7 @@
 /*********************************************************************************************
 * Fichero:	button.h
-* Autor:
-* Descrip:	Funciones de manejo de los pulsadores y gestión para evitar rebotes (EINT6-7)
+* Autor:	Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
+* Descrip:	Funciones de manejo de los pulsadores (EINT6-7)
 * Version:
 *********************************************************************************************/
 
@@ -18,5 +18,6 @@ void button_resetear(void);
 enum estado_button button_estado(void);
 void button_ev_pulsacion(enum estado_button boton);
 void button_ev_tick0(void);
+void bloquear_IRQ_button(void);
 
 #endif /* _BUTTON_H_ */

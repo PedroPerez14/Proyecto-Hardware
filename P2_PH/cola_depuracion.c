@@ -3,7 +3,9 @@
 * Autor:		Fernando Pe√±a Bes (NIA: 756012)
 * 				Pedro Jos√© P√©rez Garc√≠a (NIA: 756642)
 * Descrip:		Cola para depurar los eventos que llegan por los perifÈricos,
-* 				gestionada de forma circular
+* 				gestionada de forma circular.
+*				IMPORTANTE: Cima apunta al lugar donde corresponde el siguiente elemento
+*							a encolar, mientras que base no, apunta al elemento directamente
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/
@@ -32,6 +34,8 @@ void cola_depuracion_inicializar(int maxElem)
 	timer2_empezar();
 }
 
+
+/* Devuelve, por separado, el ID del evento y la informaciÛn adicional de este, tal y como le fueron suministrados a push_debug */
 void push_debug(uint8_t ID_evento, uint32_t auxData)
 {
 	uint32_t dato = (uint32_t) ID_evento << 24;
@@ -91,7 +95,6 @@ void pop_debug(uint8_t *ID_evento, uint32_t  *auxData)
 	}
 }
 
-//1 si es vacÌa y -1 si no
 int esVacia(void)
 {
 	return (numElem == 0);
