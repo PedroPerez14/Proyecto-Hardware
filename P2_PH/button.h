@@ -16,8 +16,6 @@ enum estado_button {button_none, button_iz, button_dr};
 void button_iniciar(void);
 void button_resetear(void);
 enum estado_button button_estado(void);
-void button_ev_pulsacion(enum estado_button boton);
-void button_ev_tick0(void);
 void bloquear_IRQ_button(void);
 
 #endif /* _BUTTON_H_ */

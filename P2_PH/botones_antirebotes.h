@@ -11,6 +11,8 @@
 #ifndef _BOTONES_ANTIREBOTES_H_
 #define _BOTONES_ANTIREBOTES_H_
 
+#include "button.h"
+
 //BLABLABLA
 void button_ev_pulsacion(enum estado_button boton);
 void button_ev_tick0(void);

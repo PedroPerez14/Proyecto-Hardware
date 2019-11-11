@@ -94,7 +94,7 @@ void reversi_main()
 				}
 				else
 				{
-					button_ev_pulsacion(button_der);
+					button_ev_pulsacion(button_dr);
 				}
 				break;
 			default :

@@ -17,7 +17,6 @@
 /* int_count la utilizamos para sacar un número por el 8led.
   Cuando se pulsa un botón sumamos y con el otro restamos. ¡A veces hay rebotes! */
 
-
 /* declaración de función que es rutina de servicio de interrupción
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 void button_ISR(void) __attribute__((interrupt("IRQ")));
