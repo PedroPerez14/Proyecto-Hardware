@@ -4,7 +4,6 @@
 			Fernando Peña Bes (NIA: 756012)
 			Pedro José Pérez García (NIA: 756642)
 * Descrip:	Implementación del juego reversi8.
-* 			Incluye funciones para probar patron_volteo()
 * Version:
 *********************************************************************************************/
 #include "reversi8_2019.h"
@@ -30,13 +29,14 @@ enum {
 	FICHA_NEGRA = 2
 };
 
-
 // candidatas: indica las posiciones a explorar
 // Se usa para no explorar todo el tablero innecesariamente
 // Sus posibles valores son NO, SI, CASILLA_OCUPADA
+enum {NO=0,SI=1,CASILLA_OCUPADA=2};
+/*
 const char  NO              = 0;
 const char  SI              = 1;
-const char  CASILLA_OCUPADA = 2;
+const char  CASILLA_OCUPADA = 2;*/
 
 /////////////////////////////////////////////////////////////////////////////
 // TABLAS AUXILIARES
@@ -80,17 +80,46 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM] = {
 	        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
 	    };
 
+	static char __attribute__ ((aligned (8))) candidatas[DIM][DIM] =
+    {
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO},
+        {NO,NO,NO,NO,NO,NO,NO,NO}
+    };
+
+	int done;     // la máquina ha conseguido mover o no
+    int move = 0; // el humano ha conseguido mover o no
+    int blancas, negras; // número de fichas de cada color
+    volatile int fin = 0;  // fin vale 1 si el humano no ha podido mover
+                  // (ha introducido un valor de movimiento con algún 8)
+                  // y luego la máquina tampoco puede
+    char f, c;    // fila y columna elegidas por la máquina para su movimiento
 
   ////////////////////////////////////////////////////////////////////
      // VARIABLES PARA INTERACCIONAR CON LA ENTRADA SALIDA
      // Pregunta: ¿hay que hacer algo con ellas para que esto funcione bien?
      // (por ejemplo añadir alguna palabra clave para garantizar que la sincronización a través de esa variable funcione)
-volatile char fila=0, columna=0, ready = 0;
+static volatile char fila=0, columna=0, ready=0;
 
 
-extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
+void reversi_procesar(char f, char c)
+{
+	fila = f;
+	columna = c;
+	ready = 1;
+	reversi8();
+}
+
+
+
+//extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
-extern int patron_volteo_arm_arm_opt(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
+//extern int patron_volteo_arm_arm_opt(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
@@ -151,13 +180,6 @@ void init_table(char tablero[][DIM], char candidatas[][DIM])
 // Espera a que ready valga 1.
 // CUIDADO: si el compilador coloca esta variable en un registro, no funcionará.
 // Hay que definirla como "volatile" para forzar a que antes de cada uso la cargue de memoria
-
-void esperar_mov(volatile char *ready)
-{
-    while (*ready == 0) {};  // bucle de espera de respuestas hasta que el se modifique el valor de ready (hay que hacerlo manualmente)
-
-    *ready = 0;  //una vez que pasemos el bucle volvemos a fijar ready a 0;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -235,86 +257,6 @@ int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF,
 		return NO_HAY_PATRON; // si no hay que voltear no hay patrón
 }
 
-// Función para probar que las diferentes implementaciones de patron_volteo() devuelven el mismo resultado
-// Además, se mide el tiempo de ejecutar cada implementación
-int patron_volteo_test_tiempos(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
-{
-	volatile int patron_c_c, patron_arm_c, patron_arm_arm;
-
-	volatile int timeA;
-	volatile int timeD;
-	volatile int timeT;
-
-	timer2_inicializar();
-
-	// Ejecutar patron_volteo
-	timer2_empezar();
-	timeA = timer2_leer();
-	patron_c_c = patron_volteo(tablero, longitud, FA, CA, SF, SC, color);
-	timeD = timer2_parar();
-	timeT = timeD - timeA;
-
-	volatile int longitud_c_c = *longitud;
-	*longitud = 0;
-
-	// Ejecutar patron_volteo_arm_c
-	timer2_empezar();
-	timeA = timer2_leer();
-	patron_arm_c = patron_volteo_arm_c(tablero, longitud, FA, CA, SF, SC, color);
-	timeD = timer2_parar();
-	timeT = timeD - timeA;
-
-	volatile int longitud_arm_c = *longitud;
-	*longitud = 0;
-
-	// Ejecutar patron_volteo_arm_arm
-	timer2_empezar();
-	timeA = timer2_leer();
-	patron_arm_arm = patron_volteo_arm_arm_opt(tablero, longitud, FA, CA, SF, SC, color);
-	timeD = timer2_parar();
-	timeT = timeD - timeA;
-
-	volatile int longitud_arm_arm = *longitud;
-
-	// Comprobar que los resultados de todas las funciones sean iguales
-	if (patron_c_c != patron_arm_c || patron_c_c != patron_arm_arm) {
-		while (1);
-	}
-	if (longitud_c_c != longitud_arm_c || longitud_c_c != longitud_arm_arm) {
-		while(1);
-	}
-	return patron_c_c;
-}
-
-// Función para probar que las diferentes implementaciones de patron_volteo() devuelven el mismo resultado
-int patron_volteo_test(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
-{
-	int patron_c_c, patron_arm_c, patron_arm_arm;
-
-	// Ejecutar patron_volteo
-	patron_c_c = patron_volteo(tablero, longitud, FA, CA, SF, SC, color);
-	int longitud_c_c = *longitud;
-	*longitud = 0;
-
-	// Ejecutar patron_volteo_arm_c
-	patron_arm_c = patron_volteo_arm_c(tablero, longitud, FA, CA, SF, SC, color);
-	int longitud_arm_c = *longitud;
-	*longitud = 0;
-
-	// Ejecutar patron_volteo_arm_arm
-	patron_arm_arm = patron_volteo_arm_arm(tablero, longitud, FA, CA, SF, SC, color);
-	int longitud_arm_arm = *longitud;
-
-	// Comprobar que los resultados de todas las funciones sean iguales
-	if (patron_c_c != patron_arm_c || patron_c_c != patron_arm_arm) {
-		while (1);
-	}
-	if (longitud_c_c != longitud_arm_c || longitud_c_c != longitud_arm_arm) {
-		while(1);
-	}
-	return patron_c_c;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // voltea n fichas en la dirección que toque
 // SF y SC son las cantidades a sumar para movernos en la dirección que toque
@@ -348,10 +290,7 @@ int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         SC = vSC[i];
         // flip: numero de fichas a voltear
         flip = 0;
-        //patron = patron_volteo(tablero, &flip, f, c, SF, SC, color); //WASD
-        //patron = patron_volteo_arm_c(tablero, &flip, f, c, SF, SC, color);
-        patron = patron_volteo_test(tablero, &flip, f, c, SF, SC, color);
-        //printf("Flip: %d \n", flip);
+        patron = patron_volteo_arm_arm(tablero, &flip, f, c, SF, SC, color);
         if (patron == PATRON_ENCONTRADO )
         {
             voltear(tablero, f, c, SF, SC, flip, color);
@@ -401,10 +340,7 @@ int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
 
                         // nos dice qué hay que voltear en cada dirección
                         longitud = 0;
-                        //patron = patron_volteo(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA); //WASD
-                        //patron = patron_volteo_arm_c(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
-                        patron = patron_volteo_test(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
-                        //  //printf("%d ", patron);
+                        patron = patron_volteo_arm_arm(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
                         if (patron == PATRON_ENCONTRADO)
                         {
                             found = 1;
@@ -501,502 +437,47 @@ void actualizar_candidatas(char candidatas[][DIM], char f, char c)
 // en esta versión el humano lleva negras y la máquina blancas
 // no se comprueba que el humano mueva correctamente.
 // Sólo que la máquina realice un movimiento correcto.
+
+void reversi8_inicializar()
+{
+	init_table(tablero, candidatas);
+}
+
 void reversi8()
 {
-
 	 ////////////////////////////////////////////////////////////////////
 	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
 	// sólo se exploran las que están alrededor de las fichas colocadas
 	 ////////////////////////////////////////////////////////////////////
-	char __attribute__ ((aligned (8))) candidatas[DIM][DIM] =
-    {
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO},
-        {NO,NO,NO,NO,NO,NO,NO,NO}
-    };
-
-
-    int done;     // la máquina ha conseguido mover o no
-    int move = 0; // el humano ha conseguido mover o no
-    int blancas, negras; // número de fichas de cada color
-    volatile int fin = 0;  // fin vale 1 si el humano no ha podido mover
-                  // (ha introducido un valor de movimiento con algún 8)
-                  // y luego la máquina tampoco puede
-    char f, c;    // fila y columna elegidas por la máquina para su movimiento
-
-    timer2_inicializar();
-    init_table(tablero, candidatas);
-
-    while (fin == 0)
+    if(fin == 0)
     {
         move = 0;
-        esperar_mov(&ready);
-        // si la fila o columna son 8 asumimos que el jugador no puede mover
-        if (((fila) != DIM) && ((columna) != DIM))
+        if(ready)
         {
-            tablero[fila][columna] = FICHA_NEGRA;
-            actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
-            actualizar_candidatas(candidatas, fila, columna);
-            move = 1;
-        }
-
-        // escribe el movimiento en las variables globales fila columna
-        done = elegir_mov(candidatas, tablero, &f, &c);
-        if (done == -1)
-        {
-            if (move == 0)
-                fin = 1;
-        }
-        else
-        {
-            tablero[f][c] = FICHA_BLANCA;
-            actualizar_tablero(tablero, f, c, FICHA_BLANCA);
-            actualizar_candidatas(candidatas, f, c);
+        	ready = 0;
+        	// si la fila o columna son 8 asumimos que el jugador no puede mover
+        	if (((fila) != DIM) && ((columna) != DIM))
+        	{
+        		tablero[fila][columna] = FICHA_NEGRA;
+        		actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+        		actualizar_candidatas(candidatas, fila, columna);
+        		move = 1;
+        	}
+        	// escribe el movimiento en las variables globales fila columna
+        	done = elegir_mov(candidatas, tablero, &f, &c);
+        	if (done == -1)
+        	{
+        		if (move == 0)
+        		fin = 1;
+        	}
+        	else
+        	{
+        		tablero[f][c] = FICHA_BLANCA;
+        		actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+        		actualizar_candidatas(candidatas, f, c);
+        	}
         }
     }
     contar(tablero, &blancas, &negras);
 }
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////// PRUEBAS de patron_volteo() //////////////////////////////////////////////////////
-/*
- * Autor:	Fernando Peña Bes (NIA: 756012)
-			Pedro José Pérez García (NIA: 756012)
- * Descrip:	Pruebas para comprobar las diferentes implentaciones de patron_volteo()
- *
- */
-
-// Pruebas para comprobar que todas las implementaciones devuelven el mismo resultado
-
-// Ejecuta patrón volteo en las 8 direcciones desde una casilla, probando a colocar primero una ficha negra y luego una blanca
-void comprobarFicha(char tablero[][DIM], char f, char c) {
-	int k, patron;
-	char SF, SC;
-	for (k=0; k < DIM; k++) {
-		int longitud = 0;
-		SF = vSF[k];    // k representa la dirección que miramos
-		SC = vSC[k];    // 1 es norte, 2 NE, 3 E ...
-		patron = patron_volteo_test(tablero, &longitud, f, c, SF, SC, FICHA_NEGRA);
-		longitud = 0;
-		patron = patron_volteo_test(tablero, &longitud, f, c, SF, SC, FICHA_BLANCA);
-	}
-}
-
-// Llama a comprobarFicha() desde todas las casillas de diferentes tableros
-void patron_volteo_prueba_resultado_igual(void)
-{
-	static char __attribute__ ((aligned (8))) tableroVacio[DIM][DIM] = {
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-		        {FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA}
-		    };
-
-	static char __attribute__ ((aligned (8))) tableroLleno[DIM][DIM] = {
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-			};
-
-	static char __attribute__ ((aligned (8))) tablero1[DIM][DIM] = {
-				{FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA}
-			};
-	static char __attribute__ ((aligned (8))) tablero2[DIM][DIM] = {
-				{FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA}
-			};
-	static char __attribute__ ((aligned (8))) tablero3[DIM][DIM] = {
-				{FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-				{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA}
-			};
-	static char __attribute__ ((aligned (8))) tablero4[DIM][DIM] = {
-			{FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-			{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-			{FICHA_NEGRA,FICHA_BLANCA,CASILLA_VACIA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-			{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,FICHA_BLANCA},
-			{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-			{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,FICHA_BLANCA},
-			{FICHA_NEGRA,CASILLA_VACIA,FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-			{FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA}
-		};
-
-
-	char i, j;
-
-	for (i=0; i < DIM; i++) {
-		for (j=0; j < DIM; j++) {
-			comprobarFicha(tableroVacio, i, j);
-		}
-	}
-
-	for (i=0; i < DIM; i++) {
-			for (j=0; j < DIM; j++) {
-				comprobarFicha(tableroLleno, i, j);
-			}
-		}
-
-	for (i=0; i < DIM; i++) {
-			for (j=0; j < DIM; j++) {
-				comprobarFicha(tablero1, i, j);
-			}
-		}
-
-	for (i=0; i < DIM; i++) {
-			for (j=0; j < DIM; j++) {
-				comprobarFicha(tablero2, i, j);
-			}
-		}
-
-	for (i=0; i < DIM; i++) {
-			for (j=0; j < DIM; j++) {
-				comprobarFicha(tablero3, i, j);
-			}
-		}
-
-	for (i=0; i < DIM; i++) {
-			for (j=0; j < DIM; j++) {
-				comprobarFicha(tablero4, i, j);
-			}
-		}
-}
-
-
-
-// Pruebas para evaluar que el resultado de evaluar patron_volteo es correcto
-
-// Dadas un tablero y una casilla comprueba que los resultados de patron_volteo() al colocar una ficha de un color dado en la casilla
-// introducida son iguales que los introducidos en los vectores <resultados_correctos> y <longitudes_correctas>
-void evaluar_patron_volteo(char tablero[][DIM], char f, char c, char color, int resultados_correctos[], int longitudes_correctas[]) {
-	int i;
-	for (i=0; i < DIM; i++) {
-		int resultado;
-		int longitud = 0;
-		resultado = patron_volteo_test(tablero, &longitud, f, c, vSF[i], vSC[i], color);
-		if (resultado != resultados_correctos[i] || longitud != longitudes_correctas[i]) {
-			while(1);
-		}
-	}
-}
-
-// Diferentes pruebas para evaluar que patron_volteo() devuelve el resultado esperado
-void patron_volteo_prueba_resultado_correcto() {
-	static char __attribute__ ((aligned (8))) tableroVacio[DIM][DIM] = {
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-			        {CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-			    };
-
-	int longitud = 0;
-	int resultado;
-
-	// Probar desplazamiento 0
-	resultado = patron_volteo_test(tableroVacio, &longitud, 0, 0, 0, 0, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while (1);
-	}
-
-	// Probar que devuelve error cuando la casilla está fuera de los límites
-	longitud = 0;
-	resultado = patron_volteo_test(tableroVacio, &longitud, -1, 0, 1, 1, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while(1);
-	}
-	resultado = patron_volteo_test(tableroVacio, &longitud, 0, -1, 1, 1, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while(1);
-	}
-	resultado = patron_volteo_test(tableroVacio, &longitud, 8, 0, 1, 1, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while(1);
-	}
-	resultado = patron_volteo_test(tableroVacio, &longitud, 0, 8, 1, 1, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while(1);
-	}
-	resultado = patron_volteo_test(tableroVacio, &longitud, -1, -1, 1, 1, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while(1);
-	}
-	resultado = patron_volteo_test(tableroVacio, &longitud, 8, 8, 1, 1, FICHA_NEGRA);
-	if (!(resultado == NO_HAY_PATRON && longitud == 0)) {
-		while(1);
-	}
-
-
-
-	// Evaluar casillas dentro de los límites
-
-	// A partir de aquí, y para que el código sea más legible,
-	// se ha usan los valores numéricos de PATRON_ENCONTRADO Y NO_HAY_PATRON.
-
-	// PRUEBAS COLOCANDO FICHA NEGRA //
-	// Encontrar patrones desde esquina (0,0)
-	// Se ha usado el valor numérico de PATRON_ENCONTRADO Y NO_HAY_PATRON para que el código sea más legible.
-	static char __attribute__ ((aligned (8))) tablero1[DIM][DIM] = {
-				        {CASILLA_VACIA,FICHA_BLANCA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_BLANCA,CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-				        {FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-				    };
-	int resultados_correctos1[] = {0, 0, 1, 1, 1, 0, 0, 0};
-	int longitudes_correctas1[] = {0, 0, 1, 2, 6, 0, 0, 0};
-	evaluar_patron_volteo(tablero1, 0, 0, FICHA_NEGRA, resultados_correctos1, longitudes_correctas1);
-
-	// Encontrar patrones desde un lado (3,0)
-	static char __attribute__ ((aligned (8))) tablero2[DIM][DIM] = {
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA},
-						{FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos2[] = {1, 1, 1, 1, 1, 0, 0, 0};
-	int longitudes_correctas2[] = {1, 2, 6, 1, 2, 0, 0, 0};
-	evaluar_patron_volteo(tablero2, 3, 0, FICHA_NEGRA, resultados_correctos2, longitudes_correctas2);
-
-	// Encontrar patrones desde el centro (3,3). Casillas vacías alrededor de los patrones
-	static char __attribute__ ((aligned (8))) tablero3[DIM][DIM] = {
-						{FICHA_NEGRA  ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA ,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA,FICHA_BLANCA  ,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA ,FICHA_NEGRA ,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA  ,FICHA_BLANCA ,FICHA_BLANCA ,CASILLA_VACIA,FICHA_BLANCA ,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_NEGRA  ,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA  ,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA  }
-					};
-	int resultados_correctos3[] = {0, 1, 1, 1, 1, 1, 1, 1};
-	int longitudes_correctas3[] = {0, 2, 1, 3, 2, 1, 2, 2};
-	evaluar_patron_volteo(tablero3, 3, 3, FICHA_NEGRA, resultados_correctos3, longitudes_correctas3);
-
-	// Encontrar patrones desde el centro. Casillas no vacías alrededor de los patrones
-	static char __attribute__ ((aligned (8))) tablero4[DIM][DIM] = {
-						{FICHA_NEGRA ,FICHA_BLANCA,FICHA_NEGRA ,FICHA_BLANCA ,FICHA_NEGRA ,FICHA_NEGRA ,FICHA_NEGRA ,FICHA_BLANCA},
-						{FICHA_NEGRA ,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA ,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-						{FICHA_NEGRA ,FICHA_BLANCA,FICHA_BLANCA,FICHA_NEGRA  ,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-						{FICHA_NEGRA ,FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,FICHA_BLANCA,FICHA_NEGRA ,FICHA_NEGRA ,FICHA_BLANCA},
-						{FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA ,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-						{FICHA_BLANCA,FICHA_NEGRA ,FICHA_BLANCA,FICHA_BLANCA ,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-						{FICHA_NEGRA ,FICHA_BLANCA,FICHA_NEGRA ,FICHA_NEGRA  ,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-						{FICHA_BLANCA,FICHA_NEGRA ,FICHA_NEGRA ,FICHA_NEGRA  ,FICHA_BLANCA,FICHA_NEGRA ,FICHA_NEGRA ,FICHA_NEGRA  }
-					};
-	int resultados_correctos4[] = {0, 1, 1, 1, 1, 1, 1, 1};
-	int longitudes_correctas4[] = {0, 2, 1, 3, 2, 1, 2, 2};
-	evaluar_patron_volteo(tablero4, 3, 3, FICHA_NEGRA, resultados_correctos4, longitudes_correctas4);
-
-	// Falsos patrones desde esquina (0,0)
-	// Se ha usado el valor numérico de PATRON_ENCONTRADO Y NO_HAY_PATRON para que el código sea más legible.
-	static char __attribute__ ((aligned (8))) tablero5[DIM][DIM] = {
-						{CASILLA_VACIA,FICHA_NEGRA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos5[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int longitudes_correctas5[] = {0, 0, 0, 0, 7, 0, 0, 0};
-	evaluar_patron_volteo(tablero5, 0, 0, FICHA_NEGRA, resultados_correctos5, longitudes_correctas5);
-
-	// Falsos patrones desde un lado (3,0)
-	static char __attribute__ ((aligned (8))) tablero6[DIM][DIM] = {
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos6[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int longitudes_correctas6[] = {1, 0, 1, 0, 2, 0, 0, 0};
-	evaluar_patron_volteo(tablero6, 3, 0, FICHA_NEGRA, resultados_correctos6, longitudes_correctas6);
-
-	// Falsos patrones desde el centro (3,3). Casillas vacías alrededor de los patrones
-	static char __attribute__ ((aligned (8))) tablero7[DIM][DIM] = {
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA  ,FICHA_NEGRA  ,FICHA_NEGRA  ,FICHA_NEGRA  },
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA  ,FICHA_BLANCA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA  ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_NEGRA  ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos7[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int longitudes_correctas7[] = {3, 0, 0, 0, 1, 0, 0, 1};
-	evaluar_patron_volteo(tablero7, 3, 3, FICHA_NEGRA, resultados_correctos7, longitudes_correctas7);
-
-
-
-
-
-
-	// PRUEBAS COLOCANDO FICHA BLANCA //
-	// Encontrar patrones desde esquina (0,0)
-	// Se ha usado el valor numérico de PATRON_ENCONTRADO Y NO_HAY_PATRON para que el código sea más legible.
-	static char __attribute__ ((aligned (8))) tablero8[DIM][DIM] = {
-						{CASILLA_VACIA,FICHA_NEGRA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos8[] = {0, 0, 1, 1, 1, 0, 0, 0};
-	int longitudes_correctas8[] = {0, 0, 1, 2, 6, 0, 0, 0};
-	evaluar_patron_volteo(tablero8, 0, 0, FICHA_BLANCA, resultados_correctos8, longitudes_correctas8);
-
-	// Encontrar patrones desde un lado (3,0)
-	static char __attribute__ ((aligned (8))) tablero9[DIM][DIM] = {
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_BLANCA},
-						{FICHA_NEGRA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos9[] = {1, 1, 1, 1, 1, 0, 0, 0};
-	int longitudes_correctas9[] = {1, 2, 6, 1, 2, 0, 0, 0};
-	evaluar_patron_volteo(tablero9, 3, 0, FICHA_BLANCA, resultados_correctos9, longitudes_correctas9);
-
-	// Encontrar patrones desde el centro (3,3). Casillas vacías alrededor de los patrones
-	static char __attribute__ ((aligned (8))) tablero10[DIM][DIM] = {
-						{FICHA_BLANCA  ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA ,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_NEGRA ,CASILLA_VACIA,FICHA_NEGRA  ,CASILLA_VACIA,FICHA_NEGRA ,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA ,FICHA_BLANCA ,FICHA_NEGRA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_BLANCA  ,FICHA_NEGRA ,FICHA_NEGRA ,CASILLA_VACIA,FICHA_NEGRA ,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA ,FICHA_NEGRA ,FICHA_NEGRA ,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_BLANCA  ,CASILLA_VACIA,FICHA_NEGRA ,CASILLA_VACIA,FICHA_NEGRA ,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA  ,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA ,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA  }
-					};
-	int resultados_correctos10[] = {0, 1, 1, 1, 1, 1, 1, 1};
-	int longitudes_correctas10[] = {0, 2, 1, 3, 2, 1, 2, 2};
-	evaluar_patron_volteo(tablero10, 3, 3, FICHA_BLANCA, resultados_correctos10, longitudes_correctas10);
-
-	// Encontrar patrones desde el centro. Casillas no vacías alrededor de los patrones
-	static char __attribute__ ((aligned (8))) tablero11[DIM][DIM] = {
-						{FICHA_BLANCA ,FICHA_NEGRA,FICHA_BLANCA ,FICHA_NEGRA ,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_NEGRA},
-						{FICHA_BLANCA ,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA ,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-						{FICHA_BLANCA ,FICHA_NEGRA,FICHA_NEGRA,FICHA_BLANCA  ,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-						{FICHA_BLANCA ,FICHA_NEGRA,FICHA_NEGRA,CASILLA_VACIA,FICHA_NEGRA,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_NEGRA},
-						{FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA ,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-						{FICHA_NEGRA,FICHA_BLANCA ,FICHA_NEGRA,FICHA_NEGRA ,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-						{FICHA_BLANCA ,FICHA_NEGRA,FICHA_BLANCA ,FICHA_BLANCA  ,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA},
-						{FICHA_NEGRA,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_BLANCA  ,FICHA_NEGRA,FICHA_BLANCA ,FICHA_BLANCA ,FICHA_BLANCA  }
-					};
-	int resultados_correctos11[] = {0, 1, 1, 1, 1, 1, 1, 1};
-	int longitudes_correctas11[] = {0, 2, 1, 3, 2, 1, 2, 2};
-	evaluar_patron_volteo(tablero11, 3, 3, FICHA_BLANCA, resultados_correctos11, longitudes_correctas11);
-
-	// Falsos patrones desde esquina (0,0)
-	// Se ha usado el valor numérico de PATRON_ENCONTRADO Y NO_HAY_PATRON para que el código sea más legible.
-	static char __attribute__ ((aligned (8))) tablero12[DIM][DIM] = {
-						{CASILLA_VACIA,FICHA_BLANCA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos12[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int longitudes_correctas12[] = {0, 0, 0, 0, 7, 0, 0, 0};
-	evaluar_patron_volteo(tablero12, 0, 0, FICHA_BLANCA, resultados_correctos12, longitudes_correctas12);
-
-	// Falsos patrones desde un lado (3,0)
-	static char __attribute__ ((aligned (8))) tablero13[DIM][DIM] = {
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos13[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int longitudes_correctas13[] = {1, 0, 1, 0, 2, 0, 0, 0};
-	evaluar_patron_volteo(tablero13, 3, 0, FICHA_BLANCA, resultados_correctos13, longitudes_correctas13);
-
-	// Falsos patrones desde el centro (3,3). Casillas vacías alrededor de los patrones
-	static char __attribute__ ((aligned (8))) tablero14[DIM][DIM] = {
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_NEGRA,FICHA_NEGRA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA,FICHA_BLANCA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA,FICHA_NEGRA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA},
-						{CASILLA_VACIA,FICHA_BLANCA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA,CASILLA_VACIA}
-					};
-	int resultados_correctos14[] = {0, 0, 0, 0, 0, 0, 0, 0};
-	int longitudes_correctas14[] = {3, 0, 0, 0, 1, 0, 0, 1};
-	evaluar_patron_volteo(tablero14, 3, 3, FICHA_BLANCA, resultados_correctos14, longitudes_correctas14);
-
-}
-
 

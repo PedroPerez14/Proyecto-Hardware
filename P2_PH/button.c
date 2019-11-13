@@ -14,8 +14,6 @@
 #include "cola_depuracion.h"
 #include "codigos_eventos.h"
 /*--- variables globales del módulo ---*/
-/* int_count la utilizamos para sacar un número por el 8led.
-  Cuando se pulsa un botón sumamos y con el otro restamos. ¡A veces hay rebotes! */
 
 /* declaración de función que es rutina de servicio de interrupción
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
@@ -24,6 +22,7 @@ void button_ISR(void) __attribute__((interrupt("IRQ")));
 /*--- codigo de funciones ---*/
 void button_ISR(void)
 {
+	rINTMSK    |= (BIT_EINT4567); 	// deshabilitamos interrupcion linea eint4567 en vector de mascaras
 	//HAY QUE APILAR EN LA COLA DE DEPURACION
 	/* Identificar la interrupcion (hay dos pulsadores)*/
 	int which_int = rEXTINTPND;
@@ -69,15 +68,6 @@ void button_iniciar(void)
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
 
 }
-
-void bloquear_IRQ_button(void)		//Bloquea las interrupciones para button
-{
-	rINTMSK    &= ~(BIT_EINT4567); 	// deshabilitamos interrupcion linea eint4567 en vector de mascaras
-	/* --- Creo que no es necesatio, pero por seguridad borro interrupciones pendientes de los botones --- */
-	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
-	rINTMSK    &= ~(BIT_EINT4567); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
-}
-
 
 void button_resetear(void)			//Reactiva interrupciones y deja button listo para uso otra vez
 {

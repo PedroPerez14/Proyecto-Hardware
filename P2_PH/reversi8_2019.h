@@ -14,7 +14,7 @@
 #include "timer2.h"
 
 void reversi8();
-void patron_volteo_prueba_resultado_correcto();
-void patron_volteo_prueba_resultado_igual();
+void reversi8_inicializar(void);
+void reversi_procesar(char f, char c);
 
 #endif /* _REVERSI8_2019_H_ */

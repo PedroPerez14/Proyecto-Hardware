@@ -1,5 +1,5 @@
 /*********************************************************************************************
-* Fichero:		botones_antirebotes.c
+* Fichero:		botones_antirebotes.h
 * Autor:		Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
 * Descrip:		Máquina de estados que elimina los rebotes de los pulsadores.
 * 				Las rutinas llamadas desde reversi_main invocan la función del autómata,
@@ -13,9 +13,8 @@
 
 #include "button.h"
 
-//BLABLABLA
+void botones_antirebotes_inicializar(void);
 void button_ev_pulsacion(enum estado_button boton);
 void button_ev_tick0(void);
-//Creo que no hace falta poner nada más aquí
 
 #endif /* _BOTONES_ANTIREBOTES_H_ */

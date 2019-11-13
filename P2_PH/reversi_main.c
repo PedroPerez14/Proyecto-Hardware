@@ -24,6 +24,7 @@
 #include "reversi_main.h"
 #include "codigos_eventos.h"
 #include "botones_antirebotes.h"
+#include "jugada_por_botones.h"
 #include <stdint.h>
 
 /*--- variables ---*/
@@ -32,14 +33,17 @@ static char estado_led1;
 
 /*--- Código de funciones ---*/
 
-void reversi_inicializar(void)
+void reversi_main_inicializar(void)
 {
 	//Inicializar las variables que hagan falta para proesar bien los eventos
 	timer_init();
 	estado_led1 = 0;		//Para decidir si hay que esperar 7 u 8 eventos de tipo tick_latido (en la teoría es cada 7.5)
 							//también codifica el estado del led1 si estado_led1 == 0, codifica apagado y 1, encendido
-	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, variable de la cuenta
+	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, variable de la cuenta de ticks
 	led1_off();				//El led empieza apagado
+	reversi8_inicializar();
+	botones_antirebotes_inicializar();
+	inicializar_jugada_botones();
 }
 
 void dormir_procesador(void)
@@ -72,7 +76,7 @@ void Latido_ev_new_tick(void)
 
 void reversi_main()
 {
-	reversi_inicializar();
+	reversi_main_inicializar();
 	while(1)
 	{
 		while(!esVacia())
@@ -91,13 +95,15 @@ void reversi_main()
 				if(info == button_izq)
 				{
 					button_ev_pulsacion(button_iz);
+					jugada_ev_incrementar();
 				}
 				else
 				{
 					button_ev_pulsacion(button_dr);
+					jugada_ev_der();
 				}
 				break;
-			default :
+			default : //Si es otra cosa desconocida, no lo atendemos
 				break;
 			}
 		}
