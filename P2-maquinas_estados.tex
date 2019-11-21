@@ -1,0 +1,98 @@
+\documentclass[landscape, a4paper]{article}
+\usepackage[margin=1.7cm]{geometry}
+\usepackage{underscore}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows, shapes.geometric}
+\tikzset{
+	->, % hace que los arcos sean dirigidos
+	>=stealth, % las cabezas de las flechas son en negrita
+	node distance=3cm, % Especifica la mínima distancia entre dos nodos, se puede cambiar si es necesario.
+	every state/.style={thick, fill=gray!10}, % establece las propiedades para cada nodo estado. En tickz cada objeto que se pone es un nodo. Se pueden poner arcos entre esos nodos.
+	initial text=$ $, % establece el texto que aparece en la flecha inicial
+	elliptic state/.style={draw,ellipse},
+}
+
+\begin{document}
+{\Large \bf \sffamily Práctica 2 Proyecto Hardware - Máquinas de estados}
+
+{\sffamily \large Pedro José Pérez García (NIA: 756642) y Fernando Peña Bes (NIA: 756012)}
+
+{\it \sffamily \large Curso 2019-20, Universidad de Zaragoza}
+\vfill
+	\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+		\node[elliptic state, initial, align=center] (q1) {$q0$ \\[0.2cm] \large \bf  Inicio};
+		\node[elliptic state, right of=q1, xshift=10cm, align=center] (q2) {$q1$ \\[0.2cm] \large \bf Contando \tt trp};
+		\node[elliptic state, below of=q1, yshift=-7cm, align=center] (q4) {$q3$ \\[0.2cm] \large \bf Contando \tt trd};
+		\node[elliptic state, below of=q2, yshift=-7cm, align=center] (q3) {$q2$ \\[0.2cm] \large \bf Encuestando cada 30\,ms};
+		
+		\draw 	(q1) edge[] node{} (q2)
+		
+				(q2) edge[right, align=center, sloped,anchor=south,auto=false] node{\tt cuenta_ticks = trp_en_ticks_timer0 \\\\ \huge / \normalsize \tt cuenta ticks = 0, \\ \tt estado = q2} (q3)
+				
+				(q3) edge[loop right, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() = que_button \&\& \\ \tt que_button = button_iz \&\& \\\tt cuenta_autoincremento = 20 \\ \\
+				\huge / \normalsize \tt cuenta_autoincremento = 0, \\ \tt hay_autoincremento   } (q3)
+				
+				(q3) edge[loop below, below right, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() = que_button \&\& \\ \tt que_button = button_iz \&\& \\ \tt cuenta_? = 20 \\ \\
+				\huge / \normalsize \tt cuenta_autoincremento = 0, \\ \tt hay_autoincremento = true } (q3)
+				
+				(q3) edge[above, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() != que_button \\ \\
+				\huge / \normalsize \tt  cuenta_ticks = 0, \\ \tt \hspace{1.5cm} cuenta_autoincremento = 0, \\ \tt estado = q3   } (q4)
+				
+				(q4) edge[above, align=left,  sloped,anchor=south,auto=false] 
+				node{\tt cuenta_ticks = trd_en_ticks_timer0\\ \\
+				\huge / \normalsize \tt button_estado() = 0, \\ \tt \hspace{0.4cm} atendiendo pulsacion = 0, \\ \tt \hspace{0.4cm} estado = q0, \\ \tt\hspace{0.4cm} cuenta_ticks = 0  } (q1);
+	\end{tikzpicture}
+	\caption{Máquina de estados de \tt botones_antirebotes}
+	\end{figure}
+	\vfill
+	
+	\begin{figure}
+	\centering
+	\begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+		\node[elliptic state, initial, align=center] (q1) {$q0$ \\[0.2cm] \large \bf  Inicio};
+		\node[elliptic state, right of=q1, xshift=10cm, align=center] (q2) {$q1$ \\[0.2cm] \large \bf Elige fila};
+		\node[elliptic state, below of=q1, yshift=-7cm, align=center] (q4) {$q3$ \\[0.2cm] \large \bf Elige columna};
+		\node[elliptic state, below of=q2, yshift=-7cm, align=center] (q3) {$q2$ \\[0.2cm] \large \bf Espera botón izquierdo \\ \large \bf para columna};
+		
+		\draw 	(q1) edge[above, align=center]
+				node{\tt ev_8led = 1 \\ \\
+				\huge / \normalsize \tt ev_8led = 0, \\ \tt \hspace{3.1cm} D8_led_symbol(mi_fila + 1), \\ \tt \hspace{0.2cm} estado = q1 } (q2)
+				
+				(q2) edge[loop right, align=left]
+				node{\tt ev_8led = 1  \\ \\
+				\huge / \normalsize \tt ev_8led = 0, \\ \hspace{0.4cm} \tt mi_fila += 1, \\ \hspace{0.4cm} \tt mi_fila\,\% 8, \\ \hspace{0.4cm} \tt D8led_symbol(mi_fila + 1)} (q2)
+				
+				(q2) edge[right, align=left, sloped,anchor=south,auto=false]
+				node{\tt ev_bot_der = 1 \\\\ \huge / \normalsize \tt ev_bot_der = 0,
+				 \\ \tt \hspace{0.4cm} D(led_symbol(0xC), \\ \tt \hspace{0.4cm} estado = q2} (q3)
+				
+				(q3) edge[loop below, below right, align=left]
+				node{\tt ev_bot_der = 1 \\ \\
+				\huge / \normalsize \tt ev_bot_der = 0   } (q3)
+				
+				(q3) edge[above, align=left]
+				node{\tt ev8_led = 1 \\ \\
+				\huge / \normalsize \tt  ev_8led = 0, \\ \tt \hspace{0.4cm} D8led_symbol(mi_columna + 1), \\ \hspace{0.4cm}  \tt estado = q3   } (q4)
+				
+				(q4) edge[loop below, align=left]
+				node{\tt ev8_led = 1 \\ \\
+				\huge / \normalsize \tt  ev_8led = 0,\\ \tt \hspace{0.4cm} mi_columna += 1, \\ \tt \hspace{0.4cm} mi_columna\, \% 8, \\ \tt \hspace{0.4cm} D8led_symbol(mi_columna + 1) \\ \hspace{0.4cm}} (q4)
+				
+				(q4) edge[below, align=left, sloped,anchor=south,auto=false]
+				node{\tt ev_bot_der = 1 \\ \\
+				\huge / \normalsize \tt  ev_bot_der = 0,\\ \tt \hspace{0.4cm} NOENTIENDO(mi_fila, mi_columna), \\ \tt \hspace{0.4cm} mi_fila = 0, \\ \tt \hspace{0.4cm} mi_columna = 0, \\ \tt \hspace{0.4cm} D8led_symbol(0xF), \\ \tt \hspace{0.4cm} estado = q0} (q1)
+				
+				(q1) edge[loop above, align=center] 
+				node{\tt ev_bot_der = 1 \\ \\
+				\huge / \normalsize \tt ev_bot_der = 0 } (q1);
+	\end{tikzpicture}
+	\caption{Máquina de estados de \tt jugada_por_botones}
+	\end{figure}
+	
+\end{document}
