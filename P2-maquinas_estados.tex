@@ -1,5 +1,5 @@
 \documentclass[landscape, a4paper]{article}
-\usepackage[margin=1.7cm]{geometry}
+\usepackage[margin=1.5cm]{geometry}
 \usepackage{underscore}
 \usepackage[utf8]{inputenc}
 \usepackage{parskip}
@@ -31,22 +31,22 @@
 		\node[elliptic state, below of=q1, yshift=-7cm, align=center] (q4) {$q3$ \\[0.2cm] \large \bf Contando \tt trd};
 		\node[elliptic state, below of=q2, yshift=-7cm, align=center] (q3) {$q2$ \\[0.2cm] \large \bf Encuestando cada 30\,ms};
 		
-		\draw 	(q1) edge[] node{} (q2)
+		\draw 	(q1) edge[below, align=center] node{\tt atendiendoPulsacion = 1 \\\\ \huge / \normalsize \tt cuenta_ticks = 0, \\ \tt estado = q1} (q2)
 		
-				(q2) edge[right, align=center, sloped,anchor=south,auto=false] node{\tt cuenta_ticks = trp_en_ticks_timer0 \\\\ \huge / \normalsize \tt cuenta ticks = 0, \\ \tt estado = q2} (q3)
+				(q2) edge[right, align=center, sloped,anchor=south,auto=false] node{\tt cuenta_ticks = trp_en_ticks_timer0 \\\\ \huge / \normalsize \tt cuenta_ticks = 0, \\ \tt estado = q2} (q3)
 				
 				(q3) edge[loop right, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() = que_button \&\& \\ \tt que_button = button_iz \&\& \\\tt cuenta_autoincremento = 20 \\ \\
 				\huge / \normalsize \tt cuenta_autoincremento = 0, \\ \tt hay_autoincremento   } (q3)
 				
-				(q3) edge[loop below, below right, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() = que_button \&\& \\ \tt que_button = button_iz \&\& \\ \tt cuenta_? = 20 \\ \\
-				\huge / \normalsize \tt cuenta_autoincremento = 0, \\ \tt hay_autoincremento = true } (q3)
+				(q3) edge[loop below, below right, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() = que_button \&\& \\ \tt que_button = button_iz \&\& \\ \tt hay_autoincremento = 1 \&\& \\ \tt cuenta_autoincremento = 11 \\ \\
+				\huge / \normalsize \tt cuenta_autoincremento = 0, \\ \tt jugada_ev_incrementar() } (q3)
 				
 				(q3) edge[above, align=center] node{\tt cuenta_ticks = TICKS_PARA_30_MS \&\& \\  \tt button_estado() != que_button \\ \\
 				\huge / \normalsize \tt  cuenta_ticks = 0, \\ \tt \hspace{1.5cm} cuenta_autoincremento = 0, \\ \tt estado = q3   } (q4)
 				
 				(q4) edge[above, align=left,  sloped,anchor=south,auto=false] 
 				node{\tt cuenta_ticks = trd_en_ticks_timer0\\ \\
-				\huge / \normalsize \tt button_estado() = 0, \\ \tt \hspace{0.4cm} atendiendo pulsacion = 0, \\ \tt \hspace{0.4cm} estado = q0, \\ \tt\hspace{0.4cm} cuenta_ticks = 0  } (q1);
+				\huge / \normalsize \tt button_resetear(), \\ \tt \hspace{0.4cm} atendiendo pulsacion = 0, \\ \tt \hspace{0.4cm} estado = q0, \\ \tt\hspace{0.4cm} cuenta_ticks = 0  } (q1);
 	\end{tikzpicture}
 	\caption{Máquina de estados de \tt botones_antirebotes}
 	\end{figure}
@@ -66,11 +66,11 @@
 				
 				(q2) edge[loop right, align=left]
 				node{\tt ev_8led = 1  \\ \\
-				\huge / \normalsize \tt ev_8led = 0, \\ \hspace{0.4cm} \tt mi_fila += 1, \\ \hspace{0.4cm} \tt mi_fila\,\% 8, \\ \hspace{0.4cm} \tt D8led_symbol(mi_fila + 1)} (q2)
+				\huge / \normalsize \tt ev_8led = 0, \\ \hspace{0.4cm} \tt mi_fila += 1, \\ \hspace{0.4cm} \tt mi_fila\,\%= 8, \\ \hspace{0.4cm} \tt D8Led_symbol(mi_fila + 1)} (q2)
 				
 				(q2) edge[right, align=left, sloped,anchor=south,auto=false]
 				node{\tt ev_bot_der = 1 \\\\ \huge / \normalsize \tt ev_bot_der = 0,
-				 \\ \tt \hspace{0.4cm} D(led_symbol(0xC), \\ \tt \hspace{0.4cm} estado = q2} (q3)
+				 \\ \tt \hspace{0.4cm} D8Led_symbol(0xC), \\ \tt \hspace{0.4cm} estado = q2} (q3)
 				
 				(q3) edge[loop below, below right, align=left]
 				node{\tt ev_bot_der = 1 \\ \\
@@ -78,15 +78,15 @@
 				
 				(q3) edge[above, align=left]
 				node{\tt ev8_led = 1 \\ \\
-				\huge / \normalsize \tt  ev_8led = 0, \\ \tt \hspace{0.4cm} D8led_symbol(mi_columna + 1), \\ \hspace{0.4cm}  \tt estado = q3   } (q4)
+				\huge / \normalsize \tt  ev_8led = 0, \\ \tt \hspace{0.4cm} D8Led_symbol(mi_columna + 1), \\ \hspace{0.4cm}  \tt estado = q3   } (q4)
 				
 				(q4) edge[loop below, align=left]
 				node{\tt ev8_led = 1 \\ \\
-				\huge / \normalsize \tt  ev_8led = 0,\\ \tt \hspace{0.4cm} mi_columna += 1, \\ \tt \hspace{0.4cm} mi_columna\, \% 8, \\ \tt \hspace{0.4cm} D8led_symbol(mi_columna + 1) \\ \hspace{0.4cm}} (q4)
+				\huge / \normalsize \tt  ev_8led = 0,\\ \tt \hspace{0.4cm} mi_columna += 1, \\ \tt \hspace{0.4cm} mi_columna\, \%= 8, \\ \tt \hspace{0.4cm} D8Led_symbol(mi_columna + 1) \\ \hspace{0.4cm}} (q4)
 				
 				(q4) edge[below, align=left, sloped,anchor=south,auto=false]
 				node{\tt ev_bot_der = 1 \\ \\
-				\huge / \normalsize \tt  ev_bot_der = 0,\\ \tt \hspace{0.4cm} NOENTIENDO(mi_fila, mi_columna), \\ \tt \hspace{0.4cm} mi_fila = 0, \\ \tt \hspace{0.4cm} mi_columna = 0, \\ \tt \hspace{0.4cm} D8led_symbol(0xF), \\ \tt \hspace{0.4cm} estado = q0} (q1)
+				\huge / \normalsize \tt  ev_bot_der = 0,\\ \tt \hspace{0.4cm} reversi_procesar(mi_fila, mi_columna), \\ \tt \hspace{0.4cm} mi_fila = 0, \\ \tt \hspace{0.4cm} mi_columna = 0, \\ \tt \hspace{0.4cm} D8Led_symbol(0xF), \\ \tt \hspace{0.4cm} estado = q0} (q1)
 				
 				(q1) edge[loop above, align=center] 
 				node{\tt ev_bot_der = 1 \\ \\
