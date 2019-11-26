@@ -23,7 +23,7 @@ void (*run)(void) = (void (*)(void))DOWNLOAD_ADDRESS;
 //--------------------------------SYSTEM---------------------------------//
 static int delayLoopCount = 400;
 
-void Delay(int time)
+void __attribute__((optimize("O0"))) Delay(int time)
 // time=0: adjust the Delay function by WatchDog timer
 // time>0: the number of loop time
 // 100us resolution
@@ -170,9 +170,9 @@ void sys_init()// Interrupt & Port
 	rINTMOD = 0x0;
 	rINTCON = 0x1;
 	rI_ISPC = 0xffffffff;			// clear all interrupt pend
-	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
-	Port_Init();					    // Initial 44B0X's I/O port
-	Delay(0);						      // delay time				
-	rINTMSK = ~(BIT_GLOBAL);  //enable interrupt mask vector
+	rEXTINTPND = 0xf;				// clear EXTINTPND reg
+	Port_Init();					// Initial 44B0X's I/O port
+	Delay(0);						// delay time
+	rINTMSK = ~(BIT_GLOBAL);  		//enable interrupt mask vector
 }
 

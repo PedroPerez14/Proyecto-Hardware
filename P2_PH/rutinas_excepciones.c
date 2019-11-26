@@ -1,3 +1,10 @@
+
+/*********************************************************************************************
+* Fichero:	rutinas_excepciones.c
+* Autor: 	Fernando Peña Bes (756012) y Pedro José Pérez García (756642)
+* Descrip:	Rutinas de tratamiento de las excepciones DAbort, Undefined y SWI
+* Version:
+*********************************************************************************************/
 /*--- ficheros de cabecera ---*/
 #include "rutinas_excepciones.h"
 #include "8led.h"
@@ -8,35 +15,36 @@
 #include "debug.h"
 #include <stdint.h>
 
-/*--- variables globales del mÃ³dulo (hacen falta?)---*/ 
-static int hay_excepcion;
-uint32_t causa_fallo;
+/*--- variables globales del módulo (hacen falta?)---*/
+volatile static int hay_excepcion;
+volatile uint32_t causa_fallo;
 /*--- Declaraciones de las diferentes rutinas para tratamiento de las excepciones ---*/
-void Gestion_excepciones(void) __attribute__((interrupt("ABORT")));
-void Gestion_excepciones(void) __attribute__((interrupt("SWI")));
-void Gestion_excepciones(void) __attribute__((interrupt("UNDEF")));
+volatile void Gestion_excepciones(void) __attribute__((interrupt("ABORT")));
+volatile void Gestion_excepciones(void) __attribute__((interrupt("SWI")));
+volatile void Gestion_excepciones(void) __attribute__((interrupt("UNDEF")));
 
-uint32_t __get_CPSR() 					//Devuelve CPSR
+//Ignorar warning, sí que devuelve lo que debe, pero sin hacer return en C como tal
+volatile uint32_t __get_CPSR() 					//Devuelve CPSR
 	{
-		__asm("MRS r0, CPSR");
-		__asm("bx lr");
+		__asm volatile ("MRS r0, CPSR");
+		__asm volatile ("bx lr");
 	}
 
-void parpadear_error(int caracter)		//8-led se queda parpadeando con el cÃ³digo del error
-{										//segÃºn lo definido en el enum del .h
-		while(1)
-		{
-			D8Led_symbol(caracter);
-			Delay(2500);
-			D8Led_symbol(16);
-			Delay(1250);
-		}
+void __attribute__((optimize("O0"))) parpadear_error(int caracter)		//8-led se queda parpadeando con el código del error
+{																		//según lo definido en el enum del .h
+	while(1)
+	{
+		D8Led_symbol(caracter);
+		Delay(2500);
+		D8Led_symbol(16);
+		Delay(1250);
+	}
 }
 
-void Gestion_excepciones(void)
+volatile void Gestion_excepciones(void)
 {
-	asm(" mov %0,lr\n" : "=r" (causa_fallo));
-	uint32_t cpsr = __get_CPSR();
+	asm volatile(" mov %0,lr\n" : "=r" (causa_fallo));
+	volatile uint32_t cpsr = __get_CPSR();
 	if((cpsr & 0x0000001F) == 0x1b) 		//Si Estamos en modo Undef
 	{
 		hay_excepcion = UNDEF;
@@ -49,7 +57,7 @@ void Gestion_excepciones(void)
 		causa_fallo = causa_fallo - 4;
 		parpadear_error(SWI);
 	}
-	else								//Estamos en modo ABORT
+	else									//Estamos en modo ABORT
 	{
 		hay_excepcion = DABORT;
 		causa_fallo = causa_fallo - 8;
@@ -57,9 +65,9 @@ void Gestion_excepciones(void)
 	}
 }
 
-//Inicializa la gestiÃ³n de las excepciones de los tipos UNDEF, SWi y DABORT
+//Inicializa la gestión de las excepciones de los tipos UNDEF, SWi y DABORT
 
-void Gestion_excepciones_init(void)
+volatile void Gestion_excepciones_init(void)
 {
 	pISR_DABORT = (int) Gestion_excepciones;
 	pISR_SWI = (int) Gestion_excepciones;

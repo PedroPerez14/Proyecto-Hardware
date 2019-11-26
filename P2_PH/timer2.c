@@ -10,6 +10,9 @@
 #include "44b.h"
 #include "44blib.h"
 
+/*Variables del m�dulo*/
+static volatile unsigned int timer2_num_int;
+
 /* declaraciï¿½n de funciï¿½n que es rutina de servicio de interrupciï¿½n
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 void timer2_ISR(void) __attribute__((interrupt("IRQ")));
@@ -18,8 +21,10 @@ void timer2_ISR(void) __attribute__((interrupt("IRQ")));
 void timer2_ISR(void)
 {
 	timer2_num_int += 1;
-	/* borrar bit en I_ISPC para desactivar la solicitud de interrupciï¿½n*/
-	rI_ISPC |= BIT_TIMER2; // BIT_TIMER0 estï¿½ definido en 44b.h y pone un uno en el bit 13 que correponde al Timer0
+	/* borrar bit en I_ISPC para desactivar la solicitud de interrupci�n*/
+	rI_ISPC |= BIT_TIMER2; // BIT_TIMER2 est� definido en 44b.h y pone un uno en el bit que correponde al Timer2
+
+
 }
 
 void timer2_inicializar(void)

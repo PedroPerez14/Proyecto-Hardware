@@ -9,7 +9,7 @@
 #define _TIMER2_H_
 
 /*--- variables visibles del m�dulo timer2.c/timer2.h ---*/
-static volatile unsigned int timer2_num_int;
+
 enum
 {
 	COMP_VALUE = 0,

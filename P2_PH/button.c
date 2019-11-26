@@ -22,11 +22,21 @@ void button_ISR(void) __attribute__((interrupt("IRQ")));
 /*--- codigo de funciones ---*/
 void button_ISR(void)
 {
-	rINTMSK    |= (BIT_EINT4567); 	// deshabilitamos interrupcion linea eint4567 en vector de mascaras
-	//HAY QUE APILAR EN LA COLA DE DEPURACION
+	rINTMSK  |= (BIT_EINT4567); 	//Deshabilitamos interrupcion linea eint4567 en vector de mascaras
+	volatile int which_int = rEXTINTPND;
+	rEXTINTPND |= 0xa;				// borra los bits 6 y 7 en EXTINTPND
+	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+
+	asm("mrs r2, cpsr");
+	asm("mov r3,#31");
+	asm("orr r2,r2,r3");
+	asm("mvn r3,#128");
+	asm("and r2,r2,r3");
+	asm("msr cpsr,r2");
+
 	/* Identificar la interrupcion (hay dos pulsadores)*/
-	int which_int = rEXTINTPND;
-	switch (which_int)
+
+	switch(which_int)
 		{
 			case 4:					//boton 6, izquierdo
 				push_debug(ev_button_int, button_izq);
@@ -37,6 +47,13 @@ void button_ISR(void)
 			default:
 				break;
 		}
+
+	asm("mrs r2, cpsr");
+	asm("mvn r3,#31");
+	asm("and r2,r2,r3");
+	asm("mov r3,#0x12");
+	asm("add r2,r2,r3");
+	asm("msr cpsr,r2");
 
 	/* Finalizar ISR */
 	rEXTINTPND |= 0xa;				// borra los bits 6 y 7 en EXTINTPND
@@ -99,4 +116,3 @@ enum estado_button button_estado(void)
 		return button_none;
 	}
 }
-//TODO puede fallar, cuidado

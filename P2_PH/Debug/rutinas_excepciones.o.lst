@@ -6,327 +6,304 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"rutinas_excepciones.c"
   21              	.Ltext0:
   22              		.file 1 "../rutinas_excepciones.c"
  2227              		.align	2
- 2228              	hay_excepcion:
- 2229 0000 00000000 		.space	4
- 2230              		.comm	causa_fallo,4,4
- 2231              		.text
- 2232              		.align	2
- 2233              		.global	__get_CPSR
- 2235              	__get_CPSR:
- 2236              	.LFB0:
-   1:../rutinas_excepciones.c **** /*--- ficheros de cabecera ---*/
-   2:../rutinas_excepciones.c **** #include "rutinas_excepciones.h"
-   3:../rutinas_excepciones.c **** #include "8led.h"
-   4:../rutinas_excepciones.c **** #include "led.h"
-   5:../rutinas_excepciones.c **** #include "44blib.h"
-   6:../rutinas_excepciones.c **** #include "44b.h"
-   7:../rutinas_excepciones.c **** #include "def.h"
-   8:../rutinas_excepciones.c **** #include "debug.h"
-   9:../rutinas_excepciones.c **** #include <stdint.h>
-  10:../rutinas_excepciones.c **** 
-  11:../rutinas_excepciones.c **** /*--- variables globales del mÃ³dulo (hacen falta?)---*/ 
-  12:../rutinas_excepciones.c **** static int hay_excepcion;
-  13:../rutinas_excepciones.c **** uint32_t causa_fallo;
-  14:../rutinas_excepciones.c **** /*--- Declaraciones de las diferentes rutinas para tratamiento de las excepciones ---*/
-  15:../rutinas_excepciones.c **** void Gestion_excepciones(void) __attribute__((interrupt("ABORT")));
-  16:../rutinas_excepciones.c **** void Gestion_excepciones(void) __attribute__((interrupt("SWI")));
-  17:../rutinas_excepciones.c **** void Gestion_excepciones(void) __attribute__((interrupt("UNDEF")));
-  18:../rutinas_excepciones.c **** 
-  19:../rutinas_excepciones.c **** uint32_t __get_CPSR() 					//Devuelve CPSR
-  20:../rutinas_excepciones.c **** 	{
- 2237              		.loc 1 20 0
- 2238              		.cfi_startproc
- 2239              		@ Function supports interworking.
- 2240              		@ args = 0, pretend = 0, frame = 0
- 2241              		@ frame_needed = 1, uses_anonymous_args = 0
- 2242 0000 0DC0A0E1 		mov	ip, sp
- 2243              	.LCFI0:
- 2244              		.cfi_def_cfa_register 12
- 2245 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2246 0008 04B04CE2 		sub	fp, ip, #4
- 2247              		.cfi_offset 14, -8
- 2248              		.cfi_offset 13, -12
- 2249              		.cfi_offset 11, -16
- 2250              	.LCFI1:
- 2251              		.cfi_def_cfa 11, 4
-  21:../rutinas_excepciones.c **** 		__asm("MRS r0, CPSR");
- 2252              		.loc 1 21 0
- 2253              	@ 21 "../rutinas_excepciones.c" 1
- 2254 000c 00000FE1 		MRS r0, CPSR
- 2255              	@ 0 "" 2
-  22:../rutinas_excepciones.c **** 		__asm("bx lr");
- 2256              		.loc 1 22 0
- 2257              	@ 22 "../rutinas_excepciones.c" 1
- 2258 0010 1EFF2FE1 		bx lr
- 2259              	@ 0 "" 2
-  23:../rutinas_excepciones.c **** 	}
- 2260              		.loc 1 23 0
- 2261 0014 0300A0E1 		mov	r0, r3
- 2262 0018 0CD04BE2 		sub	sp, fp, #12
- 2263 001c 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2264 0020 1EFF2FE1 		bx	lr
- 2265              		.cfi_endproc
- 2266              	.LFE0:
- 2268              		.align	2
- 2269              		.global	parpadear_error
- 2271              	parpadear_error:
- 2272              	.LFB1:
-  24:../rutinas_excepciones.c **** 
-  25:../rutinas_excepciones.c **** void parpadear_error(int caracter)		//8-led se queda parpadeando con el cÃ³digo del error
-  26:../rutinas_excepciones.c **** {										//segÃºn lo definido en el enum del .h
- 2273              		.loc 1 26 0
- 2274              		.cfi_startproc
- 2275              		@ Function supports interworking.
- 2276              		@ args = 0, pretend = 0, frame = 8
- 2277              		@ frame_needed = 1, uses_anonymous_args = 0
- 2278 0024 0DC0A0E1 		mov	ip, sp
- 2279              	.LCFI2:
- 2280              		.cfi_def_cfa_register 12
- 2281 0028 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2282 002c 04B04CE2 		sub	fp, ip, #4
- 2283              		.cfi_offset 14, -8
- 2284              		.cfi_offset 13, -12
- 2285              		.cfi_offset 11, -16
- 2286              	.LCFI3:
- 2287              		.cfi_def_cfa 11, 4
- 2288 0030 08D04DE2 		sub	sp, sp, #8
- 2289 0034 10000BE5 		str	r0, [fp, #-16]
- 2290              	.L3:
-  27:../rutinas_excepciones.c **** 		while(1)
-  28:../rutinas_excepciones.c **** 		{
-  29:../rutinas_excepciones.c **** 			D8Led_symbol(caracter);
- 2291              		.loc 1 29 0 discriminator 1
- 2292 0038 10001BE5 		ldr	r0, [fp, #-16]
- 2293 003c FEFFFFEB 		bl	D8Led_symbol
-  30:../rutinas_excepciones.c **** 			Delay(2500);
- 2294              		.loc 1 30 0 discriminator 1
- 2295 0040 14009FE5 		ldr	r0, .L4
- 2296 0044 FEFFFFEB 		bl	Delay
-  31:../rutinas_excepciones.c **** 			D8Led_symbol(16);
- 2297              		.loc 1 31 0 discriminator 1
- 2298 0048 1000A0E3 		mov	r0, #16
- 2299 004c FEFFFFEB 		bl	D8Led_symbol
-  32:../rutinas_excepciones.c **** 			Delay(1250);
- 2300              		.loc 1 32 0 discriminator 1
- 2301 0050 08009FE5 		ldr	r0, .L4+4
- 2302 0054 FEFFFFEB 		bl	Delay
-  33:../rutinas_excepciones.c **** 		}
- 2303              		.loc 1 33 0 discriminator 1
- 2304 0058 F6FFFFEA 		b	.L3
- 2305              	.L5:
- 2306              		.align	2
- 2307              	.L4:
- 2308 005c C4090000 		.word	2500
- 2309 0060 E2040000 		.word	1250
- 2310              		.cfi_endproc
- 2311              	.LFE1:
- 2313              		.align	2
- 2314              		.global	Gestion_excepciones
- 2316              	Gestion_excepciones:
- 2317              	.LFB2:
-  34:../rutinas_excepciones.c **** }
-  35:../rutinas_excepciones.c **** 
-  36:../rutinas_excepciones.c **** void Gestion_excepciones(void)
-  37:../rutinas_excepciones.c **** {
- 2318              		.loc 1 37 0
- 2319              		.cfi_startproc
- 2320              		@ ARM Exception Handler.
- 2321              		@ args = 0, pretend = 0, frame = 8
- 2322              		@ frame_needed = 1, uses_anonymous_args = 0
- 2323 0064 04C02DE5 		str	ip, [sp, #-4]!
- 2324 0068 0DC0A0E1 		mov	ip, sp
- 2325              	.LCFI4:
- 2326              		.cfi_def_cfa_register 12
- 2327 006c 0FD82DE9 		stmfd	sp!, {r0, r1, r2, r3, fp, ip, lr, pc}
- 2328 0070 04B04CE2 		sub	fp, ip, #4
- 2329              		.cfi_offset 14, -8
- 2330              		.cfi_offset 13, -12
- 2331              		.cfi_offset 11, -16
- 2332              		.cfi_offset 3, -20
- 2333              		.cfi_offset 2, -24
- 2334              		.cfi_offset 1, -28
- 2335              		.cfi_offset 0, -32
- 2336              	.LCFI5:
- 2337              		.cfi_def_cfa 11, 4
- 2338 0074 08D04DE2 		sub	sp, sp, #8
-  38:../rutinas_excepciones.c **** 	asm(" mov %0,lr\n" : "=r" (causa_fallo));
- 2339              		.loc 1 38 0
- 2340              	@ 38 "../rutinas_excepciones.c" 1
- 2341 0078 0E20A0E1 		 mov r2,lr
- 2342              	
- 2343              	@ 0 "" 2
- 2344 007c B8309FE5 		ldr	r3, .L10
- 2345 0080 002083E5 		str	r2, [r3, #0]
-  39:../rutinas_excepciones.c **** 	uint32_t cpsr = __get_CPSR();
- 2346              		.loc 1 39 0
- 2347 0084 FEFFFFEB 		bl	__get_CPSR
- 2348 0088 20000BE5 		str	r0, [fp, #-32]
-  40:../rutinas_excepciones.c **** 	if((cpsr & 0x0000001F) == 0x1b) 		//Si Estamos en modo Undef
- 2349              		.loc 1 40 0
- 2350 008c 20301BE5 		ldr	r3, [fp, #-32]
- 2351 0090 1F3003E2 		and	r3, r3, #31
- 2352 0094 1B0053E3 		cmp	r3, #27
- 2353 0098 0A00001A 		bne	.L7
-  41:../rutinas_excepciones.c **** 	{
-  42:../rutinas_excepciones.c **** 		hay_excepcion = UNDEF;
- 2354              		.loc 1 42 0
- 2355 009c 9C309FE5 		ldr	r3, .L10+4
- 2356 00a0 0320A0E3 		mov	r2, #3
- 2357 00a4 002083E5 		str	r2, [r3, #0]
-  43:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 4;
- 2358              		.loc 1 43 0
- 2359 00a8 8C309FE5 		ldr	r3, .L10
- 2360 00ac 003093E5 		ldr	r3, [r3, #0]
- 2361 00b0 042043E2 		sub	r2, r3, #4
- 2362 00b4 80309FE5 		ldr	r3, .L10
- 2363 00b8 002083E5 		str	r2, [r3, #0]
-  44:../rutinas_excepciones.c **** 		parpadear_error(UNDEF);
- 2364              		.loc 1 44 0
- 2365 00bc 0300A0E3 		mov	r0, #3
- 2366 00c0 FEFFFFEB 		bl	parpadear_error
- 2367 00c4 180000EA 		b	.L6
- 2368              	.L7:
-  45:../rutinas_excepciones.c **** 	}
-  46:../rutinas_excepciones.c **** 	else if((cpsr & 0x0000001F) == 0x13) 	//Si Estamos en modo SVC de SWI
- 2369              		.loc 1 46 0
- 2370 00c8 20301BE5 		ldr	r3, [fp, #-32]
- 2371 00cc 1F3003E2 		and	r3, r3, #31
- 2372 00d0 130053E3 		cmp	r3, #19
- 2373 00d4 0A00001A 		bne	.L9
-  47:../rutinas_excepciones.c **** 	{
-  48:../rutinas_excepciones.c **** 		hay_excepcion = SWI;
- 2374              		.loc 1 48 0
- 2375 00d8 60309FE5 		ldr	r3, .L10+4
- 2376 00dc 0120A0E3 		mov	r2, #1
- 2377 00e0 002083E5 		str	r2, [r3, #0]
-  49:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 4;
- 2378              		.loc 1 49 0
- 2379 00e4 50309FE5 		ldr	r3, .L10
- 2380 00e8 003093E5 		ldr	r3, [r3, #0]
- 2381 00ec 042043E2 		sub	r2, r3, #4
- 2382 00f0 44309FE5 		ldr	r3, .L10
- 2383 00f4 002083E5 		str	r2, [r3, #0]
-  50:../rutinas_excepciones.c **** 		parpadear_error(SWI);
- 2384              		.loc 1 50 0
- 2385 00f8 0100A0E3 		mov	r0, #1
- 2386 00fc FEFFFFEB 		bl	parpadear_error
- 2387 0100 090000EA 		b	.L6
- 2388              	.L9:
-  51:../rutinas_excepciones.c **** 	}
-  52:../rutinas_excepciones.c **** 	else								//Estamos en modo ABORT
-  53:../rutinas_excepciones.c **** 	{
-  54:../rutinas_excepciones.c **** 		hay_excepcion = DABORT;
- 2389              		.loc 1 54 0
- 2390 0104 34309FE5 		ldr	r3, .L10+4
- 2391 0108 0220A0E3 		mov	r2, #2
- 2392 010c 002083E5 		str	r2, [r3, #0]
-  55:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 8;
- 2393              		.loc 1 55 0
- 2394 0110 24309FE5 		ldr	r3, .L10
- 2395 0114 003093E5 		ldr	r3, [r3, #0]
- 2396 0118 082043E2 		sub	r2, r3, #8
- 2397 011c 18309FE5 		ldr	r3, .L10
- 2398 0120 002083E5 		str	r2, [r3, #0]
-  56:../rutinas_excepciones.c **** 		parpadear_error(DABORT);
- 2399              		.loc 1 56 0
- 2400 0124 0200A0E3 		mov	r0, #2
- 2401 0128 FEFFFFEB 		bl	parpadear_error
- 2402              	.L6:
-  57:../rutinas_excepciones.c **** 	}
-  58:../rutinas_excepciones.c **** }
- 2403              		.loc 1 58 0
- 2404 012c 1CD04BE2 		sub	sp, fp, #28
- 2405 0130 0F689DE8 		ldmfd	sp, {r0, r1, r2, r3, fp, sp, lr}
- 2406 0134 04C09DE4 		ldmfd	sp!, {ip}
- 2407 0138 0EF0B0E1 		movs	pc, lr
- 2408              	.L11:
- 2409              		.align	2
- 2410              	.L10:
- 2411 013c 00000000 		.word	causa_fallo
- 2412 0140 00000000 		.word	hay_excepcion
- 2413              		.cfi_endproc
- 2414              	.LFE2:
- 2416              		.align	2
- 2417              		.global	Gestion_excepciones_init
- 2419              	Gestion_excepciones_init:
- 2420              	.LFB3:
-  59:../rutinas_excepciones.c **** 
-  60:../rutinas_excepciones.c **** //Inicializa la gestiÃ³n de las excepciones de los tipos UNDEF, SWi y DABORT
-  61:../rutinas_excepciones.c **** 
-  62:../rutinas_excepciones.c **** void Gestion_excepciones_init(void)
-  63:../rutinas_excepciones.c **** {
- 2421              		.loc 1 63 0
- 2422              		.cfi_startproc
- 2423              		@ Function supports interworking.
- 2424              		@ args = 0, pretend = 0, frame = 0
- 2425              		@ frame_needed = 1, uses_anonymous_args = 0
- 2426 0144 0DC0A0E1 		mov	ip, sp
- 2427              	.LCFI6:
- 2428              		.cfi_def_cfa_register 12
- 2429 0148 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2430 014c 04B04CE2 		sub	fp, ip, #4
- 2431              		.cfi_offset 14, -8
- 2432              		.cfi_offset 13, -12
- 2433              		.cfi_offset 11, -16
- 2434              	.LCFI7:
- 2435              		.cfi_def_cfa 11, 4
-  64:../rutinas_excepciones.c **** 	pISR_DABORT = (int) Gestion_excepciones;
- 2436              		.loc 1 64 0
- 2437 0150 34309FE5 		ldr	r3, .L13
- 2438 0154 34209FE5 		ldr	r2, .L13+4
- 2439 0158 002083E5 		str	r2, [r3, #0]
-  65:../rutinas_excepciones.c **** 	pISR_SWI = (int) Gestion_excepciones;
- 2440              		.loc 1 65 0
- 2441 015c 30309FE5 		ldr	r3, .L13+8
- 2442 0160 28209FE5 		ldr	r2, .L13+4
- 2443 0164 002083E5 		str	r2, [r3, #0]
-  66:../rutinas_excepciones.c **** 	pISR_UNDEF = (int) Gestion_excepciones;
- 2444              		.loc 1 66 0
- 2445 0168 28309FE5 		ldr	r3, .L13+12
- 2446 016c 1C209FE5 		ldr	r2, .L13+4
- 2447 0170 002083E5 		str	r2, [r3, #0]
-  67:../rutinas_excepciones.c **** 	hay_excepcion = NO_EXCEPT;
- 2448              		.loc 1 67 0
- 2449 0174 20309FE5 		ldr	r3, .L13+16
- 2450 0178 0020A0E3 		mov	r2, #0
- 2451 017c 002083E5 		str	r2, [r3, #0]
-  68:../rutinas_excepciones.c **** }
- 2452              		.loc 1 68 0
- 2453 0180 0CD04BE2 		sub	sp, fp, #12
- 2454 0184 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2455 0188 1EFF2FE1 		bx	lr
- 2456              	.L14:
- 2457              		.align	2
- 2458              	.L13:
- 2459 018c 10FF7F0C 		.word	209714960
- 2460 0190 00000000 		.word	Gestion_excepciones
- 2461 0194 08FF7F0C 		.word	209714952
- 2462 0198 04FF7F0C 		.word	209714948
- 2463 019c 00000000 		.word	hay_excepcion
- 2464              		.cfi_endproc
- 2465              	.LFE3:
- 2467              	.Letext0:
+ 2228              		.global	__get_CPSR
+ 2230              	__get_CPSR:
+ 2231              	.LFB0:
+   1:../rutinas_excepciones.c **** 
+   2:../rutinas_excepciones.c **** /*********************************************************************************************
+   3:../rutinas_excepciones.c **** * Fichero:	rutinas_excepciones.c
+   4:../rutinas_excepciones.c **** * Autor: 	Fernando Peña Bes (756012) y Pedro José Pérez García (756642)
+   5:../rutinas_excepciones.c **** * Descrip:	Rutinas de tratamiento de las excepciones DAbort, Undefined y SWI
+   6:../rutinas_excepciones.c **** * Version:
+   7:../rutinas_excepciones.c **** *********************************************************************************************/
+   8:../rutinas_excepciones.c **** /*--- ficheros de cabecera ---*/
+   9:../rutinas_excepciones.c **** #include "rutinas_excepciones.h"
+  10:../rutinas_excepciones.c **** #include "8led.h"
+  11:../rutinas_excepciones.c **** #include "led.h"
+  12:../rutinas_excepciones.c **** #include "44blib.h"
+  13:../rutinas_excepciones.c **** #include "44b.h"
+  14:../rutinas_excepciones.c **** #include "def.h"
+  15:../rutinas_excepciones.c **** #include "debug.h"
+  16:../rutinas_excepciones.c **** #include <stdint.h>
+  17:../rutinas_excepciones.c **** 
+  18:../rutinas_excepciones.c **** /*--- variables globales del módulo (hacen falta?)---*/
+  19:../rutinas_excepciones.c **** volatile static int hay_excepcion;
+  20:../rutinas_excepciones.c **** volatile uint32_t causa_fallo;
+  21:../rutinas_excepciones.c **** /*--- Declaraciones de las diferentes rutinas para tratamiento de las excepciones ---*/
+  22:../rutinas_excepciones.c **** volatile void Gestion_excepciones(void) __attribute__((interrupt("ABORT")));
+  23:../rutinas_excepciones.c **** volatile void Gestion_excepciones(void) __attribute__((interrupt("SWI")));
+  24:../rutinas_excepciones.c **** volatile void Gestion_excepciones(void) __attribute__((interrupt("UNDEF")));
+  25:../rutinas_excepciones.c **** 
+  26:../rutinas_excepciones.c **** //Ignorar warning, sí que devuelve lo que debe, pero sin hacer return en C como tal
+  27:../rutinas_excepciones.c **** volatile uint32_t __get_CPSR() 					//Devuelve CPSR
+  28:../rutinas_excepciones.c **** 	{
+ 2232              		.loc 1 28 0
+ 2233              		.cfi_startproc
+ 2234              		@ Function supports interworking.
+ 2235              		@ args = 0, pretend = 0, frame = 0
+ 2236              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2237              		@ link register save eliminated.
+  29:../rutinas_excepciones.c **** 		__asm volatile ("MRS r0, CPSR");
+ 2238              		.loc 1 29 0
+ 2239              	@ 29 "../rutinas_excepciones.c" 1
+ 2240 0000 00000FE1 		MRS r0, CPSR
+ 2241              	@ 0 "" 2
+  30:../rutinas_excepciones.c **** 		__asm volatile ("bx lr");
+ 2242              		.loc 1 30 0
+ 2243              	@ 30 "../rutinas_excepciones.c" 1
+ 2244 0004 1EFF2FE1 		bx lr
+ 2245              	@ 0 "" 2
+  31:../rutinas_excepciones.c **** 	}
+ 2246              		.loc 1 31 0
+ 2247 0008 1EFF2FE1 		bx	lr
+ 2248              		.cfi_endproc
+ 2249              	.LFE0:
+ 2251              		.align	2
+ 2252              		.global	parpadear_error
+ 2254              	parpadear_error:
+ 2255              	.LFB1:
+  32:../rutinas_excepciones.c **** 
+  33:../rutinas_excepciones.c **** void __attribute__((optimize("O0"))) parpadear_error(int caracter)		//8-led se queda parpadeando co
+  34:../rutinas_excepciones.c **** {																		//según lo definido en el enum del .h
+ 2256              		.loc 1 34 0
+ 2257              		.cfi_startproc
+ 2258              		@ Function supports interworking.
+ 2259              		@ args = 0, pretend = 0, frame = 8
+ 2260              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2261              	.LVL0:
+ 2262 000c 0DC0A0E1 		mov	ip, sp
+ 2263              	.LCFI0:
+ 2264              		.cfi_def_cfa_register 12
+ 2265 0010 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2266 0014 04B04CE2 		sub	fp, ip, #4
+ 2267              		.cfi_offset 14, -8
+ 2268              		.cfi_offset 13, -12
+ 2269              		.cfi_offset 11, -16
+ 2270              	.LCFI1:
+ 2271              		.cfi_def_cfa 11, 4
+ 2272 0018 08D04DE2 		sub	sp, sp, #8
+ 2273 001c 10000BE5 		str	r0, [fp, #-16]
+ 2274              	.LVL1:
+ 2275              	.L3:
+  35:../rutinas_excepciones.c **** 	while(1)
+  36:../rutinas_excepciones.c **** 	{
+  37:../rutinas_excepciones.c **** 		D8Led_symbol(caracter);
+ 2276              		.loc 1 37 0 discriminator 1
+ 2277 0020 10001BE5 		ldr	r0, [fp, #-16]
+ 2278 0024 FEFFFFEB 		bl	D8Led_symbol
+  38:../rutinas_excepciones.c **** 		Delay(2500);
+ 2279              		.loc 1 38 0 discriminator 1
+ 2280 0028 14009FE5 		ldr	r0, .L4
+ 2281 002c FEFFFFEB 		bl	Delay
+  39:../rutinas_excepciones.c **** 		D8Led_symbol(16);
+ 2282              		.loc 1 39 0 discriminator 1
+ 2283 0030 1000A0E3 		mov	r0, #16
+ 2284 0034 FEFFFFEB 		bl	D8Led_symbol
+  40:../rutinas_excepciones.c **** 		Delay(1250);
+ 2285              		.loc 1 40 0 discriminator 1
+ 2286 0038 08009FE5 		ldr	r0, .L4+4
+ 2287 003c FEFFFFEB 		bl	Delay
+ 2288 0040 F6FFFFEA 		b	.L3
+ 2289              	.L5:
+ 2290              		.align	2
+ 2291              	.L4:
+ 2292 0044 C4090000 		.word	2500
+ 2293 0048 E2040000 		.word	1250
+ 2294              		.cfi_endproc
+ 2295              	.LFE1:
+ 2297              		.align	2
+ 2298              		.global	Gestion_excepciones
+ 2300              	Gestion_excepciones:
+ 2301              	.LFB2:
+  41:../rutinas_excepciones.c **** 	}
+  42:../rutinas_excepciones.c **** }
+  43:../rutinas_excepciones.c **** 
+  44:../rutinas_excepciones.c **** volatile void Gestion_excepciones(void)
+  45:../rutinas_excepciones.c **** {
+ 2302              		.loc 1 45 0
+ 2303              		.cfi_startproc
+ 2304              		@ ARM Exception Handler.
+ 2305              		@ args = 0, pretend = 0, frame = 8
+ 2306              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2307 004c 04C02DE5 		str	ip, [sp, #-4]!
+ 2308 0050 0DC0A0E1 		mov	ip, sp
+ 2309              	.LCFI2:
+ 2310              		.cfi_def_cfa_register 12
+ 2311 0054 1FD82DE9 		stmfd	sp!, {r0, r1, r2, r3, r4, fp, ip, lr, pc}
+ 2312 0058 04B04CE2 		sub	fp, ip, #4
+ 2313              		.cfi_offset 14, -8
+ 2314              		.cfi_offset 13, -12
+ 2315              		.cfi_offset 11, -16
+ 2316              		.cfi_offset 4, -20
+ 2317              		.cfi_offset 3, -24
+ 2318              		.cfi_offset 2, -28
+ 2319              		.cfi_offset 1, -32
+ 2320              		.cfi_offset 0, -36
+ 2321              	.LCFI3:
+ 2322              		.cfi_def_cfa 11, 4
+ 2323 005c 0CD04DE2 		sub	sp, sp, #12
+  46:../rutinas_excepciones.c **** 	asm volatile(" mov %0,lr\n" : "=r" (causa_fallo));
+ 2324              		.loc 1 46 0
+ 2325              	@ 46 "../rutinas_excepciones.c" 1
+ 2326 0060 0E00A0E1 		 mov r0,lr
+ 2327              	
+ 2328              	@ 0 "" 2
+ 2329 0064 78409FE5 		ldr	r4, .L13
+ 2330 0068 000084E5 		str	r0, [r4, #0]
+  47:../rutinas_excepciones.c **** 	volatile uint32_t cpsr = __get_CPSR();
+ 2331              		.loc 1 47 0
+ 2332 006c FEFFFFEB 		bl	__get_CPSR
+ 2333              	.LVL2:
+ 2334 0070 28000BE5 		str	r0, [fp, #-40]
+  48:../rutinas_excepciones.c **** 	if((cpsr & 0x0000001F) == 0x1b) 		//Si Estamos en modo Undef
+ 2335              		.loc 1 48 0
+ 2336 0074 28101BE5 		ldr	r1, [fp, #-40]
+ 2337 0078 1F3001E2 		and	r3, r1, #31
+ 2338 007c 1B0053E3 		cmp	r3, #27
+  49:../rutinas_excepciones.c **** 	{
+  50:../rutinas_excepciones.c **** 		hay_excepcion = UNDEF;
+ 2339              		.loc 1 50 0
+ 2340 0080 0300A003 		moveq	r0, #3
+ 2341              	.LVL3:
+  48:../rutinas_excepciones.c **** 	if((cpsr & 0x0000001F) == 0x1b) 		//Si Estamos en modo Undef
+ 2342              		.loc 1 48 0
+ 2343 0084 0F00000A 		beq	.L10
+  51:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 4;
+  52:../rutinas_excepciones.c **** 		parpadear_error(UNDEF);
+  53:../rutinas_excepciones.c **** 	}
+  54:../rutinas_excepciones.c **** 	else if((cpsr & 0x0000001F) == 0x13) 	//Si Estamos en modo SVC de SWI
+ 2344              		.loc 1 54 0
+ 2345 0088 28C01BE5 		ldr	ip, [fp, #-40]
+ 2346 008c 1F200CE2 		and	r2, ip, #31
+ 2347 0090 130052E3 		cmp	r2, #19
+ 2348 0094 0A00000A 		beq	.L12
+  55:../rutinas_excepciones.c **** 	{
+  56:../rutinas_excepciones.c **** 		hay_excepcion = SWI;
+  57:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 4;
+  58:../rutinas_excepciones.c **** 		parpadear_error(SWI);
+  59:../rutinas_excepciones.c **** 	}
+  60:../rutinas_excepciones.c **** 	else									//Estamos en modo ABORT
+  61:../rutinas_excepciones.c **** 	{
+  62:../rutinas_excepciones.c **** 		hay_excepcion = DABORT;
+ 2349              		.loc 1 62 0
+ 2350 0098 48E09FE5 		ldr	lr, .L13+4
+ 2351 009c 0200A0E3 		mov	r0, #2
+ 2352 00a0 00008EE5 		str	r0, [lr, #0]
+  63:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 8;
+ 2353              		.loc 1 63 0
+ 2354 00a4 00C094E5 		ldr	ip, [r4, #0]
+ 2355 00a8 08204CE2 		sub	r2, ip, #8
+ 2356 00ac 002084E5 		str	r2, [r4, #0]
+  64:../rutinas_excepciones.c **** 		parpadear_error(DABORT);
+ 2357              		.loc 1 64 0
+ 2358 00b0 FEFFFFEB 		bl	parpadear_error
+ 2359              	.L6:
+  65:../rutinas_excepciones.c **** 	}
+  66:../rutinas_excepciones.c **** }
+ 2360              		.loc 1 66 0
+ 2361 00b4 20D04BE2 		sub	sp, fp, #32
+ 2362 00b8 1F689DE8 		ldmfd	sp, {r0, r1, r2, r3, r4, fp, sp, lr}
+ 2363 00bc 04C09DE4 		ldmfd	sp!, {ip}
+ 2364 00c0 0EF0B0E1 		movs	pc, lr
+ 2365              	.L12:
+  56:../rutinas_excepciones.c **** 		hay_excepcion = SWI;
+ 2366              		.loc 1 56 0
+ 2367 00c4 0100A0E3 		mov	r0, #1
+ 2368              	.L10:
+ 2369 00c8 18109FE5 		ldr	r1, .L13+4
+ 2370 00cc 000081E5 		str	r0, [r1, #0]
+  57:../rutinas_excepciones.c **** 		causa_fallo = causa_fallo - 4;
+ 2371              		.loc 1 57 0
+ 2372 00d0 003094E5 		ldr	r3, [r4, #0]
+ 2373 00d4 04E043E2 		sub	lr, r3, #4
+ 2374 00d8 00E084E5 		str	lr, [r4, #0]
+  58:../rutinas_excepciones.c **** 		parpadear_error(SWI);
+ 2375              		.loc 1 58 0
+ 2376 00dc FEFFFFEB 		bl	parpadear_error
+ 2377 00e0 F3FFFFEA 		b	.L6
+ 2378              	.L14:
+ 2379              		.align	2
+ 2380              	.L13:
+ 2381 00e4 00000000 		.word	causa_fallo
+ 2382 00e8 00000000 		.word	.LANCHOR0
+ 2383              		.cfi_endproc
+ 2384              	.LFE2:
+ 2386              		.align	2
+ 2387              		.global	Gestion_excepciones_init
+ 2389              	Gestion_excepciones_init:
+ 2390              	.LFB3:
+  67:../rutinas_excepciones.c **** 
+  68:../rutinas_excepciones.c **** //Inicializa la gestión de las excepciones de los tipos UNDEF, SWi y DABORT
+  69:../rutinas_excepciones.c **** 
+  70:../rutinas_excepciones.c **** volatile void Gestion_excepciones_init(void)
+  71:../rutinas_excepciones.c **** {
+ 2391              		.loc 1 71 0
+ 2392              		.cfi_startproc
+ 2393              		@ Function supports interworking.
+ 2394              		@ args = 0, pretend = 0, frame = 0
+ 2395              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2396              		@ link register save eliminated.
+  72:../rutinas_excepciones.c **** 	pISR_DABORT = (int) Gestion_excepciones;
+ 2397              		.loc 1 72 0
+ 2398 00ec 1C009FE5 		ldr	r0, .L16
+ 2399 00f0 1C109FE5 		ldr	r1, .L16+4
+  73:../rutinas_excepciones.c **** 	pISR_SWI = (int) Gestion_excepciones;
+  74:../rutinas_excepciones.c **** 	pISR_UNDEF = (int) Gestion_excepciones;
+  75:../rutinas_excepciones.c **** 	hay_excepcion = NO_EXCEPT;
+ 2400              		.loc 1 75 0
+ 2401 00f4 1C309FE5 		ldr	r3, .L16+8
+ 2402 00f8 0020A0E3 		mov	r2, #0
+  72:../rutinas_excepciones.c **** 	pISR_DABORT = (int) Gestion_excepciones;
+ 2403              		.loc 1 72 0
+ 2404 00fc EF0001E5 		str	r0, [r1, #-239]
+  73:../rutinas_excepciones.c **** 	pISR_SWI = (int) Gestion_excepciones;
+ 2405              		.loc 1 73 0
+ 2406 0100 F70001E5 		str	r0, [r1, #-247]
+  74:../rutinas_excepciones.c **** 	pISR_UNDEF = (int) Gestion_excepciones;
+ 2407              		.loc 1 74 0
+ 2408 0104 FB0001E5 		str	r0, [r1, #-251]
+ 2409              		.loc 1 75 0
+ 2410 0108 002083E5 		str	r2, [r3, #0]
+  76:../rutinas_excepciones.c **** }
+ 2411              		.loc 1 76 0
+ 2412 010c 1EFF2FE1 		bx	lr
+ 2413              	.L17:
+ 2414              		.align	2
+ 2415              	.L16:
+ 2416 0110 00000000 		.word	Gestion_excepciones
+ 2417 0114 FFFF7F0C 		.word	209715199
+ 2418 0118 00000000 		.word	.LANCHOR0
+ 2419              		.cfi_endproc
+ 2420              	.LFE3:
+ 2422              		.comm	causa_fallo,4,4
+ 2423              		.bss
+ 2424              		.align	2
+ 2425              		.set	.LANCHOR0,. + 0
+ 2428              	hay_excepcion:
+ 2429 0000 00000000 		.space	4
+ 2430              		.text
+ 2431              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 rutinas_excepciones.c
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2227   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2228   .bss:00000000 hay_excepcion
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2227   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2230   .text:00000000 __get_CPSR
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2254   .text:0000000c parpadear_error
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2292   .text:00000044 $d
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2297   .text:0000004c $a
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2300   .text:0000004c Gestion_excepciones
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2381   .text:000000e4 $d
                             *COM*:00000004 causa_fallo
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2232   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2235   .text:00000000 __get_CPSR
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2271   .text:00000024 parpadear_error
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2308   .text:0000005c $d
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2313   .text:00000064 $a
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2316   .text:00000064 Gestion_excepciones
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2411   .text:0000013c $d
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2416   .text:00000144 $a
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2419   .text:00000144 Gestion_excepciones_init
-C:\Users\guest\AppData\Local\Temp\ccq4Lk0a.s:2459   .text:0000018c $d
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2386   .text:000000ec $a
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2389   .text:000000ec Gestion_excepciones_init
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2416   .text:00000110 $d
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2424   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccv8QFru.s:2428   .bss:00000000 hay_excepcion
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

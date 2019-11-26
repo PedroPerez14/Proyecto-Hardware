@@ -118,7 +118,7 @@ void reversi_procesar(char f, char c)
 
 
 //extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
-extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
+//extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 //extern int patron_volteo_arm_arm_opt(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +290,7 @@ int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         SC = vSC[i];
         // flip: numero de fichas a voltear
         flip = 0;
-        patron = patron_volteo_arm_arm(tablero, &flip, f, c, SF, SC, color);
+        patron = patron_volteo(tablero, &flip, f, c, SF, SC, color);
         if (patron == PATRON_ENCONTRADO )
         {
             voltear(tablero, f, c, SF, SC, flip, color);
@@ -340,7 +340,7 @@ int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
 
                         // nos dice qué hay que voltear en cada dirección
                         longitud = 0;
-                        patron = patron_volteo_arm_arm(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        patron = patron_volteo(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
                         if (patron == PATRON_ENCONTRADO)
                         {
                             found = 1;

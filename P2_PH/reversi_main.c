@@ -28,6 +28,7 @@
 #include <stdint.h>
 
 /*--- variables ---*/
+static enum {ticks_latido_A = 7, ticks_latido_B = 8};
 static int cuenta_int_latido;
 static char estado_led1;
 
@@ -38,8 +39,12 @@ void reversi_main_inicializar(void)
 	//Inicializar las variables que hagan falta para proesar bien los eventos
 	timer_init();
 	estado_led1 = 0;		//Para decidir si hay que esperar 7 u 8 eventos de tipo tick_latido (en la teoría es cada 7.5)
-							//también codifica el estado del led1 si estado_led1 == 0, codifica apagado y 1, encendido
-	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, variable de la cuenta de ticks
+							//Porque timer0 interrumpe 60 veces/seg. y el led debe latir(encender y apagar) 4 veces por segundo
+							// 	por tanto 60/4 = 15, y 15/2 = 7.5, el número de interrupciones del timer
+							//	tras el que debe cambiar su estado (on/off)
+							//También codifica el estado del led1 si estado_led1 == 0, codifica apagado y 1, encendido
+
+	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, como ya se ha explicado
 	led1_off();				//El led empieza apagado
 	reversi8_inicializar();
 	botones_antirebotes_inicializar();
@@ -54,9 +59,9 @@ void dormir_procesador(void)
 void Latido_ev_new_tick(void)
 {
 	cuenta_int_latido += 1;
-	if(estado_led1 == 0)
+	if(estado_led1 == 0)	//Unas veces 7 y otras 8, 7.5 de media
 	{
-		if(cuenta_int_latido == 7)
+		if(cuenta_int_latido == ticks_latido_A)
 		{
 			estado_led1 = 1;
 			led1_on();
@@ -65,7 +70,7 @@ void Latido_ev_new_tick(void)
 	}
 	else
 	{
-		if(cuenta_int_latido == 8)
+		if(cuenta_int_latido == ticks_latido_B)
 		{
 			estado_led1 = 0;
 			led1_off();
@@ -81,24 +86,24 @@ void reversi_main()
 	{
 		while(!esVacia())
 		{
-			//procesar
+			//Desencolar para poder procesar la información
 			uint8_t evento;
 			uint32_t info;
 			pop_debug(&evento, &info);
 			switch(evento)
 			{
-			case ev_tick_timer0 :
+			case ev_tick_timer0 :	//Atender eventos de timer0
 				Latido_ev_new_tick();
 				button_ev_tick0();
 				break;
-			case ev_button_int :
+			case ev_button_int :	//Atender eventos de los botones
 				if(info == button_izq)
-				{
+				{	//Botón izquierdo
 					button_ev_pulsacion(button_iz);
 					jugada_ev_incrementar();
 				}
 				else
-				{
+				{	//Botón deecho
 					button_ev_pulsacion(button_dr);
 					jugada_ev_der();
 				}
