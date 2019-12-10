@@ -1,0 +1,825 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"jugada_por_botones.c"
+  21              	.Ltext0:
+  22              		.file 1 "../jugada_por_botones.c"
+ 1938              	jugada_botones:
+ 1939 0000 00       		.space	1
+ 1940 0001 000000   		.align	2
+ 1941              	ev_bot_izq:
+ 1942 0004 00000000 		.space	4
+ 1943              		.align	2
+ 1944              	ev_bot_der:
+ 1945 0008 00000000 		.space	4
+ 1946              		.align	2
+ 1947              	ev_tp:
+ 1948 000c 00000000 		.space	4
+ 1949              	mi_fila:
+ 1950 0010 00       		.space	1
+ 1951              	mi_columna:
+ 1952 0011 00       		.space	1
+ 1953 0012 0000     		.align	2
+ 1954              	haciendo_DMA:
+ 1955 0014 00000000 		.space	4
+ 1956              		.align	2
+ 1957              	ev_timer2:
+ 1958 0018 00000000 		.space	4
+ 1959              		.align	2
+ 1960              	fin:
+ 1961 001c 00000000 		.space	4
+ 1962              		.align	2
+ 1963              	tiempo_calc:
+ 1964 0020 00000000 		.space	4
+ 1965              		.align	2
+ 1966              	tiempo_total:
+ 1967 0024 00000000 		.space	4
+ 1968              		.align	2
+ 1969              	tiempo_pv:
+ 1970 0028 00000000 		.space	4
+ 1971              		.align	2
+ 1972              	veces_pv:
+ 1973 002c 00000000 		.space	4
+ 1974              		.text
+ 1975              		.align	2
+ 1976              		.global	inicializar_jugada_botones
+ 1978              	inicializar_jugada_botones:
+ 1979              	.LFB0:
+   1:../jugada_por_botones.c **** /*********************************************************************************************
+   2:../jugada_por_botones.c **** * Fichero:		jugada_por_botones.c
+   3:../jugada_por_botones.c **** * Autor:		Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
+   4:../jugada_por_botones.c **** * Descrip:		Máquina de estados que gestiona la lógica del juego reversi.
+   5:../jugada_por_botones.c **** * 				Las rutinas llamadas desde reversi_main invocan la función del autómata,
+   6:../jugada_por_botones.c **** *				que comprueba si debe realizar alguna acción o no.
+   7:../jugada_por_botones.c **** * Version:		
+   8:../jugada_por_botones.c **** *********************************************************************************************/
+   9:../jugada_por_botones.c **** 
+  10:../jugada_por_botones.c **** /*--- ficheros de cabecera ---*/
+  11:../jugada_por_botones.c **** #include "led.h"
+  12:../jugada_por_botones.c **** #include "44b.h"
+  13:../jugada_por_botones.c **** #include "44blib.h"
+  14:../jugada_por_botones.c **** #include "botones_antirebotes.h"
+  15:../jugada_por_botones.c **** #include "8led.h"
+  16:../jugada_por_botones.c **** #include "button.h"
+  17:../jugada_por_botones.c **** #include "codigos_eventos.h"
+  18:../jugada_por_botones.c **** #include "reversi8_2019.h"
+  19:../jugada_por_botones.c **** #include "jugada_por_botones.h"
+  20:../jugada_por_botones.c **** 
+  21:../jugada_por_botones.c **** /*--- variables del módulo ---*/
+  22:../jugada_por_botones.c **** 
+  23:../jugada_por_botones.c **** static enum estados{Reglas, Jugando, Fin} jugada_botones;
+  24:../jugada_por_botones.c **** static int ev_bot_izq = 0;			//Indica cuándo hay que  actualizar el valor que aparece en el 8led, p
+  25:../jugada_por_botones.c **** static int ev_bot_der = 0;			//Flag que señaliza cuándo han pulsado el botón derecho, y cuántas vec
+  26:../jugada_por_botones.c **** static int ev_tp = 0;				//Indica que hay que atender un toque del touchpad de alguien
+  27:../jugada_por_botones.c **** static char mi_fila = 0;			//La fila donde queremos poner ficha
+  28:../jugada_por_botones.c **** static char mi_columna = 0;			//La columna donde queremos poner ficha
+  29:../jugada_por_botones.c **** static int haciendo_DMA = 0;		//Si estamos haciendo un DMA al LCD
+  30:../jugada_por_botones.c **** static int ev_timer2 = 0;			//Interrupción del timer2 que indica que hay que refrescar tiempos en p
+  31:../jugada_por_botones.c **** static int fin = 0;					//0 si no ha terminado, 1 para jugador gana y 2 para CPU gana
+  32:../jugada_por_botones.c **** /* PROFILING */
+  33:../jugada_por_botones.c **** static int tiempo_calc = 0;
+  34:../jugada_por_botones.c **** static int tiempo_total = 0;
+  35:../jugada_por_botones.c **** static int tiempo_pv = 0;
+  36:../jugada_por_botones.c **** static int veces_pv = 0;
+  37:../jugada_por_botones.c **** 
+  38:../jugada_por_botones.c **** void inicializar_jugada_botones()
+  39:../jugada_por_botones.c **** {
+ 1980              		.loc 1 39 0
+ 1981              		.cfi_startproc
+ 1982              		@ Function supports interworking.
+ 1983              		@ args = 0, pretend = 0, frame = 0
+ 1984              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1985 0000 0DC0A0E1 		mov	ip, sp
+ 1986              	.LCFI0:
+ 1987              		.cfi_def_cfa_register 12
+ 1988 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1989 0008 04B04CE2 		sub	fp, ip, #4
+ 1990              		.cfi_offset 14, -8
+ 1991              		.cfi_offset 13, -12
+ 1992              		.cfi_offset 11, -16
+ 1993              	.LCFI1:
+ 1994              		.cfi_def_cfa 11, 4
+  40:../jugada_por_botones.c **** 	haciendo_DMA = 1;
+ 1995              		.loc 1 40 0
+ 1996 000c A0309FE5 		ldr	r3, .L2
+ 1997 0010 0120A0E3 		mov	r2, #1
+ 1998 0014 002083E5 		str	r2, [r3, #0]
+  41:../jugada_por_botones.c **** 	mi_fila = 0;
+ 1999              		.loc 1 41 0
+ 2000 0018 98309FE5 		ldr	r3, .L2+4
+ 2001 001c 0020A0E3 		mov	r2, #0
+ 2002 0020 0020C3E5 		strb	r2, [r3, #0]
+  42:../jugada_por_botones.c **** 	mi_columna = 0;
+ 2003              		.loc 1 42 0
+ 2004 0024 90309FE5 		ldr	r3, .L2+8
+ 2005 0028 0020A0E3 		mov	r2, #0
+ 2006 002c 0020C3E5 		strb	r2, [r3, #0]
+  43:../jugada_por_botones.c **** 	ev_bot_izq = 0;
+ 2007              		.loc 1 43 0
+ 2008 0030 88309FE5 		ldr	r3, .L2+12
+ 2009 0034 0020A0E3 		mov	r2, #0
+ 2010 0038 002083E5 		str	r2, [r3, #0]
+  44:../jugada_por_botones.c **** 	ev_bot_der = 0;
+ 2011              		.loc 1 44 0
+ 2012 003c 80309FE5 		ldr	r3, .L2+16
+ 2013 0040 0020A0E3 		mov	r2, #0
+ 2014 0044 002083E5 		str	r2, [r3, #0]
+  45:../jugada_por_botones.c **** 	ev_tp = 0;
+ 2015              		.loc 1 45 0
+ 2016 0048 78309FE5 		ldr	r3, .L2+20
+ 2017 004c 0020A0E3 		mov	r2, #0
+ 2018 0050 002083E5 		str	r2, [r3, #0]
+  46:../jugada_por_botones.c **** 	ev_timer2 = 0;
+ 2019              		.loc 1 46 0
+ 2020 0054 70309FE5 		ldr	r3, .L2+24
+ 2021 0058 0020A0E3 		mov	r2, #0
+ 2022 005c 002083E5 		str	r2, [r3, #0]
+  47:../jugada_por_botones.c **** 	fin = 0;
+ 2023              		.loc 1 47 0
+ 2024 0060 68309FE5 		ldr	r3, .L2+28
+ 2025 0064 0020A0E3 		mov	r2, #0
+ 2026 0068 002083E5 		str	r2, [r3, #0]
+  48:../jugada_por_botones.c **** 	tiempo_calc = 0;
+ 2027              		.loc 1 48 0
+ 2028 006c 60309FE5 		ldr	r3, .L2+32
+ 2029 0070 0020A0E3 		mov	r2, #0
+ 2030 0074 002083E5 		str	r2, [r3, #0]
+  49:../jugada_por_botones.c **** 	tiempo_total = 0;
+ 2031              		.loc 1 49 0
+ 2032 0078 58309FE5 		ldr	r3, .L2+36
+ 2033 007c 0020A0E3 		mov	r2, #0
+ 2034 0080 002083E5 		str	r2, [r3, #0]
+  50:../jugada_por_botones.c **** 	tiempo_pv = 0;
+ 2035              		.loc 1 50 0
+ 2036 0084 50309FE5 		ldr	r3, .L2+40
+ 2037 0088 0020A0E3 		mov	r2, #0
+ 2038 008c 002083E5 		str	r2, [r3, #0]
+  51:../jugada_por_botones.c **** 	veces_pv = 0;
+ 2039              		.loc 1 51 0
+ 2040 0090 48309FE5 		ldr	r3, .L2+44
+ 2041 0094 0020A0E3 		mov	r2, #0
+ 2042 0098 002083E5 		str	r2, [r3, #0]
+  52:../jugada_por_botones.c **** 	jugada_botones = Reglas;
+ 2043              		.loc 1 52 0
+ 2044 009c 40309FE5 		ldr	r3, .L2+48
+ 2045 00a0 0020A0E3 		mov	r2, #0
+ 2046 00a4 0020C3E5 		strb	r2, [r3, #0]
+  53:../jugada_por_botones.c **** 	//Poner pantalla de reglas por DMA
+  54:../jugada_por_botones.c **** 	//
+  55:../jugada_por_botones.c **** 	//
+  56:../jugada_por_botones.c **** }
+ 2047              		.loc 1 56 0
+ 2048 00a8 0CD04BE2 		sub	sp, fp, #12
+ 2049 00ac 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2050 00b0 1EFF2FE1 		bx	lr
+ 2051              	.L3:
+ 2052              		.align	2
+ 2053              	.L2:
+ 2054 00b4 14000000 		.word	haciendo_DMA
+ 2055 00b8 10000000 		.word	mi_fila
+ 2056 00bc 11000000 		.word	mi_columna
+ 2057 00c0 04000000 		.word	ev_bot_izq
+ 2058 00c4 08000000 		.word	ev_bot_der
+ 2059 00c8 0C000000 		.word	ev_tp
+ 2060 00cc 18000000 		.word	ev_timer2
+ 2061 00d0 1C000000 		.word	fin
+ 2062 00d4 20000000 		.word	tiempo_calc
+ 2063 00d8 24000000 		.word	tiempo_total
+ 2064 00dc 28000000 		.word	tiempo_pv
+ 2065 00e0 2C000000 		.word	veces_pv
+ 2066 00e4 00000000 		.word	jugada_botones
+ 2067              		.cfi_endproc
+ 2068              	.LFE0:
+ 2070              		.align	2
+ 2071              		.global	jugada_por_botones
+ 2073              	jugada_por_botones:
+ 2074              	.LFB1:
+  57:../jugada_por_botones.c **** 
+  58:../jugada_por_botones.c **** void jugada_por_botones()
+  59:../jugada_por_botones.c **** {
+ 2075              		.loc 1 59 0
+ 2076              		.cfi_startproc
+ 2077              		@ Function supports interworking.
+ 2078              		@ args = 0, pretend = 0, frame = 8
+ 2079              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2080 00e8 0DC0A0E1 		mov	ip, sp
+ 2081              	.LCFI2:
+ 2082              		.cfi_def_cfa_register 12
+ 2083 00ec 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2084 00f0 04B04CE2 		sub	fp, ip, #4
+ 2085              		.cfi_offset 14, -8
+ 2086              		.cfi_offset 13, -12
+ 2087              		.cfi_offset 11, -16
+ 2088              	.LCFI3:
+ 2089              		.cfi_def_cfa 11, 4
+ 2090 00f4 08D04DE2 		sub	sp, sp, #8
+  60:../jugada_por_botones.c **** 	switch(jugada_botones)
+ 2091              		.loc 1 60 0
+ 2092 00f8 BC329FE5 		ldr	r3, .L25
+ 2093 00fc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2094 0100 000053E3 		cmp	r3, #0
+ 2095 0104 0200000A 		beq	.L6
+ 2096 0108 010053E3 		cmp	r3, #1
+ 2097 010c 2000000A 		beq	.L7
+ 2098 0110 910000EA 		b	.L18
+ 2099              	.L6:
+  61:../jugada_por_botones.c **** 	{
+  62:../jugada_por_botones.c **** 	case Reglas:
+  63:../jugada_por_botones.c **** 		if(ev_bot_der > 0)
+ 2100              		.loc 1 63 0
+ 2101 0114 A4329FE5 		ldr	r3, .L25+4
+ 2102 0118 003093E5 		ldr	r3, [r3, #0]
+ 2103 011c 000053E3 		cmp	r3, #0
+ 2104 0120 020000DA 		ble	.L8
+  64:../jugada_por_botones.c **** 		{
+  65:../jugada_por_botones.c **** 			ev_bot_der = 0;
+ 2105              		.loc 1 65 0
+ 2106 0124 94329FE5 		ldr	r3, .L25+4
+ 2107 0128 0020A0E3 		mov	r2, #0
+ 2108 012c 002083E5 		str	r2, [r3, #0]
+ 2109              	.L8:
+  66:../jugada_por_botones.c **** 		}
+  67:../jugada_por_botones.c **** 		if(ev_bot_izq > 0)
+ 2110              		.loc 1 67 0
+ 2111 0130 8C329FE5 		ldr	r3, .L25+8
+ 2112 0134 003093E5 		ldr	r3, [r3, #0]
+ 2113 0138 000053E3 		cmp	r3, #0
+ 2114 013c 020000DA 		ble	.L9
+  68:../jugada_por_botones.c **** 		{
+  69:../jugada_por_botones.c **** 			ev_bot_izq = 0;
+ 2115              		.loc 1 69 0
+ 2116 0140 7C329FE5 		ldr	r3, .L25+8
+ 2117 0144 0020A0E3 		mov	r2, #0
+ 2118 0148 002083E5 		str	r2, [r3, #0]
+ 2119              	.L9:
+  70:../jugada_por_botones.c **** 		}
+  71:../jugada_por_botones.c **** 		if(ev_tp == 1)
+ 2120              		.loc 1 71 0
+ 2121 014c 74329FE5 		ldr	r3, .L25+12
+ 2122 0150 003093E5 		ldr	r3, [r3, #0]
+ 2123 0154 010053E3 		cmp	r3, #1
+ 2124 0158 8900001A 		bne	.L19
+  72:../jugada_por_botones.c **** 		{
+  73:../jugada_por_botones.c **** 			ev_tp = 0;
+ 2125              		.loc 1 73 0
+ 2126 015c 64329FE5 		ldr	r3, .L25+12
+ 2127 0160 0020A0E3 		mov	r2, #0
+ 2128 0164 002083E5 		str	r2, [r3, #0]
+  74:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2129              		.loc 1 74 0
+ 2130 0168 5C329FE5 		ldr	r3, .L25+16
+ 2131 016c 003093E5 		ldr	r3, [r3, #0]
+ 2132 0170 000053E3 		cmp	r3, #0
+ 2133 0174 8400001A 		bne	.L20
+  75:../jugada_por_botones.c **** 			{
+  76:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 2134              		.loc 1 76 0
+ 2135 0178 4C329FE5 		ldr	r3, .L25+16
+ 2136 017c 0120A0E3 		mov	r2, #1
+ 2137 0180 002083E5 		str	r2, [r3, #0]
+  77:../jugada_por_botones.c **** 				jugada_botones = Jugando;
+ 2138              		.loc 1 77 0
+ 2139 0184 30329FE5 		ldr	r3, .L25
+ 2140 0188 0120A0E3 		mov	r2, #1
+ 2141 018c 0020C3E5 		strb	r2, [r3, #0]
+  78:../jugada_por_botones.c **** 				//poner DMA de pantalla de juego
+  79:../jugada_por_botones.c **** 			}
+  80:../jugada_por_botones.c **** 		}
+  81:../jugada_por_botones.c **** 		break;
+ 2142              		.loc 1 81 0
+ 2143 0190 860000EA 		b	.L4
+ 2144              	.L7:
+  82:../jugada_por_botones.c **** 	case Jugando:
+  83:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_bot_der > 0)		//Incrementar fila
+ 2145              		.loc 1 83 0
+ 2146 0194 30329FE5 		ldr	r3, .L25+16
+ 2147 0198 003093E5 		ldr	r3, [r3, #0]
+ 2148 019c 000053E3 		cmp	r3, #0
+ 2149 01a0 1100001A 		bne	.L12
+ 2150              		.loc 1 83 0 is_stmt 0 discriminator 1
+ 2151 01a4 14329FE5 		ldr	r3, .L25+4
+ 2152 01a8 003093E5 		ldr	r3, [r3, #0]
+ 2153 01ac 000053E3 		cmp	r3, #0
+ 2154 01b0 0D0000DA 		ble	.L12
+  84:../jugada_por_botones.c **** 		{
+  85:../jugada_por_botones.c **** 			ev_bot_der --;
+ 2155              		.loc 1 85 0 is_stmt 1
+ 2156 01b4 04329FE5 		ldr	r3, .L25+4
+ 2157 01b8 003093E5 		ldr	r3, [r3, #0]
+ 2158 01bc 012043E2 		sub	r2, r3, #1
+ 2159 01c0 F8319FE5 		ldr	r3, .L25+4
+ 2160 01c4 002083E5 		str	r2, [r3, #0]
+  86:../jugada_por_botones.c **** 			mi_fila++;
+ 2161              		.loc 1 86 0
+ 2162 01c8 00329FE5 		ldr	r3, .L25+20
+ 2163 01cc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2164 01d0 013083E2 		add	r3, r3, #1
+ 2165 01d4 FF2003E2 		and	r2, r3, #255
+ 2166 01d8 F0319FE5 		ldr	r3, .L25+20
+ 2167 01dc 0020C3E5 		strb	r2, [r3, #0]
+  87:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 2168              		.loc 1 87 0
+ 2169 01e0 E4319FE5 		ldr	r3, .L25+16
+ 2170 01e4 0120A0E3 		mov	r2, #1
+ 2171 01e8 002083E5 		str	r2, [r3, #0]
+ 2172              	.L12:
+  88:../jugada_por_botones.c **** 			//DMA act pantalla
+  89:../jugada_por_botones.c **** 		}
+  90:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_bot_izq > 0)		//Incrementar columna
+ 2173              		.loc 1 90 0
+ 2174 01ec D8319FE5 		ldr	r3, .L25+16
+ 2175 01f0 003093E5 		ldr	r3, [r3, #0]
+ 2176 01f4 000053E3 		cmp	r3, #0
+ 2177 01f8 1100001A 		bne	.L13
+ 2178              		.loc 1 90 0 is_stmt 0 discriminator 1
+ 2179 01fc C0319FE5 		ldr	r3, .L25+8
+ 2180 0200 003093E5 		ldr	r3, [r3, #0]
+ 2181 0204 000053E3 		cmp	r3, #0
+ 2182 0208 0D0000DA 		ble	.L13
+  91:../jugada_por_botones.c **** 		{
+  92:../jugada_por_botones.c **** 			ev_bot_izq --;
+ 2183              		.loc 1 92 0 is_stmt 1
+ 2184 020c B0319FE5 		ldr	r3, .L25+8
+ 2185 0210 003093E5 		ldr	r3, [r3, #0]
+ 2186 0214 012043E2 		sub	r2, r3, #1
+ 2187 0218 A4319FE5 		ldr	r3, .L25+8
+ 2188 021c 002083E5 		str	r2, [r3, #0]
+  93:../jugada_por_botones.c **** 			mi_columna++;
+ 2189              		.loc 1 93 0
+ 2190 0220 AC319FE5 		ldr	r3, .L25+24
+ 2191 0224 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2192 0228 013083E2 		add	r3, r3, #1
+ 2193 022c FF2003E2 		and	r2, r3, #255
+ 2194 0230 9C319FE5 		ldr	r3, .L25+24
+ 2195 0234 0020C3E5 		strb	r2, [r3, #0]
+  94:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 2196              		.loc 1 94 0
+ 2197 0238 8C319FE5 		ldr	r3, .L25+16
+ 2198 023c 0120A0E3 		mov	r2, #1
+ 2199 0240 002083E5 		str	r2, [r3, #0]
+ 2200              	.L13:
+  95:../jugada_por_botones.c **** 			//DMA act pantalla
+  96:../jugada_por_botones.c **** 		}
+  97:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_timer2 > 0)
+ 2201              		.loc 1 97 0
+ 2202 0244 80319FE5 		ldr	r3, .L25+16
+ 2203 0248 003093E5 		ldr	r3, [r3, #0]
+ 2204 024c 000053E3 		cmp	r3, #0
+ 2205 0250 1000001A 		bne	.L14
+ 2206              		.loc 1 97 0 is_stmt 0 discriminator 1
+ 2207 0254 7C319FE5 		ldr	r3, .L25+28
+ 2208 0258 003093E5 		ldr	r3, [r3, #0]
+ 2209 025c 000053E3 		cmp	r3, #0
+ 2210 0260 0C0000DA 		ble	.L14
+  98:../jugada_por_botones.c **** 		{
+  99:../jugada_por_botones.c **** 			ev_timer2--;
+ 2211              		.loc 1 99 0 is_stmt 1
+ 2212 0264 6C319FE5 		ldr	r3, .L25+28
+ 2213 0268 003093E5 		ldr	r3, [r3, #0]
+ 2214 026c 012043E2 		sub	r2, r3, #1
+ 2215 0270 60319FE5 		ldr	r3, .L25+28
+ 2216 0274 002083E5 		str	r2, [r3, #0]
+ 100:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 2217              		.loc 1 100 0
+ 2218 0278 4C319FE5 		ldr	r3, .L25+16
+ 2219 027c 0120A0E3 		mov	r2, #1
+ 2220 0280 002083E5 		str	r2, [r3, #0]
+ 101:../jugada_por_botones.c **** 			//Actualizar tiempo total
+ 102:../jugada_por_botones.c **** 			tiempo_total++;
+ 2221              		.loc 1 102 0
+ 2222 0284 50319FE5 		ldr	r3, .L25+32
+ 2223 0288 003093E5 		ldr	r3, [r3, #0]
+ 2224 028c 012083E2 		add	r2, r3, #1
+ 2225 0290 44319FE5 		ldr	r3, .L25+32
+ 2226 0294 002083E5 		str	r2, [r3, #0]
+ 2227              	.L14:
+ 103:../jugada_por_botones.c **** 			//DMA act pantalla
+ 104:../jugada_por_botones.c **** 		}
+ 105:../jugada_por_botones.c **** 		if(ev_tp == 1)
+ 2228              		.loc 1 105 0
+ 2229 0298 28319FE5 		ldr	r3, .L25+12
+ 2230 029c 003093E5 		ldr	r3, [r3, #0]
+ 2231 02a0 010053E3 		cmp	r3, #1
+ 2232 02a4 1D00001A 		bne	.L15
+ 106:../jugada_por_botones.c **** 		{
+ 107:../jugada_por_botones.c **** 			ev_tp = 0;
+ 2233              		.loc 1 107 0
+ 2234 02a8 18319FE5 		ldr	r3, .L25+12
+ 2235 02ac 0020A0E3 		mov	r2, #0
+ 2236 02b0 002083E5 		str	r2, [r3, #0]
+ 108:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2237              		.loc 1 108 0
+ 2238 02b4 10319FE5 		ldr	r3, .L25+16
+ 2239 02b8 003093E5 		ldr	r3, [r3, #0]
+ 2240 02bc 000053E3 		cmp	r3, #0
+ 2241 02c0 1600001A 		bne	.L15
+ 2242              	.LBB2:
+ 109:../jugada_por_botones.c **** 			{
+ 110:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 2243              		.loc 1 110 0
+ 2244 02c4 00319FE5 		ldr	r3, .L25+16
+ 2245 02c8 0120A0E3 		mov	r2, #1
+ 2246 02cc 002083E5 		str	r2, [r3, #0]
+ 111:../jugada_por_botones.c **** 				unsigned int delta1 = timer2_leer();
+ 2247              		.loc 1 111 0
+ 2248 02d0 FEFFFFEB 		bl	timer2_leer
+ 2249 02d4 10000BE5 		str	r0, [fp, #-16]
+ 112:../jugada_por_botones.c **** 				reversi_procesar(mi_fila, mi_columna);
+ 2250              		.loc 1 112 0
+ 2251 02d8 F0309FE5 		ldr	r3, .L25+20
+ 2252 02dc 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 2253 02e0 EC309FE5 		ldr	r3, .L25+24
+ 2254 02e4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2255 02e8 0200A0E1 		mov	r0, r2
+ 2256 02ec 0310A0E1 		mov	r1, r3
+ 2257 02f0 FEFFFFEB 		bl	reversi_procesar
+ 113:../jugada_por_botones.c **** 				unsigned int delta2 = timer2_leer();
+ 2258              		.loc 1 113 0
+ 2259 02f4 FEFFFFEB 		bl	timer2_leer
+ 2260 02f8 14000BE5 		str	r0, [fp, #-20]
+ 114:../jugada_por_botones.c **** 				tiempo_calc += (delta2-delta1);
+ 2261              		.loc 1 114 0
+ 2262 02fc 14201BE5 		ldr	r2, [fp, #-20]
+ 2263 0300 10301BE5 		ldr	r3, [fp, #-16]
+ 2264 0304 022063E0 		rsb	r2, r3, r2
+ 2265 0308 D0309FE5 		ldr	r3, .L25+36
+ 2266 030c 003093E5 		ldr	r3, [r3, #0]
+ 2267 0310 033082E0 		add	r3, r2, r3
+ 2268 0314 0320A0E1 		mov	r2, r3
+ 2269 0318 C0309FE5 		ldr	r3, .L25+36
+ 2270 031c 002083E5 		str	r2, [r3, #0]
+ 2271              	.L15:
+ 2272              	.LBE2:
+ 115:../jugada_por_botones.c **** 				//obtener datos de profiling
+ 116:../jugada_por_botones.c **** 				//DMA de nuevo tablero
+ 117:../jugada_por_botones.c **** 				//Y de nuevos datos que tengo que pintar
+ 118:../jugada_por_botones.c **** 				//Calcular_fin
+ 119:../jugada_por_botones.c **** 			}
+ 120:../jugada_por_botones.c **** 		}
+ 121:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && fin != 0)
+ 2273              		.loc 1 121 0
+ 2274 0320 A4309FE5 		ldr	r3, .L25+16
+ 2275 0324 003093E5 		ldr	r3, [r3, #0]
+ 2276 0328 000053E3 		cmp	r3, #0
+ 2277 032c 1800001A 		bne	.L21
+ 2278              		.loc 1 121 0 is_stmt 0 discriminator 1
+ 2279 0330 AC309FE5 		ldr	r3, .L25+40
+ 2280 0334 003093E5 		ldr	r3, [r3, #0]
+ 2281 0338 000053E3 		cmp	r3, #0
+ 2282 033c 1600000A 		beq	.L22
+ 122:../jugada_por_botones.c **** 		{
+ 123:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 2283              		.loc 1 123 0 is_stmt 1
+ 2284 0340 84309FE5 		ldr	r3, .L25+16
+ 2285 0344 0120A0E3 		mov	r2, #1
+ 2286 0348 002083E5 		str	r2, [r3, #0]
+ 124:../jugada_por_botones.c **** 			if(fin == 1)
+ 125:../jugada_por_botones.c **** 			{
+ 126:../jugada_por_botones.c **** 				//DMA de pantalla de victoria
+ 127:../jugada_por_botones.c **** 			}
+ 128:../jugada_por_botones.c **** 			else	//fin == 2
+ 129:../jugada_por_botones.c **** 			{
+ 130:../jugada_por_botones.c **** 				//DMA de pantalla de derrota
+ 131:../jugada_por_botones.c **** 			}
+ 132:../jugada_por_botones.c **** 			jugada_botones = Fin;
+ 2287              		.loc 1 132 0
+ 2288 034c 68309FE5 		ldr	r3, .L25
+ 2289 0350 0220A0E3 		mov	r2, #2
+ 2290 0354 0020C3E5 		strb	r2, [r3, #0]
+ 133:../jugada_por_botones.c **** 		}
+ 134:../jugada_por_botones.c **** 		break;
+ 2291              		.loc 1 134 0
+ 2292 0358 140000EA 		b	.L4
+ 2293              	.L18:
+ 135:../jugada_por_botones.c **** 	default:	//case Fin
+ 136:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado
+ 2294              		.loc 1 136 0
+ 2295 035c 68309FE5 		ldr	r3, .L25+16
+ 2296 0360 003093E5 		ldr	r3, [r3, #0]
+ 2297 0364 000053E3 		cmp	r3, #0
+ 2298 0368 0D00001A 		bne	.L23
+ 2299              		.loc 1 136 0 is_stmt 0 discriminator 1
+ 2300 036c 54309FE5 		ldr	r3, .L25+12
+ 2301 0370 003093E5 		ldr	r3, [r3, #0]
+ 2302 0374 010053E3 		cmp	r3, #1
+ 2303 0378 0B00001A 		bne	.L24
+ 137:../jugada_por_botones.c **** 		{
+ 138:../jugada_por_botones.c **** 			inicializar_jugada_botones();
+ 2304              		.loc 1 138 0 is_stmt 1
+ 2305 037c FEFFFFEB 		bl	inicializar_jugada_botones
+ 139:../jugada_por_botones.c **** 		}
+ 140:../jugada_por_botones.c **** 		break;
+ 2306              		.loc 1 140 0
+ 2307 0380 0A0000EA 		b	.L4
+ 2308              	.L19:
+  81:../jugada_por_botones.c **** 		break;
+ 2309              		.loc 1 81 0
+ 2310 0384 0000A0E1 		mov	r0, r0	@ nop
+ 2311 0388 080000EA 		b	.L4
+ 2312              	.L20:
+ 2313 038c 0000A0E1 		mov	r0, r0	@ nop
+ 2314 0390 060000EA 		b	.L4
+ 2315              	.L21:
+ 134:../jugada_por_botones.c **** 		break;
+ 2316              		.loc 1 134 0
+ 2317 0394 0000A0E1 		mov	r0, r0	@ nop
+ 2318 0398 040000EA 		b	.L4
+ 2319              	.L22:
+ 2320 039c 0000A0E1 		mov	r0, r0	@ nop
+ 2321 03a0 020000EA 		b	.L4
+ 2322              	.L23:
+ 2323              		.loc 1 140 0
+ 2324 03a4 0000A0E1 		mov	r0, r0	@ nop
+ 2325 03a8 000000EA 		b	.L4
+ 2326              	.L24:
+ 2327 03ac 0000A0E1 		mov	r0, r0	@ nop
+ 2328              	.L4:
+ 141:../jugada_por_botones.c **** 	}
+ 142:../jugada_por_botones.c **** }
+ 2329              		.loc 1 142 0
+ 2330 03b0 0CD04BE2 		sub	sp, fp, #12
+ 2331 03b4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2332 03b8 1EFF2FE1 		bx	lr
+ 2333              	.L26:
+ 2334              		.align	2
+ 2335              	.L25:
+ 2336 03bc 00000000 		.word	jugada_botones
+ 2337 03c0 08000000 		.word	ev_bot_der
+ 2338 03c4 04000000 		.word	ev_bot_izq
+ 2339 03c8 0C000000 		.word	ev_tp
+ 2340 03cc 14000000 		.word	haciendo_DMA
+ 2341 03d0 10000000 		.word	mi_fila
+ 2342 03d4 11000000 		.word	mi_columna
+ 2343 03d8 18000000 		.word	ev_timer2
+ 2344 03dc 24000000 		.word	tiempo_total
+ 2345 03e0 20000000 		.word	tiempo_calc
+ 2346 03e4 1C000000 		.word	fin
+ 2347              		.cfi_endproc
+ 2348              	.LFE1:
+ 2350              		.align	2
+ 2351              		.global	jugada_ev_tsp
+ 2353              	jugada_ev_tsp:
+ 2354              	.LFB2:
+ 143:../jugada_por_botones.c **** 
+ 144:../jugada_por_botones.c **** 
+ 145:../jugada_por_botones.c **** //Se llama cuando se pulsa en tsp. confirmando la jugada
+ 146:../jugada_por_botones.c **** void jugada_ev_tsp()
+ 147:../jugada_por_botones.c **** {
+ 2355              		.loc 1 147 0
+ 2356              		.cfi_startproc
+ 2357              		@ Function supports interworking.
+ 2358              		@ args = 0, pretend = 0, frame = 0
+ 2359              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2360 03e8 0DC0A0E1 		mov	ip, sp
+ 2361              	.LCFI4:
+ 2362              		.cfi_def_cfa_register 12
+ 2363 03ec 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2364 03f0 04B04CE2 		sub	fp, ip, #4
+ 2365              		.cfi_offset 14, -8
+ 2366              		.cfi_offset 13, -12
+ 2367              		.cfi_offset 11, -16
+ 2368              	.LCFI5:
+ 2369              		.cfi_def_cfa 11, 4
+ 148:../jugada_por_botones.c **** 	ev_tp = 1;
+ 2370              		.loc 1 148 0
+ 2371 03f4 14309FE5 		ldr	r3, .L28
+ 2372 03f8 0120A0E3 		mov	r2, #1
+ 2373 03fc 002083E5 		str	r2, [r3, #0]
+ 149:../jugada_por_botones.c **** 	jugada_por_botones();
+ 2374              		.loc 1 149 0
+ 2375 0400 FEFFFFEB 		bl	jugada_por_botones
+ 150:../jugada_por_botones.c **** }
+ 2376              		.loc 1 150 0
+ 2377 0404 0CD04BE2 		sub	sp, fp, #12
+ 2378 0408 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2379 040c 1EFF2FE1 		bx	lr
+ 2380              	.L29:
+ 2381              		.align	2
+ 2382              	.L28:
+ 2383 0410 0C000000 		.word	ev_tp
+ 2384              		.cfi_endproc
+ 2385              	.LFE2:
+ 2387              		.align	2
+ 2388              		.global	jugada_ev_der
+ 2390              	jugada_ev_der:
+ 2391              	.LFB3:
+ 151:../jugada_por_botones.c **** 
+ 152:../jugada_por_botones.c **** //Se llama cuando el botón derecho es pulsado, para tratar el evento
+ 153:../jugada_por_botones.c **** void jugada_ev_der()
+ 154:../jugada_por_botones.c **** {
+ 2392              		.loc 1 154 0
+ 2393              		.cfi_startproc
+ 2394              		@ Function supports interworking.
+ 2395              		@ args = 0, pretend = 0, frame = 0
+ 2396              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2397 0414 0DC0A0E1 		mov	ip, sp
+ 2398              	.LCFI6:
+ 2399              		.cfi_def_cfa_register 12
+ 2400 0418 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2401 041c 04B04CE2 		sub	fp, ip, #4
+ 2402              		.cfi_offset 14, -8
+ 2403              		.cfi_offset 13, -12
+ 2404              		.cfi_offset 11, -16
+ 2405              	.LCFI7:
+ 2406              		.cfi_def_cfa 11, 4
+ 155:../jugada_por_botones.c **** 	ev_bot_der++;
+ 2407              		.loc 1 155 0
+ 2408 0420 1C309FE5 		ldr	r3, .L31
+ 2409 0424 003093E5 		ldr	r3, [r3, #0]
+ 2410 0428 012083E2 		add	r2, r3, #1
+ 2411 042c 10309FE5 		ldr	r3, .L31
+ 2412 0430 002083E5 		str	r2, [r3, #0]
+ 156:../jugada_por_botones.c **** 	jugada_por_botones();
+ 2413              		.loc 1 156 0
+ 2414 0434 FEFFFFEB 		bl	jugada_por_botones
+ 157:../jugada_por_botones.c **** }
+ 2415              		.loc 1 157 0
+ 2416 0438 0CD04BE2 		sub	sp, fp, #12
+ 2417 043c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2418 0440 1EFF2FE1 		bx	lr
+ 2419              	.L32:
+ 2420              		.align	2
+ 2421              	.L31:
+ 2422 0444 08000000 		.word	ev_bot_der
+ 2423              		.cfi_endproc
+ 2424              	.LFE3:
+ 2426              		.align	2
+ 2427              		.global	jugada_ev_izq
+ 2429              	jugada_ev_izq:
+ 2430              	.LFB4:
+ 158:../jugada_por_botones.c **** 
+ 159:../jugada_por_botones.c **** //Se llama cuando, por autoincremento o por pulsación nueva,
+ 160:../jugada_por_botones.c **** //	hay que incrementar el valor del 8Led y la variable asociada a él.
+ 161:../jugada_por_botones.c **** void jugada_ev_izq()
+ 162:../jugada_por_botones.c **** {
+ 2431              		.loc 1 162 0
+ 2432              		.cfi_startproc
+ 2433              		@ Function supports interworking.
+ 2434              		@ args = 0, pretend = 0, frame = 0
+ 2435              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2436 0448 0DC0A0E1 		mov	ip, sp
+ 2437              	.LCFI8:
+ 2438              		.cfi_def_cfa_register 12
+ 2439 044c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2440 0450 04B04CE2 		sub	fp, ip, #4
+ 2441              		.cfi_offset 14, -8
+ 2442              		.cfi_offset 13, -12
+ 2443              		.cfi_offset 11, -16
+ 2444              	.LCFI9:
+ 2445              		.cfi_def_cfa 11, 4
+ 163:../jugada_por_botones.c **** 	ev_bot_izq++;
+ 2446              		.loc 1 163 0
+ 2447 0454 1C309FE5 		ldr	r3, .L34
+ 2448 0458 003093E5 		ldr	r3, [r3, #0]
+ 2449 045c 012083E2 		add	r2, r3, #1
+ 2450 0460 10309FE5 		ldr	r3, .L34
+ 2451 0464 002083E5 		str	r2, [r3, #0]
+ 164:../jugada_por_botones.c **** 	jugada_por_botones();
+ 2452              		.loc 1 164 0
+ 2453 0468 FEFFFFEB 		bl	jugada_por_botones
+ 165:../jugada_por_botones.c **** }
+ 2454              		.loc 1 165 0
+ 2455 046c 0CD04BE2 		sub	sp, fp, #12
+ 2456 0470 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2457 0474 1EFF2FE1 		bx	lr
+ 2458              	.L35:
+ 2459              		.align	2
+ 2460              	.L34:
+ 2461 0478 04000000 		.word	ev_bot_izq
+ 2462              		.cfi_endproc
+ 2463              	.LFE4:
+ 2465              		.align	2
+ 2466              		.global	jugada_ev_timer2
+ 2468              	jugada_ev_timer2:
+ 2469              	.LFB5:
+ 166:../jugada_por_botones.c **** //Se llama cuando haya que incrementar la cuenta de tiempo de juego en segundos
+ 167:../jugada_por_botones.c **** void jugada_ev_timer2()
+ 168:../jugada_por_botones.c **** {
+ 2470              		.loc 1 168 0
+ 2471              		.cfi_startproc
+ 2472              		@ Function supports interworking.
+ 2473              		@ args = 0, pretend = 0, frame = 0
+ 2474              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2475 047c 0DC0A0E1 		mov	ip, sp
+ 2476              	.LCFI10:
+ 2477              		.cfi_def_cfa_register 12
+ 2478 0480 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2479 0484 04B04CE2 		sub	fp, ip, #4
+ 2480              		.cfi_offset 14, -8
+ 2481              		.cfi_offset 13, -12
+ 2482              		.cfi_offset 11, -16
+ 2483              	.LCFI11:
+ 2484              		.cfi_def_cfa 11, 4
+ 169:../jugada_por_botones.c **** 	ev_timer2++;
+ 2485              		.loc 1 169 0
+ 2486 0488 1C309FE5 		ldr	r3, .L37
+ 2487 048c 003093E5 		ldr	r3, [r3, #0]
+ 2488 0490 012083E2 		add	r2, r3, #1
+ 2489 0494 10309FE5 		ldr	r3, .L37
+ 2490 0498 002083E5 		str	r2, [r3, #0]
+ 170:../jugada_por_botones.c **** 	jugada_por_botones();
+ 2491              		.loc 1 170 0
+ 2492 049c FEFFFFEB 		bl	jugada_por_botones
+ 171:../jugada_por_botones.c **** }
+ 2493              		.loc 1 171 0
+ 2494 04a0 0CD04BE2 		sub	sp, fp, #12
+ 2495 04a4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2496 04a8 1EFF2FE1 		bx	lr
+ 2497              	.L38:
+ 2498              		.align	2
+ 2499              	.L37:
+ 2500 04ac 18000000 		.word	ev_timer2
+ 2501              		.cfi_endproc
+ 2502              	.LFE5:
+ 2504              		.align	2
+ 2505              		.global	termina_DMA
+ 2507              	termina_DMA:
+ 2508              	.LFB6:
+ 172:../jugada_por_botones.c **** 
+ 173:../jugada_por_botones.c **** //Se llama para avisar al autómata de que la transferencia por DMA ha terminado
+ 174:../jugada_por_botones.c **** void termina_DMA()
+ 175:../jugada_por_botones.c **** {
+ 2509              		.loc 1 175 0
+ 2510              		.cfi_startproc
+ 2511              		@ Function supports interworking.
+ 2512              		@ args = 0, pretend = 0, frame = 0
+ 2513              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2514 04b0 0DC0A0E1 		mov	ip, sp
+ 2515              	.LCFI12:
+ 2516              		.cfi_def_cfa_register 12
+ 2517 04b4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2518 04b8 04B04CE2 		sub	fp, ip, #4
+ 2519              		.cfi_offset 14, -8
+ 2520              		.cfi_offset 13, -12
+ 2521              		.cfi_offset 11, -16
+ 2522              	.LCFI13:
+ 2523              		.cfi_def_cfa 11, 4
+ 176:../jugada_por_botones.c **** 	haciendo_DMA = 0;
+ 2524              		.loc 1 176 0
+ 2525 04bc 14309FE5 		ldr	r3, .L40
+ 2526 04c0 0020A0E3 		mov	r2, #0
+ 2527 04c4 002083E5 		str	r2, [r3, #0]
+ 177:../jugada_por_botones.c **** 	jugada_por_botones();
+ 2528              		.loc 1 177 0
+ 2529 04c8 FEFFFFEB 		bl	jugada_por_botones
+ 178:../jugada_por_botones.c **** }
+ 2530              		.loc 1 178 0
+ 2531 04cc 0CD04BE2 		sub	sp, fp, #12
+ 2532 04d0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2533 04d4 1EFF2FE1 		bx	lr
+ 2534              	.L41:
+ 2535              		.align	2
+ 2536              	.L40:
+ 2537 04d8 14000000 		.word	haciendo_DMA
+ 2538              		.cfi_endproc
+ 2539              	.LFE6:
+ 2541              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 jugada_por_botones.c
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1938   .bss:00000000 jugada_botones
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1939   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1941   .bss:00000004 ev_bot_izq
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1944   .bss:00000008 ev_bot_der
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1947   .bss:0000000c ev_tp
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1949   .bss:00000010 mi_fila
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1951   .bss:00000011 mi_columna
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1954   .bss:00000014 haciendo_DMA
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1957   .bss:00000018 ev_timer2
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1960   .bss:0000001c fin
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1963   .bss:00000020 tiempo_calc
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1966   .bss:00000024 tiempo_total
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1969   .bss:00000028 tiempo_pv
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1972   .bss:0000002c veces_pv
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1975   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:1978   .text:00000000 inicializar_jugada_botones
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2054   .text:000000b4 $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2070   .text:000000e8 $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2073   .text:000000e8 jugada_por_botones
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2336   .text:000003bc $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2350   .text:000003e8 $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2353   .text:000003e8 jugada_ev_tsp
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2383   .text:00000410 $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2387   .text:00000414 $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2390   .text:00000414 jugada_ev_der
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2422   .text:00000444 $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2426   .text:00000448 $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2429   .text:00000448 jugada_ev_izq
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2461   .text:00000478 $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2465   .text:0000047c $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2468   .text:0000047c jugada_ev_timer2
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2500   .text:000004ac $d
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2504   .text:000004b0 $a
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2507   .text:000004b0 termina_DMA
+C:\Users\guest\AppData\Local\Temp\ccME6t0U.s:2537   .text:000004d8 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+timer2_leer
+reversi_procesar

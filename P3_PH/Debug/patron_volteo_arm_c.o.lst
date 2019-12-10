@@ -1,0 +1,100 @@
+   1              	# 1 "../patron_volteo_arm_c.asm"
+   1              	/*********************************************************************************************
+   0              	
+   0              	
+   0              	
+   2              	* Fichero:	patron_volteo_arm_c.asm
+   3              	* Autor:	Fernando Peña Bes (NIA: 756012)
+   4              				Pedro José Pérez García (NIA: 756642)
+   5              	* Descrip:	Contiene la versión ARM-C de patron_volteo()
+   6              	*********************************************************************************************/
+   7              	
+   8              					.section .text
+   9              					.global patron_volteo_arm_c
+  10              	
+  11              	.equ DIM, 8
+  12              	.equ DESPL, 3   @2^DESPL = DIM
+  13              	
+  14              	.equ CASILLA_VACIA, 0
+  15              	.equ NO_HAY_PATRON, 0
+  16              	.equ PATRON_ENCONTRADO, 1
+  17              	
+  18              					
+  19              	@ Versión ARM-C optimizada de patron_volteo()
+  20              	
+  21              	@ La función comprueba si hay que actualizar una determinada dirección, busca
+  22              	@ el patrón de volteo (n fichas del rival seguidas de una ficha del jugador actual) en
+  23              	@ una dirección determinada
+  24              	
+  25              	@ Parámetros:
+  26              	@ Par. entrada 0 = tablero
+  27              	@ Par. entrada/salida 1 = *longitud
+  28              	@ Par. entrada 2 = FA	@ casilla a analizar
+  29              	@ Par. entrada 3 = CA
+  30              	@ Par. entrada 4 = SF	@ dirección de movimiento a analizar
+  31              	@ Par. entrada 5 = SC
+  32              	@ Par. entrada 6 = color
+  33              	
+  34              	@ Devuelve si ha encontrado un patrón de volteo y la longitud analizada en el parámetro *longitud
+  35              	patron_volteo_arm_c:
+  36 0000 0DC0A0E1 					mov ip, sp
+  37 0004 F0DF2DE9 					push {r4-r10, fp, ip, lr, pc}
+  38 0008 04B04CE2 					sub fp, ip, #4
+  39 000c 04D04DE2 					sub sp, #4 @ Espacio para posicion_valida
+  40              					@ En r0 está @tablero
+  41              					@ En r1, @longitud
+  42              					@ En r2, FA
+  43              					@ En r3, CA
+  44 0010 0040A0E1 					mov r4, r0 	@ r4 = @tablero
+  45 0014 0150A0E1 					mov r5, r1 	@ r5 = @longitud
+  46 0018 0260A0E1 					mov r6, r2	@ r6 = FA
+  47 001c 0370A0E1 					mov r7, r3	@ r7 = CA
+  48              					@ Cargar parámetros pasados por la pila
+  49 0020 D480DBE1 					ldrsb r8,[fp,#4]	@r8 = SF
+  50 0024 D890DBE1 					ldrsb r9,[fp,#8]	@r9 = SC
+  51 0028 00A095E5 					ldr r10,[r5]		@Cargo longitud en r10
+  52              					
+  53 002c 086086E0 	WHILE_C:		add r6,r6,r8		@ FA = FA + SF
+  54 0030 097087E0 					add r7, r7, r9		@ CA = CA + SC
+  55              					@ Llamada a la función ficha_valida
+  56 0034 0400A0E1 					mov r0, r4 			@ r0 = @tablero
+  57 0038 0610A0E1 					mov r1, r6			@ r1 = FA
+  58 003c 0720A0E1 					mov r2, r7			@ r2 = CA
+  59 0040 24304BE2 					sub r3, fp, #36		@ r3 = @ de posicion_valida
+  60 0044 FEFFFFEB 					bl ficha_valida		@ En r0 tenemos casilla y en fp - 36 posicion_valida
+  61              	
+  62              					@ ((posicion_valida == 1) && (casilla != color))
+  63 0048 24101BE5 					ldr r1,[fp,#-36]	@ r1 = posicion_valida
+  64 004c 010051E3 					cmp r1, #1			@ Comprobar si la posicion es valida
+  65 0050 0400001A 					bne FIN_WHILE_C
+  66 0054 0C309BE5 					ldr r3,[fp, #12]    @ r3 = color
+  67 0058 030050E1 					cmp r0, r3			@ Comparar casilla con color
+  68 005c 0100000A 					beq FIN_WHILE_C
+  69 0060 01A08AE2 					add r10,r10,#1		@ Incrementar longitud
+  70 0064 F0FFFFEA 					b WHILE_C
+  71              	
+  72              	FIN_WHILE_C:	@ ((posicion_valida == 1) && (casilla == color) && (longitud > 0))
+  73 0068 010051E3 					cmp r1,#1			@ posicion_valida == 1
+  74 006c 03005001 					cmpeq r0, r3		@ casilla == color
+  75 0070 0000A013 					movne r0, #NO_HAY_PATRON @ Si posicion_valida != 0 o casilla != color, no hay patron. Devolver 
+  76 0074 0200001A 					bne FIN_C
+  77 0078 00005A03 					cmpeq r10, #0		@ longitud > 0
+  78 007c 0100A083 					movhi r0, #PATRON_ENCONTRADO @ devolver patrón encontrado
+  79 0080 0000A093 					movls r0, #NO_HAY_PATRON @ devolver patrón no encontrado
+  80 0084 00A085E5 	FIN_C:			str	r10,[r5]		@ Almacenar longitud calculada
+  81 0088 F0AF1BE9 					ldmdb fp,{r4-r10, fp, sp, pc}
+DEFINED SYMBOLS
+../patron_volteo_arm_c.asm:35     .text:00000000 patron_volteo_arm_c
+../patron_volteo_arm_c.asm:11     *ABS*:00000008 DIM
+../patron_volteo_arm_c.asm:12     *ABS*:00000003 DESPL
+../patron_volteo_arm_c.asm:14     *ABS*:00000000 CASILLA_VACIA
+../patron_volteo_arm_c.asm:15     *ABS*:00000000 NO_HAY_PATRON
+../patron_volteo_arm_c.asm:16     *ABS*:00000001 PATRON_ENCONTRADO
+../patron_volteo_arm_c.asm:36     .text:00000000 $a
+../patron_volteo_arm_c.asm:53     .text:0000002c WHILE_C
+../patron_volteo_arm_c.asm:72     .text:00000068 FIN_WHILE_C
+../patron_volteo_arm_c.asm:80     .text:00000084 FIN_C
+                   .debug_aranges:0000000c $d
+
+UNDEFINED SYMBOLS
+ficha_valida
