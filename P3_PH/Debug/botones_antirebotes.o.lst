@@ -498,25 +498,25 @@
  2549              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 botones_antirebotes.c
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2186   .bss:00000000 maquina_estados
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2187   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2189   .bss:00000004 atendiendoPulsacion
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2192   .bss:00000008 cuenta_ticks
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2194   .bss:0000000c que_button
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2197   .bss:00000010 cuenta_autoincremento
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2200   .bss:00000014 hay_autoincremento
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2203   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2206   .text:00000000 botones_antirebotes_inicializar
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2246   .text:00000048 $d
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2253   .text:00000058 $a
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2256   .text:00000058 antirebotes
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2436   .text:00000220 $d
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2445   .text:00000238 $a
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2448   .text:00000238 button_ev_pulsacion
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2491   .text:00000288 $d
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2496   .text:00000290 $a
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2499   .text:00000290 button_ev_tick0
-C:\Users\guest\AppData\Local\Temp\ccB0y6Qe.s:2543   .text:000002e4 $d
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2186   .bss:00000000 maquina_estados
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2187   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2189   .bss:00000004 atendiendoPulsacion
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2192   .bss:00000008 cuenta_ticks
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2194   .bss:0000000c que_button
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2197   .bss:00000010 cuenta_autoincremento
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2200   .bss:00000014 hay_autoincremento
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2203   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2206   .text:00000000 botones_antirebotes_inicializar
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2246   .text:00000048 $d
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2253   .text:00000058 $a
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2256   .text:00000058 antirebotes
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2436   .text:00000220 $d
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2445   .text:00000238 $a
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2448   .text:00000238 button_ev_pulsacion
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2491   .text:00000288 $d
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2496   .text:00000290 $a
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2499   .text:00000290 button_ev_tick0
+C:\Users\guest\AppData\Local\Temp\ccWShFoD.s:2543   .text:000002e4 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

@@ -49,7 +49,7 @@ void Main(void)
 	Lcd_Active_Clr();
 	TS_init();
 
-
+	Delay(250);
 	/// Pruebas de excepciones ///
 	//asm volatile ("SWI 0x55");			//lanzar SWI
 	//asm volatile ("mov r3, #3");
@@ -57,9 +57,8 @@ void Main(void)
 	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
 
 	pasar_a_user();
-	pintar_prueba();
+	//pintar_prueba();
 	reversi_main();
-//41
 
 
 	//// pruebas automáticas de timer2 ////

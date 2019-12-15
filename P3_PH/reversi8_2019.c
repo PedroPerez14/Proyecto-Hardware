@@ -7,6 +7,7 @@
 * Version:
 *********************************************************************************************/
 #include "reversi8_2019.h"
+#include "elementos_pantalla.h"
 
 // Tamaño del tablero
 enum { DIM=8 };
@@ -23,11 +24,10 @@ enum {
 //const char FICHA_BLANCA  = 1;
 //const char FICHA_NEGRA   = 2;
 
-enum {
-	CASILLA_VACIA = 0,
-	FICHA_BLANCA = 1,
-	FICHA_NEGRA = 2
-};
+//El enum que debería estar aquí ha sido movido a definiciones_juego.h
+//	para que las funciones de elementos_pantalla, jugada_por_botones y reversi8
+//	puedan tener definiciones comunes en vez ed hacer una chapuza redefiniendo todo
+//	en cada uno de los sitios donde lo necesite
 
 // candidatas: indica las posiciones a explorar
 // Se usa para no explorar todo el tablero innecesariamente
@@ -92,6 +92,8 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM] = {
         {NO,NO,NO,NO,NO,NO,NO,NO}
     };
 
+	static int veces_pv = 0;
+	static int t_pv = 0;
 	int done;     // la máquina ha conseguido mover o no
     int move = 0; // el humano ha conseguido mover o no
     int blancas, negras; // número de fichas de cada color
@@ -106,6 +108,57 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM] = {
      // (por ejemplo añadir alguna palabra clave para garantizar que la sincronización a través de esa variable funcione)
 static volatile char fila=0, columna=0, ready=0;
 
+enum final_partida obtener_fin(void)
+{
+	if(fin == 0)
+	{
+		return no_fin;
+	}
+	else
+	{
+		if(blancas > negras)
+		{
+			return jugador_gana;
+		}
+		else if(negras > blancas)
+		{
+			return cpu_gana;
+		}
+	}
+	//blancas == negras
+	return empate;
+}
+
+//Copia tablero de la partida a donde se le diga
+//TODO esto va a explotar casi casi seguro :3
+void obtener_tablero(char tab[][num_columnas])		//char** tab    Por si lo otro falla brutalmente, pon esto en los parámetros
+{
+	int i,j;
+	for(i = 0; i < num_filas; i++)
+	{
+		for(j = 0; j < num_columnas; j++)
+		{
+			tab[i][j] = tablero[i][j];
+		}
+	}
+}
+
+//Devuelven el número de fichas de cada color al final de la partida
+//	y solo se cuenta al final, por tanto no hace falta volver a contar
+//	Si se quiere contar a mitad de partida, se tendría que contar antes
+//	de devolver el número.
+int contar_blancas(void){return blancas;}
+int contar_negras(void){return negras;}
+
+int reversi_t_pv(void)
+{
+	return veces_pv;
+}
+
+int reversi_veces_pv(void)
+{
+	return t_pv;
+}
 
 void reversi_procesar(char f, char c)
 {
@@ -115,7 +168,10 @@ void reversi_procesar(char f, char c)
 	reversi8();
 }
 
-
+enum estado_casilla obtener_ficha_en(int f, int c)
+{
+	return tablero[f][c];
+}
 
 //extern int patron_volteo_arm_c(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
 //extern int patron_volteo_arm_arm(char tablero[][DIM], int *longitud,char FA, char CA, char SF, char SC, char color);
@@ -177,11 +233,6 @@ void init_table(char tablero[][DIM], char candidatas[][DIM])
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Espera a que ready valga 1.
-// CUIDADO: si el compilador coloca esta variable en un registro, no funcionará.
-// Hay que definirla como "volatile" para forzar a que antes de cada uso la cargue de memoria
-
-////////////////////////////////////////////////////////////////////////////////
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // IMPORTANTE: AL SUSTITUIR FICHA_VALIDA() Y PATRON_VOLTEO()
 // POR RUTINAS EN ENSAMBLADOR HAY QUE RESPETAR LA MODULARIDAD.
@@ -208,7 +259,7 @@ char ficha_valida(char tablero[][DIM], char f, char c, int *posicion_valida)
     // ficha = tablero[f][c];
     // no puede accederse a tablero[f][c]
     // ya que algún índice puede ser negativo
-    //TODO AAA
+    //TODO a lo mejor la condicion que hay comentada hace falta
     if ((f < DIM) /*&& (f >= 0)*/ && (c < DIM) /*&& (c >= 0)*/ && (tablero[f][c] != CASILLA_VACIA))
     {
         *posicion_valida = 1;
@@ -234,6 +285,8 @@ char ficha_valida(char tablero[][DIM], char f, char c, int *posicion_valida)
 //          Se usa para saber cuantas fichas habría que voltear
 int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
 {
+	int t_inicio = timer2_leer();
+	int t_final;
 	int posicion_valida; // indica si la posición es valida y contiene una ficha de algún jugador
 	char casilla;   // casilla es la casilla que se lee del tablero
 
@@ -252,9 +305,19 @@ int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF,
     // si la ultima posición era válida y la ficha es del jugador actual,
     // entonces hemos encontrado el patrón
 	if ((posicion_valida == 1) && (casilla == color) && (*longitud >0))
+	{
+		t_final = timer2_leer();
+		t_pv += (t_final - t_inicio);
+		veces_pv++;
 		return PATRON_ENCONTRADO; // si hay que voltear una ficha o más hemos encontrado el patrón
+	}
 	else
+	{
+		t_final = timer2_leer();
+		t_pv += (t_final - t_inicio);
+		veces_pv++;
 		return NO_HAY_PATRON; // si no hay que voltear no hay patrón
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,6 +334,8 @@ void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, cha
         FA = FA + SF;
         CA = CA + SC;
         tablero[FA][CA] = color;
+        borrar_ficha(FA,CA);
+        pintar_ficha(FA,CA);		//TODO
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -441,6 +506,7 @@ void actualizar_candidatas(char candidatas[][DIM], char f, char c)
 void reversi8_inicializar()
 {
 	init_table(tablero, candidatas);
+	fin = 0;
 }
 
 void reversi8()
@@ -449,6 +515,8 @@ void reversi8()
 	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
 	// sólo se exploran las que están alrededor de las fichas colocadas
 	 ////////////////////////////////////////////////////////////////////
+	veces_pv = 0;
+	t_pv = 0;
     if(fin == 0)
     {
         move = 0;
@@ -481,3 +549,15 @@ void reversi8()
     contar(tablero, &blancas, &negras);
 }
 
+//TODO lista de cosas pendientes
+/*
+	Autoincremento en botón derecho
+	Antirebotes en tsp
+	timer2 por FIQ
+	-O3
+	Flashear
+	Poner bien las pantallas de las reglas
+	PIKA-CHUUUUUU
+	
+	Reparar lo que se caiga a trozos
+*/

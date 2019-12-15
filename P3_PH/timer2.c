@@ -22,10 +22,6 @@ void timer2_ISR(void) __attribute__((interrupt("IRQ")));
 void timer2_ISR(void)
 {
 	timer2_num_int += 1;
-	if(timer2_num_int == TICKS_FOR_A_SECOND)	//Si ha pasado un segundo, avisamos encolando un evento
-	{
-		push_debug(ev_tick_timer2, no_info);
-	}
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupci�n*/
 	rI_ISPC |= BIT_TIMER2; // BIT_TIMER2 est� definido en 44b.h y pone un uno en el bit que correponde al Timer2
 

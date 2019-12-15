@@ -1,0 +1,338 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"funciones_itoa.c"
+  21              	.Ltext0:
+  22              		.file 1 "../funciones_itoa.c"
+ 2043              		.align	2
+ 2044              		.global	swap
+ 2046              	swap:
+ 2047              	.LFB0:
+   1:../funciones_itoa.c **** /*********************************************************************************************
+   2:../funciones_itoa.c **** * Fichero:		funciones_itoa.h
+   3:../funciones_itoa.c **** * Autor:		Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
+   4:../funciones_itoa.c **** * Descrip:		Conjunto de funciones auxiliares para poder pasar de entero a cadenas de caracteres.
+   5:../funciones_itoa.c **** * Version:
+   6:../funciones_itoa.c **** *********************************************************************************************/
+   7:../funciones_itoa.c **** #include <stdio.h>
+   8:../funciones_itoa.c **** #include <stdlib.h>
+   9:../funciones_itoa.c **** 
+  10:../funciones_itoa.c **** // inline function to swap two numbers
+  11:../funciones_itoa.c **** inline void swap(char *x, char *y) {
+ 2048              		.loc 1 11 0
+ 2049              		.cfi_startproc
+ 2050              		@ Function supports interworking.
+ 2051              		@ args = 0, pretend = 0, frame = 16
+ 2052              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2053 0000 0DC0A0E1 		mov	ip, sp
+ 2054              	.LCFI0:
+ 2055              		.cfi_def_cfa_register 12
+ 2056 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2057 0008 04B04CE2 		sub	fp, ip, #4
+ 2058              		.cfi_offset 14, -8
+ 2059              		.cfi_offset 13, -12
+ 2060              		.cfi_offset 11, -16
+ 2061              	.LCFI1:
+ 2062              		.cfi_def_cfa 11, 4
+ 2063 000c 10D04DE2 		sub	sp, sp, #16
+ 2064 0010 18000BE5 		str	r0, [fp, #-24]
+ 2065 0014 1C100BE5 		str	r1, [fp, #-28]
+  12:../funciones_itoa.c **** 	char t = *x; *x = *y; *y = t;
+ 2066              		.loc 1 12 0
+ 2067 0018 18301BE5 		ldr	r3, [fp, #-24]
+ 2068 001c 0030D3E5 		ldrb	r3, [r3, #0]
+ 2069 0020 0D304BE5 		strb	r3, [fp, #-13]
+ 2070 0024 1C301BE5 		ldr	r3, [fp, #-28]
+ 2071 0028 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 2072 002c 18301BE5 		ldr	r3, [fp, #-24]
+ 2073 0030 0020C3E5 		strb	r2, [r3, #0]
+ 2074 0034 1C301BE5 		ldr	r3, [fp, #-28]
+ 2075 0038 0D205BE5 		ldrb	r2, [fp, #-13]
+ 2076 003c 0020C3E5 		strb	r2, [r3, #0]
+  13:../funciones_itoa.c **** }
+ 2077              		.loc 1 13 0
+ 2078 0040 0CD04BE2 		sub	sp, fp, #12
+ 2079 0044 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2080 0048 1EFF2FE1 		bx	lr
+ 2081              		.cfi_endproc
+ 2082              	.LFE0:
+ 2084              		.align	2
+ 2085              		.global	reverse
+ 2087              	reverse:
+ 2088              	.LFB1:
+  14:../funciones_itoa.c **** 
+  15:../funciones_itoa.c **** // function to reverse buffer[i..j]
+  16:../funciones_itoa.c **** char* reverse(char *buffer, int i, int j)
+  17:../funciones_itoa.c **** {
+ 2089              		.loc 1 17 0
+ 2090              		.cfi_startproc
+ 2091              		@ Function supports interworking.
+ 2092              		@ args = 0, pretend = 0, frame = 16
+ 2093              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2094 004c 0DC0A0E1 		mov	ip, sp
+ 2095              	.LCFI2:
+ 2096              		.cfi_def_cfa_register 12
+ 2097 0050 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2098 0054 04B04CE2 		sub	fp, ip, #4
+ 2099              		.cfi_offset 14, -8
+ 2100              		.cfi_offset 13, -12
+ 2101              		.cfi_offset 11, -16
+ 2102              	.LCFI3:
+ 2103              		.cfi_def_cfa 11, 4
+ 2104 0058 10D04DE2 		sub	sp, sp, #16
+ 2105 005c 10000BE5 		str	r0, [fp, #-16]
+ 2106 0060 14100BE5 		str	r1, [fp, #-20]
+ 2107 0064 18200BE5 		str	r2, [fp, #-24]
+  18:../funciones_itoa.c **** 	while (i < j)
+ 2108              		.loc 1 18 0
+ 2109 0068 0E0000EA 		b	.L3
+ 2110              	.L4:
+  19:../funciones_itoa.c **** 		swap(&buffer[i++], &buffer[j--]);
+ 2111              		.loc 1 19 0
+ 2112 006c 14301BE5 		ldr	r3, [fp, #-20]
+ 2113 0070 10201BE5 		ldr	r2, [fp, #-16]
+ 2114 0074 032082E0 		add	r2, r2, r3
+ 2115 0078 14301BE5 		ldr	r3, [fp, #-20]
+ 2116 007c 013083E2 		add	r3, r3, #1
+ 2117 0080 14300BE5 		str	r3, [fp, #-20]
+ 2118 0084 18301BE5 		ldr	r3, [fp, #-24]
+ 2119 0088 10101BE5 		ldr	r1, [fp, #-16]
+ 2120 008c 033081E0 		add	r3, r1, r3
+ 2121 0090 18101BE5 		ldr	r1, [fp, #-24]
+ 2122 0094 011041E2 		sub	r1, r1, #1
+ 2123 0098 18100BE5 		str	r1, [fp, #-24]
+ 2124 009c 0200A0E1 		mov	r0, r2
+ 2125 00a0 0310A0E1 		mov	r1, r3
+ 2126 00a4 FEFFFFEB 		bl	swap
+ 2127              	.L3:
+  18:../funciones_itoa.c **** 	while (i < j)
+ 2128              		.loc 1 18 0 discriminator 1
+ 2129 00a8 14201BE5 		ldr	r2, [fp, #-20]
+ 2130 00ac 18301BE5 		ldr	r3, [fp, #-24]
+ 2131 00b0 030052E1 		cmp	r2, r3
+ 2132 00b4 ECFFFFBA 		blt	.L4
+  20:../funciones_itoa.c **** 
+  21:../funciones_itoa.c **** 	return buffer;
+ 2133              		.loc 1 21 0
+ 2134 00b8 10301BE5 		ldr	r3, [fp, #-16]
+  22:../funciones_itoa.c **** }
+ 2135              		.loc 1 22 0
+ 2136 00bc 0300A0E1 		mov	r0, r3
+ 2137 00c0 0CD04BE2 		sub	sp, fp, #12
+ 2138 00c4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2139 00c8 1EFF2FE1 		bx	lr
+ 2140              		.cfi_endproc
+ 2141              	.LFE1:
+ 2143              		.global	__aeabi_idivmod
+ 2144              		.global	__aeabi_idiv
+ 2145              		.align	2
+ 2146              		.global	itoa
+ 2148              	itoa:
+ 2149              	.LFB2:
+  23:../funciones_itoa.c **** 
+  24:../funciones_itoa.c **** // Iterative function to implement itoa() function in C
+  25:../funciones_itoa.c **** char* itoa(int value, char* buffer, int base)
+  26:../funciones_itoa.c **** {
+ 2150              		.loc 1 26 0
+ 2151              		.cfi_startproc
+ 2152              		@ Function supports interworking.
+ 2153              		@ args = 0, pretend = 0, frame = 32
+ 2154              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2155 00cc 0DC0A0E1 		mov	ip, sp
+ 2156              	.LCFI4:
+ 2157              		.cfi_def_cfa_register 12
+ 2158 00d0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2159 00d4 04B04CE2 		sub	fp, ip, #4
+ 2160              		.cfi_offset 14, -8
+ 2161              		.cfi_offset 13, -12
+ 2162              		.cfi_offset 11, -16
+ 2163              	.LCFI5:
+ 2164              		.cfi_def_cfa 11, 4
+ 2165 00d8 20D04DE2 		sub	sp, sp, #32
+ 2166 00dc 20000BE5 		str	r0, [fp, #-32]
+ 2167 00e0 24100BE5 		str	r1, [fp, #-36]
+ 2168 00e4 28200BE5 		str	r2, [fp, #-40]
+  27:../funciones_itoa.c **** 	// invalid input
+  28:../funciones_itoa.c **** 	if (base < 2 || base > 32)
+ 2169              		.loc 1 28 0
+ 2170 00e8 28301BE5 		ldr	r3, [fp, #-40]
+ 2171 00ec 010053E3 		cmp	r3, #1
+ 2172 00f0 020000DA 		ble	.L6
+ 2173              		.loc 1 28 0 is_stmt 0 discriminator 1
+ 2174 00f4 28301BE5 		ldr	r3, [fp, #-40]
+ 2175 00f8 200053E3 		cmp	r3, #32
+ 2176 00fc 010000DA 		ble	.L7
+ 2177              	.L6:
+  29:../funciones_itoa.c **** 		return buffer;
+ 2178              		.loc 1 29 0 is_stmt 1
+ 2179 0100 24301BE5 		ldr	r3, [fp, #-36]
+ 2180 0104 530000EA 		b	.L8
+ 2181              	.L7:
+  30:../funciones_itoa.c **** 
+  31:../funciones_itoa.c **** 	// consider absolute value of number
+  32:../funciones_itoa.c **** 	int n = abs(value);
+ 2182              		.loc 1 32 0
+ 2183 0108 20301BE5 		ldr	r3, [fp, #-32]
+ 2184 010c 000053E3 		cmp	r3, #0
+ 2185 0110 003063B2 		rsblt	r3, r3, #0
+ 2186 0114 10300BE5 		str	r3, [fp, #-16]
+  33:../funciones_itoa.c **** 
+  34:../funciones_itoa.c **** 	int i = 0;
+ 2187              		.loc 1 34 0
+ 2188 0118 0030A0E3 		mov	r3, #0
+ 2189 011c 14300BE5 		str	r3, [fp, #-20]
+  35:../funciones_itoa.c **** 	while (n)
+ 2190              		.loc 1 35 0
+ 2191 0120 240000EA 		b	.L9
+ 2192              	.L12:
+ 2193              	.LBB2:
+  36:../funciones_itoa.c **** 	{
+  37:../funciones_itoa.c **** 		int r = n % base;
+ 2194              		.loc 1 37 0
+ 2195 0124 10301BE5 		ldr	r3, [fp, #-16]
+ 2196 0128 0300A0E1 		mov	r0, r3
+ 2197 012c 28101BE5 		ldr	r1, [fp, #-40]
+ 2198 0130 FEFFFFEB 		bl	__aeabi_idivmod
+ 2199 0134 0130A0E1 		mov	r3, r1
+ 2200 0138 18300BE5 		str	r3, [fp, #-24]
+  38:../funciones_itoa.c **** 
+  39:../funciones_itoa.c **** 		if (r >= 10)
+ 2201              		.loc 1 39 0
+ 2202 013c 18301BE5 		ldr	r3, [fp, #-24]
+ 2203 0140 090053E3 		cmp	r3, #9
+ 2204 0144 0B0000DA 		ble	.L10
+  40:../funciones_itoa.c **** 			buffer[i++] = 65 + (r - 10);
+ 2205              		.loc 1 40 0
+ 2206 0148 14301BE5 		ldr	r3, [fp, #-20]
+ 2207 014c 24201BE5 		ldr	r2, [fp, #-36]
+ 2208 0150 033082E0 		add	r3, r2, r3
+ 2209 0154 18201BE5 		ldr	r2, [fp, #-24]
+ 2210 0158 FF2002E2 		and	r2, r2, #255
+ 2211 015c 372082E2 		add	r2, r2, #55
+ 2212 0160 FF2002E2 		and	r2, r2, #255
+ 2213 0164 0020C3E5 		strb	r2, [r3, #0]
+ 2214 0168 14301BE5 		ldr	r3, [fp, #-20]
+ 2215 016c 013083E2 		add	r3, r3, #1
+ 2216 0170 14300BE5 		str	r3, [fp, #-20]
+ 2217 0174 0A0000EA 		b	.L11
+ 2218              	.L10:
+  41:../funciones_itoa.c **** 		else
+  42:../funciones_itoa.c **** 			buffer[i++] = 48 + r;
+ 2219              		.loc 1 42 0
+ 2220 0178 14301BE5 		ldr	r3, [fp, #-20]
+ 2221 017c 24201BE5 		ldr	r2, [fp, #-36]
+ 2222 0180 033082E0 		add	r3, r2, r3
+ 2223 0184 18201BE5 		ldr	r2, [fp, #-24]
+ 2224 0188 FF2002E2 		and	r2, r2, #255
+ 2225 018c 302082E2 		add	r2, r2, #48
+ 2226 0190 FF2002E2 		and	r2, r2, #255
+ 2227 0194 0020C3E5 		strb	r2, [r3, #0]
+ 2228 0198 14301BE5 		ldr	r3, [fp, #-20]
+ 2229 019c 013083E2 		add	r3, r3, #1
+ 2230 01a0 14300BE5 		str	r3, [fp, #-20]
+ 2231              	.L11:
+  43:../funciones_itoa.c **** 
+  44:../funciones_itoa.c **** 		n = n / base;
+ 2232              		.loc 1 44 0
+ 2233 01a4 10001BE5 		ldr	r0, [fp, #-16]
+ 2234 01a8 28101BE5 		ldr	r1, [fp, #-40]
+ 2235 01ac FEFFFFEB 		bl	__aeabi_idiv
+ 2236 01b0 0030A0E1 		mov	r3, r0
+ 2237 01b4 10300BE5 		str	r3, [fp, #-16]
+ 2238              	.L9:
+ 2239              	.LBE2:
+  35:../funciones_itoa.c **** 	while (n)
+ 2240              		.loc 1 35 0 discriminator 1
+ 2241 01b8 10301BE5 		ldr	r3, [fp, #-16]
+ 2242 01bc 000053E3 		cmp	r3, #0
+ 2243 01c0 D7FFFF1A 		bne	.L12
+  45:../funciones_itoa.c **** 	}
+  46:../funciones_itoa.c **** 
+  47:../funciones_itoa.c **** 	// if number is 0
+  48:../funciones_itoa.c **** 	if (i == 0)
+ 2244              		.loc 1 48 0
+ 2245 01c4 14301BE5 		ldr	r3, [fp, #-20]
+ 2246 01c8 000053E3 		cmp	r3, #0
+ 2247 01cc 0700001A 		bne	.L13
+  49:../funciones_itoa.c **** 		buffer[i++] = '0';
+ 2248              		.loc 1 49 0
+ 2249 01d0 14301BE5 		ldr	r3, [fp, #-20]
+ 2250 01d4 24201BE5 		ldr	r2, [fp, #-36]
+ 2251 01d8 033082E0 		add	r3, r2, r3
+ 2252 01dc 3020A0E3 		mov	r2, #48
+ 2253 01e0 0020C3E5 		strb	r2, [r3, #0]
+ 2254 01e4 14301BE5 		ldr	r3, [fp, #-20]
+ 2255 01e8 013083E2 		add	r3, r3, #1
+ 2256 01ec 14300BE5 		str	r3, [fp, #-20]
+ 2257              	.L13:
+  50:../funciones_itoa.c **** 
+  51:../funciones_itoa.c **** 	// If base is 10 and value is negative, the resulting string
+  52:../funciones_itoa.c **** 	// is preceded with a minus sign (-)
+  53:../funciones_itoa.c **** 	// With any other base, value is always considered unsigned
+  54:../funciones_itoa.c **** 	if (value < 0 && base == 10)
+ 2258              		.loc 1 54 0
+ 2259 01f0 20301BE5 		ldr	r3, [fp, #-32]
+ 2260 01f4 000053E3 		cmp	r3, #0
+ 2261 01f8 0A0000AA 		bge	.L14
+ 2262              		.loc 1 54 0 is_stmt 0 discriminator 1
+ 2263 01fc 28301BE5 		ldr	r3, [fp, #-40]
+ 2264 0200 0A0053E3 		cmp	r3, #10
+ 2265 0204 0700001A 		bne	.L14
+  55:../funciones_itoa.c **** 		buffer[i++] = '-';
+ 2266              		.loc 1 55 0 is_stmt 1
+ 2267 0208 14301BE5 		ldr	r3, [fp, #-20]
+ 2268 020c 24201BE5 		ldr	r2, [fp, #-36]
+ 2269 0210 033082E0 		add	r3, r2, r3
+ 2270 0214 2D20A0E3 		mov	r2, #45
+ 2271 0218 0020C3E5 		strb	r2, [r3, #0]
+ 2272 021c 14301BE5 		ldr	r3, [fp, #-20]
+ 2273 0220 013083E2 		add	r3, r3, #1
+ 2274 0224 14300BE5 		str	r3, [fp, #-20]
+ 2275              	.L14:
+  56:../funciones_itoa.c **** 
+  57:../funciones_itoa.c **** 	buffer[i] = '\0'; // null terminate string
+ 2276              		.loc 1 57 0
+ 2277 0228 14301BE5 		ldr	r3, [fp, #-20]
+ 2278 022c 24201BE5 		ldr	r2, [fp, #-36]
+ 2279 0230 033082E0 		add	r3, r2, r3
+ 2280 0234 0020A0E3 		mov	r2, #0
+ 2281 0238 0020C3E5 		strb	r2, [r3, #0]
+  58:../funciones_itoa.c **** 
+  59:../funciones_itoa.c **** 	// reverse the string and return it
+  60:../funciones_itoa.c **** 	return reverse(buffer, 0, i - 1);
+ 2282              		.loc 1 60 0
+ 2283 023c 14301BE5 		ldr	r3, [fp, #-20]
+ 2284 0240 013043E2 		sub	r3, r3, #1
+ 2285 0244 24001BE5 		ldr	r0, [fp, #-36]
+ 2286 0248 0010A0E3 		mov	r1, #0
+ 2287 024c 0320A0E1 		mov	r2, r3
+ 2288 0250 FEFFFFEB 		bl	reverse
+ 2289 0254 0030A0E1 		mov	r3, r0
+ 2290              	.L8:
+  61:../funciones_itoa.c **** }
+ 2291              		.loc 1 61 0
+ 2292 0258 0300A0E1 		mov	r0, r3
+ 2293 025c 0CD04BE2 		sub	sp, fp, #12
+ 2294 0260 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2295 0264 1EFF2FE1 		bx	lr
+ 2296              		.cfi_endproc
+ 2297              	.LFE2:
+ 2299              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 funciones_itoa.c
+C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2043   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2046   .text:00000000 swap
+C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2087   .text:0000004c reverse
+C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2148   .text:000000cc itoa
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+__aeabi_idivmod
+__aeabi_idiv

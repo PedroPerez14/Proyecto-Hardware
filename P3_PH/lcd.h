@@ -15,7 +15,7 @@ extern "C" {
 #include "def.h"
 
 /*--- define macros---*/
-
+volatile extern int haciendo_DMA;	//Añadido por mí
 /* tamano pantalla */
 #define TLCD_160_240 (0)
 #define VLCD_240_160 (1)

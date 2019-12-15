@@ -1,20 +1,21 @@
 /*********************************************************************************************
 * File£º	elementos_pantalla.h
 * Author:	Fernando Peña Bes (756012) y Pedro José Pérez García (756642)
-* Descrip:	Colección de funciones que permiten dibujar en la pantalla las pantallas
-* 			que corresponden a la ejecución del reversi8 en la placa
+* Descrip:	Colección de funciones y variables que permiten dibujar en el LCD las pantallas
+* 			que corresponden a la ejecución del juego reversi8 en la placa.
 * History:	A long time ago, in galaxy a far away...
 *********************************************************************************************/
 #include "lcd.h"
 #include "elementos_pantalla.h"
+#include "funciones_itoa.h"
 
 void pintar_cuadricula()
 {
 	volatile int i;
 	volatile int j;
-	for(i = 0; i < 8; i++)
+	for(i = 0; i < num_filas; i++)
 	{
-		for(j = 0; j < 8; j++)
+		for(j = 0; j < num_columnas; j++)
 		{
 			Lcd_Draw_Box(100+25*j,20+25*i,125+25*j,45+25*i,BLACK);
 		}
@@ -23,24 +24,13 @@ void pintar_cuadricula()
 
 void pintar_numeros_tablero()
 {
-	//Poner índices de filas
-	Lcd_DspAscII8x16(110,0,BLACK,"1");
-	Lcd_DspAscII8x16(135,0,BLACK,"2");
-	Lcd_DspAscII8x16(160,0,BLACK,"3");
-	Lcd_DspAscII8x16(185,0,BLACK,"4");
-	Lcd_DspAscII8x16(210,0,BLACK,"5");
-	Lcd_DspAscII8x16(235,0,BLACK,"6");
-	Lcd_DspAscII8x16(260,0,BLACK,"7");
-	Lcd_DspAscII8x16(285,0,BLACK,"8");
-	//Poner índices de columnas
-	Lcd_DspAscII8x16(310,25,BLACK,"1");
-	Lcd_DspAscII8x16(310,50,BLACK,"2");
-	Lcd_DspAscII8x16(310,75,BLACK,"3");
-	Lcd_DspAscII8x16(310,100,BLACK,"4");
-	Lcd_DspAscII8x16(310,125,BLACK,"5");
-	Lcd_DspAscII8x16(310,150,BLACK,"6");
-	Lcd_DspAscII8x16(310,175,BLACK,"7");
-	Lcd_DspAscII8x16(310,200,BLACK,"8");
+	int i;
+	char buffer[15];
+	for(i = 0; i < num_filas; i++)
+	{
+		Lcd_DspAscII8x16(110 + 25*i, 0,BLACK,itoa(i+1, buffer,10));	//10 para pasar a decimal
+		Lcd_DspAscII8x16(310,25 + 25*i,BLACK,itoa(i+1, buffer,10));
+	}
 }
 
 void pintar_textos()
@@ -56,83 +46,130 @@ void pintar_textos()
 	Lcd_DspAscII8x16(0,220,BLACK,"-> TOCA LA PANTALLA PARA HACER TU JUGADA");
 }
 
-
-//La fila
-void pintar_ficha(int fila, int col, int color)	//1 -> blanco 2-> negro 3-> gris
+void pintar_ficha(int fila, int col, enum estado_casilla color)
 {
 	switch(color)
 	{
-		case 1:
-			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0x4, "O");
+		case FICHA_BLANCA:
+			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0xa, "O");
 			break;
-		case 2:
+		case FICHA_NEGRA:
 			Lcd_DspAscII8x16(110+25*col, 25+25*fila,BLACK, "X");
 			break;
-		default:
-			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0xb, "()");
+		case FICHA_GRIS:
+			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0xd, "@");
+			break;
+		default:	//Casilla en blanco, la limpiamos
+			borrar_ficha(fila, col);
 			break;
 	}
 }
 
+void borrar_ficha(int f, int c)		//TODO acabar
+{
+	LcdClrRect((100+25*c) + 1, (20+25*f) + 1, (125+25*c) - 1, (45+25*f) - 1, 0x0);
+}
+
+//Mueve hacia abajo en el LCD la ficha gris a partir de la fila y columna en la que está (0-7),
+//	teniendo en cuenta lo que hubiera en la casilla donde está actualmente, porque lo restaura
+void mover_gris_abajo(int fila, int columna, int fila_anterior_gris)		//TODO testear
+{
+	pintar_ficha(fila, columna, FICHA_GRIS);
+	borrar_ficha(fila_anterior_gris, columna);
+	Lcd_Dma_Trans();
+}
+
+//Mueve hacia la derecha en el LCD la ficha gris a partir de la fila y columna en la que está (0-7),
+//	teniendo en cuenta lo que hubiera en la casilla donde estaba antes de actualizar el movimiento, porque lo restaura
+void mover_gris_derecha(int fila, int columna, int columna_anterior_gris)	//TODO testear y medir tiempos
+{
+	pintar_ficha(fila, columna, FICHA_GRIS);
+	borrar_ficha(fila, columna_anterior_gris);
+	Lcd_Dma_Trans();
+}
+
 void pintar_profiling(int t_total, int t_calc, int t_pvolteo, int veces_pvolteo)
 {
-	Lcd_DspAscII8x16(20,35,BLACK,"451245");
-	Lcd_DspAscII8x16(20,85,BLACK,"84512");
-	Lcd_DspAscII8x16(20,135,BLACK,"56456");
-	Lcd_DspAscII8x16(20,185,BLACK,"469352");
+	char buffer[15];						//15 por darle un tamaño decente
+
+	//Se borra la zona de pantalla virtual donde están los numeritos del profiling que si no no funciona :)
+	LcdClrRect(20, 35, 75, 50, 0x0000);
+	LcdClrRect(20, 85, 95, 100, 0x0000);
+	LcdClrRect(20, 135, 95, 150, 0x0000);
+	LcdClrRect(20, 185, 75, 200, 0x0000);
+
+	itoa(t_total, buffer, 10);				//10 es para indicar que pasamos a números decimales
+	Lcd_DspAscII8x16(20,35,BLACK,buffer);
+	itoa(t_calc, buffer, 10);
+	Lcd_DspAscII8x16(20,85,BLACK,buffer);
+	itoa(t_pvolteo, buffer, 10);
+	Lcd_DspAscII8x16(20,135,BLACK,buffer);
+	itoa(veces_pvolteo, buffer, 10);
+	Lcd_DspAscII8x16(20,185,BLACK,buffer);
 }
 
-void pintar_tablero()
+void pintar_jugando()
 {
-	pintar_cuadricula();
-	pintar_numeros_tablero();
-}
-
-//TODO es necesaria esta funcion?
-void pintar_pantalla_juego()
-{
-	pintar_tablero();
-	pintar_textos();
-	pintar_profiling(451245, 84512, 56456, 469352);
-	//pintar_ficha(/* FICHAS */); //EN BUCLE
-}
-
-void pintar_pantalla_inicio()
-{
-	//Poner textos con reglas y demás por pantalla
+	Lcd_Clr();
+	//Lcd_Active_Clr();		//TODO no sé si es esta o la otra
 	pintar_cuadricula();
 	pintar_numeros_tablero();
 	pintar_textos();
+	pintar_profiling(0,0,0,0);
+	pintar_ficha(0,0,3);	//Pintar la ficha gris en 0,0
+	pintar_ficha(3,3,1);	//Pintar las fichas blancas iniciales en 3,3 y 4,4
+	pintar_ficha(4,4,1);
+	pintar_ficha(3,4,2);	//Pintar las fichas negras en 3,4 y 4,3
+	pintar_ficha(4,3,2);
 	Lcd_Dma_Trans();
 }
 
 void pintar_prueba()
 {
-	/*
-	pintar_cuadricula();
+	/*pintar_cuadricula();
 	pintar_numeros_tablero();
 	pintar_textos();
 	pintar_ficha(0,0,1);
 	pintar_ficha(7,7,2);
 	pintar_ficha(3,3,3);
 	pintar_profiling(451245, 84512, 56456, 469352);*/
-	Lcd_DspAscII8x16(0,0,BLACK,"#############%%%%%,&((((((##############################################((((///////((((((((((((####");
-	Lcd_DspAscII8x16(0,10,BLACK,"############&&%%%%,,,,,&((((##############################################(((((((((((((((((((((####");
-	Lcd_DspAscII8x16(0,20,BLACK,"###############%%%,,,,,,,,,###################################################################&&%");
+	Lcd_DspAscII8x16(0,0,BLACK,",,,,,,%#########%%%%%#####################################((/**************//////");
+	Lcd_DspAscII8x16(8,16,BLACK,",,,,%###########%%%%%%####################################((/*********///////((((");
+	Lcd_DspAscII8x16(16,32,BLACK,"################%%%%%%%###################################((/********////((((((##");
+	Lcd_DspAscII8x16(24,48,BLACK,"REGLAS");
 	Lcd_Dma_Trans();
 }
 
 void pintar_reglas()
 {
-
+	Lcd_Active_Clr();
+	Lcd_DspAscII8x16(1,30,BLACK,"REGLAS");
+	Lcd_Dma_Trans();
 }
 
 void pintar_fin_victoria(int blancas, int negras)
 {
-
+	Lcd_Active_Clr();
+	Lcd_DspAscII8x16(1,30,BLACK,"HAS GANADO!");
+	Lcd_Dma_Trans();
 }
 
 void pintar_fin_derrota(int blancas, int negas)
 {
+	Lcd_Active_Clr();
+	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
+	Lcd_Dma_Trans();
+}
 
+void pintar_fin_empate(int blancas, int negas)
+{
+	Lcd_Active_Clr();
+	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
+	Lcd_DspAscII8x16(1,50,BLACK,"TAMPOCO PIERDES CON UNA PUTA CPU!");
+	Lcd_Dma_Trans();
+}
+
+void iniciar_DMA()
+{
+	Lcd_Dma_Trans();
 }

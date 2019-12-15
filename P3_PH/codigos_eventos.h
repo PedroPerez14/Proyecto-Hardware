@@ -13,7 +13,6 @@
 //Los códigos de 8 bits representan eventos y empiezan por ev_ , y los de 24 representan info adicional
 enum {
     ev_tick_timer0			= 0xFF,
-    ev_tick_timer2			= 0xAA,
     ev_button_int			= 0xBB,
     ev_tsp					= 0x11,
     /*ev_autoincr			= 0xCC,		//Ya no se usa al haber cambiado la forma en que se comunican antirebotes y jugada_por_botones

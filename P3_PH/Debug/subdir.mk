@@ -10,6 +10,7 @@ C_SRCS += \
 ../button.c \
 ../cola_depuracion.c \
 ../elementos_pantalla.c \
+../funciones_itoa.c \
 ../jugada_por_botones.c \
 ../lcd.c \
 ../led.c \
@@ -36,6 +37,7 @@ OBJS += \
 ./button.o \
 ./cola_depuracion.o \
 ./elementos_pantalla.o \
+./funciones_itoa.o \
 ./jugada_por_botones.o \
 ./lcd.o \
 ./led.o \
@@ -60,6 +62,7 @@ C_DEPS += \
 ./button.d \
 ./cola_depuracion.d \
 ./elementos_pantalla.d \
+./funciones_itoa.d \
 ./jugada_por_botones.d \
 ./lcd.d \
 ./led.d \

@@ -13,7 +13,7 @@
   22              		.file 1 "../cola_depuracion.c"
  1294              		.align	2
  1297              	_COLA_DEP_STARTADDRESS:
- 1298 0000 00E17F0C 		.word	209707264
+ 1298 0000 00C37F0C 		.word	209699584
  1299              		.bss
  1300              		.align	2
  1301              	cima:
@@ -50,7 +50,7 @@
   13:../cola_depuracion.c **** 
   14:../cola_depuracion.c **** //Variables para la gestión circular de la cola
   15:../cola_depuracion.c **** //La dirección del límite inferior está en option.h, si no ha cambiado es 0x0c77fe00
-  16:../cola_depuracion.c **** const int _COLA_DEP_STARTADDRESS = _ISR_STARTADDRESS-0xf00*2;		/* 0x0c7fe100 */
+  16:../cola_depuracion.c **** const int _COLA_DEP_STARTADDRESS = _ISR_STARTADDRESS-0xf00*4;		/* 0x0c7fe100 */
   17:../cola_depuracion.c **** 
   18:../cola_depuracion.c **** static volatile uint32_t * cima;
   19:../cola_depuracion.c **** static volatile uint32_t * base;
@@ -490,26 +490,26 @@
  1679              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 cola_depuracion.c
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1297   .rodata:00000000 _COLA_DEP_STARTADDRESS
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1294   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1300   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1301   .bss:00000000 cima
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1304   .bss:00000004 base
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1307   .bss:00000008 limite_sup
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1310   .bss:0000000c numElem
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1313   .bss:00000010 maxAsignado
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1316   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1319   .text:00000000 cola_depuracion_inicializar
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1381   .text:00000094 $d
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1390   .text:000000ac $a
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1393   .text:000000ac push_debug
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1537   .text:00000248 $d
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1546   .text:00000260 $a
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1549   .text:00000260 pop_debug
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1644   .text:00000344 esVacia
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1634   .text:00000334 $d
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1641   .text:00000344 $a
-C:\Users\guest\AppData\Local\Temp\ccDxIadc.s:1675   .text:00000374 $d
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1297   .rodata:00000000 _COLA_DEP_STARTADDRESS
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1294   .rodata:00000000 $d
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1300   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1301   .bss:00000000 cima
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1304   .bss:00000004 base
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1307   .bss:00000008 limite_sup
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1310   .bss:0000000c numElem
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1313   .bss:00000010 maxAsignado
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1316   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1319   .text:00000000 cola_depuracion_inicializar
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1381   .text:00000094 $d
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1390   .text:000000ac $a
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1393   .text:000000ac push_debug
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1537   .text:00000248 $d
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1546   .text:00000260 $a
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1549   .text:00000260 pop_debug
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1644   .text:00000344 esVacia
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1634   .text:00000334 $d
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1641   .text:00000344 $a
+C:\Users\guest\AppData\Local\Temp\cc7CKnfD.s:1675   .text:00000374 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

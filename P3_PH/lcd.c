@@ -465,7 +465,8 @@ void Zdma0Done(void)
 {
 	rI_ISPC=BIT_ZDMA0;	    //clear pending
 	//TODO poner algo en cola de depuración????
-	push_debug(ev_finLCD,no_info);
+	//push_debug(ev_finLCD,no_info);	//TODO creo que si lo hago como ha dicho dario es mejor quitar esto porque no hace nada
+	haciendo_DMA = 0;
 	ucZdma0Done=0;			//TODO creo que no hace falta para nada
 }
 
@@ -498,8 +499,6 @@ void Lcd_Dma_Trans(void)
 	    //reEnable ZDMA transfer
   	rZDICNT0 |= (1<<20);		//after ES3
     rZDCON0=0x1; // start!!!  
-    //push_debug(ev_finLCD,no_info); //TODO Creo que esto no va aquí
-	//Delay(500);
 }
 
 /*********************************************************************************************

@@ -13,7 +13,7 @@
 
 //Variables para la gestión circular de la cola
 //La dirección del límite inferior está en option.h, si no ha cambiado es 0x0c77fe00
-const int _COLA_DEP_STARTADDRESS = _ISR_STARTADDRESS-0xf00*2;		/* 0x0c7fe100 */
+const int _COLA_DEP_STARTADDRESS = _ISR_STARTADDRESS-0xf00*4;		/* 0x0c7fe100 */
 
 static volatile uint32_t * cima;
 static volatile uint32_t * base;

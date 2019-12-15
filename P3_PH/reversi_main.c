@@ -28,8 +28,9 @@
 #include <stdint.h>
 
 /*--- variables ---*/
-static enum {ticks_latido_A = 7, ticks_latido_B = 8};
+static enum {ticks_latido_A = 7, ticks_latido_B = 8, ticks_segundo_de_juego = 60};
 static int cuenta_int_latido;
+static int cuenta_int_t_juego;
 static char estado_led1;
 
 /*--- Código de funciones ---*/
@@ -38,6 +39,7 @@ void reversi_main_inicializar(void)
 {
 	//Inicializar las variables que hagan falta para proesar bien los eventos
 	timer_init();
+	cuenta_int_t_juego = 0;	//Cada 60 interrupciones de timer0 pasa un segundo, y tendremos que aumentar la cuenta en la pantalla
 	estado_led1 = 0;		//Para decidir si hay que esperar 7 u 8 eventos de tipo tick_latido (en la teoría es cada 7.5)
 							//Porque timer0 interrumpe 60 veces/seg. y el led debe latir(encender y apagar) 4 veces por segundo
 							// 	por tanto 60/4 = 15, y 15/2 = 7.5, el número de interrupciones del timer
@@ -46,7 +48,6 @@ void reversi_main_inicializar(void)
 
 	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, como ya se ha explicado
 	led1_off();				//El led empieza apagado
-	reversi8_inicializar();
 	botones_antirebotes_inicializar();
 	inicializar_jugada_botones();
 }
@@ -79,6 +80,16 @@ void Latido_ev_new_tick(void)
 	}
 }
 
+void tiempo_juego_ev_tick()
+{
+	cuenta_int_t_juego++;
+	if(cuenta_int_t_juego == ticks_segundo_de_juego)
+	{
+		cuenta_int_t_juego = 0;
+		jugada_ev_timer();
+	}
+}
+
 void reversi_main()
 {
 	reversi_main_inicializar();
@@ -94,10 +105,8 @@ void reversi_main()
 			{
 			case ev_tick_timer0 :	//Atender eventos de timer0
 				Latido_ev_new_tick();
+				tiempo_juego_ev_tick();
 				button_ev_tick0();
-				break;
-			case ev_tick_timer2 :	//Atender eventos de timer2
-				jugada_ev_timer2();
 				break;
 			case ev_button_int :	//Atender eventos de los botones
 				if(info == button_izq)
@@ -112,11 +121,11 @@ void reversi_main()
 				}
 				break;
 			case ev_finLCD:
-					termina_DMA();
-					break;
+				termina_DMA();
+				break;
 			case ev_tsp:
-					jugada_ev_tsp();
-					break;
+				jugada_ev_tsp();
+				break;
 			default : //Si es otra cosa desconocida, no lo atendemos
 				break;
 			}

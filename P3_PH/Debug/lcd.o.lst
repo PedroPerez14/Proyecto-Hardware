@@ -2991,391 +2991,388 @@
  4618 1db8 0DC0A0E1 		mov	ip, sp
  4619              	.LCFI26:
  4620              		.cfi_def_cfa_register 12
- 4621 1dbc 0FD82DE9 		stmfd	sp!, {r0, r1, r2, r3, fp, ip, lr, pc}
+ 4621 1dbc 0CD82DE9 		stmfd	sp!, {r2, r3, fp, ip, lr, pc}
  4622 1dc0 04B04CE2 		sub	fp, ip, #4
  4623              		.cfi_offset 14, -8
  4624              		.cfi_offset 13, -12
  4625              		.cfi_offset 11, -16
  4626              		.cfi_offset 3, -20
  4627              		.cfi_offset 2, -24
- 4628              		.cfi_offset 1, -28
- 4629              		.cfi_offset 0, -32
- 4630              	.LCFI27:
- 4631              		.cfi_def_cfa 11, 4
+ 4628              	.LCFI27:
+ 4629              		.cfi_def_cfa 11, 4
  466:../lcd.c      **** 	rI_ISPC=BIT_ZDMA0;	    //clear pending
- 4632              		.loc 1 466 0
- 4633 1dc4 2C309FE5 		ldr	r3, .L104
- 4634 1dc8 0227A0E3 		mov	r2, #524288
- 4635 1dcc 002083E5 		str	r2, [r3, #0]
+ 4630              		.loc 1 466 0
+ 4631 1dc4 2C309FE5 		ldr	r3, .L104
+ 4632 1dc8 0227A0E3 		mov	r2, #524288
+ 4633 1dcc 002083E5 		str	r2, [r3, #0]
  467:../lcd.c      **** 	//TODO poner algo en cola de depuración????
- 468:../lcd.c      **** 	push_debug(ev_finLCD,no_info);
- 4636              		.loc 1 468 0
- 4637 1dd0 6900A0E3 		mov	r0, #105
- 4638 1dd4 20109FE5 		ldr	r1, .L104+4
- 4639 1dd8 FEFFFFEB 		bl	push_debug
- 469:../lcd.c      **** 	ucZdma0Done=0;			//TODO creo que no hace falta para nada
- 4640              		.loc 1 469 0
- 4641 1ddc 1C309FE5 		ldr	r3, .L104+8
- 4642 1de0 0020A0E3 		mov	r2, #0
- 4643 1de4 0020C3E5 		strb	r2, [r3, #0]
- 470:../lcd.c      **** }
- 4644              		.loc 1 470 0
- 4645 1de8 1CD04BE2 		sub	sp, fp, #28
- 4646 1dec 0F689DE8 		ldmfd	sp, {r0, r1, r2, r3, fp, sp, lr}
- 4647 1df0 04C09DE4 		ldmfd	sp!, {ip}
- 4648 1df4 04F05EE2 		subs	pc, lr, #4
- 4649              	.L105:
- 4650              		.align	2
- 4651              	.L104:
- 4652 1df8 2400E001 		.word	31457316
- 4653 1dfc AAAAAAAA 		.word	-1431655766
- 4654 1e00 00000000 		.word	ucZdma0Done
- 4655              		.cfi_endproc
- 4656              	.LFE13:
- 4658              		.align	2
- 4659              		.global	Lcd_Dma_Trans
- 4661              	Lcd_Dma_Trans:
- 4662              	.LFB14:
- 471:../lcd.c      **** 
- 472:../lcd.c      **** /*********************************************************************************************
- 473:../lcd.c      **** * name:		Lcd_Dma_Trans()
- 474:../lcd.c      **** * func:		dma transport virtual LCD screen to LCD actual screen
- 475:../lcd.c      **** * para:		none
- 476:../lcd.c      **** * ret:		none
- 477:../lcd.c      **** * modify:
- 478:../lcd.c      **** * comment:		
- 479:../lcd.c      **** *********************************************************************************************/
- 480:../lcd.c      **** void Lcd_Dma_Trans(void)
- 481:../lcd.c      **** {
- 4663              		.loc 1 481 0
- 4664              		.cfi_startproc
- 4665              		@ Function supports interworking.
- 4666              		@ args = 0, pretend = 0, frame = 0
- 4667              		@ frame_needed = 1, uses_anonymous_args = 0
- 4668 1e04 0DC0A0E1 		mov	ip, sp
- 4669              	.LCFI28:
- 4670              		.cfi_def_cfa_register 12
- 4671 1e08 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 4672 1e0c 04B04CE2 		sub	fp, ip, #4
- 4673              		.cfi_offset 14, -8
- 4674              		.cfi_offset 13, -12
- 4675              		.cfi_offset 11, -16
- 4676              	.LCFI29:
- 4677              		.cfi_def_cfa 11, 4
- 482:../lcd.c      **** 	INT8U err;
- 483:../lcd.c      **** 	
- 484:../lcd.c      **** 	//#define LCD_VIRTUAL_BUFFER	(0xc400000)
- 485:../lcd.c      **** 	//#define LCD_ACTIVE_BUFFER	(LCD_VIRTUAL_BUFFER+(SCR_XSIZE*SCR_YSIZE/2))	//DMA ON
- 486:../lcd.c      **** 	//#define LCD_ACTIVE_BUFFER	LCD_VIRTUAL_BUFFER								//DMA OFF
- 487:../lcd.c      **** 	//#define LCD_BUF_SIZE		(SCR_XSIZE*SCR_YSIZE/2)
- 488:../lcd.c      **** 	//So the Lcd Buffer Low area is from LCD_VIRTUAL_BUFFER to (LCD_ACTIVE_BUFFER+(SCR_XSIZE*SCR_YSIZE
- 489:../lcd.c      **** 	rNCACHBE1=(((unsigned)(LCD_ACTIVE_BUFFER)>>12) <<16 )|((unsigned)(LCD_VIRTUAL_BUFFER)>>12);
- 4678              		.loc 1 489 0
- 4679 1e10 54309FE5 		ldr	r3, .L107
- 4680 1e14 54209FE5 		ldr	r2, .L107+4
- 4681 1e18 002083E5 		str	r2, [r3, #0]
- 490:../lcd.c      ****   	rZDISRC0=(DW<<30)|(1<<28)     |LCD_VIRTUAL_BUFFER; // inc
- 4682              		.loc 1 490 0
- 4683 1e1c 50309FE5 		ldr	r3, .L107+8
- 4684 1e20 50209FE5 		ldr	r2, .L107+12
- 4685 1e24 002083E5 		str	r2, [r3, #0]
- 491:../lcd.c      ****   	rZDIDES0=( 2<<30)|(1<<28)     |LCD_ACTIVE_BUFFER; // inc
- 4686              		.loc 1 491 0
- 4687 1e28 4C309FE5 		ldr	r3, .L107+16
- 4688 1e2c 4C209FE5 		ldr	r2, .L107+20
- 4689 1e30 002083E5 		str	r2, [r3, #0]
- 492:../lcd.c      ****     rZDICNT0=( 2<<28)|(1<<26)     |(3<<22)     |(0<<20)      |(LCD_BUF_SIZE);
- 4690              		.loc 1 492 0
- 4691 1e34 48309FE5 		ldr	r3, .L107+24
- 4692 1e38 48209FE5 		ldr	r2, .L107+28
- 4693 1e3c 002083E5 		str	r2, [r3, #0]
- 493:../lcd.c      ****         //           |            |            |             |            |---->0 = Disable DMA
- 494:../lcd.c      ****         //           |            |            |             |------------>Int. whenever transferre
- 495:../lcd.c      ****         //           |            |            |-------------------->Write time on the fly
- 496:../lcd.c      ****         //           |            |---------------------------->Block(4-word) transfer mode
- 497:../lcd.c      ****         //           |------------------------------------>whole service
- 498:../lcd.c      **** 	    //reEnable ZDMA transfer
- 499:../lcd.c      ****   	rZDICNT0 |= (1<<20);		//after ES3
- 4694              		.loc 1 499 0
- 4695 1e40 3C309FE5 		ldr	r3, .L107+24
- 4696 1e44 38209FE5 		ldr	r2, .L107+24
- 4697 1e48 002092E5 		ldr	r2, [r2, #0]
- 4698 1e4c 012682E3 		orr	r2, r2, #1048576
- 4699 1e50 002083E5 		str	r2, [r3, #0]
- 500:../lcd.c      ****     rZDCON0=0x1; // start!!!  
- 4700              		.loc 1 500 0
- 4701 1e54 7A37A0E3 		mov	r3, #31981568
- 4702 1e58 0120A0E3 		mov	r2, #1
- 4703 1e5c 002083E5 		str	r2, [r3, #0]
- 501:../lcd.c      ****     //push_debug(ev_finLCD,no_info); //TODO Creo que esto no va aquí
- 502:../lcd.c      **** 	//Delay(500);
- 503:../lcd.c      **** }
- 4704              		.loc 1 503 0
- 4705 1e60 0CD04BE2 		sub	sp, fp, #12
- 4706 1e64 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 4707 1e68 1EFF2FE1 		bx	lr
- 4708              	.L108:
- 4709              		.align	2
- 4710              	.L107:
- 4711 1e6c 0800C001 		.word	29360136
- 4712 1e70 09C300C3 		.word	-1023360247
- 4713 1e74 0400E801 		.word	31981572
- 4714 1e78 0096301C 		.word	472946176
- 4715 1e7c 0800E801 		.word	31981576
- 4716 1e80 0000309C 		.word	-1674575872
- 4717 1e84 0C00E801 		.word	31981580
- 4718 1e88 0096C024 		.word	616601088
- 4719              		.cfi_endproc
- 4720              	.LFE14:
- 4722              		.section	.rodata
- 4723              		.align	2
- 4724              	.LC0:
- 4725 0000 436F6469 		.ascii	"Codigo del puesto: \000"
- 4725      676F2064 
- 4725      656C2070 
- 4725      75657374 
- 4725      6F3A2000 
- 4726              		.text
- 4727              		.align	2
- 4728              		.global	Lcd_Test
- 4730              	Lcd_Test:
- 4731              	.LFB15:
- 504:../lcd.c      **** 
- 505:../lcd.c      **** /*********************************************************************************************
- 506:../lcd.c      **** * name:		Lcd_Test()
- 507:../lcd.c      **** * func:		LCD test function
- 508:../lcd.c      **** * para:		none
- 509:../lcd.c      **** * ret:		none
- 510:../lcd.c      **** * modify:
- 511:../lcd.c      **** * comment:		
- 512:../lcd.c      **** *********************************************************************************************/
- 513:../lcd.c      **** void Lcd_Test(void)
- 514:../lcd.c      **** {
- 4732              		.loc 1 514 0
- 4733              		.cfi_startproc
- 4734              		@ Function supports interworking.
- 4735              		@ args = 0, pretend = 0, frame = 0
- 4736              		@ frame_needed = 1, uses_anonymous_args = 0
- 4737 1e8c 0DC0A0E1 		mov	ip, sp
- 4738              	.LCFI30:
- 4739              		.cfi_def_cfa_register 12
- 4740 1e90 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 4741 1e94 04B04CE2 		sub	fp, ip, #4
- 4742              		.cfi_offset 14, -8
- 4743              		.cfi_offset 13, -12
- 4744              		.cfi_offset 11, -16
- 4745              	.LCFI31:
- 4746              		.cfi_def_cfa 11, 4
- 4747 1e98 08D04DE2 		sub	sp, sp, #8
- 515:../lcd.c      **** 	/* initial LCD controller */
- 516:../lcd.c      **** 	Lcd_Init();
- 4748              		.loc 1 516 0
- 4749 1e9c FEFFFFEB 		bl	Lcd_Init
- 517:../lcd.c      **** 	/* clear screen */
- 518:../lcd.c      **** 	Lcd_Clr();
+ 468:../lcd.c      **** 	//push_debug(ev_finLCD,no_info);	//TODO creo que si lo hago como ha dicho dario es mejor quitar es
+ 469:../lcd.c      **** 	haciendo_DMA = 0;
+ 4634              		.loc 1 469 0
+ 4635 1dd0 24309FE5 		ldr	r3, .L104+4
+ 4636 1dd4 0020A0E3 		mov	r2, #0
+ 4637 1dd8 002083E5 		str	r2, [r3, #0]
+ 470:../lcd.c      **** 	ucZdma0Done=0;			//TODO creo que no hace falta para nada
+ 4638              		.loc 1 470 0
+ 4639 1ddc 1C309FE5 		ldr	r3, .L104+8
+ 4640 1de0 0020A0E3 		mov	r2, #0
+ 4641 1de4 0020C3E5 		strb	r2, [r3, #0]
+ 471:../lcd.c      **** }
+ 4642              		.loc 1 471 0
+ 4643 1de8 14D04BE2 		sub	sp, fp, #20
+ 4644 1dec 0C689DE8 		ldmfd	sp, {r2, r3, fp, sp, lr}
+ 4645 1df0 04C09DE4 		ldmfd	sp!, {ip}
+ 4646 1df4 04F05EE2 		subs	pc, lr, #4
+ 4647              	.L105:
+ 4648              		.align	2
+ 4649              	.L104:
+ 4650 1df8 2400E001 		.word	31457316
+ 4651 1dfc 00000000 		.word	haciendo_DMA
+ 4652 1e00 00000000 		.word	ucZdma0Done
+ 4653              		.cfi_endproc
+ 4654              	.LFE13:
+ 4656              		.align	2
+ 4657              		.global	Lcd_Dma_Trans
+ 4659              	Lcd_Dma_Trans:
+ 4660              	.LFB14:
+ 472:../lcd.c      **** 
+ 473:../lcd.c      **** /*********************************************************************************************
+ 474:../lcd.c      **** * name:		Lcd_Dma_Trans()
+ 475:../lcd.c      **** * func:		dma transport virtual LCD screen to LCD actual screen
+ 476:../lcd.c      **** * para:		none
+ 477:../lcd.c      **** * ret:		none
+ 478:../lcd.c      **** * modify:
+ 479:../lcd.c      **** * comment:		
+ 480:../lcd.c      **** *********************************************************************************************/
+ 481:../lcd.c      **** void Lcd_Dma_Trans(void)
+ 482:../lcd.c      **** {
+ 4661              		.loc 1 482 0
+ 4662              		.cfi_startproc
+ 4663              		@ Function supports interworking.
+ 4664              		@ args = 0, pretend = 0, frame = 0
+ 4665              		@ frame_needed = 1, uses_anonymous_args = 0
+ 4666 1e04 0DC0A0E1 		mov	ip, sp
+ 4667              	.LCFI28:
+ 4668              		.cfi_def_cfa_register 12
+ 4669 1e08 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 4670 1e0c 04B04CE2 		sub	fp, ip, #4
+ 4671              		.cfi_offset 14, -8
+ 4672              		.cfi_offset 13, -12
+ 4673              		.cfi_offset 11, -16
+ 4674              	.LCFI29:
+ 4675              		.cfi_def_cfa 11, 4
+ 483:../lcd.c      **** 	INT8U err;
+ 484:../lcd.c      **** 	
+ 485:../lcd.c      **** 	//#define LCD_VIRTUAL_BUFFER	(0xc400000)
+ 486:../lcd.c      **** 	//#define LCD_ACTIVE_BUFFER	(LCD_VIRTUAL_BUFFER+(SCR_XSIZE*SCR_YSIZE/2))	//DMA ON
+ 487:../lcd.c      **** 	//#define LCD_ACTIVE_BUFFER	LCD_VIRTUAL_BUFFER								//DMA OFF
+ 488:../lcd.c      **** 	//#define LCD_BUF_SIZE		(SCR_XSIZE*SCR_YSIZE/2)
+ 489:../lcd.c      **** 	//So the Lcd Buffer Low area is from LCD_VIRTUAL_BUFFER to (LCD_ACTIVE_BUFFER+(SCR_XSIZE*SCR_YSIZE
+ 490:../lcd.c      **** 	rNCACHBE1=(((unsigned)(LCD_ACTIVE_BUFFER)>>12) <<16 )|((unsigned)(LCD_VIRTUAL_BUFFER)>>12);
+ 4676              		.loc 1 490 0
+ 4677 1e10 54309FE5 		ldr	r3, .L107
+ 4678 1e14 54209FE5 		ldr	r2, .L107+4
+ 4679 1e18 002083E5 		str	r2, [r3, #0]
+ 491:../lcd.c      ****   	rZDISRC0=(DW<<30)|(1<<28)     |LCD_VIRTUAL_BUFFER; // inc
+ 4680              		.loc 1 491 0
+ 4681 1e1c 50309FE5 		ldr	r3, .L107+8
+ 4682 1e20 50209FE5 		ldr	r2, .L107+12
+ 4683 1e24 002083E5 		str	r2, [r3, #0]
+ 492:../lcd.c      ****   	rZDIDES0=( 2<<30)|(1<<28)     |LCD_ACTIVE_BUFFER; // inc
+ 4684              		.loc 1 492 0
+ 4685 1e28 4C309FE5 		ldr	r3, .L107+16
+ 4686 1e2c 4C209FE5 		ldr	r2, .L107+20
+ 4687 1e30 002083E5 		str	r2, [r3, #0]
+ 493:../lcd.c      ****     rZDICNT0=( 2<<28)|(1<<26)     |(3<<22)     |(0<<20)      |(LCD_BUF_SIZE);
+ 4688              		.loc 1 493 0
+ 4689 1e34 48309FE5 		ldr	r3, .L107+24
+ 4690 1e38 48209FE5 		ldr	r2, .L107+28
+ 4691 1e3c 002083E5 		str	r2, [r3, #0]
+ 494:../lcd.c      ****         //           |            |            |             |            |---->0 = Disable DMA
+ 495:../lcd.c      ****         //           |            |            |             |------------>Int. whenever transferre
+ 496:../lcd.c      ****         //           |            |            |-------------------->Write time on the fly
+ 497:../lcd.c      ****         //           |            |---------------------------->Block(4-word) transfer mode
+ 498:../lcd.c      ****         //           |------------------------------------>whole service
+ 499:../lcd.c      **** 	    //reEnable ZDMA transfer
+ 500:../lcd.c      ****   	rZDICNT0 |= (1<<20);		//after ES3
+ 4692              		.loc 1 500 0
+ 4693 1e40 3C309FE5 		ldr	r3, .L107+24
+ 4694 1e44 38209FE5 		ldr	r2, .L107+24
+ 4695 1e48 002092E5 		ldr	r2, [r2, #0]
+ 4696 1e4c 012682E3 		orr	r2, r2, #1048576
+ 4697 1e50 002083E5 		str	r2, [r3, #0]
+ 501:../lcd.c      ****     rZDCON0=0x1; // start!!!  
+ 4698              		.loc 1 501 0
+ 4699 1e54 7A37A0E3 		mov	r3, #31981568
+ 4700 1e58 0120A0E3 		mov	r2, #1
+ 4701 1e5c 002083E5 		str	r2, [r3, #0]
+ 502:../lcd.c      **** }
+ 4702              		.loc 1 502 0
+ 4703 1e60 0CD04BE2 		sub	sp, fp, #12
+ 4704 1e64 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 4705 1e68 1EFF2FE1 		bx	lr
+ 4706              	.L108:
+ 4707              		.align	2
+ 4708              	.L107:
+ 4709 1e6c 0800C001 		.word	29360136
+ 4710 1e70 09C300C3 		.word	-1023360247
+ 4711 1e74 0400E801 		.word	31981572
+ 4712 1e78 0096301C 		.word	472946176
+ 4713 1e7c 0800E801 		.word	31981576
+ 4714 1e80 0000309C 		.word	-1674575872
+ 4715 1e84 0C00E801 		.word	31981580
+ 4716 1e88 0096C024 		.word	616601088
+ 4717              		.cfi_endproc
+ 4718              	.LFE14:
+ 4720              		.section	.rodata
+ 4721              		.align	2
+ 4722              	.LC0:
+ 4723 0000 436F6469 		.ascii	"Codigo del puesto: \000"
+ 4723      676F2064 
+ 4723      656C2070 
+ 4723      75657374 
+ 4723      6F3A2000 
+ 4724              		.text
+ 4725              		.align	2
+ 4726              		.global	Lcd_Test
+ 4728              	Lcd_Test:
+ 4729              	.LFB15:
+ 503:../lcd.c      **** 
+ 504:../lcd.c      **** /*********************************************************************************************
+ 505:../lcd.c      **** * name:		Lcd_Test()
+ 506:../lcd.c      **** * func:		LCD test function
+ 507:../lcd.c      **** * para:		none
+ 508:../lcd.c      **** * ret:		none
+ 509:../lcd.c      **** * modify:
+ 510:../lcd.c      **** * comment:		
+ 511:../lcd.c      **** *********************************************************************************************/
+ 512:../lcd.c      **** void Lcd_Test(void)
+ 513:../lcd.c      **** {
+ 4730              		.loc 1 513 0
+ 4731              		.cfi_startproc
+ 4732              		@ Function supports interworking.
+ 4733              		@ args = 0, pretend = 0, frame = 0
+ 4734              		@ frame_needed = 1, uses_anonymous_args = 0
+ 4735 1e8c 0DC0A0E1 		mov	ip, sp
+ 4736              	.LCFI30:
+ 4737              		.cfi_def_cfa_register 12
+ 4738 1e90 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 4739 1e94 04B04CE2 		sub	fp, ip, #4
+ 4740              		.cfi_offset 14, -8
+ 4741              		.cfi_offset 13, -12
+ 4742              		.cfi_offset 11, -16
+ 4743              	.LCFI31:
+ 4744              		.cfi_def_cfa 11, 4
+ 4745 1e98 08D04DE2 		sub	sp, sp, #8
+ 514:../lcd.c      **** 	/* initial LCD controller */
+ 515:../lcd.c      **** 	Lcd_Init();
+ 4746              		.loc 1 515 0
+ 4747 1e9c FEFFFFEB 		bl	Lcd_Init
+ 516:../lcd.c      **** 	/* clear screen */
+ 517:../lcd.c      **** 	Lcd_Clr();
+ 4748              		.loc 1 517 0
+ 4749 1ea0 FEFFFFEB 		bl	Lcd_Clr
+ 518:../lcd.c      **** 	Lcd_Active_Clr();
  4750              		.loc 1 518 0
- 4751 1ea0 FEFFFFEB 		bl	Lcd_Clr
- 519:../lcd.c      **** 	Lcd_Active_Clr();
- 4752              		.loc 1 519 0
- 4753 1ea4 FEFFFFEB 		bl	Lcd_Active_Clr
- 520:../lcd.c      **** 
- 521:../lcd.c      **** 	/* draw rectangle pattern */ 
- 522:../lcd.c      ****     #ifdef Eng_v // english version
- 523:../lcd.c      **** 	Lcd_DspAscII8x16(10,0,DARKGRAY,"Embest S3CEV40 ");
- 524:../lcd.c      **** 	#else
- 525:../lcd.c      **** //	Lcd_DspHz16(10,0,DARKGRAY,"Ó¢ÝíÌØÈýÐÇÊµÑéÆÀ¹À°å");
- 526:../lcd.c      **** 	#endif
- 527:../lcd.c      **** 	Lcd_DspAscII8x16(10,20,BLACK,"Codigo del puesto: ");
- 4754              		.loc 1 527 0
- 4755 1ea8 0A00A0E3 		mov	r0, #10
- 4756 1eac 1410A0E3 		mov	r1, #20
- 4757 1eb0 0F20A0E3 		mov	r2, #15
- 4758 1eb4 A0319FE5 		ldr	r3, .L110
- 4759 1eb8 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 528:../lcd.c      **** 	Lcd_Draw_Box(10,40,310,230,14);
- 4760              		.loc 1 528 0
- 4761 1ebc 0E30A0E3 		mov	r3, #14
- 4762 1ec0 00308DE5 		str	r3, [sp, #0]
- 4763 1ec4 0A00A0E3 		mov	r0, #10
- 4764 1ec8 2810A0E3 		mov	r1, #40
- 4765 1ecc 8C219FE5 		ldr	r2, .L110+4
- 4766 1ed0 E630A0E3 		mov	r3, #230
- 4767 1ed4 FEFFFFEB 		bl	Lcd_Draw_Box
- 529:../lcd.c      **** 	Lcd_Draw_Box(20,45,300,225,13);
- 4768              		.loc 1 529 0
- 4769 1ed8 0D30A0E3 		mov	r3, #13
- 4770 1edc 00308DE5 		str	r3, [sp, #0]
- 4771 1ee0 1400A0E3 		mov	r0, #20
- 4772 1ee4 2D10A0E3 		mov	r1, #45
- 4773 1ee8 4B2FA0E3 		mov	r2, #300
- 4774 1eec E130A0E3 		mov	r3, #225
- 4775 1ef0 FEFFFFEB 		bl	Lcd_Draw_Box
- 530:../lcd.c      **** 	Lcd_Draw_Box(30,50,290,220,12);
- 4776              		.loc 1 530 0
- 4777 1ef4 0C30A0E3 		mov	r3, #12
- 4778 1ef8 00308DE5 		str	r3, [sp, #0]
- 4779 1efc 1E00A0E3 		mov	r0, #30
- 4780 1f00 3210A0E3 		mov	r1, #50
- 4781 1f04 58219FE5 		ldr	r2, .L110+8
- 4782 1f08 DC30A0E3 		mov	r3, #220
- 4783 1f0c FEFFFFEB 		bl	Lcd_Draw_Box
- 531:../lcd.c      **** 	Lcd_Draw_Box(40,55,280,215,11);
- 4784              		.loc 1 531 0
- 4785 1f10 0B30A0E3 		mov	r3, #11
- 4786 1f14 00308DE5 		str	r3, [sp, #0]
- 4787 1f18 2800A0E3 		mov	r0, #40
- 4788 1f1c 3710A0E3 		mov	r1, #55
- 4789 1f20 462FA0E3 		mov	r2, #280
- 4790 1f24 D730A0E3 		mov	r3, #215
- 4791 1f28 FEFFFFEB 		bl	Lcd_Draw_Box
- 532:../lcd.c      **** 	Lcd_Draw_Box(50,60,270,210,10);
- 4792              		.loc 1 532 0
- 4793 1f2c 0A30A0E3 		mov	r3, #10
- 4794 1f30 00308DE5 		str	r3, [sp, #0]
- 4795 1f34 3200A0E3 		mov	r0, #50
- 4796 1f38 3C10A0E3 		mov	r1, #60
- 4797 1f3c 24219FE5 		ldr	r2, .L110+12
- 4798 1f40 D230A0E3 		mov	r3, #210
- 4799 1f44 FEFFFFEB 		bl	Lcd_Draw_Box
- 533:../lcd.c      **** 	Lcd_Draw_Box(60,65,260,205,9);
- 4800              		.loc 1 533 0
- 4801 1f48 0930A0E3 		mov	r3, #9
- 4802 1f4c 00308DE5 		str	r3, [sp, #0]
- 4803 1f50 3C00A0E3 		mov	r0, #60
- 4804 1f54 4110A0E3 		mov	r1, #65
- 4805 1f58 412FA0E3 		mov	r2, #260
- 4806 1f5c CD30A0E3 		mov	r3, #205
- 4807 1f60 FEFFFFEB 		bl	Lcd_Draw_Box
- 534:../lcd.c      **** 	Lcd_Draw_Box(70,70,250,200,8);
- 4808              		.loc 1 534 0
- 4809 1f64 0830A0E3 		mov	r3, #8
- 4810 1f68 00308DE5 		str	r3, [sp, #0]
- 4811 1f6c 4600A0E3 		mov	r0, #70
- 4812 1f70 4610A0E3 		mov	r1, #70
- 4813 1f74 FA20A0E3 		mov	r2, #250
- 4814 1f78 C830A0E3 		mov	r3, #200
- 4815 1f7c FEFFFFEB 		bl	Lcd_Draw_Box
- 535:../lcd.c      **** 	Lcd_Draw_Box(80,75,240,195,7);
- 4816              		.loc 1 535 0
- 4817 1f80 0730A0E3 		mov	r3, #7
- 4818 1f84 00308DE5 		str	r3, [sp, #0]
- 4819 1f88 5000A0E3 		mov	r0, #80
- 4820 1f8c 4B10A0E3 		mov	r1, #75
- 4821 1f90 F020A0E3 		mov	r2, #240
- 4822 1f94 C330A0E3 		mov	r3, #195
- 4823 1f98 FEFFFFEB 		bl	Lcd_Draw_Box
- 536:../lcd.c      **** 	Lcd_Draw_Box(90,80,230,190,6);
- 4824              		.loc 1 536 0
- 4825 1f9c 0630A0E3 		mov	r3, #6
- 4826 1fa0 00308DE5 		str	r3, [sp, #0]
- 4827 1fa4 5A00A0E3 		mov	r0, #90
- 4828 1fa8 5010A0E3 		mov	r1, #80
- 4829 1fac E620A0E3 		mov	r2, #230
- 4830 1fb0 BE30A0E3 		mov	r3, #190
- 4831 1fb4 FEFFFFEB 		bl	Lcd_Draw_Box
- 537:../lcd.c      **** 	Lcd_Draw_Box(100,85,220,185,5);
- 4832              		.loc 1 537 0
- 4833 1fb8 0530A0E3 		mov	r3, #5
- 4834 1fbc 00308DE5 		str	r3, [sp, #0]
- 4835 1fc0 6400A0E3 		mov	r0, #100
- 4836 1fc4 5510A0E3 		mov	r1, #85
- 4837 1fc8 DC20A0E3 		mov	r2, #220
- 4838 1fcc B930A0E3 		mov	r3, #185
- 4839 1fd0 FEFFFFEB 		bl	Lcd_Draw_Box
- 538:../lcd.c      **** 	Lcd_Draw_Box(110,90,210,180,4);
- 4840              		.loc 1 538 0
- 4841 1fd4 0430A0E3 		mov	r3, #4
- 4842 1fd8 00308DE5 		str	r3, [sp, #0]
- 4843 1fdc 6E00A0E3 		mov	r0, #110
- 4844 1fe0 5A10A0E3 		mov	r1, #90
- 4845 1fe4 D220A0E3 		mov	r2, #210
- 4846 1fe8 B430A0E3 		mov	r3, #180
- 4847 1fec FEFFFFEB 		bl	Lcd_Draw_Box
- 539:../lcd.c      **** 	Lcd_Draw_Box(120,95,200,175,3);
- 4848              		.loc 1 539 0
- 4849 1ff0 0330A0E3 		mov	r3, #3
- 4850 1ff4 00308DE5 		str	r3, [sp, #0]
- 4851 1ff8 7800A0E3 		mov	r0, #120
- 4852 1ffc 5F10A0E3 		mov	r1, #95
- 4853 2000 C820A0E3 		mov	r2, #200
- 4854 2004 AF30A0E3 		mov	r3, #175
- 4855 2008 FEFFFFEB 		bl	Lcd_Draw_Box
- 540:../lcd.c      **** 	Lcd_Draw_Box(130,100,190,170,2);
- 4856              		.loc 1 540 0
- 4857 200c 0230A0E3 		mov	r3, #2
- 4858 2010 00308DE5 		str	r3, [sp, #0]
- 4859 2014 8200A0E3 		mov	r0, #130
- 4860 2018 6410A0E3 		mov	r1, #100
- 4861 201c BE20A0E3 		mov	r2, #190
- 4862 2020 AA30A0E3 		mov	r3, #170
- 4863 2024 FEFFFFEB 		bl	Lcd_Draw_Box
- 541:../lcd.c      **** 	BitmapView(125,135,Stru_Bitmap_gbMouse);
- 4864              		.loc 1 541 0
- 4865 2028 3C309FE5 		ldr	r3, .L110+16
- 4866 202c 0D20A0E1 		mov	r2, sp
- 4867 2030 081083E2 		add	r1, r3, #8
- 4868 2034 030091E8 		ldmia	r1, {r0, r1}
- 4869 2038 030082E8 		stmia	r2, {r0, r1}
- 4870 203c 0C0093E8 		ldmia	r3, {r2, r3}
- 4871 2040 7D00A0E3 		mov	r0, #125
- 4872 2044 8710A0E3 		mov	r1, #135
- 4873 2048 FEFFFFEB 		bl	BitmapView
- 542:../lcd.c      **** 	Lcd_Dma_Trans();
- 4874              		.loc 1 542 0
- 4875 204c FEFFFFEB 		bl	Lcd_Dma_Trans
- 543:../lcd.c      **** 
- 544:../lcd.c      **** }
- 4876              		.loc 1 544 0
- 4877 2050 0CD04BE2 		sub	sp, fp, #12
- 4878 2054 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 4879 2058 1EFF2FE1 		bx	lr
- 4880              	.L111:
- 4881              		.align	2
- 4882              	.L110:
- 4883 205c 00000000 		.word	.LC0
- 4884 2060 36010000 		.word	310
- 4885 2064 22010000 		.word	290
- 4886 2068 0E010000 		.word	270
- 4887 206c 00000000 		.word	Stru_Bitmap_gbMouse
- 4888              		.cfi_endproc
- 4889              	.LFE15:
- 4891              	.Letext0:
+ 4751 1ea4 FEFFFFEB 		bl	Lcd_Active_Clr
+ 519:../lcd.c      **** 
+ 520:../lcd.c      **** 	/* draw rectangle pattern */ 
+ 521:../lcd.c      ****     #ifdef Eng_v // english version
+ 522:../lcd.c      **** 	Lcd_DspAscII8x16(10,0,DARKGRAY,"Embest S3CEV40 ");
+ 523:../lcd.c      **** 	#else
+ 524:../lcd.c      **** //	Lcd_DspHz16(10,0,DARKGRAY,"Ó¢ÝíÌØÈýÐÇÊµÑéÆÀ¹À°å");
+ 525:../lcd.c      **** 	#endif
+ 526:../lcd.c      **** 	Lcd_DspAscII8x16(10,20,BLACK,"Codigo del puesto: ");
+ 4752              		.loc 1 526 0
+ 4753 1ea8 0A00A0E3 		mov	r0, #10
+ 4754 1eac 1410A0E3 		mov	r1, #20
+ 4755 1eb0 0F20A0E3 		mov	r2, #15
+ 4756 1eb4 A0319FE5 		ldr	r3, .L110
+ 4757 1eb8 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 527:../lcd.c      **** 	Lcd_Draw_Box(10,40,310,230,14);
+ 4758              		.loc 1 527 0
+ 4759 1ebc 0E30A0E3 		mov	r3, #14
+ 4760 1ec0 00308DE5 		str	r3, [sp, #0]
+ 4761 1ec4 0A00A0E3 		mov	r0, #10
+ 4762 1ec8 2810A0E3 		mov	r1, #40
+ 4763 1ecc 8C219FE5 		ldr	r2, .L110+4
+ 4764 1ed0 E630A0E3 		mov	r3, #230
+ 4765 1ed4 FEFFFFEB 		bl	Lcd_Draw_Box
+ 528:../lcd.c      **** 	Lcd_Draw_Box(20,45,300,225,13);
+ 4766              		.loc 1 528 0
+ 4767 1ed8 0D30A0E3 		mov	r3, #13
+ 4768 1edc 00308DE5 		str	r3, [sp, #0]
+ 4769 1ee0 1400A0E3 		mov	r0, #20
+ 4770 1ee4 2D10A0E3 		mov	r1, #45
+ 4771 1ee8 4B2FA0E3 		mov	r2, #300
+ 4772 1eec E130A0E3 		mov	r3, #225
+ 4773 1ef0 FEFFFFEB 		bl	Lcd_Draw_Box
+ 529:../lcd.c      **** 	Lcd_Draw_Box(30,50,290,220,12);
+ 4774              		.loc 1 529 0
+ 4775 1ef4 0C30A0E3 		mov	r3, #12
+ 4776 1ef8 00308DE5 		str	r3, [sp, #0]
+ 4777 1efc 1E00A0E3 		mov	r0, #30
+ 4778 1f00 3210A0E3 		mov	r1, #50
+ 4779 1f04 58219FE5 		ldr	r2, .L110+8
+ 4780 1f08 DC30A0E3 		mov	r3, #220
+ 4781 1f0c FEFFFFEB 		bl	Lcd_Draw_Box
+ 530:../lcd.c      **** 	Lcd_Draw_Box(40,55,280,215,11);
+ 4782              		.loc 1 530 0
+ 4783 1f10 0B30A0E3 		mov	r3, #11
+ 4784 1f14 00308DE5 		str	r3, [sp, #0]
+ 4785 1f18 2800A0E3 		mov	r0, #40
+ 4786 1f1c 3710A0E3 		mov	r1, #55
+ 4787 1f20 462FA0E3 		mov	r2, #280
+ 4788 1f24 D730A0E3 		mov	r3, #215
+ 4789 1f28 FEFFFFEB 		bl	Lcd_Draw_Box
+ 531:../lcd.c      **** 	Lcd_Draw_Box(50,60,270,210,10);
+ 4790              		.loc 1 531 0
+ 4791 1f2c 0A30A0E3 		mov	r3, #10
+ 4792 1f30 00308DE5 		str	r3, [sp, #0]
+ 4793 1f34 3200A0E3 		mov	r0, #50
+ 4794 1f38 3C10A0E3 		mov	r1, #60
+ 4795 1f3c 24219FE5 		ldr	r2, .L110+12
+ 4796 1f40 D230A0E3 		mov	r3, #210
+ 4797 1f44 FEFFFFEB 		bl	Lcd_Draw_Box
+ 532:../lcd.c      **** 	Lcd_Draw_Box(60,65,260,205,9);
+ 4798              		.loc 1 532 0
+ 4799 1f48 0930A0E3 		mov	r3, #9
+ 4800 1f4c 00308DE5 		str	r3, [sp, #0]
+ 4801 1f50 3C00A0E3 		mov	r0, #60
+ 4802 1f54 4110A0E3 		mov	r1, #65
+ 4803 1f58 412FA0E3 		mov	r2, #260
+ 4804 1f5c CD30A0E3 		mov	r3, #205
+ 4805 1f60 FEFFFFEB 		bl	Lcd_Draw_Box
+ 533:../lcd.c      **** 	Lcd_Draw_Box(70,70,250,200,8);
+ 4806              		.loc 1 533 0
+ 4807 1f64 0830A0E3 		mov	r3, #8
+ 4808 1f68 00308DE5 		str	r3, [sp, #0]
+ 4809 1f6c 4600A0E3 		mov	r0, #70
+ 4810 1f70 4610A0E3 		mov	r1, #70
+ 4811 1f74 FA20A0E3 		mov	r2, #250
+ 4812 1f78 C830A0E3 		mov	r3, #200
+ 4813 1f7c FEFFFFEB 		bl	Lcd_Draw_Box
+ 534:../lcd.c      **** 	Lcd_Draw_Box(80,75,240,195,7);
+ 4814              		.loc 1 534 0
+ 4815 1f80 0730A0E3 		mov	r3, #7
+ 4816 1f84 00308DE5 		str	r3, [sp, #0]
+ 4817 1f88 5000A0E3 		mov	r0, #80
+ 4818 1f8c 4B10A0E3 		mov	r1, #75
+ 4819 1f90 F020A0E3 		mov	r2, #240
+ 4820 1f94 C330A0E3 		mov	r3, #195
+ 4821 1f98 FEFFFFEB 		bl	Lcd_Draw_Box
+ 535:../lcd.c      **** 	Lcd_Draw_Box(90,80,230,190,6);
+ 4822              		.loc 1 535 0
+ 4823 1f9c 0630A0E3 		mov	r3, #6
+ 4824 1fa0 00308DE5 		str	r3, [sp, #0]
+ 4825 1fa4 5A00A0E3 		mov	r0, #90
+ 4826 1fa8 5010A0E3 		mov	r1, #80
+ 4827 1fac E620A0E3 		mov	r2, #230
+ 4828 1fb0 BE30A0E3 		mov	r3, #190
+ 4829 1fb4 FEFFFFEB 		bl	Lcd_Draw_Box
+ 536:../lcd.c      **** 	Lcd_Draw_Box(100,85,220,185,5);
+ 4830              		.loc 1 536 0
+ 4831 1fb8 0530A0E3 		mov	r3, #5
+ 4832 1fbc 00308DE5 		str	r3, [sp, #0]
+ 4833 1fc0 6400A0E3 		mov	r0, #100
+ 4834 1fc4 5510A0E3 		mov	r1, #85
+ 4835 1fc8 DC20A0E3 		mov	r2, #220
+ 4836 1fcc B930A0E3 		mov	r3, #185
+ 4837 1fd0 FEFFFFEB 		bl	Lcd_Draw_Box
+ 537:../lcd.c      **** 	Lcd_Draw_Box(110,90,210,180,4);
+ 4838              		.loc 1 537 0
+ 4839 1fd4 0430A0E3 		mov	r3, #4
+ 4840 1fd8 00308DE5 		str	r3, [sp, #0]
+ 4841 1fdc 6E00A0E3 		mov	r0, #110
+ 4842 1fe0 5A10A0E3 		mov	r1, #90
+ 4843 1fe4 D220A0E3 		mov	r2, #210
+ 4844 1fe8 B430A0E3 		mov	r3, #180
+ 4845 1fec FEFFFFEB 		bl	Lcd_Draw_Box
+ 538:../lcd.c      **** 	Lcd_Draw_Box(120,95,200,175,3);
+ 4846              		.loc 1 538 0
+ 4847 1ff0 0330A0E3 		mov	r3, #3
+ 4848 1ff4 00308DE5 		str	r3, [sp, #0]
+ 4849 1ff8 7800A0E3 		mov	r0, #120
+ 4850 1ffc 5F10A0E3 		mov	r1, #95
+ 4851 2000 C820A0E3 		mov	r2, #200
+ 4852 2004 AF30A0E3 		mov	r3, #175
+ 4853 2008 FEFFFFEB 		bl	Lcd_Draw_Box
+ 539:../lcd.c      **** 	Lcd_Draw_Box(130,100,190,170,2);
+ 4854              		.loc 1 539 0
+ 4855 200c 0230A0E3 		mov	r3, #2
+ 4856 2010 00308DE5 		str	r3, [sp, #0]
+ 4857 2014 8200A0E3 		mov	r0, #130
+ 4858 2018 6410A0E3 		mov	r1, #100
+ 4859 201c BE20A0E3 		mov	r2, #190
+ 4860 2020 AA30A0E3 		mov	r3, #170
+ 4861 2024 FEFFFFEB 		bl	Lcd_Draw_Box
+ 540:../lcd.c      **** 	BitmapView(125,135,Stru_Bitmap_gbMouse);
+ 4862              		.loc 1 540 0
+ 4863 2028 3C309FE5 		ldr	r3, .L110+16
+ 4864 202c 0D20A0E1 		mov	r2, sp
+ 4865 2030 081083E2 		add	r1, r3, #8
+ 4866 2034 030091E8 		ldmia	r1, {r0, r1}
+ 4867 2038 030082E8 		stmia	r2, {r0, r1}
+ 4868 203c 0C0093E8 		ldmia	r3, {r2, r3}
+ 4869 2040 7D00A0E3 		mov	r0, #125
+ 4870 2044 8710A0E3 		mov	r1, #135
+ 4871 2048 FEFFFFEB 		bl	BitmapView
+ 541:../lcd.c      **** 	Lcd_Dma_Trans();
+ 4872              		.loc 1 541 0
+ 4873 204c FEFFFFEB 		bl	Lcd_Dma_Trans
+ 542:../lcd.c      **** 
+ 543:../lcd.c      **** }
+ 4874              		.loc 1 543 0
+ 4875 2050 0CD04BE2 		sub	sp, fp, #12
+ 4876 2054 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 4877 2058 1EFF2FE1 		bx	lr
+ 4878              	.L111:
+ 4879              		.align	2
+ 4880              	.L110:
+ 4881 205c 00000000 		.word	.LC0
+ 4882 2060 36010000 		.word	310
+ 4883 2064 22010000 		.word	290
+ 4884 2068 0E010000 		.word	270
+ 4885 206c 00000000 		.word	Stru_Bitmap_gbMouse
+ 4886              		.cfi_endproc
+ 4887              	.LFE15:
+ 4889              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 lcd.c
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2137   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2140   .text:00000000 Lcd_Init
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2245   .text:00000110 $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4610   .text:00001db4 Zdma0Done
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2281   .text:00000194 $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2284   .text:00000194 Lcd_Active_Clr
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2334   .text:000001f8 $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2338   .text:000001fc $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2341   .text:000001fc LCD_GetPixel
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2422   .text:000002cc Lcd_Clr
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2472   .text:00000330 $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2477   .text:00000338 $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2480   .text:00000338 LcdClrRect
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:2959   .text:00000988 Lcd_Draw_Box
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:3720   .text:0000137c Lcd_Draw_HLine
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:3886   .text:00001584 Lcd_Draw_VLine
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:3024   .text:00000a24 Lcd_Draw_Line
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4064   .text:000017bc Lcd_DisplayString
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4096   .text:000017e8 Lcd_DspAscII8x16
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4345   .text:00001af8 $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4349   .text:00001afc $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4352   .text:00001afc Lcd_DspAscII6x8
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4502   .text:00001cbc $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4506   .text:00001cc0 $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4509   .text:00001cc0 ReverseLine
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4604   .data:00000000 ucZdma0Done
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4652   .text:00001df8 $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4658   .text:00001e04 $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4661   .text:00001e04 Lcd_Dma_Trans
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4711   .text:00001e6c $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4723   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4727   .text:00001e8c $a
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4730   .text:00001e8c Lcd_Test
-C:\Users\guest\AppData\Local\Temp\ccaAQ2ik.s:4883   .text:0000205c $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2137   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2140   .text:00000000 Lcd_Init
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2245   .text:00000110 $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4610   .text:00001db4 Zdma0Done
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2281   .text:00000194 $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2284   .text:00000194 Lcd_Active_Clr
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2334   .text:000001f8 $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2338   .text:000001fc $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2341   .text:000001fc LCD_GetPixel
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2422   .text:000002cc Lcd_Clr
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2472   .text:00000330 $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2477   .text:00000338 $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2480   .text:00000338 LcdClrRect
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:2959   .text:00000988 Lcd_Draw_Box
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:3720   .text:0000137c Lcd_Draw_HLine
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:3886   .text:00001584 Lcd_Draw_VLine
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:3024   .text:00000a24 Lcd_Draw_Line
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4064   .text:000017bc Lcd_DisplayString
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4096   .text:000017e8 Lcd_DspAscII8x16
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4345   .text:00001af8 $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4349   .text:00001afc $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4352   .text:00001afc Lcd_DspAscII6x8
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4502   .text:00001cbc $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4506   .text:00001cc0 $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4509   .text:00001cc0 ReverseLine
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4604   .data:00000000 ucZdma0Done
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4650   .text:00001df8 $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4656   .text:00001e04 $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4659   .text:00001e04 Lcd_Dma_Trans
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4709   .text:00001e6c $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4721   .rodata:00000000 $d
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4725   .text:00001e8c $a
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4728   .text:00001e8c Lcd_Test
+C:\Users\guest\AppData\Local\Temp\cckVJNjA.s:4881   .text:0000205c $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
@@ -3383,6 +3380,6 @@ __aeabi_idiv
 strlen
 g_auc_Ascii8x16
 g_auc_Ascii6x8
-push_debug
+haciendo_DMA
 BitmapView
 Stru_Bitmap_gbMouse
