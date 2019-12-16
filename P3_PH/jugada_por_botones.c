@@ -139,17 +139,30 @@ void jugada_por_botones()
 			if(haciendo_DMA == 0)
 			{
 				unsigned int delta1 = timer2_leer();
-				reversi_procesar(mi_fila, mi_columna);
+				reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de procesamiento
 				unsigned int delta2 = timer2_leer();
 				tiempo_calc += (delta2-delta1);
-				actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y voltea lo que haga falta
-				//obtener datos de profiling
-				tiempo_pv += reversi_t_pv();
-				veces_pv += reversi_veces_pv();
-				pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
-				haciendo_DMA = 1;
-				iniciar_DMA();
-				fin = obtener_fin();
+				if(obtener_jugada_valida() == 1)
+				{
+					borrar_ficha(mi_fila, mi_columna);
+					actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y voltea lo que haga falta
+					reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera casilla libre
+					//obtener datos de profiling
+					tiempo_pv += reversi_t_pv();
+					veces_pv += reversi_veces_pv();
+					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+					haciendo_DMA = 1;
+					iniciar_DMA();
+					fin = obtener_fin();
+				}
+				else
+				{
+					tiempo_pv += reversi_t_pv();
+					veces_pv += reversi_veces_pv();
+					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+					haciendo_DMA = 1;
+					iniciar_DMA();
+				}
 			}
 		}
 		if(haciendo_DMA == 0 && fin != no_fin)
@@ -214,6 +227,31 @@ void termina_DMA()
 	jugada_por_botones();
 }
 
+
+//Se llama tras hacer un movimiento
+//	Devuelve la ficha gris a 0,0 o a la siguiente posición libre del tablero,
+//	para hacer la siguiente jugada.
+void reiniciar_posicion_gris()
+{
+	mi_fila = 0;
+	mi_columna = 0;
+	int i,j;
+	int fin_bucle = 0;
+	for(i = 0; i < num_filas && fin_bucle == 0; i++)
+	{
+		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
+		{
+			if(tablero_actual[i][j] == CASILLA_VACIA)
+			{
+				mi_fila = i;
+				mi_columna = j;
+				fin_bucle = 1;
+			}
+		}
+	}
+	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
+}	
+
 void actualizar_movimientos_pantalla()
 {
 	obtener_tablero(tablero_actual);		//TODO hay que hacer la funcion
@@ -224,10 +262,7 @@ void actualizar_movimientos_pantalla()
 		{
 			if(tablero_actual[i][j] != tablero_anterior[i][j])
 			{
-				if(tablero_anterior[i][j] != CASILLA_VACIA)
-				{
-					borrar_ficha(i,j);
-				}
+				borrar_ficha(i,j);
 				pintar_ficha(i, j, tablero_actual[i][j]);
 				tablero_anterior[i][j] = tablero_actual[i][j];
 			}

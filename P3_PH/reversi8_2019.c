@@ -91,7 +91,7 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM] = {
         {NO,NO,NO,NO,NO,NO,NO,NO},
         {NO,NO,NO,NO,NO,NO,NO,NO}
     };
-
+    static int jugada_valida = 0;
 	static int veces_pv = 0;
 	static int t_pv = 0;
 	int done;     // la máquina ha conseguido mover o no
@@ -108,7 +108,12 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM] = {
      // (por ejemplo añadir alguna palabra clave para garantizar que la sincronización a través de esa variable funcione)
 static volatile char fila=0, columna=0, ready=0;
 
-enum final_partida obtener_fin(void)
+int obtener_jugada_valida()
+{
+    return jugada_valida;
+}
+
+enum final_partida obtener_fin()
 {
 	if(fin == 0)
 	{
@@ -335,7 +340,6 @@ void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, cha
         CA = CA + SC;
         tablero[FA][CA] = color;
         borrar_ficha(FA,CA);
-        pintar_ficha(FA,CA);		//TODO
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -359,6 +363,7 @@ int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         if (patron == PATRON_ENCONTRADO )
         {
             voltear(tablero, f, c, SF, SC, flip, color);
+            jugada_valida = 1;          //TODO explicar
         }
     }
     return 0;
@@ -515,6 +520,7 @@ void reversi8()
 	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
 	// sólo se exploran las que están alrededor de las fichas colocadas
 	 ////////////////////////////////////////////////////////////////////
+    jugada_valida = 0;
 	veces_pv = 0;
 	t_pv = 0;
     if(fin == 0)
@@ -528,22 +534,29 @@ void reversi8()
         	{
         		tablero[fila][columna] = FICHA_NEGRA;
         		actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+                if(jugada_valida != 1)
+                {
+                    tablero[fila][columna] = CASILLA_VACIA;     //TODO no me fío
+                }
         		actualizar_candidatas(candidatas, fila, columna);
         		move = 1;
         	}
-        	// escribe el movimiento en las variables globales fila columna
-        	done = elegir_mov(candidatas, tablero, &f, &c);
-        	if (done == -1)
-        	{
-        		if (move == 0)
-        		fin = 1;
-        	}
-        	else
-        	{
-        		tablero[f][c] = FICHA_BLANCA;
-        		actualizar_tablero(tablero, f, c, FICHA_BLANCA);
-        		actualizar_candidatas(candidatas, f, c);
-        	}
+            if(jugada_valida == 1)
+            {
+                // escribe el movimiento en las variables globales fila columna
+                done = elegir_mov(candidatas, tablero, &f, &c);
+                if (done == -1)
+                {
+                    if (move == 0)
+                    fin = 1;
+                }
+                else
+                {
+                    tablero[f][c] = FICHA_BLANCA;
+                    actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+                    actualizar_candidatas(candidatas, f, c);
+                }
+            }
         }
     }
     contar(tablero, &blancas, &negras);
