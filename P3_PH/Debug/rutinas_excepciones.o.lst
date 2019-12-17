@@ -323,19 +323,19 @@
  2471              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 rutinas_excepciones.c
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2230   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2231   .bss:00000000 hay_excepcion
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2230   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2231   .bss:00000000 hay_excepcion
                             *COM*:00000004 causa_fallo
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2235   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2238   .text:00000000 __get_CPSR
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2274   .text:00000024 parpadear_error
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2311   .text:0000005c $d
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2316   .text:00000064 $a
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2319   .text:00000064 Gestion_excepciones
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2415   .text:00000140 $d
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2420   .text:00000148 $a
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2423   .text:00000148 Gestion_excepciones_init
-C:\Users\guest\AppData\Local\Temp\ccDVtSSw.s:2463   .text:00000190 $d
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2235   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2238   .text:00000000 __get_CPSR
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2274   .text:00000024 parpadear_error
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2311   .text:0000005c $d
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2316   .text:00000064 $a
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2319   .text:00000064 Gestion_excepciones
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2415   .text:00000140 $d
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2420   .text:00000148 $a
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2423   .text:00000148 Gestion_excepciones_init
+C:\Users\pjper\AppData\Local\Temp\cc80arJa.s:2463   .text:00000190 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

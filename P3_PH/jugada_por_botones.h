@@ -18,5 +18,7 @@ void jugada_ev_der(void);
 void jugada_ev_tsp(void);
 void jugada_ev_timer(void);
 void termina_DMA(void);
+void jugada_ev_tecla0(void);
+void jugada_ev_tecla1(void);
 
 #endif /* _JUGADA_POR_BOTONES_H_ */

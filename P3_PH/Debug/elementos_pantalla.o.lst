@@ -1224,9 +1224,9 @@
  2258 0a50 08D04DE2 		sub	sp, sp, #8
  2259 0a54 10000BE5 		str	r0, [fp, #-16]
  2260 0a58 14100BE5 		str	r1, [fp, #-20]
- 159:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 159:../elementos_pantalla.c **** 	Lcd_Clr();
  2261              		.loc 1 159 0
- 2262 0a5c FEFFFFEB 		bl	Lcd_Active_Clr
+ 2262 0a5c FEFFFFEB 		bl	Lcd_Clr
  160:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"HAS GANADO!");
  2263              		.loc 1 160 0
  2264 0a60 0100A0E3 		mov	r0, #1
@@ -1282,9 +1282,9 @@
  2307 0a94 08D04DE2 		sub	sp, sp, #8
  2308 0a98 10000BE5 		str	r0, [fp, #-16]
  2309 0a9c 14100BE5 		str	r1, [fp, #-20]
- 166:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 166:../elementos_pantalla.c **** 	Lcd_Clr();
  2310              		.loc 1 166 0
- 2311 0aa0 FEFFFFEB 		bl	Lcd_Active_Clr
+ 2311 0aa0 FEFFFFEB 		bl	Lcd_Clr
  167:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
  2312              		.loc 1 167 0
  2313 0aa4 0100A0E3 		mov	r0, #1
@@ -1347,9 +1347,9 @@
  2359 0ad8 08D04DE2 		sub	sp, sp, #8
  2360 0adc 10000BE5 		str	r0, [fp, #-16]
  2361 0ae0 14100BE5 		str	r1, [fp, #-20]
- 173:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 173:../elementos_pantalla.c **** 	Lcd_Clr();
  2362              		.loc 1 173 0
- 2363 0ae4 FEFFFFEB 		bl	Lcd_Active_Clr
+ 2363 0ae4 FEFFFFEB 		bl	Lcd_Clr
  174:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
  2364              		.loc 1 174 0
  2365 0ae8 0100A0E3 		mov	r0, #1
@@ -1414,37 +1414,37 @@
  2419              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 elementos_pantalla.c
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1209   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1212   .text:00000000 pintar_cuadricula
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1352   .text:000001b0 pintar_numeros_tablero
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1448   .text:000002c8 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1453   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1475   .text:000002cc $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1478   .text:000002cc pintar_textos
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1556   .text:00000398 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1577   .text:000003b4 $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1580   .text:000003b4 pintar_ficha
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1735   .text:000005ac $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1741   .text:000005b8 $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1744   .text:000005b8 borrar_ficha
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1858   .text:00000728 mover_gris_abajo
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1900   .text:00000770 mover_gris_derecha
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1942   .text:000007b8 pintar_profiling
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2054   .text:000008f4 pintar_jugando
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2122   .text:00000984 pintar_prueba
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2195   .text:00000a0c pintar_reglas
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2229   .text:00000a40 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2238   .text:00000a44 $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2241   .text:00000a44 pintar_fin_victoria
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2278   .text:00000a84 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2287   .text:00000a88 $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2290   .text:00000a88 pintar_fin_derrota
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2327   .text:00000ac8 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2339   .text:00000acc $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2342   .text:00000acc pintar_fin_empate
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2385   .text:00000b20 $d
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2390   .text:00000b28 $a
-C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2393   .text:00000b28 iniciar_DMA
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1209   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1212   .text:00000000 pintar_cuadricula
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1352   .text:000001b0 pintar_numeros_tablero
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1448   .text:000002c8 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1453   .rodata:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1475   .text:000002cc $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1478   .text:000002cc pintar_textos
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1556   .text:00000398 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1577   .text:000003b4 $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1580   .text:000003b4 pintar_ficha
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1735   .text:000005ac $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1741   .text:000005b8 $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1744   .text:000005b8 borrar_ficha
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1858   .text:00000728 mover_gris_abajo
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1900   .text:00000770 mover_gris_derecha
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:1942   .text:000007b8 pintar_profiling
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2054   .text:000008f4 pintar_jugando
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2122   .text:00000984 pintar_prueba
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2195   .text:00000a0c pintar_reglas
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2229   .text:00000a40 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2238   .text:00000a44 $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2241   .text:00000a44 pintar_fin_victoria
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2278   .text:00000a84 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2287   .text:00000a88 $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2290   .text:00000a88 pintar_fin_derrota
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2327   .text:00000ac8 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2339   .text:00000acc $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2342   .text:00000acc pintar_fin_empate
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2385   .text:00000b20 $d
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2390   .text:00000b28 $a
+C:\Users\pjper\AppData\Local\Temp\cc07WEPs.s:2393   .text:00000b28 iniciar_DMA
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

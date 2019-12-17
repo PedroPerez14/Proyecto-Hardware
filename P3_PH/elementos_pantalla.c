@@ -156,21 +156,21 @@ void pintar_reglas()
 
 void pintar_fin_victoria(int blancas, int negras)
 {
-	Lcd_Active_Clr();
+	Lcd_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"HAS GANADO!");
 	Lcd_Dma_Trans();
 }
 
 void pintar_fin_derrota(int blancas, int negas)
 {
-	Lcd_Active_Clr();
+	Lcd_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
 	Lcd_Dma_Trans();
 }
 
 void pintar_fin_empate(int blancas, int negas)
 {
-	Lcd_Active_Clr();
+	Lcd_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
 	Lcd_DspAscII8x16(1,50,BLACK,"TAMPOCO PIERDES CON UNA PUTA CPU!");
 	Lcd_Dma_Trans();

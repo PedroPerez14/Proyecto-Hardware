@@ -1,0 +1,336 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"tsp_antirebotes.c"
+  21              	.Ltext0:
+  22              		.file 1 "../tsp_antirebotes.c"
+ 2263              		.align	2
+ 2266              	t_espera_ticks_timer0:
+ 2267 0000 1E000000 		.word	30
+ 2268              		.bss
+ 2269              		.align	2
+ 2270              	cuenta_ticks_tsp:
+ 2271 0000 00000000 		.space	4
+ 2272              		.align	2
+ 2273              	atendiendo_pulsacion_tsp:
+ 2274 0004 00000000 		.space	4
+ 2275              	maquina_estados_tsp:
+ 2276 0008 00       		.space	1
+ 2277 0009 000000   		.text
+ 2278              		.align	2
+ 2279              		.global	tsp_antirebotes_inicializar
+ 2281              	tsp_antirebotes_inicializar:
+ 2282              	.LFB0:
+   1:../tsp_antirebotes.c **** /*********************************************************************************************
+   2:../tsp_antirebotes.c **** * Fichero:		tsp_antirebotes.c
+   3:../tsp_antirebotes.c **** * Autor:		Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
+   4:../tsp_antirebotes.c **** * Descrip:		Máquina de estados que elimina los rebotes de la pantalla táctil.
+   5:../tsp_antirebotes.c **** * Version:		
+   6:../tsp_antirebotes.c **** *********************************************************************************************/
+   7:../tsp_antirebotes.c **** 
+   8:../tsp_antirebotes.c **** /*--- ficheros de cabecera ---*/
+   9:../tsp_antirebotes.c **** #include "led.h"
+  10:../tsp_antirebotes.c **** #include "44b.h"
+  11:../tsp_antirebotes.c **** #include "44blib.h"
+  12:../tsp_antirebotes.c **** #include "tsp_antirebotes.h"
+  13:../tsp_antirebotes.c **** #include "tp.h"
+  14:../tsp_antirebotes.c **** #include "cola_depuracion.h"
+  15:../tsp_antirebotes.c **** #include "codigos_eventos.h"
+  16:../tsp_antirebotes.c **** #include "jugada_por_botones.h"
+  17:../tsp_antirebotes.c **** 
+  18:../tsp_antirebotes.c **** /*--- variables del módulo ---*/
+  19:../tsp_antirebotes.c **** 
+  20:../tsp_antirebotes.c **** static const int t_espera_ticks_timer0 = 30;	//TODO para probarlo usa un valor exagerado
+  21:../tsp_antirebotes.c **** static int cuenta_ticks_tsp = 0;
+  22:../tsp_antirebotes.c **** static int atendiendo_pulsacion_tsp = 0;
+  23:../tsp_antirebotes.c **** 
+  24:../tsp_antirebotes.c **** /*
+  25:../tsp_antirebotes.c ****    Los valores se pueden cambiar en función de la placa para controlar mejor los rebotes
+  26:../tsp_antirebotes.c **** 	Desactivamos las interrupciones durante 30 ticks = 30 * 1/60 seg = 0.5 segundos.
+  27:../tsp_antirebotes.c **** */
+  28:../tsp_antirebotes.c **** static enum estados_tsp_antirebotes{Inicio, deshabilitadas_int} maquina_estados_tsp;
+  29:../tsp_antirebotes.c **** //Estados de la máquina de estados
+  30:../tsp_antirebotes.c **** 
+  31:../tsp_antirebotes.c **** void tsp_antirebotes_inicializar()
+  32:../tsp_antirebotes.c **** {
+ 2283              		.loc 1 32 0
+ 2284              		.cfi_startproc
+ 2285              		@ Function supports interworking.
+ 2286              		@ args = 0, pretend = 0, frame = 0
+ 2287              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2288 0000 0DC0A0E1 		mov	ip, sp
+ 2289              	.LCFI0:
+ 2290              		.cfi_def_cfa_register 12
+ 2291 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2292 0008 04B04CE2 		sub	fp, ip, #4
+ 2293              		.cfi_offset 14, -8
+ 2294              		.cfi_offset 13, -12
+ 2295              		.cfi_offset 11, -16
+ 2296              	.LCFI1:
+ 2297              		.cfi_def_cfa 11, 4
+  33:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
+ 2298              		.loc 1 33 0
+ 2299 000c 28309FE5 		ldr	r3, .L2
+ 2300 0010 0020A0E3 		mov	r2, #0
+ 2301 0014 0020C3E5 		strb	r2, [r3, #0]
+  34:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
+ 2302              		.loc 1 34 0
+ 2303 0018 20309FE5 		ldr	r3, .L2+4
+ 2304 001c 0020A0E3 		mov	r2, #0
+ 2305 0020 002083E5 		str	r2, [r3, #0]
+  35:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 			//Inicialmente no se está atendiendo ninguna pulsación, por eso s
+ 2306              		.loc 1 35 0
+ 2307 0024 18309FE5 		ldr	r3, .L2+8
+ 2308 0028 0020A0E3 		mov	r2, #0
+ 2309 002c 002083E5 		str	r2, [r3, #0]
+  36:../tsp_antirebotes.c **** }
+ 2310              		.loc 1 36 0
+ 2311 0030 0CD04BE2 		sub	sp, fp, #12
+ 2312 0034 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2313 0038 1EFF2FE1 		bx	lr
+ 2314              	.L3:
+ 2315              		.align	2
+ 2316              	.L2:
+ 2317 003c 08000000 		.word	maquina_estados_tsp
+ 2318 0040 00000000 		.word	cuenta_ticks_tsp
+ 2319 0044 04000000 		.word	atendiendo_pulsacion_tsp
+ 2320              		.cfi_endproc
+ 2321              	.LFE0:
+ 2323              		.align	2
+ 2324              		.global	tsp_antirebotes
+ 2326              	tsp_antirebotes:
+ 2327              	.LFB1:
+  37:../tsp_antirebotes.c **** 
+  38:../tsp_antirebotes.c **** void tsp_antirebotes(void)
+  39:../tsp_antirebotes.c **** {
+ 2328              		.loc 1 39 0
+ 2329              		.cfi_startproc
+ 2330              		@ Function supports interworking.
+ 2331              		@ args = 0, pretend = 0, frame = 0
+ 2332              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2333 0048 0DC0A0E1 		mov	ip, sp
+ 2334              	.LCFI2:
+ 2335              		.cfi_def_cfa_register 12
+ 2336 004c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2337 0050 04B04CE2 		sub	fp, ip, #4
+ 2338              		.cfi_offset 14, -8
+ 2339              		.cfi_offset 13, -12
+ 2340              		.cfi_offset 11, -16
+ 2341              	.LCFI3:
+ 2342              		.cfi_def_cfa 11, 4
+  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2343              		.loc 1 40 0
+ 2344 0054 64309FE5 		ldr	r3, .L13
+ 2345 0058 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2346 005c 000053E3 		cmp	r3, #0
+ 2347 0060 0700001A 		bne	.L10
+ 2348              	.L6:
+  41:../tsp_antirebotes.c **** 	{
+  42:../tsp_antirebotes.c **** 		case Inicio :
+  43:../tsp_antirebotes.c **** 			if(atendiendo_pulsacion_tsp)
+ 2349              		.loc 1 43 0
+ 2350 0064 58309FE5 		ldr	r3, .L13+4
+ 2351 0068 003093E5 		ldr	r3, [r3, #0]
+ 2352 006c 000053E3 		cmp	r3, #0
+ 2353 0070 0C00000A 		beq	.L11
+  44:../tsp_antirebotes.c **** 			{
+  45:../tsp_antirebotes.c **** 				//Las interrupciones de tsp se deshabilitan en el propio tsp por si acaso
+  46:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
+ 2354              		.loc 1 46 0
+ 2355 0074 44309FE5 		ldr	r3, .L13
+ 2356 0078 0120A0E3 		mov	r2, #1
+ 2357 007c 0020C3E5 		strb	r2, [r3, #0]
+  47:../tsp_antirebotes.c **** 			}
+  48:../tsp_antirebotes.c **** 			break;
+ 2358              		.loc 1 48 0
+ 2359 0080 0B0000EA 		b	.L4
+ 2360              	.L10:
+  49:../tsp_antirebotes.c **** 		default: //Si estamos en deshabilitadas_int
+  50:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
+ 2361              		.loc 1 50 0
+ 2362 0084 3C309FE5 		ldr	r3, .L13+8
+ 2363 0088 002093E5 		ldr	r2, [r3, #0]
+ 2364 008c 38309FE5 		ldr	r3, .L13+12
+ 2365 0090 003093E5 		ldr	r3, [r3, #0]
+ 2366 0094 030052E1 		cmp	r2, r3
+ 2367 0098 0400001A 		bne	.L12
+  51:../tsp_antirebotes.c **** 			{	//Si ha pasado trd, rehabilitamos interrupciones tsp y volvemos a admitir el procesado de otra
+  52:../tsp_antirebotes.c **** 				tsp_resetear();
+ 2368              		.loc 1 52 0
+ 2369 009c FEFFFFEB 		bl	tsp_resetear
+  53:../tsp_antirebotes.c **** 				tsp_antirebotes_inicializar();
+ 2370              		.loc 1 53 0
+ 2371 00a0 FEFFFFEB 		bl	tsp_antirebotes_inicializar
+  54:../tsp_antirebotes.c **** 			}
+  55:../tsp_antirebotes.c **** 			break;
+ 2372              		.loc 1 55 0
+ 2373 00a4 020000EA 		b	.L4
+ 2374              	.L11:
+  48:../tsp_antirebotes.c **** 			break;
+ 2375              		.loc 1 48 0
+ 2376 00a8 0000A0E1 		mov	r0, r0	@ nop
+ 2377 00ac 000000EA 		b	.L4
+ 2378              	.L12:
+ 2379              		.loc 1 55 0
+ 2380 00b0 0000A0E1 		mov	r0, r0	@ nop
+ 2381              	.L4:
+  56:../tsp_antirebotes.c **** 	}
+  57:../tsp_antirebotes.c **** }
+ 2382              		.loc 1 57 0
+ 2383 00b4 0CD04BE2 		sub	sp, fp, #12
+ 2384 00b8 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2385 00bc 1EFF2FE1 		bx	lr
+ 2386              	.L14:
+ 2387              		.align	2
+ 2388              	.L13:
+ 2389 00c0 08000000 		.word	maquina_estados_tsp
+ 2390 00c4 04000000 		.word	atendiendo_pulsacion_tsp
+ 2391 00c8 00000000 		.word	cuenta_ticks_tsp
+ 2392 00cc 00000000 		.word	t_espera_ticks_timer0
+ 2393              		.cfi_endproc
+ 2394              	.LFE1:
+ 2396              		.align	2
+ 2397              		.global	tsp_ev_pulsacion
+ 2399              	tsp_ev_pulsacion:
+ 2400              	.LFB2:
+  58:../tsp_antirebotes.c **** 
+  59:../tsp_antirebotes.c **** void tsp_ev_pulsacion()
+  60:../tsp_antirebotes.c **** {
+ 2401              		.loc 1 60 0
+ 2402              		.cfi_startproc
+ 2403              		@ Function supports interworking.
+ 2404              		@ args = 0, pretend = 0, frame = 0
+ 2405              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2406 00d0 0DC0A0E1 		mov	ip, sp
+ 2407              	.LCFI4:
+ 2408              		.cfi_def_cfa_register 12
+ 2409 00d4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2410 00d8 04B04CE2 		sub	fp, ip, #4
+ 2411              		.cfi_offset 14, -8
+ 2412              		.cfi_offset 13, -12
+ 2413              		.cfi_offset 11, -16
+ 2414              	.LCFI5:
+ 2415              		.cfi_def_cfa 11, 4
+  61:../tsp_antirebotes.c **** 	if(!atendiendo_pulsacion_tsp)
+ 2416              		.loc 1 61 0
+ 2417 00dc 24309FE5 		ldr	r3, .L17
+ 2418 00e0 003093E5 		ldr	r3, [r3, #0]
+ 2419 00e4 000053E3 		cmp	r3, #0
+ 2420 00e8 0300001A 		bne	.L15
+  62:../tsp_antirebotes.c **** 	{
+  63:../tsp_antirebotes.c **** 		atendiendo_pulsacion_tsp = 1;
+ 2421              		.loc 1 63 0
+ 2422 00ec 14309FE5 		ldr	r3, .L17
+ 2423 00f0 0120A0E3 		mov	r2, #1
+ 2424 00f4 002083E5 		str	r2, [r3, #0]
+  64:../tsp_antirebotes.c **** 		tsp_antirebotes();					//Se avisa a la máquina de estados para que inicie su ejecución
+ 2425              		.loc 1 64 0
+ 2426 00f8 FEFFFFEB 		bl	tsp_antirebotes
+ 2427              	.L15:
+  65:../tsp_antirebotes.c **** 	}
+  66:../tsp_antirebotes.c **** }
+ 2428              		.loc 1 66 0
+ 2429 00fc 0CD04BE2 		sub	sp, fp, #12
+ 2430 0100 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2431 0104 1EFF2FE1 		bx	lr
+ 2432              	.L18:
+ 2433              		.align	2
+ 2434              	.L17:
+ 2435 0108 04000000 		.word	atendiendo_pulsacion_tsp
+ 2436              		.cfi_endproc
+ 2437              	.LFE2:
+ 2439              		.align	2
+ 2440              		.global	tsp_ev_tick0
+ 2442              	tsp_ev_tick0:
+ 2443              	.LFB3:
+  67:../tsp_antirebotes.c **** 
+  68:../tsp_antirebotes.c **** void tsp_ev_tick0(void)
+  69:../tsp_antirebotes.c **** {	//Solo se incrementa el contador si es útil para la máquina de estados
+ 2444              		.loc 1 69 0
+ 2445              		.cfi_startproc
+ 2446              		@ Function supports interworking.
+ 2447              		@ args = 0, pretend = 0, frame = 0
+ 2448              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2449 010c 0DC0A0E1 		mov	ip, sp
+ 2450              	.LCFI6:
+ 2451              		.cfi_def_cfa_register 12
+ 2452 0110 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2453 0114 04B04CE2 		sub	fp, ip, #4
+ 2454              		.cfi_offset 14, -8
+ 2455              		.cfi_offset 13, -12
+ 2456              		.cfi_offset 11, -16
+ 2457              	.LCFI7:
+ 2458              		.cfi_def_cfa 11, 4
+  70:../tsp_antirebotes.c **** 	//	por tanto, si no estamos atendiendo ningún evento de pulsación no
+  71:../tsp_antirebotes.c **** 	//	nos molestamos en hacer nada
+  72:../tsp_antirebotes.c **** 	if(atendiendo_pulsacion_tsp)
+ 2459              		.loc 1 72 0
+ 2460 0118 2C309FE5 		ldr	r3, .L21
+ 2461 011c 003093E5 		ldr	r3, [r3, #0]
+ 2462 0120 000053E3 		cmp	r3, #0
+ 2463 0124 0500000A 		beq	.L19
+  73:../tsp_antirebotes.c **** 	{
+  74:../tsp_antirebotes.c **** 		cuenta_ticks_tsp += 1;
+ 2464              		.loc 1 74 0
+ 2465 0128 20309FE5 		ldr	r3, .L21+4
+ 2466 012c 003093E5 		ldr	r3, [r3, #0]
+ 2467 0130 012083E2 		add	r2, r3, #1
+ 2468 0134 14309FE5 		ldr	r3, .L21+4
+ 2469 0138 002083E5 		str	r2, [r3, #0]
+  75:../tsp_antirebotes.c **** 		tsp_antirebotes();
+ 2470              		.loc 1 75 0
+ 2471 013c FEFFFFEB 		bl	tsp_antirebotes
+ 2472              	.L19:
+  76:../tsp_antirebotes.c **** 	}
+  77:../tsp_antirebotes.c **** }
+ 2473              		.loc 1 77 0
+ 2474 0140 0CD04BE2 		sub	sp, fp, #12
+ 2475 0144 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2476 0148 1EFF2FE1 		bx	lr
+ 2477              	.L22:
+ 2478              		.align	2
+ 2479              	.L21:
+ 2480 014c 04000000 		.word	atendiendo_pulsacion_tsp
+ 2481 0150 00000000 		.word	cuenta_ticks_tsp
+ 2482              		.cfi_endproc
+ 2483              	.LFE3:
+ 2485              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 tsp_antirebotes.c
+                            *COM*:00000004 CheckTSP
+                            *COM*:00000004 oneTouch
+                            *COM*:00000004 Vx
+                            *COM*:00000004 Vy
+                            *COM*:00000004 Xmax
+                            *COM*:00000004 Ymax
+                            *COM*:00000004 Xmin
+                            *COM*:00000004 Ymin
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2263   .rodata:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2266   .rodata:00000000 t_espera_ticks_timer0
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2269   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2270   .bss:00000000 cuenta_ticks_tsp
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2273   .bss:00000004 atendiendo_pulsacion_tsp
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2275   .bss:00000008 maquina_estados_tsp
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2278   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2281   .text:00000000 tsp_antirebotes_inicializar
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2317   .text:0000003c $d
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2323   .text:00000048 $a
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2326   .text:00000048 tsp_antirebotes
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2389   .text:000000c0 $d
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2396   .text:000000d0 $a
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2399   .text:000000d0 tsp_ev_pulsacion
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2435   .text:00000108 $d
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2439   .text:0000010c $a
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2442   .text:0000010c tsp_ev_tick0
+C:\Users\pjper\AppData\Local\Temp\cc9G2wAb.s:2480   .text:0000014c $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+tsp_resetear

@@ -123,11 +123,11 @@ enum final_partida obtener_fin()
 	{
 		if(blancas > negras)
 		{
-			return jugador_gana;
+			return cpu_gana;
 		}
 		else if(negras > blancas)
 		{
-			return cpu_gana;
+			return jugador_gana;
 		}
 	}
 	//blancas == negras
@@ -135,8 +135,7 @@ enum final_partida obtener_fin()
 }
 
 //Copia tablero de la partida a donde se le diga
-//TODO esto va a explotar casi casi seguro :3
-void obtener_tablero(char tab[][num_columnas])		//char** tab    Por si lo otro falla brutalmente, pon esto en los parámetros
+void obtener_tablero(char tab[][num_columnas])
 {
 	int i,j;
 	for(i = 0; i < num_filas; i++)
@@ -260,12 +259,7 @@ void init_table(char tablero[][DIM], char candidatas[][DIM])
 char ficha_valida(char tablero[][DIM], char f, char c, int *posicion_valida)
 {
     char ficha;
-
-    // ficha = tablero[f][c];
-    // no puede accederse a tablero[f][c]
-    // ya que algún índice puede ser negativo
-    //TODO a lo mejor la condicion que hay comentada hace falta
-    if ((f < DIM) /*&& (f >= 0)*/ && (c < DIM) /*&& (c >= 0)*/ && (tablero[f][c] != CASILLA_VACIA))
+    if ((f < DIM) && (c < DIM) && (tablero[f][c] != CASILLA_VACIA))
     {
         *posicion_valida = 1;
         ficha = tablero[f][c];
@@ -513,14 +507,12 @@ void reversi8_inicializar()
 	fin = 0;
 }
 
-void mover_IA()
+void mover_IA()		//TODO Probar
 {
-    move = 0;
     // escribe el movimiento en las variables globales fila columna
     done = elegir_mov(candidatas, tablero, &f, &c);
     if (done == -1)
     {
-         if (move == 0)
          fin = 1;
     }
     else
@@ -528,7 +520,8 @@ void mover_IA()
         tablero[f][c] = FICHA_BLANCA;
         actualizar_tablero(tablero, f, c, FICHA_BLANCA);
         actualizar_candidatas(candidatas, f, c);
-     }
+    }
+    contar(tablero, &blancas, &negras);
 }
 
 void reversi8()
@@ -558,25 +551,27 @@ void reversi8()
                 else
                 {
                     actualizar_candidatas(candidatas, fila, columna);
+                    move = 1;
                 }
-        		move = 1;
         	}
-            if(jugada_valida == 1)
-            {
-                // escribe el movimiento en las variables globales fila columna
-                done = elegir_mov(candidatas, tablero, &f, &c);
-                if (done == -1)
-                {
-                     if (move == 0)
-                     fin = 1;
-                }
-                else
-                {
-                    tablero[f][c] = FICHA_BLANCA;
-                    actualizar_tablero(tablero, f, c, FICHA_BLANCA);
-                    actualizar_candidatas(candidatas, f, c);
-                 }
-            }
+        	if(jugada_valida == 1)
+        	{
+        		// escribe el movimiento en las variables globales fila columna
+        		done = elegir_mov(candidatas, tablero, &f, &c);
+        		if (done == -1)
+        		{
+        			if (move == 0)
+        			{
+        				fin = 1;
+        			}
+        		}
+        		else
+        		{
+        			tablero[f][c] = FICHA_BLANCA;
+        			actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+        			actualizar_candidatas(candidatas, f, c);
+        		}
+        	}
         }
     }
     contar(tablero, &blancas, &negras);
@@ -584,14 +579,14 @@ void reversi8()
 
 //TODO lista de cosas pendientes
 /*
-	Autoincremento en botón derecho -hecho, no probado
-	Antirebotes en tsp
-	timer2 por FIQ                  -hecho, no probado
+	Antirebotes en tsp --PROBAR
+	TECLADO PARA PASAR Y PARA FIN PREMATURO	--PROBAR
+	Cambiar lo que he tocado de pasar y de jugada no válida --PROBAR
+	Antirebotes teclado	--Pendiente
+
 	-O3
 	Flashear
-	Poner bien las pantallas de las reglas
+	Poner bien las pantallas de las reglas y las fichas
 	PIKA-CHUUUUUU
-	TECLADO PARA PASAR Y PARA FIN PREMATURO
-
 	Reparar lo que se caiga a trozos
 */

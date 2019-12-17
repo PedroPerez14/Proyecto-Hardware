@@ -25,6 +25,8 @@
 #include "codigos_eventos.h"
 #include "botones_antirebotes.h"
 #include "jugada_por_botones.h"
+#include "tsp_antirebotes.h"
+#include "teclado_antirebotes.h"
 #include <stdint.h>
 
 /*--- variables ---*/
@@ -49,6 +51,7 @@ void reversi_main_inicializar(void)
 	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, como ya se ha explicado
 	led1_off();				//El led empieza apagado
 	botones_antirebotes_inicializar();
+	tsp_antirebotes_inicializar();
 	inicializar_jugada_botones();
 }
 
@@ -107,6 +110,8 @@ void reversi_main()
 				Latido_ev_new_tick();
 				tiempo_juego_ev_tick();
 				button_ev_tick0();
+				tsp_ev_tick0();
+				tec_ev_tick0();
 				break;
 			case ev_button_int :	//Atender eventos de los botones
 				if(info == button_izq)
@@ -124,7 +129,20 @@ void reversi_main()
 				termina_DMA();
 				break;
 			case ev_tsp:
+				tsp_ev_pulsacion();
 				jugada_ev_tsp();
+				break;
+			case ev_keyboard:
+				if(info == tecla_0)
+				{	//tecla 0
+					tec_ev_pulsacion();
+					jugada_ev_tecla0();
+				}
+				else
+				{	//tecla 1
+					tec_ev_pulsacion();
+					jugada_ev_tecla1();
+				}
 				break;
 			default : //Si es otra cosa desconocida, no lo atendemos
 				break;

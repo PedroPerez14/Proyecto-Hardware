@@ -30,7 +30,7 @@ static char mi_fila = 0;			//La fila donde queremos poner ficha
 static char mi_columna = 0;			//La columna donde queremos poner ficha
 volatile int haciendo_DMA = 0;		//Si estamos haciendo un DMA al LCD
 static int ev_timer = 0;			//Interrupción del timer que indica que hay que refrescar tiempos en pantalla
-static enum final_partida fin;		//Determina si la partida ha terminado, y cómo lo ha hecho: Por empate, victoria del jugador o de la CPU
+static enum final_partida final;	//Determina si la partida ha terminado, y cómo lo ha hecho: Por empate, victoria del jugador o de la CPU
 /* PROFILING */
 static int tiempo_calc = 0;
 static int tiempo_total = 0;
@@ -53,7 +53,7 @@ void inicializar_jugada_botones()
 	ev_bot_der = 0;
 	ev_tp = 0;
 	ev_timer = 0;
-	fin = no_fin;
+	final = no_fin;
 	tiempo_calc = 0;
 	tiempo_total = 0;
 	tiempo_pv = 0;
@@ -89,6 +89,23 @@ void jugada_por_botones()
 		}
 		break;
 	case Jugando:
+		if(haciendo_DMA == 0 && final != no_fin)
+		{
+			haciendo_DMA = 1;
+			if(final == jugador_gana)
+			{
+				pintar_fin_victoria(contar_blancas(), contar_negras());
+			}
+			else if(final == cpu_gana)
+			{
+				pintar_fin_derrota(contar_blancas(), contar_negras());
+			}
+			else	//En caso de empate
+			{
+				pintar_fin_empate(contar_blancas(), contar_negras());
+			}
+			jugada_botones = Fin;
+		}
 		if(ev_bot_der == 1)		//Incrementar fila
 		{
 			ev_bot_der = 0;
@@ -97,7 +114,7 @@ void jugada_por_botones()
 			{
 				mi_fila = ((mi_fila + 1) & 0x7);			//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_columnas
 			}
-			while((obtener_ficha_en(mi_fila, mi_columna) != CASILLA_VACIA) && (obtener_ficha_en(mi_fila, mi_columna) != FICHA_GRIS));
+			while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_columna) == FICHA_NEGRA));
 
 			while(haciendo_DMA != 0)
 			{
@@ -114,13 +131,12 @@ void jugada_por_botones()
 			{
 				mi_columna = ((mi_columna + 1) & 0x7);		//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_filas
 			}
-			while((obtener_ficha_en(mi_fila, mi_columna) != CASILLA_VACIA) && (obtener_ficha_en(mi_fila, mi_columna) != FICHA_GRIS));
+			while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_columna) == FICHA_NEGRA));
 
 			while(haciendo_DMA != 0)		//TODO espera activa que nos ha dicho dario, retrasamos llegar a ella lo máximo posible
 			{								//	pero con -O3 creo que esto va a dar dolor de cabeza
 			}
 			haciendo_DMA = 1;
-			//DMA act ficha gris
 			mover_gris_derecha(mi_fila, mi_columna, aux);	//Mover en la pantalla
 		}
 		if(haciendo_DMA == 0 && ev_timer > 0)
@@ -153,7 +169,6 @@ void jugada_por_botones()
 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
 					haciendo_DMA = 1;
 					iniciar_DMA();
-					fin = obtener_fin();
 				}
 				else
 				{
@@ -163,29 +178,14 @@ void jugada_por_botones()
 					haciendo_DMA = 1;
 					iniciar_DMA();
 				}
+				final = obtener_fin();
 			}
-		}
-		if(haciendo_DMA == 0 && fin != no_fin)
-		{
-			haciendo_DMA = 1;
-			if(fin == jugador_gana)
-			{
-				pintar_fin_victoria(contar_blancas(), contar_negras());
-			}
-			else if(fin == cpu_gana)
-			{
-				pintar_fin_derrota(contar_blancas(), contar_negras());
-			}
-			else	//En caso de empate
-			{
-				pintar_fin_empate(contar_blancas(), contar_negras());
-			}
-			jugada_botones = Fin;
 		}
 		break;
 	default:	//case Fin
 		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado inicial del autómata
 		{
+			Lcd_Clr();
 			inicializar_jugada_botones();
 		}
 		break;
@@ -267,5 +267,29 @@ void actualizar_movimientos_pantalla()
 				tablero_anterior[i][j] = tablero_actual[i][j];
 			}
 		}
+	}
+}
+
+void jugada_ev_tecla0(void)		//Pasar turno de jugador
+{
+
+}
+
+void jugada_ev_tecla1()			//Finalizar la partida de forma prematura
+{
+	int blancas = contar_blancas();
+	int negras = contar_negras();
+	haciendo_DMA = 1;
+	if(blancas > negras)
+	{
+		final = jugador_gana;
+	}
+	else if(blancas < negras)
+	{
+		final = cpu_gana;
+	}
+	else	//En caso de empate
+	{
+		final = empate;
 	}
 }

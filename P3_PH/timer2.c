@@ -23,7 +23,7 @@ void timer2_ISR(void)
 {
 	timer2_num_int += 1;
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupci�n*/
-	rI_ISPC |= BIT_TIMER2; // BIT_TIMER2 est� definido en 44b.h y pone un uno en el bit que correponde al Timer2
+	rF_ISPC |= BIT_TIMER2; // BIT_TIMER2 est� definido en 44b.h y pone un uno en el bit que correponde al Timer2
 
 
 }
@@ -36,7 +36,7 @@ void timer2_inicializar(void)
 	rINTMSK &= ~(BIT_TIMER2); // habilitamos en vector de mascaras de interrupcion el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 estï¿½n definidos en 44b.h)
 
 	/* Establece la rutina de servicio para TIMER0 */
-	pISR_TIMER2 = (unsigned) timer2_ISR;
+	pISR_FIQ = (unsigned) timer2_ISR;
 
 	/* Configura el Timer2 */
 	rTCFG0 &= 0xFFFF00FF; // ajusta el preescalado a 0

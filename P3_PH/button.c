@@ -26,13 +26,6 @@ void button_ISR(void)
 	volatile int which_int = rEXTINTPND;
 	rEXTINTPND |= 0xa;				// borra los bits 6 y 7 en EXTINTPND
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
-	/*
-	asm("mrs r2, cpsr");
-	asm("mov r3,#31");
-	asm("orr r2,r2,r3");
-	asm("mvn r3,#128");
-	asm("and r2,r2,r3");
-	asm("msr cpsr,r2");*/
 
 	/* Identificar la interrupcion (hay dos pulsadores)*/
 
@@ -47,13 +40,6 @@ void button_ISR(void)
 			default:
 				break;
 		}
-
-	/*asm("mrs r2, cpsr");
-	asm("mvn r3,#31");
-	asm("and r2,r2,r3");
-	asm("mov r3,#0x12");
-	asm("add r2,r2,r3");
-	asm("msr cpsr,r2");*/
 
 	/* Finalizar ISR */
 	rEXTINTPND |= 0xa;				// borra los bits 6 y 7 en EXTINTPND
