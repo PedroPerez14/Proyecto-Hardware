@@ -18,8 +18,8 @@
    1:../elementos_pantalla.c **** /*********************************************************************************************
    2:../elementos_pantalla.c **** * File£º	elementos_pantalla.h
    3:../elementos_pantalla.c **** * Author:	Fernando Peña Bes (756012) y Pedro José Pérez García (756642)
-   4:../elementos_pantalla.c **** * Descrip:	Colección de funciones que permiten dibujar en la pantalla las pantallas
-   5:../elementos_pantalla.c **** * 			que corresponden a la ejecución del reversi8 en la placa
+   4:../elementos_pantalla.c **** * Descrip:	Colección de funciones y variables que permiten dibujar en el LCD las pantallas
+   5:../elementos_pantalla.c **** * 			que corresponden a la ejecución del juego reversi8 en la placa.
    6:../elementos_pantalla.c **** * History:	A long time ago, in galaxy a far away...
    7:../elementos_pantalla.c **** *********************************************************************************************/
    8:../elementos_pantalla.c **** #include "lcd.h"
@@ -448,7 +448,7 @@
  1580              	pintar_ficha:
  1581              	.LFB3:
   48:../elementos_pantalla.c **** 
-  49:../elementos_pantalla.c **** void pintar_ficha(int fila, int col, enum estado_casilla color)	//1 -> blanco 2-> negro 3-> gris
+  49:../elementos_pantalla.c **** void pintar_ficha(int fila, int col, enum estado_casilla color)
   50:../elementos_pantalla.c **** {
  1582              		.loc 1 50 0
  1583              		.cfi_startproc
@@ -478,7 +478,7 @@
  1606 03e0 030053E3 		cmp	r3, #3
  1607 03e4 4900000A 		beq	.L18
  1608 03e8 010053E3 		cmp	r3, #1
- 1609 03ec 6C00001A 		bne	.L20
+ 1609 03ec 6B00001A 		bne	.L14
  1610              	.L16:
   52:../elementos_pantalla.c **** 	{
   53:../elementos_pantalla.c **** 		case FICHA_BLANCA:
@@ -517,11 +517,11 @@
  1642 0468 0200A0E1 		mov	r0, r2
  1643 046c 0310A0E1 		mov	r1, r3
  1644 0470 0A20A0E3 		mov	r2, #10
- 1645 0474 38319FE5 		ldr	r3, .L21
+ 1645 0474 30319FE5 		ldr	r3, .L19
  1646 0478 FEFFFFEB 		bl	Lcd_DspAscII8x16
   55:../elementos_pantalla.c **** 			break;
  1647              		.loc 1 55 0
- 1648 047c 490000EA 		b	.L14
+ 1648 047c 470000EA 		b	.L14
  1649              	.L17:
   56:../elementos_pantalla.c **** 		case FICHA_NEGRA:
   57:../elementos_pantalla.c **** 			Lcd_DspAscII8x16(110+25*col, 25+25*fila,BLACK, "X");
@@ -559,11 +559,11 @@
  1681 04f8 0200A0E1 		mov	r0, r2
  1682 04fc 0310A0E1 		mov	r1, r3
  1683 0500 0F20A0E3 		mov	r2, #15
- 1684 0504 AC309FE5 		ldr	r3, .L21+4
+ 1684 0504 A4309FE5 		ldr	r3, .L19+4
  1685 0508 FEFFFFEB 		bl	Lcd_DspAscII8x16
   58:../elementos_pantalla.c **** 			break;
  1686              		.loc 1 58 0
- 1687 050c 250000EA 		b	.L14
+ 1687 050c 230000EA 		b	.L14
  1688              	.L18:
   59:../elementos_pantalla.c **** 		case FICHA_GRIS:
   60:../elementos_pantalla.c **** 			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0xd, "@");
@@ -601,876 +601,850 @@
  1720 0588 0200A0E1 		mov	r0, r2
  1721 058c 0310A0E1 		mov	r1, r3
  1722 0590 0D20A0E3 		mov	r2, #13
- 1723 0594 20309FE5 		ldr	r3, .L21+8
+ 1723 0594 18309FE5 		ldr	r3, .L19+8
  1724 0598 FEFFFFEB 		bl	Lcd_DspAscII8x16
   61:../elementos_pantalla.c **** 			break;
  1725              		.loc 1 61 0
  1726 059c 0000A0E1 		mov	r0, r0	@ nop
- 1727 05a0 000000EA 		b	.L14
- 1728              	.L20:
-  62:../elementos_pantalla.c **** 		default:	//Casilla en blanco, no hacemos nada
-  63:../elementos_pantalla.c **** 			break;
- 1729              		.loc 1 63 0
- 1730 05a4 0000A0E1 		mov	r0, r0	@ nop
- 1731              	.L14:
-  64:../elementos_pantalla.c **** 	}
-  65:../elementos_pantalla.c **** }
- 1732              		.loc 1 65 0
- 1733 05a8 0CD04BE2 		sub	sp, fp, #12
- 1734 05ac 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1735 05b0 1EFF2FE1 		bx	lr
- 1736              	.L22:
- 1737              		.align	2
- 1738              	.L21:
- 1739 05b4 78000000 		.word	.LC7
- 1740 05b8 7C000000 		.word	.LC8
- 1741 05bc 80000000 		.word	.LC9
- 1742              		.cfi_endproc
- 1743              	.LFE3:
- 1745              		.align	2
- 1746              		.global	borrar_ficha
- 1748              	borrar_ficha:
- 1749              	.LFB4:
-  66:../elementos_pantalla.c **** 
-  67:../elementos_pantalla.c **** void borrar_ficha(int f, int c)		//TODO acabar
-  68:../elementos_pantalla.c **** {
- 1750              		.loc 1 68 0
- 1751              		.cfi_startproc
- 1752              		@ Function supports interworking.
- 1753              		@ args = 0, pretend = 0, frame = 8
- 1754              		@ frame_needed = 1, uses_anonymous_args = 0
- 1755 05c0 0DC0A0E1 		mov	ip, sp
- 1756              	.LCFI8:
- 1757              		.cfi_def_cfa_register 12
- 1758 05c4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1759 05c8 04B04CE2 		sub	fp, ip, #4
- 1760              		.cfi_offset 14, -8
- 1761              		.cfi_offset 13, -12
- 1762              		.cfi_offset 11, -16
- 1763              	.LCFI9:
- 1764              		.cfi_def_cfa 11, 4
- 1765 05cc 10D04DE2 		sub	sp, sp, #16
- 1766 05d0 10000BE5 		str	r0, [fp, #-16]
- 1767 05d4 14100BE5 		str	r1, [fp, #-20]
-  69:../elementos_pantalla.c **** 	LcdClrRect((100+25*c) + 1, (20+25*f) + 1, (125+25*c) - 1, (45+25*f) - 1, 0x0);
- 1768              		.loc 1 69 0
- 1769 05d8 14301BE5 		ldr	r3, [fp, #-20]
- 1770 05dc 0338A0E1 		mov	r3, r3, asl #16
- 1771 05e0 2338A0E1 		mov	r3, r3, lsr #16
- 1772 05e4 0320A0E1 		mov	r2, r3	@ movhi
- 1773 05e8 0221A0E1 		mov	r2, r2, asl #2
- 1774 05ec 033082E0 		add	r3, r2, r3
- 1775 05f0 0320A0E1 		mov	r2, r3	@ movhi
- 1776 05f4 0211A0E1 		mov	r1, r2, asl #2
- 1777 05f8 0320A0E1 		mov	r2, r3	@ movhi
- 1778 05fc 0130A0E1 		mov	r3, r1	@ movhi
- 1779 0600 033082E0 		add	r3, r2, r3
- 1780 0604 0338A0E1 		mov	r3, r3, asl #16
- 1781 0608 2338A0E1 		mov	r3, r3, lsr #16
- 1782 060c 653083E2 		add	r3, r3, #101
- 1783 0610 0338A0E1 		mov	r3, r3, asl #16
- 1784 0614 2338A0E1 		mov	r3, r3, lsr #16
- 1785 0618 0338A0E1 		mov	r3, r3, asl #16
- 1786 061c 2308A0E1 		mov	r0, r3, lsr #16
- 1787 0620 10301BE5 		ldr	r3, [fp, #-16]
- 1788 0624 0338A0E1 		mov	r3, r3, asl #16
- 1789 0628 2338A0E1 		mov	r3, r3, lsr #16
- 1790 062c 0320A0E1 		mov	r2, r3	@ movhi
- 1791 0630 0221A0E1 		mov	r2, r2, asl #2
- 1792 0634 033082E0 		add	r3, r2, r3
- 1793 0638 0320A0E1 		mov	r2, r3	@ movhi
- 1794 063c 0211A0E1 		mov	r1, r2, asl #2
- 1795 0640 0320A0E1 		mov	r2, r3	@ movhi
- 1796 0644 0130A0E1 		mov	r3, r1	@ movhi
- 1797 0648 033082E0 		add	r3, r2, r3
- 1798 064c 0338A0E1 		mov	r3, r3, asl #16
- 1799 0650 2338A0E1 		mov	r3, r3, lsr #16
- 1800 0654 153083E2 		add	r3, r3, #21
- 1801 0658 0338A0E1 		mov	r3, r3, asl #16
- 1802 065c 2338A0E1 		mov	r3, r3, lsr #16
- 1803 0660 0338A0E1 		mov	r3, r3, asl #16
- 1804 0664 2318A0E1 		mov	r1, r3, lsr #16
- 1805 0668 14301BE5 		ldr	r3, [fp, #-20]
- 1806 066c 0338A0E1 		mov	r3, r3, asl #16
- 1807 0670 2338A0E1 		mov	r3, r3, lsr #16
- 1808 0674 0320A0E1 		mov	r2, r3	@ movhi
- 1809 0678 0221A0E1 		mov	r2, r2, asl #2
- 1810 067c 033082E0 		add	r3, r2, r3
- 1811 0680 0320A0E1 		mov	r2, r3	@ movhi
- 1812 0684 02C1A0E1 		mov	ip, r2, asl #2
- 1813 0688 0320A0E1 		mov	r2, r3	@ movhi
- 1814 068c 0C30A0E1 		mov	r3, ip	@ movhi
- 1815 0690 033082E0 		add	r3, r2, r3
- 1816 0694 0338A0E1 		mov	r3, r3, asl #16
- 1817 0698 2338A0E1 		mov	r3, r3, lsr #16
- 1818 069c 7C3083E2 		add	r3, r3, #124
- 1819 06a0 0338A0E1 		mov	r3, r3, asl #16
- 1820 06a4 2338A0E1 		mov	r3, r3, lsr #16
- 1821 06a8 0338A0E1 		mov	r3, r3, asl #16
- 1822 06ac 2328A0E1 		mov	r2, r3, lsr #16
- 1823 06b0 10301BE5 		ldr	r3, [fp, #-16]
- 1824 06b4 0338A0E1 		mov	r3, r3, asl #16
- 1825 06b8 2338A0E1 		mov	r3, r3, lsr #16
- 1826 06bc 03C0A0E1 		mov	ip, r3	@ movhi
- 1827 06c0 0CC1A0E1 		mov	ip, ip, asl #2
- 1828 06c4 03308CE0 		add	r3, ip, r3
- 1829 06c8 03C0A0E1 		mov	ip, r3	@ movhi
- 1830 06cc 0CE1A0E1 		mov	lr, ip, asl #2
- 1831 06d0 03C0A0E1 		mov	ip, r3	@ movhi
- 1832 06d4 0E30A0E1 		mov	r3, lr	@ movhi
- 1833 06d8 03308CE0 		add	r3, ip, r3
- 1834 06dc 0338A0E1 		mov	r3, r3, asl #16
- 1835 06e0 2338A0E1 		mov	r3, r3, lsr #16
- 1836 06e4 2C3083E2 		add	r3, r3, #44
- 1837 06e8 0338A0E1 		mov	r3, r3, asl #16
- 1838 06ec 2338A0E1 		mov	r3, r3, lsr #16
- 1839 06f0 0338A0E1 		mov	r3, r3, asl #16
- 1840 06f4 2338A0E1 		mov	r3, r3, lsr #16
- 1841 06f8 0008A0E1 		mov	r0, r0, asl #16
- 1842 06fc 4008A0E1 		mov	r0, r0, asr #16
- 1843 0700 0118A0E1 		mov	r1, r1, asl #16
- 1844 0704 4118A0E1 		mov	r1, r1, asr #16
- 1845 0708 0228A0E1 		mov	r2, r2, asl #16
- 1846 070c 4228A0E1 		mov	r2, r2, asr #16
- 1847 0710 0338A0E1 		mov	r3, r3, asl #16
- 1848 0714 4338A0E1 		mov	r3, r3, asr #16
- 1849 0718 00C0A0E3 		mov	ip, #0
- 1850 071c 00C08DE5 		str	ip, [sp, #0]
- 1851 0720 FEFFFFEB 		bl	LcdClrRect
-  70:../elementos_pantalla.c **** }
- 1852              		.loc 1 70 0
- 1853 0724 0CD04BE2 		sub	sp, fp, #12
- 1854 0728 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1855 072c 1EFF2FE1 		bx	lr
- 1856              		.cfi_endproc
- 1857              	.LFE4:
- 1859              		.align	2
- 1860              		.global	mover_gris_abajo
- 1862              	mover_gris_abajo:
- 1863              	.LFB5:
-  71:../elementos_pantalla.c **** 
-  72:../elementos_pantalla.c **** //Mueve hacia abajo en el LCD la ficha gris a partir de la fila y columna en la que está (0-7),
-  73:../elementos_pantalla.c **** //	teniendo en cuenta lo que hubiera en la casilla donde está actualmente, porque lo restaura
-  74:../elementos_pantalla.c **** void mover_gris_abajo(int fila, int columna, int fila_anterior_gris)		//TODO testear
-  75:../elementos_pantalla.c **** {
- 1864              		.loc 1 75 0
- 1865              		.cfi_startproc
- 1866              		@ Function supports interworking.
- 1867              		@ args = 0, pretend = 0, frame = 16
- 1868              		@ frame_needed = 1, uses_anonymous_args = 0
- 1869 0730 0DC0A0E1 		mov	ip, sp
- 1870              	.LCFI10:
- 1871              		.cfi_def_cfa_register 12
- 1872 0734 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1873 0738 04B04CE2 		sub	fp, ip, #4
- 1874              		.cfi_offset 14, -8
- 1875              		.cfi_offset 13, -12
- 1876              		.cfi_offset 11, -16
- 1877              	.LCFI11:
- 1878              		.cfi_def_cfa 11, 4
- 1879 073c 10D04DE2 		sub	sp, sp, #16
- 1880 0740 10000BE5 		str	r0, [fp, #-16]
- 1881 0744 14100BE5 		str	r1, [fp, #-20]
- 1882 0748 18200BE5 		str	r2, [fp, #-24]
-  76:../elementos_pantalla.c **** 	pintar_ficha(fila, columna, FICHA_GRIS);
- 1883              		.loc 1 76 0
- 1884 074c 10001BE5 		ldr	r0, [fp, #-16]
- 1885 0750 14101BE5 		ldr	r1, [fp, #-20]
- 1886 0754 0320A0E3 		mov	r2, #3
- 1887 0758 FEFFFFEB 		bl	pintar_ficha
-  77:../elementos_pantalla.c **** 	borrar_ficha(fila_anterior_gris, columna);
- 1888              		.loc 1 77 0
- 1889 075c 18001BE5 		ldr	r0, [fp, #-24]
- 1890 0760 14101BE5 		ldr	r1, [fp, #-20]
- 1891 0764 FEFFFFEB 		bl	borrar_ficha
-  78:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 1892              		.loc 1 78 0
- 1893 0768 FEFFFFEB 		bl	Lcd_Dma_Trans
-  79:../elementos_pantalla.c **** }
- 1894              		.loc 1 79 0
- 1895 076c 0CD04BE2 		sub	sp, fp, #12
- 1896 0770 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1897 0774 1EFF2FE1 		bx	lr
- 1898              		.cfi_endproc
- 1899              	.LFE5:
- 1901              		.align	2
- 1902              		.global	mover_gris_derecha
- 1904              	mover_gris_derecha:
- 1905              	.LFB6:
-  80:../elementos_pantalla.c **** 
-  81:../elementos_pantalla.c **** //Mueve hacia la derecha en el LCD la ficha gris a partir de la fila y columna en la que está (0-7)
-  82:../elementos_pantalla.c **** //	teniendo en cuenta lo que hubiera en la casilla donde estaba antes de actualizar el movimiento, 
-  83:../elementos_pantalla.c **** void mover_gris_derecha(int fila, int columna, int columna_anterior_gris)	//TODO testear y medir ti
-  84:../elementos_pantalla.c **** {
- 1906              		.loc 1 84 0
- 1907              		.cfi_startproc
- 1908              		@ Function supports interworking.
- 1909              		@ args = 0, pretend = 0, frame = 16
- 1910              		@ frame_needed = 1, uses_anonymous_args = 0
- 1911 0778 0DC0A0E1 		mov	ip, sp
- 1912              	.LCFI12:
- 1913              		.cfi_def_cfa_register 12
- 1914 077c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1915 0780 04B04CE2 		sub	fp, ip, #4
- 1916              		.cfi_offset 14, -8
- 1917              		.cfi_offset 13, -12
- 1918              		.cfi_offset 11, -16
- 1919              	.LCFI13:
- 1920              		.cfi_def_cfa 11, 4
- 1921 0784 10D04DE2 		sub	sp, sp, #16
- 1922 0788 10000BE5 		str	r0, [fp, #-16]
- 1923 078c 14100BE5 		str	r1, [fp, #-20]
- 1924 0790 18200BE5 		str	r2, [fp, #-24]
-  85:../elementos_pantalla.c **** 	pintar_ficha(fila, columna, FICHA_GRIS);
- 1925              		.loc 1 85 0
- 1926 0794 10001BE5 		ldr	r0, [fp, #-16]
- 1927 0798 14101BE5 		ldr	r1, [fp, #-20]
- 1928 079c 0320A0E3 		mov	r2, #3
- 1929 07a0 FEFFFFEB 		bl	pintar_ficha
-  86:../elementos_pantalla.c **** 	borrar_ficha(fila, columna_anterior_gris);
- 1930              		.loc 1 86 0
- 1931 07a4 10001BE5 		ldr	r0, [fp, #-16]
- 1932 07a8 18101BE5 		ldr	r1, [fp, #-24]
- 1933 07ac FEFFFFEB 		bl	borrar_ficha
-  87:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 1934              		.loc 1 87 0
- 1935 07b0 FEFFFFEB 		bl	Lcd_Dma_Trans
-  88:../elementos_pantalla.c **** }
- 1936              		.loc 1 88 0
- 1937 07b4 0CD04BE2 		sub	sp, fp, #12
- 1938 07b8 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1939 07bc 1EFF2FE1 		bx	lr
- 1940              		.cfi_endproc
- 1941              	.LFE6:
- 1943              		.align	2
- 1944              		.global	pintar_profiling
- 1946              	pintar_profiling:
- 1947              	.LFB7:
-  89:../elementos_pantalla.c **** 
-  90:../elementos_pantalla.c **** void pintar_profiling(int t_total, int t_calc, int t_pvolteo, int veces_pvolteo)
-  91:../elementos_pantalla.c **** {
- 1948              		.loc 1 91 0
- 1949              		.cfi_startproc
- 1950              		@ Function supports interworking.
- 1951              		@ args = 0, pretend = 0, frame = 32
- 1952              		@ frame_needed = 1, uses_anonymous_args = 0
- 1953 07c0 0DC0A0E1 		mov	ip, sp
- 1954              	.LCFI14:
- 1955              		.cfi_def_cfa_register 12
- 1956 07c4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1957 07c8 04B04CE2 		sub	fp, ip, #4
- 1958              		.cfi_offset 14, -8
- 1959              		.cfi_offset 13, -12
- 1960              		.cfi_offset 11, -16
- 1961              	.LCFI15:
- 1962              		.cfi_def_cfa 11, 4
- 1963 07cc 28D04DE2 		sub	sp, sp, #40
- 1964 07d0 20000BE5 		str	r0, [fp, #-32]
- 1965 07d4 24100BE5 		str	r1, [fp, #-36]
- 1966 07d8 28200BE5 		str	r2, [fp, #-40]
- 1967 07dc 2C300BE5 		str	r3, [fp, #-44]
-  92:../elementos_pantalla.c **** 	char buffer[15];						//15 por darle un tamaño decente
-  93:../elementos_pantalla.c **** 
-  94:../elementos_pantalla.c **** 	//Se borra la zona de pantalla virtual donde están los numeritos del profiling que si no no funcio
-  95:../elementos_pantalla.c **** 	LcdClrRect(20, 35, 75, 50, 0x0000);
- 1968              		.loc 1 95 0
- 1969 07e0 0030A0E3 		mov	r3, #0
- 1970 07e4 00308DE5 		str	r3, [sp, #0]
- 1971 07e8 1400A0E3 		mov	r0, #20
- 1972 07ec 2310A0E3 		mov	r1, #35
- 1973 07f0 4B20A0E3 		mov	r2, #75
- 1974 07f4 3230A0E3 		mov	r3, #50
- 1975 07f8 FEFFFFEB 		bl	LcdClrRect
-  96:../elementos_pantalla.c **** 	LcdClrRect(20, 85, 95, 100, 0x0000);
- 1976              		.loc 1 96 0
- 1977 07fc 0030A0E3 		mov	r3, #0
- 1978 0800 00308DE5 		str	r3, [sp, #0]
- 1979 0804 1400A0E3 		mov	r0, #20
- 1980 0808 5510A0E3 		mov	r1, #85
- 1981 080c 5F20A0E3 		mov	r2, #95
- 1982 0810 6430A0E3 		mov	r3, #100
- 1983 0814 FEFFFFEB 		bl	LcdClrRect
-  97:../elementos_pantalla.c **** 	LcdClrRect(20, 135, 95, 150, 0x0000);
- 1984              		.loc 1 97 0
- 1985 0818 0030A0E3 		mov	r3, #0
- 1986 081c 00308DE5 		str	r3, [sp, #0]
- 1987 0820 1400A0E3 		mov	r0, #20
- 1988 0824 8710A0E3 		mov	r1, #135
- 1989 0828 5F20A0E3 		mov	r2, #95
- 1990 082c 9630A0E3 		mov	r3, #150
- 1991 0830 FEFFFFEB 		bl	LcdClrRect
-  98:../elementos_pantalla.c **** 	LcdClrRect(20, 185, 75, 200, 0x0000);
- 1992              		.loc 1 98 0
- 1993 0834 0030A0E3 		mov	r3, #0
- 1994 0838 00308DE5 		str	r3, [sp, #0]
- 1995 083c 1400A0E3 		mov	r0, #20
- 1996 0840 B910A0E3 		mov	r1, #185
- 1997 0844 4B20A0E3 		mov	r2, #75
- 1998 0848 C830A0E3 		mov	r3, #200
- 1999 084c FEFFFFEB 		bl	LcdClrRect
-  99:../elementos_pantalla.c **** 
- 100:../elementos_pantalla.c **** 	itoa(t_total, buffer, 10);				//10 es para indicar que pasamos a números decimales
- 2000              		.loc 1 100 0
- 2001 0850 1C304BE2 		sub	r3, fp, #28
- 2002 0854 20001BE5 		ldr	r0, [fp, #-32]
- 2003 0858 0310A0E1 		mov	r1, r3
- 2004 085c 0A20A0E3 		mov	r2, #10
- 2005 0860 FEFFFFEB 		bl	itoa
- 101:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,35,BLACK,buffer);
- 2006              		.loc 1 101 0
- 2007 0864 1C304BE2 		sub	r3, fp, #28
- 2008 0868 1400A0E3 		mov	r0, #20
- 2009 086c 2310A0E3 		mov	r1, #35
- 2010 0870 0F20A0E3 		mov	r2, #15
- 2011 0874 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 102:../elementos_pantalla.c **** 	itoa(t_calc, buffer, 10);
- 2012              		.loc 1 102 0
- 2013 0878 1C304BE2 		sub	r3, fp, #28
- 2014 087c 24001BE5 		ldr	r0, [fp, #-36]
- 2015 0880 0310A0E1 		mov	r1, r3
- 2016 0884 0A20A0E3 		mov	r2, #10
- 2017 0888 FEFFFFEB 		bl	itoa
- 103:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,85,BLACK,buffer);
- 2018              		.loc 1 103 0
- 2019 088c 1C304BE2 		sub	r3, fp, #28
- 2020 0890 1400A0E3 		mov	r0, #20
- 2021 0894 5510A0E3 		mov	r1, #85
- 2022 0898 0F20A0E3 		mov	r2, #15
- 2023 089c FEFFFFEB 		bl	Lcd_DspAscII8x16
- 104:../elementos_pantalla.c **** 	itoa(t_pvolteo, buffer, 10);
- 2024              		.loc 1 104 0
- 2025 08a0 1C304BE2 		sub	r3, fp, #28
- 2026 08a4 28001BE5 		ldr	r0, [fp, #-40]
- 2027 08a8 0310A0E1 		mov	r1, r3
- 2028 08ac 0A20A0E3 		mov	r2, #10
- 2029 08b0 FEFFFFEB 		bl	itoa
- 105:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,135,BLACK,buffer);
- 2030              		.loc 1 105 0
- 2031 08b4 1C304BE2 		sub	r3, fp, #28
- 2032 08b8 1400A0E3 		mov	r0, #20
- 2033 08bc 8710A0E3 		mov	r1, #135
- 2034 08c0 0F20A0E3 		mov	r2, #15
- 2035 08c4 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 106:../elementos_pantalla.c **** 	itoa(veces_pvolteo, buffer, 10);
- 2036              		.loc 1 106 0
- 2037 08c8 1C304BE2 		sub	r3, fp, #28
- 2038 08cc 2C001BE5 		ldr	r0, [fp, #-44]
- 2039 08d0 0310A0E1 		mov	r1, r3
- 2040 08d4 0A20A0E3 		mov	r2, #10
- 2041 08d8 FEFFFFEB 		bl	itoa
- 107:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,185,BLACK,buffer);
- 2042              		.loc 1 107 0
- 2043 08dc 1C304BE2 		sub	r3, fp, #28
- 2044 08e0 1400A0E3 		mov	r0, #20
- 2045 08e4 B910A0E3 		mov	r1, #185
- 2046 08e8 0F20A0E3 		mov	r2, #15
- 2047 08ec FEFFFFEB 		bl	Lcd_DspAscII8x16
- 108:../elementos_pantalla.c **** }
- 2048              		.loc 1 108 0
- 2049 08f0 0CD04BE2 		sub	sp, fp, #12
- 2050 08f4 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2051 08f8 1EFF2FE1 		bx	lr
- 2052              		.cfi_endproc
- 2053              	.LFE7:
- 2055              		.align	2
- 2056              		.global	pintar_jugando
- 2058              	pintar_jugando:
- 2059              	.LFB8:
- 109:../elementos_pantalla.c **** 
- 110:../elementos_pantalla.c **** void pintar_jugando()
- 111:../elementos_pantalla.c **** {
- 2060              		.loc 1 111 0
- 2061              		.cfi_startproc
- 2062              		@ Function supports interworking.
- 2063              		@ args = 0, pretend = 0, frame = 0
- 2064              		@ frame_needed = 1, uses_anonymous_args = 0
- 2065 08fc 0DC0A0E1 		mov	ip, sp
- 2066              	.LCFI16:
- 2067              		.cfi_def_cfa_register 12
- 2068 0900 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2069 0904 04B04CE2 		sub	fp, ip, #4
- 2070              		.cfi_offset 14, -8
- 2071              		.cfi_offset 13, -12
- 2072              		.cfi_offset 11, -16
- 2073              	.LCFI17:
- 2074              		.cfi_def_cfa 11, 4
- 112:../elementos_pantalla.c **** 	Lcd_Clr();
+ 1727              	.L14:
+  62:../elementos_pantalla.c **** 	}
+  63:../elementos_pantalla.c **** }
+ 1728              		.loc 1 63 0
+ 1729 05a0 0CD04BE2 		sub	sp, fp, #12
+ 1730 05a4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1731 05a8 1EFF2FE1 		bx	lr
+ 1732              	.L20:
+ 1733              		.align	2
+ 1734              	.L19:
+ 1735 05ac 78000000 		.word	.LC7
+ 1736 05b0 7C000000 		.word	.LC8
+ 1737 05b4 80000000 		.word	.LC9
+ 1738              		.cfi_endproc
+ 1739              	.LFE3:
+ 1741              		.align	2
+ 1742              		.global	borrar_ficha
+ 1744              	borrar_ficha:
+ 1745              	.LFB4:
+  64:../elementos_pantalla.c **** 
+  65:../elementos_pantalla.c **** void borrar_ficha(int f, int c)		//TODO acabar
+  66:../elementos_pantalla.c **** {
+ 1746              		.loc 1 66 0
+ 1747              		.cfi_startproc
+ 1748              		@ Function supports interworking.
+ 1749              		@ args = 0, pretend = 0, frame = 8
+ 1750              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1751 05b8 0DC0A0E1 		mov	ip, sp
+ 1752              	.LCFI8:
+ 1753              		.cfi_def_cfa_register 12
+ 1754 05bc 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1755 05c0 04B04CE2 		sub	fp, ip, #4
+ 1756              		.cfi_offset 14, -8
+ 1757              		.cfi_offset 13, -12
+ 1758              		.cfi_offset 11, -16
+ 1759              	.LCFI9:
+ 1760              		.cfi_def_cfa 11, 4
+ 1761 05c4 10D04DE2 		sub	sp, sp, #16
+ 1762 05c8 10000BE5 		str	r0, [fp, #-16]
+ 1763 05cc 14100BE5 		str	r1, [fp, #-20]
+  67:../elementos_pantalla.c **** 	LcdClrRect((100+25*c) + 1, (20+25*f) + 1, (125+25*c) - 1, (45+25*f) - 1, 0x0);
+ 1764              		.loc 1 67 0
+ 1765 05d0 14301BE5 		ldr	r3, [fp, #-20]
+ 1766 05d4 0338A0E1 		mov	r3, r3, asl #16
+ 1767 05d8 2338A0E1 		mov	r3, r3, lsr #16
+ 1768 05dc 0320A0E1 		mov	r2, r3	@ movhi
+ 1769 05e0 0221A0E1 		mov	r2, r2, asl #2
+ 1770 05e4 033082E0 		add	r3, r2, r3
+ 1771 05e8 0320A0E1 		mov	r2, r3	@ movhi
+ 1772 05ec 0211A0E1 		mov	r1, r2, asl #2
+ 1773 05f0 0320A0E1 		mov	r2, r3	@ movhi
+ 1774 05f4 0130A0E1 		mov	r3, r1	@ movhi
+ 1775 05f8 033082E0 		add	r3, r2, r3
+ 1776 05fc 0338A0E1 		mov	r3, r3, asl #16
+ 1777 0600 2338A0E1 		mov	r3, r3, lsr #16
+ 1778 0604 653083E2 		add	r3, r3, #101
+ 1779 0608 0338A0E1 		mov	r3, r3, asl #16
+ 1780 060c 2338A0E1 		mov	r3, r3, lsr #16
+ 1781 0610 0338A0E1 		mov	r3, r3, asl #16
+ 1782 0614 2308A0E1 		mov	r0, r3, lsr #16
+ 1783 0618 10301BE5 		ldr	r3, [fp, #-16]
+ 1784 061c 0338A0E1 		mov	r3, r3, asl #16
+ 1785 0620 2338A0E1 		mov	r3, r3, lsr #16
+ 1786 0624 0320A0E1 		mov	r2, r3	@ movhi
+ 1787 0628 0221A0E1 		mov	r2, r2, asl #2
+ 1788 062c 033082E0 		add	r3, r2, r3
+ 1789 0630 0320A0E1 		mov	r2, r3	@ movhi
+ 1790 0634 0211A0E1 		mov	r1, r2, asl #2
+ 1791 0638 0320A0E1 		mov	r2, r3	@ movhi
+ 1792 063c 0130A0E1 		mov	r3, r1	@ movhi
+ 1793 0640 033082E0 		add	r3, r2, r3
+ 1794 0644 0338A0E1 		mov	r3, r3, asl #16
+ 1795 0648 2338A0E1 		mov	r3, r3, lsr #16
+ 1796 064c 153083E2 		add	r3, r3, #21
+ 1797 0650 0338A0E1 		mov	r3, r3, asl #16
+ 1798 0654 2338A0E1 		mov	r3, r3, lsr #16
+ 1799 0658 0338A0E1 		mov	r3, r3, asl #16
+ 1800 065c 2318A0E1 		mov	r1, r3, lsr #16
+ 1801 0660 14301BE5 		ldr	r3, [fp, #-20]
+ 1802 0664 0338A0E1 		mov	r3, r3, asl #16
+ 1803 0668 2338A0E1 		mov	r3, r3, lsr #16
+ 1804 066c 0320A0E1 		mov	r2, r3	@ movhi
+ 1805 0670 0221A0E1 		mov	r2, r2, asl #2
+ 1806 0674 033082E0 		add	r3, r2, r3
+ 1807 0678 0320A0E1 		mov	r2, r3	@ movhi
+ 1808 067c 02C1A0E1 		mov	ip, r2, asl #2
+ 1809 0680 0320A0E1 		mov	r2, r3	@ movhi
+ 1810 0684 0C30A0E1 		mov	r3, ip	@ movhi
+ 1811 0688 033082E0 		add	r3, r2, r3
+ 1812 068c 0338A0E1 		mov	r3, r3, asl #16
+ 1813 0690 2338A0E1 		mov	r3, r3, lsr #16
+ 1814 0694 7C3083E2 		add	r3, r3, #124
+ 1815 0698 0338A0E1 		mov	r3, r3, asl #16
+ 1816 069c 2338A0E1 		mov	r3, r3, lsr #16
+ 1817 06a0 0338A0E1 		mov	r3, r3, asl #16
+ 1818 06a4 2328A0E1 		mov	r2, r3, lsr #16
+ 1819 06a8 10301BE5 		ldr	r3, [fp, #-16]
+ 1820 06ac 0338A0E1 		mov	r3, r3, asl #16
+ 1821 06b0 2338A0E1 		mov	r3, r3, lsr #16
+ 1822 06b4 03C0A0E1 		mov	ip, r3	@ movhi
+ 1823 06b8 0CC1A0E1 		mov	ip, ip, asl #2
+ 1824 06bc 03308CE0 		add	r3, ip, r3
+ 1825 06c0 03C0A0E1 		mov	ip, r3	@ movhi
+ 1826 06c4 0CE1A0E1 		mov	lr, ip, asl #2
+ 1827 06c8 03C0A0E1 		mov	ip, r3	@ movhi
+ 1828 06cc 0E30A0E1 		mov	r3, lr	@ movhi
+ 1829 06d0 03308CE0 		add	r3, ip, r3
+ 1830 06d4 0338A0E1 		mov	r3, r3, asl #16
+ 1831 06d8 2338A0E1 		mov	r3, r3, lsr #16
+ 1832 06dc 2C3083E2 		add	r3, r3, #44
+ 1833 06e0 0338A0E1 		mov	r3, r3, asl #16
+ 1834 06e4 2338A0E1 		mov	r3, r3, lsr #16
+ 1835 06e8 0338A0E1 		mov	r3, r3, asl #16
+ 1836 06ec 2338A0E1 		mov	r3, r3, lsr #16
+ 1837 06f0 0008A0E1 		mov	r0, r0, asl #16
+ 1838 06f4 4008A0E1 		mov	r0, r0, asr #16
+ 1839 06f8 0118A0E1 		mov	r1, r1, asl #16
+ 1840 06fc 4118A0E1 		mov	r1, r1, asr #16
+ 1841 0700 0228A0E1 		mov	r2, r2, asl #16
+ 1842 0704 4228A0E1 		mov	r2, r2, asr #16
+ 1843 0708 0338A0E1 		mov	r3, r3, asl #16
+ 1844 070c 4338A0E1 		mov	r3, r3, asr #16
+ 1845 0710 00C0A0E3 		mov	ip, #0
+ 1846 0714 00C08DE5 		str	ip, [sp, #0]
+ 1847 0718 FEFFFFEB 		bl	LcdClrRect
+  68:../elementos_pantalla.c **** }
+ 1848              		.loc 1 68 0
+ 1849 071c 0CD04BE2 		sub	sp, fp, #12
+ 1850 0720 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1851 0724 1EFF2FE1 		bx	lr
+ 1852              		.cfi_endproc
+ 1853              	.LFE4:
+ 1855              		.align	2
+ 1856              		.global	mover_gris_abajo
+ 1858              	mover_gris_abajo:
+ 1859              	.LFB5:
+  69:../elementos_pantalla.c **** 
+  70:../elementos_pantalla.c **** //Mueve hacia abajo en el LCD la ficha gris a partir de la fila y columna en la que está (0-7),
+  71:../elementos_pantalla.c **** //	teniendo en cuenta lo que hubiera en la casilla donde está actualmente, porque lo restaura
+  72:../elementos_pantalla.c **** void mover_gris_abajo(int fila, int columna, int fila_anterior_gris)		//TODO testear
+  73:../elementos_pantalla.c **** {
+ 1860              		.loc 1 73 0
+ 1861              		.cfi_startproc
+ 1862              		@ Function supports interworking.
+ 1863              		@ args = 0, pretend = 0, frame = 16
+ 1864              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1865 0728 0DC0A0E1 		mov	ip, sp
+ 1866              	.LCFI10:
+ 1867              		.cfi_def_cfa_register 12
+ 1868 072c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1869 0730 04B04CE2 		sub	fp, ip, #4
+ 1870              		.cfi_offset 14, -8
+ 1871              		.cfi_offset 13, -12
+ 1872              		.cfi_offset 11, -16
+ 1873              	.LCFI11:
+ 1874              		.cfi_def_cfa 11, 4
+ 1875 0734 10D04DE2 		sub	sp, sp, #16
+ 1876 0738 10000BE5 		str	r0, [fp, #-16]
+ 1877 073c 14100BE5 		str	r1, [fp, #-20]
+ 1878 0740 18200BE5 		str	r2, [fp, #-24]
+  74:../elementos_pantalla.c **** 	pintar_ficha(fila, columna, FICHA_GRIS);
+ 1879              		.loc 1 74 0
+ 1880 0744 10001BE5 		ldr	r0, [fp, #-16]
+ 1881 0748 14101BE5 		ldr	r1, [fp, #-20]
+ 1882 074c 0320A0E3 		mov	r2, #3
+ 1883 0750 FEFFFFEB 		bl	pintar_ficha
+  75:../elementos_pantalla.c **** 	borrar_ficha(fila_anterior_gris, columna);
+ 1884              		.loc 1 75 0
+ 1885 0754 18001BE5 		ldr	r0, [fp, #-24]
+ 1886 0758 14101BE5 		ldr	r1, [fp, #-20]
+ 1887 075c FEFFFFEB 		bl	borrar_ficha
+  76:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 1888              		.loc 1 76 0
+ 1889 0760 FEFFFFEB 		bl	Lcd_Dma_Trans
+  77:../elementos_pantalla.c **** }
+ 1890              		.loc 1 77 0
+ 1891 0764 0CD04BE2 		sub	sp, fp, #12
+ 1892 0768 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1893 076c 1EFF2FE1 		bx	lr
+ 1894              		.cfi_endproc
+ 1895              	.LFE5:
+ 1897              		.align	2
+ 1898              		.global	mover_gris_derecha
+ 1900              	mover_gris_derecha:
+ 1901              	.LFB6:
+  78:../elementos_pantalla.c **** 
+  79:../elementos_pantalla.c **** //Mueve hacia la derecha en el LCD la ficha gris a partir de la fila y columna en la que está (0-7)
+  80:../elementos_pantalla.c **** //	teniendo en cuenta lo que hubiera en la casilla donde estaba antes de actualizar el movimiento, 
+  81:../elementos_pantalla.c **** void mover_gris_derecha(int fila, int columna, int columna_anterior_gris)	//TODO testear y medir ti
+  82:../elementos_pantalla.c **** {
+ 1902              		.loc 1 82 0
+ 1903              		.cfi_startproc
+ 1904              		@ Function supports interworking.
+ 1905              		@ args = 0, pretend = 0, frame = 16
+ 1906              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1907 0770 0DC0A0E1 		mov	ip, sp
+ 1908              	.LCFI12:
+ 1909              		.cfi_def_cfa_register 12
+ 1910 0774 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1911 0778 04B04CE2 		sub	fp, ip, #4
+ 1912              		.cfi_offset 14, -8
+ 1913              		.cfi_offset 13, -12
+ 1914              		.cfi_offset 11, -16
+ 1915              	.LCFI13:
+ 1916              		.cfi_def_cfa 11, 4
+ 1917 077c 10D04DE2 		sub	sp, sp, #16
+ 1918 0780 10000BE5 		str	r0, [fp, #-16]
+ 1919 0784 14100BE5 		str	r1, [fp, #-20]
+ 1920 0788 18200BE5 		str	r2, [fp, #-24]
+  83:../elementos_pantalla.c **** 	pintar_ficha(fila, columna, FICHA_GRIS);
+ 1921              		.loc 1 83 0
+ 1922 078c 10001BE5 		ldr	r0, [fp, #-16]
+ 1923 0790 14101BE5 		ldr	r1, [fp, #-20]
+ 1924 0794 0320A0E3 		mov	r2, #3
+ 1925 0798 FEFFFFEB 		bl	pintar_ficha
+  84:../elementos_pantalla.c **** 	borrar_ficha(fila, columna_anterior_gris);
+ 1926              		.loc 1 84 0
+ 1927 079c 10001BE5 		ldr	r0, [fp, #-16]
+ 1928 07a0 18101BE5 		ldr	r1, [fp, #-24]
+ 1929 07a4 FEFFFFEB 		bl	borrar_ficha
+  85:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 1930              		.loc 1 85 0
+ 1931 07a8 FEFFFFEB 		bl	Lcd_Dma_Trans
+  86:../elementos_pantalla.c **** }
+ 1932              		.loc 1 86 0
+ 1933 07ac 0CD04BE2 		sub	sp, fp, #12
+ 1934 07b0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1935 07b4 1EFF2FE1 		bx	lr
+ 1936              		.cfi_endproc
+ 1937              	.LFE6:
+ 1939              		.align	2
+ 1940              		.global	pintar_profiling
+ 1942              	pintar_profiling:
+ 1943              	.LFB7:
+  87:../elementos_pantalla.c **** 
+  88:../elementos_pantalla.c **** void pintar_profiling(int t_total, int t_calc, int t_pvolteo, int veces_pvolteo)
+  89:../elementos_pantalla.c **** {
+ 1944              		.loc 1 89 0
+ 1945              		.cfi_startproc
+ 1946              		@ Function supports interworking.
+ 1947              		@ args = 0, pretend = 0, frame = 32
+ 1948              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1949 07b8 0DC0A0E1 		mov	ip, sp
+ 1950              	.LCFI14:
+ 1951              		.cfi_def_cfa_register 12
+ 1952 07bc 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1953 07c0 04B04CE2 		sub	fp, ip, #4
+ 1954              		.cfi_offset 14, -8
+ 1955              		.cfi_offset 13, -12
+ 1956              		.cfi_offset 11, -16
+ 1957              	.LCFI15:
+ 1958              		.cfi_def_cfa 11, 4
+ 1959 07c4 28D04DE2 		sub	sp, sp, #40
+ 1960 07c8 20000BE5 		str	r0, [fp, #-32]
+ 1961 07cc 24100BE5 		str	r1, [fp, #-36]
+ 1962 07d0 28200BE5 		str	r2, [fp, #-40]
+ 1963 07d4 2C300BE5 		str	r3, [fp, #-44]
+  90:../elementos_pantalla.c **** 	char buffer[15];						//15 por darle un tamaño decente
+  91:../elementos_pantalla.c **** 
+  92:../elementos_pantalla.c **** 	//Se borra la zona de pantalla virtual donde están los numeritos del profiling que si no no funcio
+  93:../elementos_pantalla.c **** 	LcdClrRect(20, 35, 75, 50, 0x0000);
+ 1964              		.loc 1 93 0
+ 1965 07d8 0030A0E3 		mov	r3, #0
+ 1966 07dc 00308DE5 		str	r3, [sp, #0]
+ 1967 07e0 1400A0E3 		mov	r0, #20
+ 1968 07e4 2310A0E3 		mov	r1, #35
+ 1969 07e8 4B20A0E3 		mov	r2, #75
+ 1970 07ec 3230A0E3 		mov	r3, #50
+ 1971 07f0 FEFFFFEB 		bl	LcdClrRect
+  94:../elementos_pantalla.c **** 	LcdClrRect(20, 85, 95, 100, 0x0000);
+ 1972              		.loc 1 94 0
+ 1973 07f4 0030A0E3 		mov	r3, #0
+ 1974 07f8 00308DE5 		str	r3, [sp, #0]
+ 1975 07fc 1400A0E3 		mov	r0, #20
+ 1976 0800 5510A0E3 		mov	r1, #85
+ 1977 0804 5F20A0E3 		mov	r2, #95
+ 1978 0808 6430A0E3 		mov	r3, #100
+ 1979 080c FEFFFFEB 		bl	LcdClrRect
+  95:../elementos_pantalla.c **** 	LcdClrRect(20, 135, 95, 150, 0x0000);
+ 1980              		.loc 1 95 0
+ 1981 0810 0030A0E3 		mov	r3, #0
+ 1982 0814 00308DE5 		str	r3, [sp, #0]
+ 1983 0818 1400A0E3 		mov	r0, #20
+ 1984 081c 8710A0E3 		mov	r1, #135
+ 1985 0820 5F20A0E3 		mov	r2, #95
+ 1986 0824 9630A0E3 		mov	r3, #150
+ 1987 0828 FEFFFFEB 		bl	LcdClrRect
+  96:../elementos_pantalla.c **** 	LcdClrRect(20, 185, 75, 200, 0x0000);
+ 1988              		.loc 1 96 0
+ 1989 082c 0030A0E3 		mov	r3, #0
+ 1990 0830 00308DE5 		str	r3, [sp, #0]
+ 1991 0834 1400A0E3 		mov	r0, #20
+ 1992 0838 B910A0E3 		mov	r1, #185
+ 1993 083c 4B20A0E3 		mov	r2, #75
+ 1994 0840 C830A0E3 		mov	r3, #200
+ 1995 0844 FEFFFFEB 		bl	LcdClrRect
+  97:../elementos_pantalla.c **** 
+  98:../elementos_pantalla.c **** 	itoa(t_total, buffer, 10);				//10 es para indicar que pasamos a números decimales
+ 1996              		.loc 1 98 0
+ 1997 0848 1C304BE2 		sub	r3, fp, #28
+ 1998 084c 20001BE5 		ldr	r0, [fp, #-32]
+ 1999 0850 0310A0E1 		mov	r1, r3
+ 2000 0854 0A20A0E3 		mov	r2, #10
+ 2001 0858 FEFFFFEB 		bl	itoa
+  99:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,35,BLACK,buffer);
+ 2002              		.loc 1 99 0
+ 2003 085c 1C304BE2 		sub	r3, fp, #28
+ 2004 0860 1400A0E3 		mov	r0, #20
+ 2005 0864 2310A0E3 		mov	r1, #35
+ 2006 0868 0F20A0E3 		mov	r2, #15
+ 2007 086c FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 100:../elementos_pantalla.c **** 	itoa(t_calc, buffer, 10);
+ 2008              		.loc 1 100 0
+ 2009 0870 1C304BE2 		sub	r3, fp, #28
+ 2010 0874 24001BE5 		ldr	r0, [fp, #-36]
+ 2011 0878 0310A0E1 		mov	r1, r3
+ 2012 087c 0A20A0E3 		mov	r2, #10
+ 2013 0880 FEFFFFEB 		bl	itoa
+ 101:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,85,BLACK,buffer);
+ 2014              		.loc 1 101 0
+ 2015 0884 1C304BE2 		sub	r3, fp, #28
+ 2016 0888 1400A0E3 		mov	r0, #20
+ 2017 088c 5510A0E3 		mov	r1, #85
+ 2018 0890 0F20A0E3 		mov	r2, #15
+ 2019 0894 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 102:../elementos_pantalla.c **** 	itoa(t_pvolteo, buffer, 10);
+ 2020              		.loc 1 102 0
+ 2021 0898 1C304BE2 		sub	r3, fp, #28
+ 2022 089c 28001BE5 		ldr	r0, [fp, #-40]
+ 2023 08a0 0310A0E1 		mov	r1, r3
+ 2024 08a4 0A20A0E3 		mov	r2, #10
+ 2025 08a8 FEFFFFEB 		bl	itoa
+ 103:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,135,BLACK,buffer);
+ 2026              		.loc 1 103 0
+ 2027 08ac 1C304BE2 		sub	r3, fp, #28
+ 2028 08b0 1400A0E3 		mov	r0, #20
+ 2029 08b4 8710A0E3 		mov	r1, #135
+ 2030 08b8 0F20A0E3 		mov	r2, #15
+ 2031 08bc FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 104:../elementos_pantalla.c **** 	itoa(veces_pvolteo, buffer, 10);
+ 2032              		.loc 1 104 0
+ 2033 08c0 1C304BE2 		sub	r3, fp, #28
+ 2034 08c4 2C001BE5 		ldr	r0, [fp, #-44]
+ 2035 08c8 0310A0E1 		mov	r1, r3
+ 2036 08cc 0A20A0E3 		mov	r2, #10
+ 2037 08d0 FEFFFFEB 		bl	itoa
+ 105:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(20,185,BLACK,buffer);
+ 2038              		.loc 1 105 0
+ 2039 08d4 1C304BE2 		sub	r3, fp, #28
+ 2040 08d8 1400A0E3 		mov	r0, #20
+ 2041 08dc B910A0E3 		mov	r1, #185
+ 2042 08e0 0F20A0E3 		mov	r2, #15
+ 2043 08e4 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 106:../elementos_pantalla.c **** }
+ 2044              		.loc 1 106 0
+ 2045 08e8 0CD04BE2 		sub	sp, fp, #12
+ 2046 08ec 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2047 08f0 1EFF2FE1 		bx	lr
+ 2048              		.cfi_endproc
+ 2049              	.LFE7:
+ 2051              		.align	2
+ 2052              		.global	pintar_jugando
+ 2054              	pintar_jugando:
+ 2055              	.LFB8:
+ 107:../elementos_pantalla.c **** 
+ 108:../elementos_pantalla.c **** void pintar_jugando()
+ 109:../elementos_pantalla.c **** {
+ 2056              		.loc 1 109 0
+ 2057              		.cfi_startproc
+ 2058              		@ Function supports interworking.
+ 2059              		@ args = 0, pretend = 0, frame = 0
+ 2060              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2061 08f4 0DC0A0E1 		mov	ip, sp
+ 2062              	.LCFI16:
+ 2063              		.cfi_def_cfa_register 12
+ 2064 08f8 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2065 08fc 04B04CE2 		sub	fp, ip, #4
+ 2066              		.cfi_offset 14, -8
+ 2067              		.cfi_offset 13, -12
+ 2068              		.cfi_offset 11, -16
+ 2069              	.LCFI17:
+ 2070              		.cfi_def_cfa 11, 4
+ 110:../elementos_pantalla.c **** 	Lcd_Clr();
+ 2071              		.loc 1 110 0
+ 2072 0900 FEFFFFEB 		bl	Lcd_Clr
+ 111:../elementos_pantalla.c **** 	pintar_cuadricula();
+ 2073              		.loc 1 111 0
+ 2074 0904 FEFFFFEB 		bl	pintar_cuadricula
+ 112:../elementos_pantalla.c **** 	pintar_numeros_tablero();
  2075              		.loc 1 112 0
- 2076 0908 FEFFFFEB 		bl	Lcd_Clr
- 113:../elementos_pantalla.c **** 	//Lcd_Active_Clr();		//TODO no sé si es esta o la otra
- 114:../elementos_pantalla.c **** 	pintar_cuadricula();
- 2077              		.loc 1 114 0
- 2078 090c FEFFFFEB 		bl	pintar_cuadricula
- 115:../elementos_pantalla.c **** 	pintar_numeros_tablero();
- 2079              		.loc 1 115 0
- 2080 0910 FEFFFFEB 		bl	pintar_numeros_tablero
- 116:../elementos_pantalla.c **** 	pintar_textos();
- 2081              		.loc 1 116 0
- 2082 0914 FEFFFFEB 		bl	pintar_textos
- 117:../elementos_pantalla.c **** 	pintar_profiling(0,0,0,0);
- 2083              		.loc 1 117 0
- 2084 0918 0000A0E3 		mov	r0, #0
- 2085 091c 0010A0E3 		mov	r1, #0
- 2086 0920 0020A0E3 		mov	r2, #0
- 2087 0924 0030A0E3 		mov	r3, #0
- 2088 0928 FEFFFFEB 		bl	pintar_profiling
- 118:../elementos_pantalla.c **** 	pintar_ficha(0,0,3);	//Pintar la ficha gris en 0,0
- 2089              		.loc 1 118 0
- 2090 092c 0000A0E3 		mov	r0, #0
- 2091 0930 0010A0E3 		mov	r1, #0
- 2092 0934 0320A0E3 		mov	r2, #3
- 2093 0938 FEFFFFEB 		bl	pintar_ficha
- 119:../elementos_pantalla.c **** 	pintar_ficha(3,3,1);	//Pintar las fichas blancas iniciales en 3,3 y 4,4
- 2094              		.loc 1 119 0
- 2095 093c 0300A0E3 		mov	r0, #3
- 2096 0940 0310A0E3 		mov	r1, #3
- 2097 0944 0120A0E3 		mov	r2, #1
- 2098 0948 FEFFFFEB 		bl	pintar_ficha
- 120:../elementos_pantalla.c **** 	pintar_ficha(4,4,1);
- 2099              		.loc 1 120 0
- 2100 094c 0400A0E3 		mov	r0, #4
- 2101 0950 0410A0E3 		mov	r1, #4
- 2102 0954 0120A0E3 		mov	r2, #1
- 2103 0958 FEFFFFEB 		bl	pintar_ficha
- 121:../elementos_pantalla.c **** 	pintar_ficha(3,4,2);	//Pintar las fichas negras en 3,4 y 4,3
- 2104              		.loc 1 121 0
- 2105 095c 0300A0E3 		mov	r0, #3
- 2106 0960 0410A0E3 		mov	r1, #4
- 2107 0964 0220A0E3 		mov	r2, #2
- 2108 0968 FEFFFFEB 		bl	pintar_ficha
- 122:../elementos_pantalla.c **** 	pintar_ficha(4,3,2);
- 2109              		.loc 1 122 0
- 2110 096c 0400A0E3 		mov	r0, #4
- 2111 0970 0310A0E3 		mov	r1, #3
- 2112 0974 0220A0E3 		mov	r2, #2
- 2113 0978 FEFFFFEB 		bl	pintar_ficha
- 123:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2114              		.loc 1 123 0
- 2115 097c FEFFFFEB 		bl	Lcd_Dma_Trans
- 124:../elementos_pantalla.c **** }
- 2116              		.loc 1 124 0
- 2117 0980 0CD04BE2 		sub	sp, fp, #12
- 2118 0984 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2119 0988 1EFF2FE1 		bx	lr
- 2120              		.cfi_endproc
- 2121              	.LFE8:
- 2123              		.section	.rodata
- 2124 0082 0000     		.align	2
- 2125              	.LC10:
- 2126 0084 2C2C2C2C 		.ascii	",,,,,,%#########%%%%%##############################"
- 2126      2C2C2523 
- 2126      23232323 
- 2126      23232323 
- 2126      25252525 
- 2127 00b7 23232323 		.ascii	"#######((/**************//////\000"
- 2127      23232328 
- 2127      282F2A2A 
- 2127      2A2A2A2A 
- 2127      2A2A2A2A 
- 2128 00d6 0000     		.align	2
- 2129              	.LC11:
- 2130 00d8 2C2C2C2C 		.ascii	",,,,%###########%%%%%%#############################"
- 2130      25232323 
- 2130      23232323 
- 2130      23232323 
- 2130      25252525 
- 2131 010b 23232323 		.ascii	"#######((/*********///////((((\000"
- 2131      23232328 
- 2131      282F2A2A 
- 2131      2A2A2A2A 
- 2131      2A2A2A2F 
- 2132 012a 0000     		.align	2
- 2133              	.LC12:
- 2134 012c 23232323 		.ascii	"################%%%%%%%############################"
- 2134      23232323 
- 2134      23232323 
- 2134      23232323 
- 2134      25252525 
- 2135 015f 23232323 		.ascii	"#######((/********////((((((##\000"
- 2135      23232328 
- 2135      282F2A2A 
- 2135      2A2A2A2A 
- 2135      2A2A2F2F 
- 2136 017e 0000     		.align	2
- 2137              	.LC13:
- 2138 0180 5245474C 		.ascii	"REGLAS\000"
- 2138      415300
- 2139              		.text
- 2140              		.align	2
- 2141              		.global	pintar_prueba
- 2143              	pintar_prueba:
- 2144              	.LFB9:
- 125:../elementos_pantalla.c **** 
- 126:../elementos_pantalla.c **** void pintar_prueba()
- 127:../elementos_pantalla.c **** {
- 2145              		.loc 1 127 0
- 2146              		.cfi_startproc
- 2147              		@ Function supports interworking.
- 2148              		@ args = 0, pretend = 0, frame = 0
- 2149              		@ frame_needed = 1, uses_anonymous_args = 0
- 2150 098c 0DC0A0E1 		mov	ip, sp
- 2151              	.LCFI18:
- 2152              		.cfi_def_cfa_register 12
- 2153 0990 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2154 0994 04B04CE2 		sub	fp, ip, #4
- 2155              		.cfi_offset 14, -8
- 2156              		.cfi_offset 13, -12
- 2157              		.cfi_offset 11, -16
- 2158              	.LCFI19:
- 2159              		.cfi_def_cfa 11, 4
- 128:../elementos_pantalla.c **** 	/*pintar_cuadricula();
- 129:../elementos_pantalla.c **** 	pintar_numeros_tablero();
- 130:../elementos_pantalla.c **** 	pintar_textos();
- 131:../elementos_pantalla.c **** 	pintar_ficha(0,0,1);
- 132:../elementos_pantalla.c **** 	pintar_ficha(7,7,2);
- 133:../elementos_pantalla.c **** 	pintar_ficha(3,3,3);
- 134:../elementos_pantalla.c **** 	pintar_profiling(451245, 84512, 56456, 469352);*/
- 135:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(0,0,BLACK,",,,,,,%#########%%%%%#####################################((/*********
- 2160              		.loc 1 135 0
- 2161 0998 0000A0E3 		mov	r0, #0
- 2162 099c 0010A0E3 		mov	r1, #0
- 2163 09a0 0F20A0E3 		mov	r2, #15
- 2164 09a4 4C309FE5 		ldr	r3, .L29
- 2165 09a8 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 136:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(8,16,BLACK,",,,,%###########%%%%%%####################################((/********
- 2166              		.loc 1 136 0
- 2167 09ac 0800A0E3 		mov	r0, #8
- 2168 09b0 1010A0E3 		mov	r1, #16
- 2169 09b4 0F20A0E3 		mov	r2, #15
- 2170 09b8 3C309FE5 		ldr	r3, .L29+4
- 2171 09bc FEFFFFEB 		bl	Lcd_DspAscII8x16
- 137:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(16,32,BLACK,"################%%%%%%%###################################((/*******
- 2172              		.loc 1 137 0
- 2173 09c0 1000A0E3 		mov	r0, #16
- 2174 09c4 2010A0E3 		mov	r1, #32
- 2175 09c8 0F20A0E3 		mov	r2, #15
- 2176 09cc 2C309FE5 		ldr	r3, .L29+8
- 2177 09d0 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 138:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(24,48,BLACK,"REGLAS");
- 2178              		.loc 1 138 0
- 2179 09d4 1800A0E3 		mov	r0, #24
- 2180 09d8 3010A0E3 		mov	r1, #48
- 2181 09dc 0F20A0E3 		mov	r2, #15
- 2182 09e0 1C309FE5 		ldr	r3, .L29+12
- 2183 09e4 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 139:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2184              		.loc 1 139 0
- 2185 09e8 FEFFFFEB 		bl	Lcd_Dma_Trans
- 140:../elementos_pantalla.c **** }
- 2186              		.loc 1 140 0
- 2187 09ec 0CD04BE2 		sub	sp, fp, #12
- 2188 09f0 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2189 09f4 1EFF2FE1 		bx	lr
- 2190              	.L30:
- 2191              		.align	2
- 2192              	.L29:
- 2193 09f8 84000000 		.word	.LC10
- 2194 09fc D8000000 		.word	.LC11
- 2195 0a00 2C010000 		.word	.LC12
- 2196 0a04 80010000 		.word	.LC13
- 2197              		.cfi_endproc
- 2198              	.LFE9:
- 2200              		.align	2
- 2201              		.global	pintar_reglas
- 2203              	pintar_reglas:
- 2204              	.LFB10:
- 141:../elementos_pantalla.c **** 
- 142:../elementos_pantalla.c **** void pintar_reglas()
- 143:../elementos_pantalla.c **** {
- 2205              		.loc 1 143 0
- 2206              		.cfi_startproc
- 2207              		@ Function supports interworking.
- 2208              		@ args = 0, pretend = 0, frame = 0
- 2209              		@ frame_needed = 1, uses_anonymous_args = 0
- 2210 0a08 0DC0A0E1 		mov	ip, sp
- 2211              	.LCFI20:
- 2212              		.cfi_def_cfa_register 12
- 2213 0a0c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2214 0a10 04B04CE2 		sub	fp, ip, #4
- 2215              		.cfi_offset 14, -8
- 2216              		.cfi_offset 13, -12
- 2217              		.cfi_offset 11, -16
- 2218              	.LCFI21:
- 2219              		.cfi_def_cfa 11, 4
- 144:../elementos_pantalla.c **** 	Lcd_Active_Clr();
- 2220              		.loc 1 144 0
- 2221 0a14 FEFFFFEB 		bl	Lcd_Active_Clr
- 145:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"REGLAS");
- 2222              		.loc 1 145 0
- 2223 0a18 0100A0E3 		mov	r0, #1
- 2224 0a1c 1E10A0E3 		mov	r1, #30
- 2225 0a20 0F20A0E3 		mov	r2, #15
- 2226 0a24 10309FE5 		ldr	r3, .L32
- 2227 0a28 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 2076 0908 FEFFFFEB 		bl	pintar_numeros_tablero
+ 113:../elementos_pantalla.c **** 	pintar_textos();
+ 2077              		.loc 1 113 0
+ 2078 090c FEFFFFEB 		bl	pintar_textos
+ 114:../elementos_pantalla.c **** 	pintar_profiling(0,0,0,0);
+ 2079              		.loc 1 114 0
+ 2080 0910 0000A0E3 		mov	r0, #0
+ 2081 0914 0010A0E3 		mov	r1, #0
+ 2082 0918 0020A0E3 		mov	r2, #0
+ 2083 091c 0030A0E3 		mov	r3, #0
+ 2084 0920 FEFFFFEB 		bl	pintar_profiling
+ 115:../elementos_pantalla.c **** 	pintar_ficha(0,0,3);	//Pintar la ficha gris en 0,0
+ 2085              		.loc 1 115 0
+ 2086 0924 0000A0E3 		mov	r0, #0
+ 2087 0928 0010A0E3 		mov	r1, #0
+ 2088 092c 0320A0E3 		mov	r2, #3
+ 2089 0930 FEFFFFEB 		bl	pintar_ficha
+ 116:../elementos_pantalla.c **** 	pintar_ficha(3,3,FICHA_BLANCA);	//Pintar las fichas blancas iniciales en 3,3 y 4,4
+ 2090              		.loc 1 116 0
+ 2091 0934 0300A0E3 		mov	r0, #3
+ 2092 0938 0310A0E3 		mov	r1, #3
+ 2093 093c 0120A0E3 		mov	r2, #1
+ 2094 0940 FEFFFFEB 		bl	pintar_ficha
+ 117:../elementos_pantalla.c **** 	pintar_ficha(4,4,FICHA_BLANCA);
+ 2095              		.loc 1 117 0
+ 2096 0944 0400A0E3 		mov	r0, #4
+ 2097 0948 0410A0E3 		mov	r1, #4
+ 2098 094c 0120A0E3 		mov	r2, #1
+ 2099 0950 FEFFFFEB 		bl	pintar_ficha
+ 118:../elementos_pantalla.c **** 	pintar_ficha(3,4,FICHA_NEGRA);	//Pintar las fichas negras en 3,4 y 4,3
+ 2100              		.loc 1 118 0
+ 2101 0954 0300A0E3 		mov	r0, #3
+ 2102 0958 0410A0E3 		mov	r1, #4
+ 2103 095c 0220A0E3 		mov	r2, #2
+ 2104 0960 FEFFFFEB 		bl	pintar_ficha
+ 119:../elementos_pantalla.c **** 	pintar_ficha(4,3,FICHA_NEGRA);
+ 2105              		.loc 1 119 0
+ 2106 0964 0400A0E3 		mov	r0, #4
+ 2107 0968 0310A0E3 		mov	r1, #3
+ 2108 096c 0220A0E3 		mov	r2, #2
+ 2109 0970 FEFFFFEB 		bl	pintar_ficha
+ 120:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2110              		.loc 1 120 0
+ 2111 0974 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 121:../elementos_pantalla.c **** }
+ 2112              		.loc 1 121 0
+ 2113 0978 0CD04BE2 		sub	sp, fp, #12
+ 2114 097c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2115 0980 1EFF2FE1 		bx	lr
+ 2116              		.cfi_endproc
+ 2117              	.LFE8:
+ 2119              		.align	2
+ 2120              		.global	pintar_prueba
+ 2122              	pintar_prueba:
+ 2123              	.LFB9:
+ 122:../elementos_pantalla.c **** 
+ 123:../elementos_pantalla.c **** void pintar_prueba()
+ 124:../elementos_pantalla.c **** {
+ 2124              		.loc 1 124 0
+ 2125              		.cfi_startproc
+ 2126              		@ Function supports interworking.
+ 2127              		@ args = 0, pretend = 0, frame = 0
+ 2128              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2129 0984 0DC0A0E1 		mov	ip, sp
+ 2130              	.LCFI18:
+ 2131              		.cfi_def_cfa_register 12
+ 2132 0988 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2133 098c 04B04CE2 		sub	fp, ip, #4
+ 2134              		.cfi_offset 14, -8
+ 2135              		.cfi_offset 13, -12
+ 2136              		.cfi_offset 11, -16
+ 2137              	.LCFI19:
+ 2138              		.cfi_def_cfa 11, 4
+ 125:../elementos_pantalla.c **** 	pintar_cuadricula();
+ 2139              		.loc 1 125 0
+ 2140 0990 FEFFFFEB 		bl	pintar_cuadricula
+ 126:../elementos_pantalla.c **** 	/*pintar_numeros_tablero();
+ 127:../elementos_pantalla.c **** 	pintar_textos();
+ 128:../elementos_pantalla.c **** 	pintar_ficha(0,0,1);
+ 129:../elementos_pantalla.c **** 	pintar_ficha(7,7,2);
+ 130:../elementos_pantalla.c **** 	pintar_ficha(3,3,3);
+ 131:../elementos_pantalla.c **** 	pintar_profiling(451245, 84512, 56456, 469352);*/
+ 132:../elementos_pantalla.c **** 	//Lcd_DspAscII8x16(0,0,BLACK,",,,,,,%#########%%%%%#####################################((/*******
+ 133:../elementos_pantalla.c **** 	//Lcd_DspAscII8x16(8,16,BLACK,",,,,%###########%%%%%%####################################((/******
+ 134:../elementos_pantalla.c **** 	//Lcd_DspAscII8x16(16,32,BLACK,"################%%%%%%%###################################((/*****
+ 135:../elementos_pantalla.c **** 	//Lcd_DspAscII8x16(24,48,BLACK,"REGLAS");
+ 136:../elementos_pantalla.c **** 	pintar_ficha(7, 0, FICHA_BLANCA);
+ 2141              		.loc 1 136 0
+ 2142 0994 0700A0E3 		mov	r0, #7
+ 2143 0998 0010A0E3 		mov	r1, #0
+ 2144 099c 0120A0E3 		mov	r2, #1
+ 2145 09a0 FEFFFFEB 		bl	pintar_ficha
+ 137:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2146              		.loc 1 137 0
+ 2147 09a4 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 138:../elementos_pantalla.c **** 	Delay(250);
+ 2148              		.loc 1 138 0
+ 2149 09a8 FA00A0E3 		mov	r0, #250
+ 2150 09ac FEFFFFEB 		bl	Delay
+ 139:../elementos_pantalla.c **** 	borrar_ficha(7, 0);
+ 2151              		.loc 1 139 0
+ 2152 09b0 0700A0E3 		mov	r0, #7
+ 2153 09b4 0010A0E3 		mov	r1, #0
+ 2154 09b8 FEFFFFEB 		bl	borrar_ficha
+ 140:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2155              		.loc 1 140 0
+ 2156 09bc FEFFFFEB 		bl	Lcd_Dma_Trans
+ 141:../elementos_pantalla.c **** 	Delay(250);
+ 2157              		.loc 1 141 0
+ 2158 09c0 FA00A0E3 		mov	r0, #250
+ 2159 09c4 FEFFFFEB 		bl	Delay
+ 142:../elementos_pantalla.c **** 	pintar_ficha(7, 0, FICHA_BLANCA);
+ 2160              		.loc 1 142 0
+ 2161 09c8 0700A0E3 		mov	r0, #7
+ 2162 09cc 0010A0E3 		mov	r1, #0
+ 2163 09d0 0120A0E3 		mov	r2, #1
+ 2164 09d4 FEFFFFEB 		bl	pintar_ficha
+ 143:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2165              		.loc 1 143 0
+ 2166 09d8 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 144:../elementos_pantalla.c **** 	Delay(250);
+ 2167              		.loc 1 144 0
+ 2168 09dc FA00A0E3 		mov	r0, #250
+ 2169 09e0 FEFFFFEB 		bl	Delay
+ 145:../elementos_pantalla.c **** 	pintar_ficha(7, 0, 4);
+ 2170              		.loc 1 145 0
+ 2171 09e4 0700A0E3 		mov	r0, #7
+ 2172 09e8 0010A0E3 		mov	r1, #0
+ 2173 09ec 0420A0E3 		mov	r2, #4
+ 2174 09f0 FEFFFFEB 		bl	pintar_ficha
  146:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2228              		.loc 1 146 0
- 2229 0a2c FEFFFFEB 		bl	Lcd_Dma_Trans
- 147:../elementos_pantalla.c **** }
- 2230              		.loc 1 147 0
- 2231 0a30 0CD04BE2 		sub	sp, fp, #12
- 2232 0a34 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2233 0a38 1EFF2FE1 		bx	lr
- 2234              	.L33:
- 2235              		.align	2
- 2236              	.L32:
- 2237 0a3c 80010000 		.word	.LC13
- 2238              		.cfi_endproc
- 2239              	.LFE10:
- 2241              		.section	.rodata
- 2242 0187 00       		.align	2
- 2243              	.LC14:
- 2244 0188 48415320 		.ascii	"HAS GANADO!\000"
- 2244      47414E41 
- 2244      444F2100 
- 2245              		.text
- 2246              		.align	2
- 2247              		.global	pintar_fin_victoria
- 2249              	pintar_fin_victoria:
- 2250              	.LFB11:
- 148:../elementos_pantalla.c **** 
- 149:../elementos_pantalla.c **** void pintar_fin_victoria(int blancas, int negras)
- 150:../elementos_pantalla.c **** {
- 2251              		.loc 1 150 0
- 2252              		.cfi_startproc
- 2253              		@ Function supports interworking.
- 2254              		@ args = 0, pretend = 0, frame = 8
- 2255              		@ frame_needed = 1, uses_anonymous_args = 0
- 2256 0a40 0DC0A0E1 		mov	ip, sp
- 2257              	.LCFI22:
- 2258              		.cfi_def_cfa_register 12
- 2259 0a44 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2260 0a48 04B04CE2 		sub	fp, ip, #4
- 2261              		.cfi_offset 14, -8
- 2262              		.cfi_offset 13, -12
- 2263              		.cfi_offset 11, -16
- 2264              	.LCFI23:
- 2265              		.cfi_def_cfa 11, 4
- 2266 0a4c 08D04DE2 		sub	sp, sp, #8
- 2267 0a50 10000BE5 		str	r0, [fp, #-16]
- 2268 0a54 14100BE5 		str	r1, [fp, #-20]
- 151:../elementos_pantalla.c **** 	Lcd_Active_Clr();
- 2269              		.loc 1 151 0
- 2270 0a58 FEFFFFEB 		bl	Lcd_Active_Clr
- 152:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"HAS GANADO!");
- 2271              		.loc 1 152 0
- 2272 0a5c 0100A0E3 		mov	r0, #1
- 2273 0a60 1E10A0E3 		mov	r1, #30
- 2274 0a64 0F20A0E3 		mov	r2, #15
- 2275 0a68 10309FE5 		ldr	r3, .L35
- 2276 0a6c FEFFFFEB 		bl	Lcd_DspAscII8x16
- 153:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2277              		.loc 1 153 0
- 2278 0a70 FEFFFFEB 		bl	Lcd_Dma_Trans
- 154:../elementos_pantalla.c **** }
- 2279              		.loc 1 154 0
- 2280 0a74 0CD04BE2 		sub	sp, fp, #12
- 2281 0a78 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2282 0a7c 1EFF2FE1 		bx	lr
- 2283              	.L36:
- 2284              		.align	2
- 2285              	.L35:
- 2286 0a80 88010000 		.word	.LC14
- 2287              		.cfi_endproc
- 2288              	.LFE11:
- 2290              		.section	.rodata
- 2291              		.align	2
- 2292              	.LC15:
- 2293 0194 48415320 		.ascii	"HAS PERDIDO, TROZO DE ESCORIA!\000"
- 2293      50455244 
- 2293      49444F2C 
- 2293      2054524F 
- 2293      5A4F2044 
- 2294              		.text
- 2295              		.align	2
- 2296              		.global	pintar_fin_derrota
- 2298              	pintar_fin_derrota:
- 2299              	.LFB12:
- 155:../elementos_pantalla.c **** 
- 156:../elementos_pantalla.c **** void pintar_fin_derrota(int blancas, int negas)
- 157:../elementos_pantalla.c **** {
- 2300              		.loc 1 157 0
- 2301              		.cfi_startproc
- 2302              		@ Function supports interworking.
- 2303              		@ args = 0, pretend = 0, frame = 8
- 2304              		@ frame_needed = 1, uses_anonymous_args = 0
- 2305 0a84 0DC0A0E1 		mov	ip, sp
- 2306              	.LCFI24:
- 2307              		.cfi_def_cfa_register 12
- 2308 0a88 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2309 0a8c 04B04CE2 		sub	fp, ip, #4
- 2310              		.cfi_offset 14, -8
- 2311              		.cfi_offset 13, -12
- 2312              		.cfi_offset 11, -16
- 2313              	.LCFI25:
- 2314              		.cfi_def_cfa 11, 4
- 2315 0a90 08D04DE2 		sub	sp, sp, #8
- 2316 0a94 10000BE5 		str	r0, [fp, #-16]
- 2317 0a98 14100BE5 		str	r1, [fp, #-20]
- 158:../elementos_pantalla.c **** 	Lcd_Active_Clr();
- 2318              		.loc 1 158 0
- 2319 0a9c FEFFFFEB 		bl	Lcd_Active_Clr
- 159:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
- 2320              		.loc 1 159 0
- 2321 0aa0 0100A0E3 		mov	r0, #1
- 2322 0aa4 1E10A0E3 		mov	r1, #30
- 2323 0aa8 0F20A0E3 		mov	r2, #15
- 2324 0aac 10309FE5 		ldr	r3, .L38
- 2325 0ab0 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 160:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2326              		.loc 1 160 0
- 2327 0ab4 FEFFFFEB 		bl	Lcd_Dma_Trans
- 161:../elementos_pantalla.c **** }
- 2328              		.loc 1 161 0
- 2329 0ab8 0CD04BE2 		sub	sp, fp, #12
- 2330 0abc 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2331 0ac0 1EFF2FE1 		bx	lr
- 2332              	.L39:
- 2333              		.align	2
- 2334              	.L38:
- 2335 0ac4 94010000 		.word	.LC15
- 2336              		.cfi_endproc
- 2337              	.LFE12:
- 2339              		.section	.rodata
- 2340 01b3 00       		.align	2
- 2341              	.LC16:
- 2342 01b4 45524553 		.ascii	"ERES TAN IN\332TIL QUE NO GANAS PERO\000"
- 2342      2054414E 
- 2342      20494EDA 
- 2342      54494C20 
- 2342      51554520 
- 2343 01d6 0000     		.align	2
- 2344              	.LC17:
- 2345 01d8 54414D50 		.ascii	"TAMPOCO PIERDES CON UNA PUTA CPU!\000"
- 2345      4F434F20 
- 2345      50494552 
- 2345      44455320 
- 2345      434F4E20 
- 2346 01fa 0000     		.text
- 2347              		.align	2
- 2348              		.global	pintar_fin_empate
- 2350              	pintar_fin_empate:
- 2351              	.LFB13:
- 162:../elementos_pantalla.c **** 
- 163:../elementos_pantalla.c **** void pintar_fin_empate(int blancas, int negas)
- 164:../elementos_pantalla.c **** {
- 2352              		.loc 1 164 0
- 2353              		.cfi_startproc
- 2354              		@ Function supports interworking.
- 2355              		@ args = 0, pretend = 0, frame = 8
- 2356              		@ frame_needed = 1, uses_anonymous_args = 0
- 2357 0ac8 0DC0A0E1 		mov	ip, sp
- 2358              	.LCFI26:
- 2359              		.cfi_def_cfa_register 12
- 2360 0acc 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2361 0ad0 04B04CE2 		sub	fp, ip, #4
- 2362              		.cfi_offset 14, -8
- 2363              		.cfi_offset 13, -12
- 2364              		.cfi_offset 11, -16
- 2365              	.LCFI27:
- 2366              		.cfi_def_cfa 11, 4
- 2367 0ad4 08D04DE2 		sub	sp, sp, #8
- 2368 0ad8 10000BE5 		str	r0, [fp, #-16]
- 2369 0adc 14100BE5 		str	r1, [fp, #-20]
- 165:../elementos_pantalla.c **** 	Lcd_Active_Clr();
- 2370              		.loc 1 165 0
- 2371 0ae0 FEFFFFEB 		bl	Lcd_Active_Clr
- 166:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
- 2372              		.loc 1 166 0
- 2373 0ae4 0100A0E3 		mov	r0, #1
- 2374 0ae8 1E10A0E3 		mov	r1, #30
- 2375 0aec 0F20A0E3 		mov	r2, #15
- 2376 0af0 24309FE5 		ldr	r3, .L41
- 2377 0af4 FEFFFFEB 		bl	Lcd_DspAscII8x16
- 167:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,50,BLACK,"TAMPOCO PIERDES CON UNA PUTA CPU!");
- 2378              		.loc 1 167 0
- 2379 0af8 0100A0E3 		mov	r0, #1
- 2380 0afc 3210A0E3 		mov	r1, #50
- 2381 0b00 0F20A0E3 		mov	r2, #15
- 2382 0b04 14309FE5 		ldr	r3, .L41+4
- 2383 0b08 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 2175              		.loc 1 146 0
+ 2176 09f4 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 147:../elementos_pantalla.c **** 	Delay(250);
+ 2177              		.loc 1 147 0
+ 2178 09f8 FA00A0E3 		mov	r0, #250
+ 2179 09fc FEFFFFEB 		bl	Delay
+ 148:../elementos_pantalla.c **** }
+ 2180              		.loc 1 148 0
+ 2181 0a00 0CD04BE2 		sub	sp, fp, #12
+ 2182 0a04 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2183 0a08 1EFF2FE1 		bx	lr
+ 2184              		.cfi_endproc
+ 2185              	.LFE9:
+ 2187              		.section	.rodata
+ 2188 0082 0000     		.align	2
+ 2189              	.LC10:
+ 2190 0084 5245474C 		.ascii	"REGLAS\000"
+ 2190      415300
+ 2191              		.text
+ 2192              		.align	2
+ 2193              		.global	pintar_reglas
+ 2195              	pintar_reglas:
+ 2196              	.LFB10:
+ 149:../elementos_pantalla.c **** 
+ 150:../elementos_pantalla.c **** void pintar_reglas()
+ 151:../elementos_pantalla.c **** {
+ 2197              		.loc 1 151 0
+ 2198              		.cfi_startproc
+ 2199              		@ Function supports interworking.
+ 2200              		@ args = 0, pretend = 0, frame = 0
+ 2201              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2202 0a0c 0DC0A0E1 		mov	ip, sp
+ 2203              	.LCFI20:
+ 2204              		.cfi_def_cfa_register 12
+ 2205 0a10 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2206 0a14 04B04CE2 		sub	fp, ip, #4
+ 2207              		.cfi_offset 14, -8
+ 2208              		.cfi_offset 13, -12
+ 2209              		.cfi_offset 11, -16
+ 2210              	.LCFI21:
+ 2211              		.cfi_def_cfa 11, 4
+ 152:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 2212              		.loc 1 152 0
+ 2213 0a18 FEFFFFEB 		bl	Lcd_Active_Clr
+ 153:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"REGLAS");
+ 2214              		.loc 1 153 0
+ 2215 0a1c 0100A0E3 		mov	r0, #1
+ 2216 0a20 1E10A0E3 		mov	r1, #30
+ 2217 0a24 0F20A0E3 		mov	r2, #15
+ 2218 0a28 10309FE5 		ldr	r3, .L28
+ 2219 0a2c FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 154:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2220              		.loc 1 154 0
+ 2221 0a30 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 155:../elementos_pantalla.c **** }
+ 2222              		.loc 1 155 0
+ 2223 0a34 0CD04BE2 		sub	sp, fp, #12
+ 2224 0a38 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2225 0a3c 1EFF2FE1 		bx	lr
+ 2226              	.L29:
+ 2227              		.align	2
+ 2228              	.L28:
+ 2229 0a40 84000000 		.word	.LC10
+ 2230              		.cfi_endproc
+ 2231              	.LFE10:
+ 2233              		.section	.rodata
+ 2234 008b 00       		.align	2
+ 2235              	.LC11:
+ 2236 008c 48415320 		.ascii	"HAS GANADO!\000"
+ 2236      47414E41 
+ 2236      444F2100 
+ 2237              		.text
+ 2238              		.align	2
+ 2239              		.global	pintar_fin_victoria
+ 2241              	pintar_fin_victoria:
+ 2242              	.LFB11:
+ 156:../elementos_pantalla.c **** 
+ 157:../elementos_pantalla.c **** void pintar_fin_victoria(int blancas, int negras)
+ 158:../elementos_pantalla.c **** {
+ 2243              		.loc 1 158 0
+ 2244              		.cfi_startproc
+ 2245              		@ Function supports interworking.
+ 2246              		@ args = 0, pretend = 0, frame = 8
+ 2247              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2248 0a44 0DC0A0E1 		mov	ip, sp
+ 2249              	.LCFI22:
+ 2250              		.cfi_def_cfa_register 12
+ 2251 0a48 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2252 0a4c 04B04CE2 		sub	fp, ip, #4
+ 2253              		.cfi_offset 14, -8
+ 2254              		.cfi_offset 13, -12
+ 2255              		.cfi_offset 11, -16
+ 2256              	.LCFI23:
+ 2257              		.cfi_def_cfa 11, 4
+ 2258 0a50 08D04DE2 		sub	sp, sp, #8
+ 2259 0a54 10000BE5 		str	r0, [fp, #-16]
+ 2260 0a58 14100BE5 		str	r1, [fp, #-20]
+ 159:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 2261              		.loc 1 159 0
+ 2262 0a5c FEFFFFEB 		bl	Lcd_Active_Clr
+ 160:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"HAS GANADO!");
+ 2263              		.loc 1 160 0
+ 2264 0a60 0100A0E3 		mov	r0, #1
+ 2265 0a64 1E10A0E3 		mov	r1, #30
+ 2266 0a68 0F20A0E3 		mov	r2, #15
+ 2267 0a6c 10309FE5 		ldr	r3, .L31
+ 2268 0a70 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 161:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2269              		.loc 1 161 0
+ 2270 0a74 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 162:../elementos_pantalla.c **** }
+ 2271              		.loc 1 162 0
+ 2272 0a78 0CD04BE2 		sub	sp, fp, #12
+ 2273 0a7c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2274 0a80 1EFF2FE1 		bx	lr
+ 2275              	.L32:
+ 2276              		.align	2
+ 2277              	.L31:
+ 2278 0a84 8C000000 		.word	.LC11
+ 2279              		.cfi_endproc
+ 2280              	.LFE11:
+ 2282              		.section	.rodata
+ 2283              		.align	2
+ 2284              	.LC12:
+ 2285 0098 48415320 		.ascii	"HAS PERDIDO, TROZO DE ESCORIA!\000"
+ 2285      50455244 
+ 2285      49444F2C 
+ 2285      2054524F 
+ 2285      5A4F2044 
+ 2286              		.text
+ 2287              		.align	2
+ 2288              		.global	pintar_fin_derrota
+ 2290              	pintar_fin_derrota:
+ 2291              	.LFB12:
+ 163:../elementos_pantalla.c **** 
+ 164:../elementos_pantalla.c **** void pintar_fin_derrota(int blancas, int negas)
+ 165:../elementos_pantalla.c **** {
+ 2292              		.loc 1 165 0
+ 2293              		.cfi_startproc
+ 2294              		@ Function supports interworking.
+ 2295              		@ args = 0, pretend = 0, frame = 8
+ 2296              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2297 0a88 0DC0A0E1 		mov	ip, sp
+ 2298              	.LCFI24:
+ 2299              		.cfi_def_cfa_register 12
+ 2300 0a8c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2301 0a90 04B04CE2 		sub	fp, ip, #4
+ 2302              		.cfi_offset 14, -8
+ 2303              		.cfi_offset 13, -12
+ 2304              		.cfi_offset 11, -16
+ 2305              	.LCFI25:
+ 2306              		.cfi_def_cfa 11, 4
+ 2307 0a94 08D04DE2 		sub	sp, sp, #8
+ 2308 0a98 10000BE5 		str	r0, [fp, #-16]
+ 2309 0a9c 14100BE5 		str	r1, [fp, #-20]
+ 166:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 2310              		.loc 1 166 0
+ 2311 0aa0 FEFFFFEB 		bl	Lcd_Active_Clr
+ 167:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
+ 2312              		.loc 1 167 0
+ 2313 0aa4 0100A0E3 		mov	r0, #1
+ 2314 0aa8 1E10A0E3 		mov	r1, #30
+ 2315 0aac 0F20A0E3 		mov	r2, #15
+ 2316 0ab0 10309FE5 		ldr	r3, .L34
+ 2317 0ab4 FEFFFFEB 		bl	Lcd_DspAscII8x16
  168:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2384              		.loc 1 168 0
- 2385 0b0c FEFFFFEB 		bl	Lcd_Dma_Trans
+ 2318              		.loc 1 168 0
+ 2319 0ab8 FEFFFFEB 		bl	Lcd_Dma_Trans
  169:../elementos_pantalla.c **** }
- 2386              		.loc 1 169 0
- 2387 0b10 0CD04BE2 		sub	sp, fp, #12
- 2388 0b14 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2389 0b18 1EFF2FE1 		bx	lr
- 2390              	.L42:
- 2391              		.align	2
- 2392              	.L41:
- 2393 0b1c B4010000 		.word	.LC16
- 2394 0b20 D8010000 		.word	.LC17
- 2395              		.cfi_endproc
- 2396              	.LFE13:
- 2398              		.align	2
- 2399              		.global	iniciar_DMA
- 2401              	iniciar_DMA:
- 2402              	.LFB14:
+ 2320              		.loc 1 169 0
+ 2321 0abc 0CD04BE2 		sub	sp, fp, #12
+ 2322 0ac0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2323 0ac4 1EFF2FE1 		bx	lr
+ 2324              	.L35:
+ 2325              		.align	2
+ 2326              	.L34:
+ 2327 0ac8 98000000 		.word	.LC12
+ 2328              		.cfi_endproc
+ 2329              	.LFE12:
+ 2331              		.section	.rodata
+ 2332 00b7 00       		.align	2
+ 2333              	.LC13:
+ 2334 00b8 45524553 		.ascii	"ERES TAN IN\332TIL QUE NO GANAS PERO\000"
+ 2334      2054414E 
+ 2334      20494EDA 
+ 2334      54494C20 
+ 2334      51554520 
+ 2335 00da 0000     		.align	2
+ 2336              	.LC14:
+ 2337 00dc 54414D50 		.ascii	"TAMPOCO PIERDES CON UNA PUTA CPU!\000"
+ 2337      4F434F20 
+ 2337      50494552 
+ 2337      44455320 
+ 2337      434F4E20 
+ 2338 00fe 0000     		.text
+ 2339              		.align	2
+ 2340              		.global	pintar_fin_empate
+ 2342              	pintar_fin_empate:
+ 2343              	.LFB13:
  170:../elementos_pantalla.c **** 
- 171:../elementos_pantalla.c **** void iniciar_DMA()
+ 171:../elementos_pantalla.c **** void pintar_fin_empate(int blancas, int negas)
  172:../elementos_pantalla.c **** {
- 2403              		.loc 1 172 0
- 2404              		.cfi_startproc
- 2405              		@ Function supports interworking.
- 2406              		@ args = 0, pretend = 0, frame = 0
- 2407              		@ frame_needed = 1, uses_anonymous_args = 0
- 2408 0b24 0DC0A0E1 		mov	ip, sp
- 2409              	.LCFI28:
- 2410              		.cfi_def_cfa_register 12
- 2411 0b28 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2412 0b2c 04B04CE2 		sub	fp, ip, #4
- 2413              		.cfi_offset 14, -8
- 2414              		.cfi_offset 13, -12
- 2415              		.cfi_offset 11, -16
- 2416              	.LCFI29:
- 2417              		.cfi_def_cfa 11, 4
- 173:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
- 2418              		.loc 1 173 0
- 2419 0b30 FEFFFFEB 		bl	Lcd_Dma_Trans
- 174:../elementos_pantalla.c **** }
- 2420              		.loc 1 174 0
- 2421 0b34 0CD04BE2 		sub	sp, fp, #12
- 2422 0b38 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2423 0b3c 1EFF2FE1 		bx	lr
- 2424              		.cfi_endproc
- 2425              	.LFE14:
- 2427              	.Letext0:
+ 2344              		.loc 1 172 0
+ 2345              		.cfi_startproc
+ 2346              		@ Function supports interworking.
+ 2347              		@ args = 0, pretend = 0, frame = 8
+ 2348              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2349 0acc 0DC0A0E1 		mov	ip, sp
+ 2350              	.LCFI26:
+ 2351              		.cfi_def_cfa_register 12
+ 2352 0ad0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2353 0ad4 04B04CE2 		sub	fp, ip, #4
+ 2354              		.cfi_offset 14, -8
+ 2355              		.cfi_offset 13, -12
+ 2356              		.cfi_offset 11, -16
+ 2357              	.LCFI27:
+ 2358              		.cfi_def_cfa 11, 4
+ 2359 0ad8 08D04DE2 		sub	sp, sp, #8
+ 2360 0adc 10000BE5 		str	r0, [fp, #-16]
+ 2361 0ae0 14100BE5 		str	r1, [fp, #-20]
+ 173:../elementos_pantalla.c **** 	Lcd_Active_Clr();
+ 2362              		.loc 1 173 0
+ 2363 0ae4 FEFFFFEB 		bl	Lcd_Active_Clr
+ 174:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
+ 2364              		.loc 1 174 0
+ 2365 0ae8 0100A0E3 		mov	r0, #1
+ 2366 0aec 1E10A0E3 		mov	r1, #30
+ 2367 0af0 0F20A0E3 		mov	r2, #15
+ 2368 0af4 24309FE5 		ldr	r3, .L37
+ 2369 0af8 FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 175:../elementos_pantalla.c **** 	Lcd_DspAscII8x16(1,50,BLACK,"TAMPOCO PIERDES CON UNA PUTA CPU!");
+ 2370              		.loc 1 175 0
+ 2371 0afc 0100A0E3 		mov	r0, #1
+ 2372 0b00 3210A0E3 		mov	r1, #50
+ 2373 0b04 0F20A0E3 		mov	r2, #15
+ 2374 0b08 14309FE5 		ldr	r3, .L37+4
+ 2375 0b0c FEFFFFEB 		bl	Lcd_DspAscII8x16
+ 176:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2376              		.loc 1 176 0
+ 2377 0b10 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 177:../elementos_pantalla.c **** }
+ 2378              		.loc 1 177 0
+ 2379 0b14 0CD04BE2 		sub	sp, fp, #12
+ 2380 0b18 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2381 0b1c 1EFF2FE1 		bx	lr
+ 2382              	.L38:
+ 2383              		.align	2
+ 2384              	.L37:
+ 2385 0b20 B8000000 		.word	.LC13
+ 2386 0b24 DC000000 		.word	.LC14
+ 2387              		.cfi_endproc
+ 2388              	.LFE13:
+ 2390              		.align	2
+ 2391              		.global	iniciar_DMA
+ 2393              	iniciar_DMA:
+ 2394              	.LFB14:
+ 178:../elementos_pantalla.c **** 
+ 179:../elementos_pantalla.c **** void iniciar_DMA()
+ 180:../elementos_pantalla.c **** {
+ 2395              		.loc 1 180 0
+ 2396              		.cfi_startproc
+ 2397              		@ Function supports interworking.
+ 2398              		@ args = 0, pretend = 0, frame = 0
+ 2399              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2400 0b28 0DC0A0E1 		mov	ip, sp
+ 2401              	.LCFI28:
+ 2402              		.cfi_def_cfa_register 12
+ 2403 0b2c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2404 0b30 04B04CE2 		sub	fp, ip, #4
+ 2405              		.cfi_offset 14, -8
+ 2406              		.cfi_offset 13, -12
+ 2407              		.cfi_offset 11, -16
+ 2408              	.LCFI29:
+ 2409              		.cfi_def_cfa 11, 4
+ 181:../elementos_pantalla.c **** 	Lcd_Dma_Trans();
+ 2410              		.loc 1 181 0
+ 2411 0b34 FEFFFFEB 		bl	Lcd_Dma_Trans
+ 182:../elementos_pantalla.c **** }
+ 2412              		.loc 1 182 0
+ 2413 0b38 0CD04BE2 		sub	sp, fp, #12
+ 2414 0b3c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2415 0b40 1EFF2FE1 		bx	lr
+ 2416              		.cfi_endproc
+ 2417              	.LFE14:
+ 2419              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 elementos_pantalla.c
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1209   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1212   .text:00000000 pintar_cuadricula
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1352   .text:000001b0 pintar_numeros_tablero
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1448   .text:000002c8 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1453   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1475   .text:000002cc $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1478   .text:000002cc pintar_textos
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1556   .text:00000398 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1577   .text:000003b4 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1580   .text:000003b4 pintar_ficha
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1739   .text:000005b4 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1745   .text:000005c0 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1748   .text:000005c0 borrar_ficha
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1862   .text:00000730 mover_gris_abajo
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1904   .text:00000778 mover_gris_derecha
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:1946   .text:000007c0 pintar_profiling
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2058   .text:000008fc pintar_jugando
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2143   .text:0000098c pintar_prueba
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2193   .text:000009f8 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2200   .text:00000a08 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2203   .text:00000a08 pintar_reglas
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2237   .text:00000a3c $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2246   .text:00000a40 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2249   .text:00000a40 pintar_fin_victoria
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2286   .text:00000a80 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2295   .text:00000a84 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2298   .text:00000a84 pintar_fin_derrota
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2335   .text:00000ac4 $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2347   .text:00000ac8 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2350   .text:00000ac8 pintar_fin_empate
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2393   .text:00000b1c $d
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2398   .text:00000b24 $a
-C:\Users\guest\AppData\Local\Temp\cc5eOrRK.s:2401   .text:00000b24 iniciar_DMA
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1209   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1212   .text:00000000 pintar_cuadricula
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1352   .text:000001b0 pintar_numeros_tablero
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1448   .text:000002c8 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1453   .rodata:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1475   .text:000002cc $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1478   .text:000002cc pintar_textos
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1556   .text:00000398 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1577   .text:000003b4 $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1580   .text:000003b4 pintar_ficha
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1735   .text:000005ac $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1741   .text:000005b8 $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1744   .text:000005b8 borrar_ficha
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1858   .text:00000728 mover_gris_abajo
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1900   .text:00000770 mover_gris_derecha
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:1942   .text:000007b8 pintar_profiling
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2054   .text:000008f4 pintar_jugando
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2122   .text:00000984 pintar_prueba
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2195   .text:00000a0c pintar_reglas
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2229   .text:00000a40 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2238   .text:00000a44 $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2241   .text:00000a44 pintar_fin_victoria
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2278   .text:00000a84 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2287   .text:00000a88 $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2290   .text:00000a88 pintar_fin_derrota
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2327   .text:00000ac8 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2339   .text:00000acc $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2342   .text:00000acc pintar_fin_empate
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2385   .text:00000b20 $d
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2390   .text:00000b28 $a
+C:\Users\guest\AppData\Local\Temp\ccFRo0Ho.s:2393   .text:00000b28 iniciar_DMA
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
@@ -1480,4 +1454,5 @@ Lcd_DspAscII8x16
 LcdClrRect
 Lcd_Dma_Trans
 Lcd_Clr
+Delay
 Lcd_Active_Clr

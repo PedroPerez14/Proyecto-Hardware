@@ -477,22 +477,22 @@
  2555              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 reversi_main.c
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2234   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2235   .bss:00000000 cuenta_int_latido
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2238   .bss:00000004 cuenta_int_t_juego
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2240   .bss:00000008 estado_led1
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2243   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2246   .text:00000000 reversi_main_inicializar
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2290   .text:0000004c $d
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2296   .text:00000058 $a
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2299   .text:00000058 dormir_procesador
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2326   .text:00000070 Latido_ev_new_tick
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2394   .text:00000108 $d
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2399   .text:00000110 $a
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2402   .text:00000110 tiempo_juego_ev_tick
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2444   .text:0000015c $d
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2448   .text:00000160 $a
-C:\Users\guest\AppData\Local\Temp\ccP8qsLF.s:2451   .text:00000160 reversi_main
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2234   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2235   .bss:00000000 cuenta_int_latido
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2238   .bss:00000004 cuenta_int_t_juego
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2240   .bss:00000008 estado_led1
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2243   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2246   .text:00000000 reversi_main_inicializar
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2290   .text:0000004c $d
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2296   .text:00000058 $a
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2299   .text:00000058 dormir_procesador
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2326   .text:00000070 Latido_ev_new_tick
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2394   .text:00000108 $d
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2399   .text:00000110 $a
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2402   .text:00000110 tiempo_juego_ev_tick
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2444   .text:0000015c $d
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2448   .text:00000160 $a
+C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2451   .text:00000160 reversi_main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

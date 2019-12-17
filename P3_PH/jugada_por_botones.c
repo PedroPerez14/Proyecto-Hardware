@@ -254,7 +254,7 @@ void reiniciar_posicion_gris()
 
 void actualizar_movimientos_pantalla()
 {
-	obtener_tablero(tablero_actual);		//TODO hay que hacer la funcion
+	obtener_tablero(tablero_actual);
 	int i,j;
 	for(i = 0; i < num_filas; i++)
 	{

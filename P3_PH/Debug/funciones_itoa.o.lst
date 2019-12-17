@@ -327,10 +327,10 @@
  2299              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 funciones_itoa.c
-C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2043   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2046   .text:00000000 swap
-C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2087   .text:0000004c reverse
-C:\Users\guest\AppData\Local\Temp\ccbTzBK6.s:2148   .text:000000cc itoa
+C:\Users\guest\AppData\Local\Temp\ccLQfA8G.s:2043   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccLQfA8G.s:2046   .text:00000000 swap
+C:\Users\guest\AppData\Local\Temp\ccLQfA8G.s:2087   .text:0000004c reverse
+C:\Users\guest\AppData\Local\Temp\ccLQfA8G.s:2148   .text:000000cc itoa
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

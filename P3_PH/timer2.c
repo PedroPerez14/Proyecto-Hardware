@@ -16,7 +16,7 @@ static volatile unsigned int timer2_num_int;
 
 /* declaraci�n de funci�n que es rutina de servicio de interrupciï¿½n
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
-void timer2_ISR(void) __attribute__((interrupt("IRQ")));
+void timer2_ISR(void) __attribute__((interrupt("FIQ")));
 
 /*--- codigo de las funciones ---*/
 void timer2_ISR(void)
@@ -31,8 +31,8 @@ void timer2_ISR(void)
 void timer2_inicializar(void)
 {
 	/* Configuraion controlador de interrupciones */
-	rINTMOD &= ~(BIT_TIMER2); //Configura la lï¿½nea del timer2 como IRQ
-	rINTCON &= 0x1; // Habilita int. vectorizadas y la linea IRQ, dejando FIQ como estuviera
+	rINTMOD |= BIT_TIMER2; //Configura la lï¿½nea del timer2 como IRQ
+	rINTCON &= 0x6; // Habilita int. vectorizadas y la linea IRQ, dejando FIQ como estuviera
 	rINTMSK &= ~(BIT_TIMER2); // habilitamos en vector de mascaras de interrupcion el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 estï¿½n definidos en 44b.h)
 
 	/* Establece la rutina de servicio para TIMER0 */

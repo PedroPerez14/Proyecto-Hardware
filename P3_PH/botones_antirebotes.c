@@ -71,20 +71,34 @@ void antirebotes(void)
 					hay_autoincremento = 0;
 					maquina_estados = contando_trd;
 				}
-				else if(que_button == button_iz)
 				if(cuenta_autoincremento == int_timer0_enable_autoincr)		//TODO poner autoincemento para boton derecho
 				{	//Tras mantener pulsado durante 1/3 de segundo
 					//	autoincremento cada 180ms a partir de ahora
 					cuenta_autoincremento = 0;
 					hay_autoincremento = 1;
-					jugada_ev_izq();
+					if(que_button == button_iz)
+					{
+						jugada_ev_izq();
+					}
+					else if(que_button == button_dr)
+					{
+						jugada_ev_der();
+					}
 				}
-				if(hay_autoincremento && cuenta_autoincremento ==  int_timer0_autoincr) 	//11 ticks de timer0 son 182.6 milisegs ~= 180 ms, para incrementar de forma auto
+				if(hay_autoincremento && cuenta_autoincremento == int_timer0_autoincr) 	//11 ticks de timer0 son 182.6 milisegs ~= 180 ms, para incrementar de forma auto
 				{
 					cuenta_autoincremento = 0;
 					//push_debug(ev_autoincr, no_info);
 					//Lo hago como una llamada directa a jugada_por_botones porque la cola es concurrente y así se usa el mínimo posible
-					jugada_ev_izq();
+
+					if(que_button == button_iz)
+					{
+						jugada_ev_izq();
+					}
+					else if(que_button == button_dr)
+					{
+						jugada_ev_der();
+					}
 				}
 			}
 			break;

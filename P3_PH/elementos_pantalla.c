@@ -59,9 +59,6 @@ void pintar_ficha(int fila, int col, enum estado_casilla color)
 		case FICHA_GRIS:
 			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0xd, "@");
 			break;
-		default:	//Casilla en blanco, la limpiamos
-			borrar_ficha(fila, col);
-			break;
 	}
 }
 
@@ -111,33 +108,43 @@ void pintar_profiling(int t_total, int t_calc, int t_pvolteo, int veces_pvolteo)
 void pintar_jugando()
 {
 	Lcd_Clr();
-	//Lcd_Active_Clr();		//TODO no sé si es esta o la otra
 	pintar_cuadricula();
 	pintar_numeros_tablero();
 	pintar_textos();
 	pintar_profiling(0,0,0,0);
 	pintar_ficha(0,0,3);	//Pintar la ficha gris en 0,0
-	pintar_ficha(3,3,1);	//Pintar las fichas blancas iniciales en 3,3 y 4,4
-	pintar_ficha(4,4,1);
-	pintar_ficha(3,4,2);	//Pintar las fichas negras en 3,4 y 4,3
-	pintar_ficha(4,3,2);
+	pintar_ficha(3,3,FICHA_BLANCA);	//Pintar las fichas blancas iniciales en 3,3 y 4,4
+	pintar_ficha(4,4,FICHA_BLANCA);
+	pintar_ficha(3,4,FICHA_NEGRA);	//Pintar las fichas negras en 3,4 y 4,3
+	pintar_ficha(4,3,FICHA_NEGRA);
 	Lcd_Dma_Trans();
 }
 
 void pintar_prueba()
 {
-	/*pintar_cuadricula();
-	pintar_numeros_tablero();
+	pintar_cuadricula();
+	/*pintar_numeros_tablero();
 	pintar_textos();
 	pintar_ficha(0,0,1);
 	pintar_ficha(7,7,2);
 	pintar_ficha(3,3,3);
 	pintar_profiling(451245, 84512, 56456, 469352);*/
-	Lcd_DspAscII8x16(0,0,BLACK,",,,,,,%#########%%%%%#####################################((/**************//////");
-	Lcd_DspAscII8x16(8,16,BLACK,",,,,%###########%%%%%%####################################((/*********///////((((");
-	Lcd_DspAscII8x16(16,32,BLACK,"################%%%%%%%###################################((/********////((((((##");
-	Lcd_DspAscII8x16(24,48,BLACK,"REGLAS");
+	//Lcd_DspAscII8x16(0,0,BLACK,",,,,,,%#########%%%%%#####################################((/**************//////");
+	//Lcd_DspAscII8x16(8,16,BLACK,",,,,%###########%%%%%%####################################((/*********///////((((");
+	//Lcd_DspAscII8x16(16,32,BLACK,"################%%%%%%%###################################((/********////((((((##");
+	//Lcd_DspAscII8x16(24,48,BLACK,"REGLAS");
+	pintar_ficha(7, 0, FICHA_BLANCA);
 	Lcd_Dma_Trans();
+	Delay(250);
+	borrar_ficha(7, 0);
+	Lcd_Dma_Trans();
+	Delay(250);
+	pintar_ficha(7, 0, FICHA_BLANCA);
+	Lcd_Dma_Trans();
+	Delay(250);
+	pintar_ficha(7, 0, 4);
+	Lcd_Dma_Trans();
+	Delay(250);
 }
 
 void pintar_reglas()

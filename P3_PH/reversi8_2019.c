@@ -339,7 +339,6 @@ void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, cha
         FA = FA + SF;
         CA = CA + SC;
         tablero[FA][CA] = color;
-        borrar_ficha(FA,CA);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -514,6 +513,24 @@ void reversi8_inicializar()
 	fin = 0;
 }
 
+void mover_IA()
+{
+    move = 0;
+    // escribe el movimiento en las variables globales fila columna
+    done = elegir_mov(candidatas, tablero, &f, &c);
+    if (done == -1)
+    {
+         if (move == 0)
+         fin = 1;
+    }
+    else
+    {
+        tablero[f][c] = FICHA_BLANCA;
+        actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+        actualizar_candidatas(candidatas, f, c);
+     }
+}
+
 void reversi8()
 {
 	 ////////////////////////////////////////////////////////////////////
@@ -536,9 +553,12 @@ void reversi8()
         		actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
                 if(jugada_valida != 1)
                 {
-                    tablero[fila][columna] = CASILLA_VACIA;     //TODO no me fío
+                    tablero[fila][columna] = CASILLA_VACIA;
                 }
-        		actualizar_candidatas(candidatas, fila, columna);
+                else
+                {
+                    actualizar_candidatas(candidatas, fila, columna);
+                }
         		move = 1;
         	}
             if(jugada_valida == 1)
@@ -547,15 +567,15 @@ void reversi8()
                 done = elegir_mov(candidatas, tablero, &f, &c);
                 if (done == -1)
                 {
-                    if (move == 0)
-                    fin = 1;
+                     if (move == 0)
+                     fin = 1;
                 }
                 else
                 {
                     tablero[f][c] = FICHA_BLANCA;
                     actualizar_tablero(tablero, f, c, FICHA_BLANCA);
                     actualizar_candidatas(candidatas, f, c);
-                }
+                 }
             }
         }
     }
@@ -564,13 +584,14 @@ void reversi8()
 
 //TODO lista de cosas pendientes
 /*
-	Autoincremento en botón derecho
+	Autoincremento en botón derecho -hecho, no probado
 	Antirebotes en tsp
-	timer2 por FIQ
+	timer2 por FIQ                  -hecho, no probado
 	-O3
 	Flashear
 	Poner bien las pantallas de las reglas
 	PIKA-CHUUUUUU
-	
+	TECLADO PARA PASAR Y PARA FIN PREMATURO
+
 	Reparar lo que se caiga a trozos
 */
