@@ -94,13 +94,14 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM] = {
     static int jugada_valida = 0;
 	static int veces_pv = 0;
 	static int t_pv = 0;
-	int done;     // la máquina ha conseguido mover o no
-    int move = 0; // el humano ha conseguido mover o no
-    int blancas, negras; // número de fichas de cada color
-    volatile int fin = 0;  // fin vale 1 si el humano no ha podido mover
-                  // (ha introducido un valor de movimiento con algún 8)
-                  // y luego la máquina tampoco puede
-    char f, c;    // fila y columna elegidas por la máquina para su movimiento
+	int done;     			// la máquina ha conseguido mover o no
+    int move = 0; 			// el humano ha conseguido mover o no
+    int blancas = 0;
+    int negras = 0;			// número de fichas de cada color
+    volatile int fin = 0;   // fin vale 1 si el humano no ha podido mover
+    						// (ha introducido un valor de movimiento con algún 8)
+                  	  	  	// y luego la máquina tampoco puede
+    char f, c;    			// fila y columna elegidas por la máquina para su movimiento
 
   ////////////////////////////////////////////////////////////////////
      // VARIABLES PARA INTERACCIONAR CON LA ENTRADA SALIDA
@@ -234,6 +235,10 @@ void init_table(char tablero[][DIM], char candidatas[][DIM])
     candidatas[5][3] = SI;
     candidatas[5][4] = SI;
     candidatas[5][5] = SI;
+
+    // Añadido para que se muestre correctamente el número de fichas
+    // antes de realizar el primer movimiento
+    contar(tablero, &blancas, &negras);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -505,9 +510,13 @@ void reversi8_inicializar()
 {
 	init_table(tablero, candidatas);
 	fin = 0;
+	/* Se comenta porque contamos en init_table y esto lo sobreescribe de forma errónea
+	blancas = 0;
+	negras = 0;
+	*/
 }
 
-void mover_IA()		//TODO Probar
+void mover_IA()
 {
     // escribe el movimiento en las variables globales fila columna
     done = elegir_mov(candidatas, tablero, &f, &c);
@@ -579,14 +588,10 @@ void reversi8()
 
 //TODO lista de cosas pendientes
 /*
-	Antirebotes en tsp --PROBAR
-	TECLADO PARA PASAR Y PARA FIN PREMATURO	--PROBAR
-	Cambiar lo que he tocado de pasar y de jugada no válida --PROBAR
-	Antirebotes teclado	--Pendiente
+	Poner bien las pantallas de las reglas y las fichas --WIP
 
 	-O3
 	Flashear
-	Poner bien las pantallas de las reglas y las fichas
 	PIKA-CHUUUUUU
 	Reparar lo que se caiga a trozos
 */

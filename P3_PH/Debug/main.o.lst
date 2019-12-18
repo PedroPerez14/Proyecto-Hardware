@@ -6,15 +6,15 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"main.c"
   21              	.Ltext0:
   22              		.file 1 "../main.c"
- 2454              		.align	2
- 2455              		.global	pasar_a_user
- 2457              	pasar_a_user:
- 2458              	.LFB0:
+ 2469              		.align	2
+ 2470              		.global	Main
+ 2472              	Main:
+ 2473              	.LFB1:
    1:../main.c     **** /*********************************************************************************************
    2:../main.c     **** * Fichero:	main.c
    3:../main.c     **** * Autor:	Profesores de la asignatura
@@ -41,154 +41,143 @@
   24:../main.c     **** #include "elementos_pantalla.h"
   25:../main.c     **** #include <stdint.h>
   26:../main.c     **** 
-  27:../main.c     **** inline void pasar_a_user()
+  27:../main.c     **** static volatile inline void pasar_a_user()
   28:../main.c     **** {
- 2459              		.loc 1 28 0
- 2460              		.cfi_startproc
- 2461              		@ Function supports interworking.
- 2462              		@ args = 0, pretend = 0, frame = 8
- 2463              		@ frame_needed = 1, uses_anonymous_args = 0
- 2464 0000 0DC0A0E1 		mov	ip, sp
- 2465              	.LCFI0:
- 2466              		.cfi_def_cfa_register 12
- 2467 0004 10D82DE9 		stmfd	sp!, {r4, fp, ip, lr, pc}
- 2468 0008 04B04CE2 		sub	fp, ip, #4
- 2469              		.cfi_offset 14, -8
- 2470              		.cfi_offset 13, -12
- 2471              		.cfi_offset 11, -16
- 2472              		.cfi_offset 4, -20
- 2473              	.LCFI1:
- 2474              		.cfi_def_cfa 11, 4
- 2475 000c 0CD04DE2 		sub	sp, sp, #12
   29:../main.c     **** 	uint32_t _cpsr;
   30:../main.c     **** 	asm volatile (" mrs %0, cpsr\n" : "=r" (_cpsr));
- 2476              		.loc 1 30 0
- 2477              	@ 30 "../main.c" 1
- 2478 0010 00400FE1 		 mrs r4, cpsr
- 2479              	
- 2480              	@ 0 "" 2
- 2481 0014 18400BE5 		str	r4, [fp, #-24]
   31:../main.c     **** 	_cpsr &= 0xFFFFFFE0;
- 2482              		.loc 1 31 0
- 2483 0018 18301BE5 		ldr	r3, [fp, #-24]
- 2484 001c 1F30C3E3 		bic	r3, r3, #31
- 2485 0020 18300BE5 		str	r3, [fp, #-24]
   32:../main.c     **** 	_cpsr |= 0x00000010;
- 2486              		.loc 1 32 0
- 2487 0024 18301BE5 		ldr	r3, [fp, #-24]
- 2488 0028 103083E3 		orr	r3, r3, #16
- 2489 002c 18300BE5 		str	r3, [fp, #-24]
   33:../main.c     **** 	asm volatile (" msr cpsr,%0\n" :: "r" (_cpsr));
- 2490              		.loc 1 33 0
- 2491 0030 18301BE5 		ldr	r3, [fp, #-24]
- 2492              	@ 33 "../main.c" 1
- 2493 0034 03F029E1 		 msr cpsr,r3
- 2494              	
- 2495              	@ 0 "" 2
-  34:../main.c     **** }
- 2496              		.loc 1 34 0
- 2497 0038 10D04BE2 		sub	sp, fp, #16
- 2498 003c 10689DE8 		ldmfd	sp, {r4, fp, sp, lr}
- 2499 0040 1EFF2FE1 		bx	lr
- 2500              		.cfi_endproc
- 2501              	.LFE0:
- 2503              		.align	2
- 2504              		.global	Main
- 2506              	Main:
- 2507              	.LFB1:
-  35:../main.c     **** 
-  36:../main.c     **** /*--- codigo de funciones ---*/
-  37:../main.c     **** //extern void Lcd_Test();
-  38:../main.c     **** void Main(void)
-  39:../main.c     **** {
- 2508              		.loc 1 39 0
- 2509              		.cfi_startproc
- 2510              		@ Function supports interworking.
- 2511              		@ args = 0, pretend = 0, frame = 0
- 2512              		@ frame_needed = 1, uses_anonymous_args = 0
- 2513 0044 0DC0A0E1 		mov	ip, sp
- 2514              	.LCFI2:
- 2515              		.cfi_def_cfa_register 12
- 2516 0048 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2517 004c 04B04CE2 		sub	fp, ip, #4
- 2518              		.cfi_offset 14, -8
- 2519              		.cfi_offset 13, -12
- 2520              		.cfi_offset 11, -16
- 2521              	.LCFI3:
- 2522              		.cfi_def_cfa 11, 4
-  40:../main.c     **** 	/* Inicializa controladores */
-  41:../main.c     **** 	sys_init();         				// Inicializacion de la placa, interrupciones y puertos
- 2523              		.loc 1 41 0
- 2524 0050 FEFFFFEB 		bl	sys_init
-  42:../main.c     **** 	timer_init();	    				// Inicializacion del temporizador
- 2525              		.loc 1 42 0
- 2526 0054 FEFFFFEB 		bl	timer_init
-  43:../main.c     **** 	button_iniciar();					// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en 
- 2527              		.loc 1 43 0
- 2528 0058 FEFFFFEB 		bl	button_iniciar
-  44:../main.c     **** 	D8Led_init();      					// inicializamos el 8led
- 2529              		.loc 1 44 0
- 2530 005c FEFFFFEB 		bl	D8Led_init
-  45:../main.c     **** 	cola_depuracion_inicializar(32);	// Debe darse un tamaño suficiente para almacenar todos los event
- 2531              		.loc 1 45 0
- 2532 0060 2000A0E3 		mov	r0, #32
- 2533 0064 FEFFFFEB 		bl	cola_depuracion_inicializar
-  46:../main.c     **** 	Gestion_excepciones_init();			// Inicializa la gestión de excepciones SWI, UNDEF y DABORT
- 2534              		.loc 1 46 0
- 2535 0068 FEFFFFEB 		bl	Gestion_excepciones_init
-  47:../main.c     **** 	Lcd_Init();
- 2536              		.loc 1 47 0
- 2537 006c FEFFFFEB 		bl	Lcd_Init
-  48:../main.c     **** 	Lcd_Clr();
- 2538              		.loc 1 48 0
- 2539 0070 FEFFFFEB 		bl	Lcd_Clr
-  49:../main.c     **** 	Lcd_Active_Clr();
- 2540              		.loc 1 49 0
- 2541 0074 FEFFFFEB 		bl	Lcd_Active_Clr
-  50:../main.c     **** 	TS_init();
- 2542              		.loc 1 50 0
- 2543 0078 FEFFFFEB 		bl	TS_init
-  51:../main.c     **** 
-  52:../main.c     **** 	Delay(250);
- 2544              		.loc 1 52 0
- 2545 007c FA00A0E3 		mov	r0, #250
- 2546 0080 FEFFFFEB 		bl	Delay
-  53:../main.c     **** 	/// Pruebas de excepciones ///
-  54:../main.c     **** 	//asm volatile ("SWI 0x55");			//lanzar SWI
-  55:../main.c     **** 	//asm volatile ("mov r3, #3");
-  56:../main.c     **** 	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
-  57:../main.c     **** 	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
-  58:../main.c     **** 
-  59:../main.c     **** 	pasar_a_user();
- 2547              		.loc 1 59 0
- 2548 0084 FEFFFFEB 		bl	pasar_a_user
-  60:../main.c     **** 	//pintar_prueba();
-  61:../main.c     **** 	reversi_main();
- 2549              		.loc 1 61 0
- 2550 0088 FEFFFFEB 		bl	reversi_main
-  62:../main.c     **** 
+  34:../main.c     **** 	asm volatile (" ldr sp, =0xc7ff000 ");
+  35:../main.c     **** 	return;
+  36:../main.c     **** }
+  37:../main.c     **** 
+  38:../main.c     **** /*--- codigo de funciones ---*/
+  39:../main.c     **** void Main(void)
+  40:../main.c     **** {
+ 2474              		.loc 1 40 0
+ 2475              		.cfi_startproc
+ 2476              		@ Function supports interworking.
+ 2477              		@ args = 0, pretend = 0, frame = 0
+ 2478              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2479 0000 0DC0A0E1 		mov	ip, sp
+ 2480              	.LCFI0:
+ 2481              		.cfi_def_cfa_register 12
+ 2482 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2483 0008 04B04CE2 		sub	fp, ip, #4
+ 2484              		.cfi_offset 14, -8
+ 2485              		.cfi_offset 13, -12
+ 2486              		.cfi_offset 11, -16
+ 2487              	.LCFI1:
+ 2488              		.cfi_def_cfa 11, 4
+  41:../main.c     **** 	/* Inicializa controladores */
+  42:../main.c     **** 	sys_init();         				// Inicializacion de la placa, interrupciones y puertos
+ 2489              		.loc 1 42 0
+ 2490 000c FEFFFFEB 		bl	sys_init
+  43:../main.c     **** 	timer_init();	    				// Inicializacion del temporizador
+ 2491              		.loc 1 43 0
+ 2492 0010 FEFFFFEB 		bl	timer_init
+  44:../main.c     **** 	button_iniciar();					// inicializamos los pulsadores. Cada vez que se pulse se verá reflejado en 
+ 2493              		.loc 1 44 0
+ 2494 0014 FEFFFFEB 		bl	button_iniciar
+  45:../main.c     **** 	D8Led_init();      					// inicializamos el 8led
+ 2495              		.loc 1 45 0
+ 2496 0018 FEFFFFEB 		bl	D8Led_init
+  46:../main.c     **** 	cola_depuracion_inicializar(32);	// Debe darse un tamaño suficiente para almacenar todos los event
+ 2497              		.loc 1 46 0
+ 2498 001c 2000A0E3 		mov	r0, #32
+ 2499 0020 FEFFFFEB 		bl	cola_depuracion_inicializar
+  47:../main.c     **** 	Gestion_excepciones_init();			// Inicializa la gestión de excepciones SWI, UNDEF y DABORT
+ 2500              		.loc 1 47 0
+ 2501 0024 FEFFFFEB 		bl	Gestion_excepciones_init
+  48:../main.c     **** 	Lcd_Init();
+ 2502              		.loc 1 48 0
+ 2503 0028 FEFFFFEB 		bl	Lcd_Init
+  49:../main.c     **** 	Lcd_Clr();
+ 2504              		.loc 1 49 0
+ 2505 002c FEFFFFEB 		bl	Lcd_Clr
+  50:../main.c     **** 	Lcd_Active_Clr();
+ 2506              		.loc 1 50 0
+ 2507 0030 FEFFFFEB 		bl	Lcd_Active_Clr
+  51:../main.c     **** 	TS_init();
+ 2508              		.loc 1 51 0
+ 2509 0034 FEFFFFEB 		bl	TS_init
+ 2510              	.LBB4:
+ 2511              	.LBB5:
+  30:../main.c     **** 	asm volatile (" mrs %0, cpsr\n" : "=r" (_cpsr));
+ 2512              		.loc 1 30 0
+ 2513              	@ 30 "../main.c" 1
+ 2514 0038 00100FE1 		 mrs r1, cpsr
+ 2515              	
+ 2516              	@ 0 "" 2
+ 2517              	.LVL0:
+  31:../main.c     **** 	_cpsr &= 0xFFFFFFE0;
+ 2518              		.loc 1 31 0
+ 2519 003c 1F00C1E3 		bic	r0, r1, #31
+ 2520              	.LVL1:
+  32:../main.c     **** 	_cpsr |= 0x00000010;
+ 2521              		.loc 1 32 0
+ 2522 0040 103080E3 		orr	r3, r0, #16
+  33:../main.c     **** 	asm volatile (" msr cpsr,%0\n" :: "r" (_cpsr));
+ 2523              		.loc 1 33 0
+ 2524              	@ 33 "../main.c" 1
+ 2525 0044 03F029E1 		 msr cpsr,r3
+ 2526              	
+ 2527              	@ 0 "" 2
+  34:../main.c     **** 	asm volatile (" ldr sp, =0xc7ff000 ");
+ 2528              		.loc 1 34 0
+ 2529              	@ 34 "../main.c" 1
+ 2530 0048 0CD09FE5 		 ldr sp, =0xc7ff000 
+ 2531              	@ 0 "" 2
+ 2532              	.LBE5:
+ 2533              	.LBE4:
+  52:../main.c     **** 
+  53:../main.c     **** 	//Delay(250);
+  54:../main.c     **** 	/// Pruebas de excepciones ///
+  55:../main.c     **** 	//asm volatile ("SWI 0x55");			//lanzar SWI
+  56:../main.c     **** 	//asm volatile ("mov r3, #3");
+  57:../main.c     **** 	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
+  58:../main.c     **** 	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
+  59:../main.c     **** 
+  60:../main.c     **** 	pasar_a_user();
+  61:../main.c     **** 	//pintar_prueba();
+  62:../main.c     **** 	reversi_main();
+ 2534              		.loc 1 62 0
+ 2535 004c FEFFFFEB 		bl	reversi_main
+ 2536              	.LVL2:
   63:../main.c     **** 
-  64:../main.c     **** 	//// pruebas automáticas de timer2 ////
-  65:../main.c     **** 	//pruebas_timer2();
-  66:../main.c     **** 
-  67:../main.c     **** 	//// pruebas automáticas de patron_volteo ////
-  68:../main.c     **** 	//patron_volteo_prueba_resultado_igual();
-  69:../main.c     **** 	//patron_volteo_prueba_resultado_correcto();
-  70:../main.c     **** 
+  64:../main.c     **** 
+  65:../main.c     **** 	//// pruebas automáticas de timer2 ////
+  66:../main.c     **** 	//pruebas_timer2();
+  67:../main.c     **** 
+  68:../main.c     **** 	//// pruebas automáticas de patron_volteo ////
+  69:../main.c     **** 	//patron_volteo_prueba_resultado_igual();
+  70:../main.c     **** 	//patron_volteo_prueba_resultado_correcto();
   71:../main.c     **** 
-  72:../main.c     **** 	/* Valor inicial de los leds */
-  73:../main.c     **** 	//leds_off();
-  74:../main.c     **** 	//led1_on();
-  75:../main.c     **** }
- 2551              		.loc 1 75 0
- 2552 008c 0CD04BE2 		sub	sp, fp, #12
- 2553 0090 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2554 0094 1EFF2FE1 		bx	lr
- 2555              		.cfi_endproc
- 2556              	.LFE1:
- 2558              	.Letext0:
+  72:../main.c     **** 
+  73:../main.c     **** 	/* Valor inicial de los leds */
+  74:../main.c     **** 	//leds_off();
+  75:../main.c     **** 	//led1_on();
+  76:../main.c     **** }
+ 2537              		.loc 1 76 0
+ 2538 0050 0CD04BE2 		sub	sp, fp, #12
+ 2539 0054 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2540 0058 1EFF2FE1 		bx	lr
+ 2541              		.cfi_endproc
+ 2542              	.LFE1:
+ 2544              		.comm	CheckTSP,4,4
+ 2545              		.comm	oneTouch,4,4
+ 2546              		.comm	Vx,4,4
+ 2547              		.comm	Vy,4,4
+ 2548              		.comm	Xmax,4,4
+ 2549              		.comm	Ymax,4,4
+ 2550              		.comm	Xmin,4,4
+ 2551              		.comm	Ymin,4,4
+ 2552              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
+C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2469   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2472   .text:00000000 Main
                             *COM*:00000004 CheckTSP
                             *COM*:00000004 oneTouch
                             *COM*:00000004 Vx
@@ -197,9 +186,7 @@ DEFINED SYMBOLS
                             *COM*:00000004 Ymax
                             *COM*:00000004 Xmin
                             *COM*:00000004 Ymin
-C:\Users\pjper\AppData\Local\Temp\cc7Y5DU7.s:2454   .text:00000000 $a
-C:\Users\pjper\AppData\Local\Temp\cc7Y5DU7.s:2457   .text:00000000 pasar_a_user
-C:\Users\pjper\AppData\Local\Temp\cc7Y5DU7.s:2506   .text:00000044 Main
+C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2553   .text:0000005c $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
@@ -213,5 +200,4 @@ Lcd_Init
 Lcd_Clr
 Lcd_Active_Clr
 TS_init
-Delay
 reversi_main

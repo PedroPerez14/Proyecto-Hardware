@@ -24,17 +24,18 @@
 #include "elementos_pantalla.h"
 #include <stdint.h>
 
-inline void pasar_a_user()
+static volatile inline void pasar_a_user()
 {
 	uint32_t _cpsr;
 	asm volatile (" mrs %0, cpsr\n" : "=r" (_cpsr));
 	_cpsr &= 0xFFFFFFE0;
 	_cpsr |= 0x00000010;
 	asm volatile (" msr cpsr,%0\n" :: "r" (_cpsr));
+	asm volatile (" ldr sp, =0xc7ff000 ");
+	return;
 }
 
 /*--- codigo de funciones ---*/
-//extern void Lcd_Test();
 void Main(void)
 {
 	/* Inicializa controladores */
@@ -49,7 +50,7 @@ void Main(void)
 	Lcd_Active_Clr();
 	TS_init();
 
-	Delay(250);
+	//Delay(250);
 	/// Pruebas de excepciones ///
 	//asm volatile ("SWI 0x55");			//lanzar SWI
 	//asm volatile ("mov r3, #3");

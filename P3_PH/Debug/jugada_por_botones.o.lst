@@ -6,66 +6,15 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"jugada_por_botones.c"
   21              	.Ltext0:
   22              		.file 1 "../jugada_por_botones.c"
- 2174              	jugada_botones:
- 2175 0000 00       		.space	1
- 2176 0001 000000   		.align	2
- 2177              	ev_bot_izq:
- 2178 0004 00000000 		.space	4
- 2179              		.align	2
- 2180              	ev_bot_der:
- 2181 0008 00000000 		.space	4
- 2182              		.align	2
- 2183              	ev_tp:
- 2184 000c 00000000 		.space	4
- 2185              	mi_fila:
- 2186 0010 00       		.space	1
- 2187              	mi_columna:
- 2188 0011 00       		.space	1
- 2189              		.global	haciendo_DMA
- 2190 0012 0000     		.align	2
- 2193              	haciendo_DMA:
- 2194 0014 00000000 		.space	4
- 2195              		.align	2
- 2196              	ev_timer:
- 2197 0018 00000000 		.space	4
- 2198              	final:
- 2199 001c 00       		.space	1
- 2200 001d 000000   		.align	2
- 2201              	tiempo_calc:
- 2202 0020 00000000 		.space	4
- 2203              		.align	2
- 2204              	tiempo_total:
- 2205 0024 00000000 		.space	4
- 2206              		.align	2
- 2207              	tiempo_pv:
- 2208 0028 00000000 		.space	4
- 2209              		.align	2
- 2210              	veces_pv:
- 2211 002c 00000000 		.space	4
- 2212              		.align	2
- 2213              	tablero_actual:
- 2214 0030 00000000 		.space	64
- 2214      00000000 
- 2214      00000000 
- 2214      00000000 
- 2214      00000000 
- 2215              		.align	2
- 2216              	tablero_anterior:
- 2217 0070 00000000 		.space	64
- 2217      00000000 
- 2217      00000000 
- 2217      00000000 
- 2217      00000000 
- 2218              		.text
- 2219              		.align	2
- 2220              		.global	inicializar_jugada_botones
- 2222              	inicializar_jugada_botones:
- 2223              	.LFB0:
+ 2197              		.align	2
+ 2198              		.global	contar_fichas_final
+ 2200              	contar_fichas_final:
+ 2201              	.LFB10:
    1:../jugada_por_botones.c **** /*********************************************************************************************
    2:../jugada_por_botones.c **** * Fichero:		jugada_por_botones.c
    3:../jugada_por_botones.c **** * Autor:		Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
@@ -101,7 +50,7 @@
   33:../jugada_por_botones.c **** static enum final_partida final;	//Determina si la partida ha terminado, y cómo lo ha hecho: Por em
   34:../jugada_por_botones.c **** /* PROFILING */
   35:../jugada_por_botones.c **** static int tiempo_calc = 0;
-  36:../jugada_por_botones.c **** static int tiempo_total = 0;
+  36:../jugada_por_botones.c **** volatile static int tiempo_total = 0;
   37:../jugada_por_botones.c **** static int tiempo_pv = 0;
   38:../jugada_por_botones.c **** static int veces_pv = 0;
   39:../jugada_por_botones.c **** /* TABLEROS PARA ACTUALIZAR SOLO LAS FICHAS NECESARIAS */
@@ -113,1455 +62,2460 @@
   45:../jugada_por_botones.c **** 
   46:../jugada_por_botones.c **** void inicializar_jugada_botones()
   47:../jugada_por_botones.c **** {
- 2224              		.loc 1 47 0
- 2225              		.cfi_startproc
- 2226              		@ Function supports interworking.
- 2227              		@ args = 0, pretend = 0, frame = 0
- 2228              		@ frame_needed = 1, uses_anonymous_args = 0
- 2229 0000 0DC0A0E1 		mov	ip, sp
- 2230              	.LCFI0:
- 2231              		.cfi_def_cfa_register 12
- 2232 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2233 0008 04B04CE2 		sub	fp, ip, #4
- 2234              		.cfi_offset 14, -8
- 2235              		.cfi_offset 13, -12
- 2236              		.cfi_offset 11, -16
- 2237              	.LCFI1:
- 2238              		.cfi_def_cfa 11, 4
   48:../jugada_por_botones.c **** 	reversi8_inicializar();
- 2239              		.loc 1 48 0
- 2240 000c FEFFFFEB 		bl	reversi8_inicializar
   49:../jugada_por_botones.c **** 	haciendo_DMA = 1;
- 2241              		.loc 1 49 0
- 2242 0010 B4309FE5 		ldr	r3, .L2
- 2243 0014 0120A0E3 		mov	r2, #1
- 2244 0018 002083E5 		str	r2, [r3, #0]
   50:../jugada_por_botones.c **** 	mi_fila = 0;
- 2245              		.loc 1 50 0
- 2246 001c AC309FE5 		ldr	r3, .L2+4
- 2247 0020 0020A0E3 		mov	r2, #0
- 2248 0024 0020C3E5 		strb	r2, [r3, #0]
   51:../jugada_por_botones.c **** 	mi_columna = 0;
- 2249              		.loc 1 51 0
- 2250 0028 A4309FE5 		ldr	r3, .L2+8
- 2251 002c 0020A0E3 		mov	r2, #0
- 2252 0030 0020C3E5 		strb	r2, [r3, #0]
   52:../jugada_por_botones.c **** 	ev_bot_izq = 0;
- 2253              		.loc 1 52 0
- 2254 0034 9C309FE5 		ldr	r3, .L2+12
- 2255 0038 0020A0E3 		mov	r2, #0
- 2256 003c 002083E5 		str	r2, [r3, #0]
   53:../jugada_por_botones.c **** 	ev_bot_der = 0;
- 2257              		.loc 1 53 0
- 2258 0040 94309FE5 		ldr	r3, .L2+16
- 2259 0044 0020A0E3 		mov	r2, #0
- 2260 0048 002083E5 		str	r2, [r3, #0]
   54:../jugada_por_botones.c **** 	ev_tp = 0;
- 2261              		.loc 1 54 0
- 2262 004c 8C309FE5 		ldr	r3, .L2+20
- 2263 0050 0020A0E3 		mov	r2, #0
- 2264 0054 002083E5 		str	r2, [r3, #0]
   55:../jugada_por_botones.c **** 	ev_timer = 0;
- 2265              		.loc 1 55 0
- 2266 0058 84309FE5 		ldr	r3, .L2+24
- 2267 005c 0020A0E3 		mov	r2, #0
- 2268 0060 002083E5 		str	r2, [r3, #0]
   56:../jugada_por_botones.c **** 	final = no_fin;
- 2269              		.loc 1 56 0
- 2270 0064 7C309FE5 		ldr	r3, .L2+28
- 2271 0068 0020A0E3 		mov	r2, #0
- 2272 006c 0020C3E5 		strb	r2, [r3, #0]
   57:../jugada_por_botones.c **** 	tiempo_calc = 0;
- 2273              		.loc 1 57 0
- 2274 0070 74309FE5 		ldr	r3, .L2+32
- 2275 0074 0020A0E3 		mov	r2, #0
- 2276 0078 002083E5 		str	r2, [r3, #0]
   58:../jugada_por_botones.c **** 	tiempo_total = 0;
- 2277              		.loc 1 58 0
- 2278 007c 6C309FE5 		ldr	r3, .L2+36
- 2279 0080 0020A0E3 		mov	r2, #0
- 2280 0084 002083E5 		str	r2, [r3, #0]
   59:../jugada_por_botones.c **** 	tiempo_pv = 0;
- 2281              		.loc 1 59 0
- 2282 0088 64309FE5 		ldr	r3, .L2+40
- 2283 008c 0020A0E3 		mov	r2, #0
- 2284 0090 002083E5 		str	r2, [r3, #0]
   60:../jugada_por_botones.c **** 	veces_pv = 0;
- 2285              		.loc 1 60 0
- 2286 0094 5C309FE5 		ldr	r3, .L2+44
- 2287 0098 0020A0E3 		mov	r2, #0
- 2288 009c 002083E5 		str	r2, [r3, #0]
   61:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
- 2289              		.loc 1 61 0
- 2290 00a0 54009FE5 		ldr	r0, .L2+48
- 2291 00a4 FEFFFFEB 		bl	obtener_tablero
   62:../jugada_por_botones.c **** 	obtener_tablero(tablero_anterior);
- 2292              		.loc 1 62 0
- 2293 00a8 50009FE5 		ldr	r0, .L2+52
- 2294 00ac FEFFFFEB 		bl	obtener_tablero
   63:../jugada_por_botones.c **** 	jugada_botones = Reglas;
- 2295              		.loc 1 63 0
- 2296 00b0 4C309FE5 		ldr	r3, .L2+56
- 2297 00b4 0020A0E3 		mov	r2, #0
- 2298 00b8 0020C3E5 		strb	r2, [r3, #0]
   64:../jugada_por_botones.c **** 	pintar_reglas();
- 2299              		.loc 1 64 0
- 2300 00bc FEFFFFEB 		bl	pintar_reglas
   65:../jugada_por_botones.c **** }
- 2301              		.loc 1 65 0
- 2302 00c0 0CD04BE2 		sub	sp, fp, #12
- 2303 00c4 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2304 00c8 1EFF2FE1 		bx	lr
- 2305              	.L3:
- 2306              		.align	2
- 2307              	.L2:
- 2308 00cc 00000000 		.word	haciendo_DMA
- 2309 00d0 10000000 		.word	mi_fila
- 2310 00d4 11000000 		.word	mi_columna
- 2311 00d8 04000000 		.word	ev_bot_izq
- 2312 00dc 08000000 		.word	ev_bot_der
- 2313 00e0 0C000000 		.word	ev_tp
- 2314 00e4 18000000 		.word	ev_timer
- 2315 00e8 1C000000 		.word	final
- 2316 00ec 20000000 		.word	tiempo_calc
- 2317 00f0 24000000 		.word	tiempo_total
- 2318 00f4 28000000 		.word	tiempo_pv
- 2319 00f8 2C000000 		.word	veces_pv
- 2320 00fc 30000000 		.word	tablero_actual
- 2321 0100 70000000 		.word	tablero_anterior
- 2322 0104 00000000 		.word	jugada_botones
- 2323              		.cfi_endproc
- 2324              	.LFE0:
- 2326              		.align	2
- 2327              		.global	jugada_por_botones
- 2329              	jugada_por_botones:
- 2330              	.LFB1:
   66:../jugada_por_botones.c **** 
   67:../jugada_por_botones.c **** void jugada_por_botones()
   68:../jugada_por_botones.c **** {
- 2331              		.loc 1 68 0
- 2332              		.cfi_startproc
- 2333              		@ Function supports interworking.
- 2334              		@ args = 0, pretend = 0, frame = 16
- 2335              		@ frame_needed = 1, uses_anonymous_args = 0
- 2336 0108 0DC0A0E1 		mov	ip, sp
- 2337              	.LCFI2:
- 2338              		.cfi_def_cfa_register 12
- 2339 010c 10D82DE9 		stmfd	sp!, {r4, fp, ip, lr, pc}
- 2340 0110 04B04CE2 		sub	fp, ip, #4
- 2341              		.cfi_offset 14, -8
- 2342              		.cfi_offset 13, -12
- 2343              		.cfi_offset 11, -16
- 2344              		.cfi_offset 4, -20
- 2345              	.LCFI3:
- 2346              		.cfi_def_cfa 11, 4
- 2347 0114 14D04DE2 		sub	sp, sp, #20
   69:../jugada_por_botones.c **** 	switch(jugada_botones)
- 2348              		.loc 1 69 0
- 2349 0118 AC359FE5 		ldr	r3, .L34
- 2350 011c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2351 0120 000053E3 		cmp	r3, #0
- 2352 0124 0200000A 		beq	.L6
- 2353 0128 010053E3 		cmp	r3, #1
- 2354 012c 2100000A 		beq	.L7
- 2355 0130 4C0100EA 		b	.L27
- 2356              	.L6:
   70:../jugada_por_botones.c **** 	{
   71:../jugada_por_botones.c **** 	case Reglas:
   72:../jugada_por_botones.c **** 		if(ev_bot_der > 0)
- 2357              		.loc 1 72 0
- 2358 0134 94359FE5 		ldr	r3, .L34+4
- 2359 0138 003093E5 		ldr	r3, [r3, #0]
- 2360 013c 000053E3 		cmp	r3, #0
- 2361 0140 020000DA 		ble	.L8
   73:../jugada_por_botones.c **** 		{
   74:../jugada_por_botones.c **** 			ev_bot_der = 0;
- 2362              		.loc 1 74 0
- 2363 0144 84359FE5 		ldr	r3, .L34+4
- 2364 0148 0020A0E3 		mov	r2, #0
- 2365 014c 002083E5 		str	r2, [r3, #0]
- 2366              	.L8:
   75:../jugada_por_botones.c **** 		}
   76:../jugada_por_botones.c **** 		if(ev_bot_izq > 0)
- 2367              		.loc 1 76 0
- 2368 0150 7C359FE5 		ldr	r3, .L34+8
- 2369 0154 003093E5 		ldr	r3, [r3, #0]
- 2370 0158 000053E3 		cmp	r3, #0
- 2371 015c 020000DA 		ble	.L9
   77:../jugada_por_botones.c **** 		{
   78:../jugada_por_botones.c **** 			ev_bot_izq = 0;
- 2372              		.loc 1 78 0
- 2373 0160 6C359FE5 		ldr	r3, .L34+8
- 2374 0164 0020A0E3 		mov	r2, #0
- 2375 0168 002083E5 		str	r2, [r3, #0]
- 2376              	.L9:
   79:../jugada_por_botones.c **** 		}
   80:../jugada_por_botones.c **** 		if(ev_tp == 1)
- 2377              		.loc 1 80 0
- 2378 016c 64359FE5 		ldr	r3, .L34+12
- 2379 0170 003093E5 		ldr	r3, [r3, #0]
- 2380 0174 010053E3 		cmp	r3, #1
- 2381 0178 4501001A 		bne	.L28
   81:../jugada_por_botones.c **** 		{
   82:../jugada_por_botones.c **** 			ev_tp = 0;
- 2382              		.loc 1 82 0
- 2383 017c 54359FE5 		ldr	r3, .L34+12
- 2384 0180 0020A0E3 		mov	r2, #0
- 2385 0184 002083E5 		str	r2, [r3, #0]
   83:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
- 2386              		.loc 1 83 0
- 2387 0188 4C359FE5 		ldr	r3, .L34+16
- 2388 018c 003093E5 		ldr	r3, [r3, #0]
- 2389 0190 000053E3 		cmp	r3, #0
- 2390 0194 4001001A 		bne	.L29
   84:../jugada_por_botones.c **** 			{
   85:../jugada_por_botones.c **** 				haciendo_DMA = 1;
- 2391              		.loc 1 85 0
- 2392 0198 3C359FE5 		ldr	r3, .L34+16
- 2393 019c 0120A0E3 		mov	r2, #1
- 2394 01a0 002083E5 		str	r2, [r3, #0]
   86:../jugada_por_botones.c **** 				jugada_botones = Jugando;
- 2395              		.loc 1 86 0
- 2396 01a4 20359FE5 		ldr	r3, .L34
- 2397 01a8 0120A0E3 		mov	r2, #1
- 2398 01ac 0020C3E5 		strb	r2, [r3, #0]
   87:../jugada_por_botones.c **** 				pintar_jugando();
- 2399              		.loc 1 87 0
- 2400 01b0 FEFFFFEB 		bl	pintar_jugando
   88:../jugada_por_botones.c **** 			}
   89:../jugada_por_botones.c **** 		}
   90:../jugada_por_botones.c **** 		break;
- 2401              		.loc 1 90 0
- 2402 01b4 410100EA 		b	.L4
- 2403              	.L7:
   91:../jugada_por_botones.c **** 	case Jugando:
   92:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && final != no_fin)
- 2404              		.loc 1 92 0
- 2405 01b8 1C359FE5 		ldr	r3, .L34+16
- 2406 01bc 003093E5 		ldr	r3, [r3, #0]
- 2407 01c0 000053E3 		cmp	r3, #0
- 2408 01c4 2800001A 		bne	.L12
- 2409              		.loc 1 92 0 is_stmt 0 discriminator 1
- 2410 01c8 10359FE5 		ldr	r3, .L34+20
- 2411 01cc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2412 01d0 000053E3 		cmp	r3, #0
- 2413 01d4 2400000A 		beq	.L12
   93:../jugada_por_botones.c **** 		{
   94:../jugada_por_botones.c **** 			haciendo_DMA = 1;
- 2414              		.loc 1 94 0 is_stmt 1
- 2415 01d8 FC349FE5 		ldr	r3, .L34+16
- 2416 01dc 0120A0E3 		mov	r2, #1
- 2417 01e0 002083E5 		str	r2, [r3, #0]
   95:../jugada_por_botones.c **** 			if(final == jugador_gana)
- 2418              		.loc 1 95 0
- 2419 01e4 F4349FE5 		ldr	r3, .L34+20
- 2420 01e8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2421 01ec 010053E3 		cmp	r3, #1
- 2422 01f0 0700001A 		bne	.L13
   96:../jugada_por_botones.c **** 			{
   97:../jugada_por_botones.c **** 				pintar_fin_victoria(contar_blancas(), contar_negras());
- 2423              		.loc 1 97 0
- 2424 01f4 FEFFFFEB 		bl	contar_blancas
- 2425 01f8 0040A0E1 		mov	r4, r0
- 2426 01fc FEFFFFEB 		bl	contar_negras
- 2427 0200 0030A0E1 		mov	r3, r0
- 2428 0204 0400A0E1 		mov	r0, r4
- 2429 0208 0310A0E1 		mov	r1, r3
- 2430 020c FEFFFFEB 		bl	pintar_fin_victoria
- 2431 0210 120000EA 		b	.L14
- 2432              	.L13:
   98:../jugada_por_botones.c **** 			}
   99:../jugada_por_botones.c **** 			else if(final == cpu_gana)
- 2433              		.loc 1 99 0
- 2434 0214 C4349FE5 		ldr	r3, .L34+20
- 2435 0218 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2436 021c 020053E3 		cmp	r3, #2
- 2437 0220 0700001A 		bne	.L15
  100:../jugada_por_botones.c **** 			{
  101:../jugada_por_botones.c **** 				pintar_fin_derrota(contar_blancas(), contar_negras());
- 2438              		.loc 1 101 0
- 2439 0224 FEFFFFEB 		bl	contar_blancas
- 2440 0228 0040A0E1 		mov	r4, r0
- 2441 022c FEFFFFEB 		bl	contar_negras
- 2442 0230 0030A0E1 		mov	r3, r0
- 2443 0234 0400A0E1 		mov	r0, r4
- 2444 0238 0310A0E1 		mov	r1, r3
- 2445 023c FEFFFFEB 		bl	pintar_fin_derrota
- 2446 0240 060000EA 		b	.L14
- 2447              	.L15:
  102:../jugada_por_botones.c **** 			}
  103:../jugada_por_botones.c **** 			else	//En caso de empate
  104:../jugada_por_botones.c **** 			{
  105:../jugada_por_botones.c **** 				pintar_fin_empate(contar_blancas(), contar_negras());
- 2448              		.loc 1 105 0
- 2449 0244 FEFFFFEB 		bl	contar_blancas
- 2450 0248 0040A0E1 		mov	r4, r0
- 2451 024c FEFFFFEB 		bl	contar_negras
- 2452 0250 0030A0E1 		mov	r3, r0
- 2453 0254 0400A0E1 		mov	r0, r4
- 2454 0258 0310A0E1 		mov	r1, r3
- 2455 025c FEFFFFEB 		bl	pintar_fin_empate
- 2456              	.L14:
  106:../jugada_por_botones.c **** 			}
  107:../jugada_por_botones.c **** 			jugada_botones = Fin;
- 2457              		.loc 1 107 0
- 2458 0260 64349FE5 		ldr	r3, .L34
- 2459 0264 0220A0E3 		mov	r2, #2
- 2460 0268 0020C3E5 		strb	r2, [r3, #0]
- 2461              	.L12:
  108:../jugada_por_botones.c **** 		}
- 109:../jugada_por_botones.c **** 		if(ev_bot_der == 1)		//Incrementar fila
- 2462              		.loc 1 109 0
- 2463 026c 5C349FE5 		ldr	r3, .L34+4
- 2464 0270 003093E5 		ldr	r3, [r3, #0]
- 2465 0274 010053E3 		cmp	r3, #1
- 2466 0278 3400001A 		bne	.L16
- 2467              	.LBB2:
+ 109:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_timer > 0)
  110:../jugada_por_botones.c **** 		{
- 111:../jugada_por_botones.c **** 			ev_bot_der = 0;
- 2468              		.loc 1 111 0
- 2469 027c 4C349FE5 		ldr	r3, .L34+4
- 2470 0280 0020A0E3 		mov	r2, #0
- 2471 0284 002083E5 		str	r2, [r3, #0]
- 112:../jugada_por_botones.c **** 			int aux = mi_fila;
- 2472              		.loc 1 112 0
- 2473 0288 54349FE5 		ldr	r3, .L34+24
- 2474 028c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2475 0290 18300BE5 		str	r3, [fp, #-24]
- 2476              	.L17:
- 113:../jugada_por_botones.c **** 			do
- 114:../jugada_por_botones.c **** 			{
- 115:../jugada_por_botones.c **** 				mi_fila = ((mi_fila + 1) & 0x7);			//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_co
- 2477              		.loc 1 115 0 discriminator 1
- 2478 0294 48349FE5 		ldr	r3, .L34+24
- 2479 0298 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2480 029c 013083E2 		add	r3, r3, #1
- 2481 02a0 FF3003E2 		and	r3, r3, #255
- 2482 02a4 073003E2 		and	r3, r3, #7
- 2483 02a8 FF2003E2 		and	r2, r3, #255
- 2484 02ac 30349FE5 		ldr	r3, .L34+24
- 2485 02b0 0020C3E5 		strb	r2, [r3, #0]
- 116:../jugada_por_botones.c **** 			}
- 117:../jugada_por_botones.c **** 			while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_c
- 2486              		.loc 1 117 0 discriminator 1
- 2487 02b4 28349FE5 		ldr	r3, .L34+24
- 2488 02b8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2489 02bc 0320A0E1 		mov	r2, r3
- 2490 02c0 20349FE5 		ldr	r3, .L34+28
- 2491 02c4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2492 02c8 0200A0E1 		mov	r0, r2
- 2493 02cc 0310A0E1 		mov	r1, r3
- 2494 02d0 FEFFFFEB 		bl	obtener_ficha_en
- 2495 02d4 0030A0E1 		mov	r3, r0
- 2496 02d8 010053E3 		cmp	r3, #1
- 2497 02dc ECFFFF0A 		beq	.L17
- 2498              		.loc 1 117 0 is_stmt 0 discriminator 2
- 2499 02e0 FC339FE5 		ldr	r3, .L34+24
- 2500 02e4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2501 02e8 0320A0E1 		mov	r2, r3
- 2502 02ec F4339FE5 		ldr	r3, .L34+28
- 2503 02f0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2504 02f4 0200A0E1 		mov	r0, r2
- 2505 02f8 0310A0E1 		mov	r1, r3
- 2506 02fc FEFFFFEB 		bl	obtener_ficha_en
- 2507 0300 0030A0E1 		mov	r3, r0
- 2508 0304 020053E3 		cmp	r3, #2
- 2509 0308 E1FFFF0A 		beq	.L17
- 118:../jugada_por_botones.c **** 
- 119:../jugada_por_botones.c **** 			while(haciendo_DMA != 0)
- 2510              		.loc 1 119 0 is_stmt 1
- 2511 030c 0000A0E1 		mov	r0, r0	@ nop
- 2512              	.L18:
- 2513              		.loc 1 119 0 is_stmt 0 discriminator 1
- 2514 0310 C4339FE5 		ldr	r3, .L34+16
- 2515 0314 003093E5 		ldr	r3, [r3, #0]
- 2516 0318 000053E3 		cmp	r3, #0
- 2517 031c FBFFFF1A 		bne	.L18
- 120:../jugada_por_botones.c **** 			{
- 121:../jugada_por_botones.c **** 			}
- 122:../jugada_por_botones.c **** 			haciendo_DMA = 1;
- 2518              		.loc 1 122 0 is_stmt 1
- 2519 0320 B4339FE5 		ldr	r3, .L34+16
- 2520 0324 0120A0E3 		mov	r2, #1
- 2521 0328 002083E5 		str	r2, [r3, #0]
- 123:../jugada_por_botones.c **** 			//DMA act ficha gris
- 124:../jugada_por_botones.c **** 			mover_gris_abajo(mi_fila, mi_columna, aux);		//Mover en la pantalla
- 2522              		.loc 1 124 0
- 2523 032c B0339FE5 		ldr	r3, .L34+24
- 2524 0330 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2525 0334 0320A0E1 		mov	r2, r3
- 2526 0338 A8339FE5 		ldr	r3, .L34+28
- 2527 033c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2528 0340 0200A0E1 		mov	r0, r2
- 2529 0344 0310A0E1 		mov	r1, r3
- 2530 0348 18201BE5 		ldr	r2, [fp, #-24]
- 2531 034c FEFFFFEB 		bl	mover_gris_abajo
- 2532              	.L16:
- 2533              	.LBE2:
- 125:../jugada_por_botones.c **** 		}
- 126:../jugada_por_botones.c **** 		if(ev_bot_izq == 1)		//Incrementar columna
- 2534              		.loc 1 126 0
- 2535 0350 7C339FE5 		ldr	r3, .L34+8
- 2536 0354 003093E5 		ldr	r3, [r3, #0]
- 2537 0358 010053E3 		cmp	r3, #1
- 2538 035c 3400001A 		bne	.L19
- 2539              	.LBB3:
- 127:../jugada_por_botones.c **** 		{
- 128:../jugada_por_botones.c **** 			ev_bot_izq = 0;
- 2540              		.loc 1 128 0
- 2541 0360 6C339FE5 		ldr	r3, .L34+8
- 2542 0364 0020A0E3 		mov	r2, #0
- 2543 0368 002083E5 		str	r2, [r3, #0]
- 129:../jugada_por_botones.c **** 			int aux = mi_columna;
- 2544              		.loc 1 129 0
- 2545 036c 74339FE5 		ldr	r3, .L34+28
- 2546 0370 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2547 0374 1C300BE5 		str	r3, [fp, #-28]
- 2548              	.L20:
- 130:../jugada_por_botones.c **** 			do
- 131:../jugada_por_botones.c **** 			{
- 132:../jugada_por_botones.c **** 				mi_columna = ((mi_columna + 1) & 0x7);		//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = n
- 2549              		.loc 1 132 0 discriminator 1
- 2550 0378 68339FE5 		ldr	r3, .L34+28
- 2551 037c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2552 0380 013083E2 		add	r3, r3, #1
- 2553 0384 FF3003E2 		and	r3, r3, #255
- 2554 0388 073003E2 		and	r3, r3, #7
- 2555 038c FF2003E2 		and	r2, r3, #255
- 2556 0390 50339FE5 		ldr	r3, .L34+28
- 2557 0394 0020C3E5 		strb	r2, [r3, #0]
- 133:../jugada_por_botones.c **** 			}
- 134:../jugada_por_botones.c **** 			while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_c
- 2558              		.loc 1 134 0 discriminator 1
- 2559 0398 44339FE5 		ldr	r3, .L34+24
- 2560 039c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2561 03a0 0320A0E1 		mov	r2, r3
- 2562 03a4 3C339FE5 		ldr	r3, .L34+28
- 2563 03a8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2564 03ac 0200A0E1 		mov	r0, r2
- 2565 03b0 0310A0E1 		mov	r1, r3
- 2566 03b4 FEFFFFEB 		bl	obtener_ficha_en
- 2567 03b8 0030A0E1 		mov	r3, r0
- 2568 03bc 010053E3 		cmp	r3, #1
- 2569 03c0 ECFFFF0A 		beq	.L20
- 2570              		.loc 1 134 0 is_stmt 0 discriminator 2
- 2571 03c4 18339FE5 		ldr	r3, .L34+24
- 2572 03c8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2573 03cc 0320A0E1 		mov	r2, r3
- 2574 03d0 10339FE5 		ldr	r3, .L34+28
- 2575 03d4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2576 03d8 0200A0E1 		mov	r0, r2
- 2577 03dc 0310A0E1 		mov	r1, r3
- 2578 03e0 FEFFFFEB 		bl	obtener_ficha_en
- 2579 03e4 0030A0E1 		mov	r3, r0
- 2580 03e8 020053E3 		cmp	r3, #2
- 2581 03ec E1FFFF0A 		beq	.L20
- 135:../jugada_por_botones.c **** 
- 136:../jugada_por_botones.c **** 			while(haciendo_DMA != 0)		//TODO espera activa que nos ha dicho dario, retrasamos llegar a ella 
- 2582              		.loc 1 136 0 is_stmt 1
- 2583 03f0 0000A0E1 		mov	r0, r0	@ nop
- 2584              	.L21:
- 2585              		.loc 1 136 0 is_stmt 0 discriminator 1
- 2586 03f4 E0329FE5 		ldr	r3, .L34+16
- 2587 03f8 003093E5 		ldr	r3, [r3, #0]
- 2588 03fc 000053E3 		cmp	r3, #0
- 2589 0400 FBFFFF1A 		bne	.L21
- 137:../jugada_por_botones.c **** 			{								//	pero con -O3 creo que esto va a dar dolor de cabeza
- 138:../jugada_por_botones.c **** 			}
- 139:../jugada_por_botones.c **** 			haciendo_DMA = 1;
- 2590              		.loc 1 139 0 is_stmt 1
- 2591 0404 D0329FE5 		ldr	r3, .L34+16
- 2592 0408 0120A0E3 		mov	r2, #1
- 2593 040c 002083E5 		str	r2, [r3, #0]
- 140:../jugada_por_botones.c **** 			mover_gris_derecha(mi_fila, mi_columna, aux);	//Mover en la pantalla
- 2594              		.loc 1 140 0
- 2595 0410 CC329FE5 		ldr	r3, .L34+24
- 2596 0414 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2597 0418 0320A0E1 		mov	r2, r3
- 2598 041c C4329FE5 		ldr	r3, .L34+28
- 2599 0420 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2600 0424 0200A0E1 		mov	r0, r2
- 2601 0428 0310A0E1 		mov	r1, r3
- 2602 042c 1C201BE5 		ldr	r2, [fp, #-28]
- 2603 0430 FEFFFFEB 		bl	mover_gris_derecha
- 2604              	.L19:
- 2605              	.LBE3:
- 141:../jugada_por_botones.c **** 		}
- 142:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_timer > 0)
- 2606              		.loc 1 142 0
- 2607 0434 A0329FE5 		ldr	r3, .L34+16
- 2608 0438 003093E5 		ldr	r3, [r3, #0]
- 2609 043c 000053E3 		cmp	r3, #0
- 2610 0440 1A00001A 		bne	.L22
- 2611              		.loc 1 142 0 is_stmt 0 discriminator 1
- 2612 0444 A0329FE5 		ldr	r3, .L34+32
- 2613 0448 003093E5 		ldr	r3, [r3, #0]
- 2614 044c 000053E3 		cmp	r3, #0
- 2615 0450 160000DA 		ble	.L22
- 143:../jugada_por_botones.c **** 		{
- 144:../jugada_por_botones.c **** 			ev_timer--;
- 2616              		.loc 1 144 0 is_stmt 1
- 2617 0454 90329FE5 		ldr	r3, .L34+32
- 2618 0458 003093E5 		ldr	r3, [r3, #0]
- 2619 045c 012043E2 		sub	r2, r3, #1
- 2620 0460 84329FE5 		ldr	r3, .L34+32
- 2621 0464 002083E5 		str	r2, [r3, #0]
- 145:../jugada_por_botones.c **** 			//Actualizar tiempo total
- 146:../jugada_por_botones.c **** 			tiempo_total++;
- 2622              		.loc 1 146 0
- 2623 0468 80329FE5 		ldr	r3, .L34+36
- 2624 046c 003093E5 		ldr	r3, [r3, #0]
- 2625 0470 012083E2 		add	r2, r3, #1
- 2626 0474 74329FE5 		ldr	r3, .L34+36
- 2627 0478 002083E5 		str	r2, [r3, #0]
- 147:../jugada_por_botones.c **** 			//DMA act pantalla con nuevos tiempos
- 148:../jugada_por_botones.c **** 			pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
- 2628              		.loc 1 148 0
- 2629 047c 6C329FE5 		ldr	r3, .L34+36
- 2630 0480 000093E5 		ldr	r0, [r3, #0]
- 2631 0484 68329FE5 		ldr	r3, .L34+40
- 2632 0488 001093E5 		ldr	r1, [r3, #0]
- 2633 048c 64329FE5 		ldr	r3, .L34+44
- 2634 0490 002093E5 		ldr	r2, [r3, #0]
- 2635 0494 60329FE5 		ldr	r3, .L34+48
- 2636 0498 003093E5 		ldr	r3, [r3, #0]
- 2637 049c FEFFFFEB 		bl	pintar_profiling
- 149:../jugada_por_botones.c **** 			haciendo_DMA = 1;
- 2638              		.loc 1 149 0
- 2639 04a0 34329FE5 		ldr	r3, .L34+16
- 2640 04a4 0120A0E3 		mov	r2, #1
- 2641 04a8 002083E5 		str	r2, [r3, #0]
- 150:../jugada_por_botones.c **** 			iniciar_DMA();
- 2642              		.loc 1 150 0
- 2643 04ac FEFFFFEB 		bl	iniciar_DMA
- 2644              	.L22:
- 151:../jugada_por_botones.c **** 		}
- 152:../jugada_por_botones.c **** 		if(ev_tp == 1)
- 2645              		.loc 1 152 0
- 2646 04b0 20329FE5 		ldr	r3, .L34+12
- 2647 04b4 003093E5 		ldr	r3, [r3, #0]
- 2648 04b8 010053E3 		cmp	r3, #1
- 2649 04bc 7800001A 		bne	.L30
- 153:../jugada_por_botones.c **** 		{
- 154:../jugada_por_botones.c **** 			ev_tp = 0;
- 2650              		.loc 1 154 0
- 2651 04c0 10329FE5 		ldr	r3, .L34+12
- 2652 04c4 0020A0E3 		mov	r2, #0
- 2653 04c8 002083E5 		str	r2, [r3, #0]
- 155:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
- 2654              		.loc 1 155 0
- 2655 04cc 08329FE5 		ldr	r3, .L34+16
- 2656 04d0 003093E5 		ldr	r3, [r3, #0]
- 2657 04d4 000053E3 		cmp	r3, #0
- 2658 04d8 7300001A 		bne	.L31
- 2659              	.LBB4:
- 156:../jugada_por_botones.c **** 			{
- 157:../jugada_por_botones.c **** 				unsigned int delta1 = timer2_leer();
- 2660              		.loc 1 157 0
- 2661 04dc FEFFFFEB 		bl	timer2_leer
- 2662 04e0 20000BE5 		str	r0, [fp, #-32]
- 158:../jugada_por_botones.c **** 				reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de proce
- 2663              		.loc 1 158 0
- 2664 04e4 F8319FE5 		ldr	r3, .L34+24
- 2665 04e8 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
- 2666 04ec F4319FE5 		ldr	r3, .L34+28
- 2667 04f0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2668 04f4 0200A0E1 		mov	r0, r2
- 2669 04f8 0310A0E1 		mov	r1, r3
- 2670 04fc FEFFFFEB 		bl	reversi_procesar
- 159:../jugada_por_botones.c **** 				unsigned int delta2 = timer2_leer();
- 2671              		.loc 1 159 0
- 2672 0500 FEFFFFEB 		bl	timer2_leer
- 2673 0504 24000BE5 		str	r0, [fp, #-36]
- 160:../jugada_por_botones.c **** 				tiempo_calc += (delta2-delta1);
- 2674              		.loc 1 160 0
- 2675 0508 24201BE5 		ldr	r2, [fp, #-36]
- 2676 050c 20301BE5 		ldr	r3, [fp, #-32]
- 2677 0510 022063E0 		rsb	r2, r3, r2
- 2678 0514 D8319FE5 		ldr	r3, .L34+40
- 2679 0518 003093E5 		ldr	r3, [r3, #0]
- 2680 051c 033082E0 		add	r3, r2, r3
- 2681 0520 0320A0E1 		mov	r2, r3
- 2682 0524 C8319FE5 		ldr	r3, .L34+40
- 2683 0528 002083E5 		str	r2, [r3, #0]
- 161:../jugada_por_botones.c **** 				if(obtener_jugada_valida() == 1)
- 2684              		.loc 1 161 0
- 2685 052c FEFFFFEB 		bl	obtener_jugada_valida
- 2686 0530 0030A0E1 		mov	r3, r0
- 2687 0534 010053E3 		cmp	r3, #1
- 2688 0538 2900001A 		bne	.L24
- 2689              	.LBB5:
- 162:../jugada_por_botones.c **** 				{
- 163:../jugada_por_botones.c **** 					borrar_ficha(mi_fila, mi_columna);
- 2690              		.loc 1 163 0
- 2691 053c A0319FE5 		ldr	r3, .L34+24
- 2692 0540 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2693 0544 0320A0E1 		mov	r2, r3
- 2694 0548 98319FE5 		ldr	r3, .L34+28
- 2695 054c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2696 0550 0200A0E1 		mov	r0, r2
- 2697 0554 0310A0E1 		mov	r1, r3
- 2698 0558 FEFFFFEB 		bl	borrar_ficha
- 164:../jugada_por_botones.c **** 					actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y vo
- 2699              		.loc 1 164 0
- 2700 055c 9C319FE5 		ldr	r3, .L34+52
- 2701 0560 0FE0A0E1 		mov	lr, pc
- 2702 0564 13FF2FE1 		bx	r3
- 165:../jugada_por_botones.c **** 					reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera 
- 2703              		.loc 1 165 0
- 2704 0568 94319FE5 		ldr	r3, .L34+56
- 2705 056c 0FE0A0E1 		mov	lr, pc
- 2706 0570 13FF2FE1 		bx	r3
- 166:../jugada_por_botones.c **** 					//obtener datos de profiling
- 167:../jugada_por_botones.c **** 					tiempo_pv += reversi_t_pv();
- 2707              		.loc 1 167 0
- 2708 0574 FEFFFFEB 		bl	reversi_t_pv
- 2709 0578 0020A0E1 		mov	r2, r0
- 2710 057c 74319FE5 		ldr	r3, .L34+44
- 2711 0580 003093E5 		ldr	r3, [r3, #0]
- 2712 0584 032082E0 		add	r2, r2, r3
- 2713 0588 68319FE5 		ldr	r3, .L34+44
- 2714 058c 002083E5 		str	r2, [r3, #0]
- 168:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
- 2715              		.loc 1 168 0
- 2716 0590 FEFFFFEB 		bl	reversi_veces_pv
- 2717 0594 0020A0E1 		mov	r2, r0
- 2718 0598 5C319FE5 		ldr	r3, .L34+48
- 2719 059c 003093E5 		ldr	r3, [r3, #0]
- 2720 05a0 032082E0 		add	r2, r2, r3
- 2721 05a4 50319FE5 		ldr	r3, .L34+48
- 2722 05a8 002083E5 		str	r2, [r3, #0]
- 169:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
- 2723              		.loc 1 169 0
- 2724 05ac 3C319FE5 		ldr	r3, .L34+36
- 2725 05b0 000093E5 		ldr	r0, [r3, #0]
- 2726 05b4 38319FE5 		ldr	r3, .L34+40
- 2727 05b8 001093E5 		ldr	r1, [r3, #0]
- 2728 05bc 34319FE5 		ldr	r3, .L34+44
- 2729 05c0 002093E5 		ldr	r2, [r3, #0]
- 2730 05c4 30319FE5 		ldr	r3, .L34+48
- 2731 05c8 003093E5 		ldr	r3, [r3, #0]
- 2732 05cc FEFFFFEB 		bl	pintar_profiling
- 170:../jugada_por_botones.c **** 					haciendo_DMA = 1;
- 2733              		.loc 1 170 0
- 2734 05d0 04319FE5 		ldr	r3, .L34+16
- 2735 05d4 0120A0E3 		mov	r2, #1
- 2736 05d8 002083E5 		str	r2, [r3, #0]
- 171:../jugada_por_botones.c **** 					iniciar_DMA();
- 2737              		.loc 1 171 0
- 2738 05dc FEFFFFEB 		bl	iniciar_DMA
- 2739 05e0 1A0000EA 		b	.L25
- 2740              	.L24:
- 2741              	.LBE5:
- 172:../jugada_por_botones.c **** 				}
- 173:../jugada_por_botones.c **** 				else
- 174:../jugada_por_botones.c **** 				{
- 175:../jugada_por_botones.c **** 					tiempo_pv += reversi_t_pv();
- 2742              		.loc 1 175 0
- 2743 05e4 FEFFFFEB 		bl	reversi_t_pv
- 2744 05e8 0020A0E1 		mov	r2, r0
- 2745 05ec 04319FE5 		ldr	r3, .L34+44
- 2746 05f0 003093E5 		ldr	r3, [r3, #0]
- 2747 05f4 032082E0 		add	r2, r2, r3
- 2748 05f8 F8309FE5 		ldr	r3, .L34+44
- 2749 05fc 002083E5 		str	r2, [r3, #0]
- 176:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
- 2750              		.loc 1 176 0
- 2751 0600 FEFFFFEB 		bl	reversi_veces_pv
- 2752 0604 0020A0E1 		mov	r2, r0
- 2753 0608 EC309FE5 		ldr	r3, .L34+48
- 2754 060c 003093E5 		ldr	r3, [r3, #0]
- 2755 0610 032082E0 		add	r2, r2, r3
- 2756 0614 E0309FE5 		ldr	r3, .L34+48
- 2757 0618 002083E5 		str	r2, [r3, #0]
- 177:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
- 2758              		.loc 1 177 0
- 2759 061c CC309FE5 		ldr	r3, .L34+36
- 2760 0620 000093E5 		ldr	r0, [r3, #0]
- 2761 0624 C8309FE5 		ldr	r3, .L34+40
- 2762 0628 001093E5 		ldr	r1, [r3, #0]
- 2763 062c C4309FE5 		ldr	r3, .L34+44
- 2764 0630 002093E5 		ldr	r2, [r3, #0]
- 2765 0634 C0309FE5 		ldr	r3, .L34+48
- 2766 0638 003093E5 		ldr	r3, [r3, #0]
- 2767 063c FEFFFFEB 		bl	pintar_profiling
- 178:../jugada_por_botones.c **** 					haciendo_DMA = 1;
- 2768              		.loc 1 178 0
- 2769 0640 94309FE5 		ldr	r3, .L34+16
- 2770 0644 0120A0E3 		mov	r2, #1
- 2771 0648 002083E5 		str	r2, [r3, #0]
- 179:../jugada_por_botones.c **** 					iniciar_DMA();
- 2772              		.loc 1 179 0
- 2773 064c FEFFFFEB 		bl	iniciar_DMA
- 2774              	.L25:
- 180:../jugada_por_botones.c **** 				}
- 181:../jugada_por_botones.c **** 				final = obtener_fin();
- 2775              		.loc 1 181 0
- 2776 0650 FEFFFFEB 		bl	obtener_fin
- 2777 0654 0030A0E1 		mov	r3, r0
- 2778 0658 0320A0E1 		mov	r2, r3
- 2779 065c 7C309FE5 		ldr	r3, .L34+20
- 2780 0660 0020C3E5 		strb	r2, [r3, #0]
- 2781              	.LBE4:
- 182:../jugada_por_botones.c **** 			}
- 183:../jugada_por_botones.c **** 		}
- 184:../jugada_por_botones.c **** 		break;
- 2782              		.loc 1 184 0
- 2783 0664 150000EA 		b	.L4
- 2784              	.L27:
- 185:../jugada_por_botones.c **** 	default:	//case Fin
- 186:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado inicial del autóm
- 2785              		.loc 1 186 0
- 2786 0668 6C309FE5 		ldr	r3, .L34+16
- 2787 066c 003093E5 		ldr	r3, [r3, #0]
- 2788 0670 000053E3 		cmp	r3, #0
- 2789 0674 0E00001A 		bne	.L32
- 2790              		.loc 1 186 0 is_stmt 0 discriminator 1
- 2791 0678 58309FE5 		ldr	r3, .L34+12
- 2792 067c 003093E5 		ldr	r3, [r3, #0]
- 2793 0680 010053E3 		cmp	r3, #1
- 2794 0684 0C00001A 		bne	.L33
- 187:../jugada_por_botones.c **** 		{
- 188:../jugada_por_botones.c **** 			Lcd_Clr();
- 2795              		.loc 1 188 0 is_stmt 1
- 2796 0688 FEFFFFEB 		bl	Lcd_Clr
- 189:../jugada_por_botones.c **** 			inicializar_jugada_botones();
- 2797              		.loc 1 189 0
- 2798 068c FEFFFFEB 		bl	inicializar_jugada_botones
- 190:../jugada_por_botones.c **** 		}
- 191:../jugada_por_botones.c **** 		break;
- 2799              		.loc 1 191 0
- 2800 0690 0A0000EA 		b	.L4
- 2801              	.L28:
-  90:../jugada_por_botones.c **** 		break;
- 2802              		.loc 1 90 0
- 2803 0694 0000A0E1 		mov	r0, r0	@ nop
- 2804 0698 080000EA 		b	.L4
- 2805              	.L29:
- 2806 069c 0000A0E1 		mov	r0, r0	@ nop
- 2807 06a0 060000EA 		b	.L4
- 2808              	.L30:
- 184:../jugada_por_botones.c **** 		break;
- 2809              		.loc 1 184 0
- 2810 06a4 0000A0E1 		mov	r0, r0	@ nop
- 2811 06a8 040000EA 		b	.L4
- 2812              	.L31:
- 2813 06ac 0000A0E1 		mov	r0, r0	@ nop
- 2814 06b0 020000EA 		b	.L4
- 2815              	.L32:
- 2816              		.loc 1 191 0
- 2817 06b4 0000A0E1 		mov	r0, r0	@ nop
- 2818 06b8 000000EA 		b	.L4
- 2819              	.L33:
- 2820 06bc 0000A0E1 		mov	r0, r0	@ nop
- 2821              	.L4:
- 192:../jugada_por_botones.c **** 	}
- 193:../jugada_por_botones.c **** }
- 2822              		.loc 1 193 0
- 2823 06c0 10D04BE2 		sub	sp, fp, #16
- 2824 06c4 10689DE8 		ldmfd	sp, {r4, fp, sp, lr}
- 2825 06c8 1EFF2FE1 		bx	lr
- 2826              	.L35:
- 2827              		.align	2
- 2828              	.L34:
- 2829 06cc 00000000 		.word	jugada_botones
- 2830 06d0 08000000 		.word	ev_bot_der
- 2831 06d4 04000000 		.word	ev_bot_izq
- 2832 06d8 0C000000 		.word	ev_tp
- 2833 06dc 00000000 		.word	haciendo_DMA
- 2834 06e0 1C000000 		.word	final
- 2835 06e4 10000000 		.word	mi_fila
- 2836 06e8 11000000 		.word	mi_columna
- 2837 06ec 18000000 		.word	ev_timer
- 2838 06f0 24000000 		.word	tiempo_total
- 2839 06f4 20000000 		.word	tiempo_calc
- 2840 06f8 28000000 		.word	tiempo_pv
- 2841 06fc 2C000000 		.word	veces_pv
- 2842 0700 00000000 		.word	actualizar_movimientos_pantalla
- 2843 0704 00000000 		.word	reiniciar_posicion_gris
- 2844              		.cfi_endproc
- 2845              	.LFE1:
- 2847              		.align	2
- 2848              		.global	jugada_ev_tsp
- 2850              	jugada_ev_tsp:
- 2851              	.LFB2:
- 194:../jugada_por_botones.c **** 
- 195:../jugada_por_botones.c **** //Se llama cuando se pulsa en tsp, confirmando la jugada
- 196:../jugada_por_botones.c **** void jugada_ev_tsp()
- 197:../jugada_por_botones.c **** {
- 2852              		.loc 1 197 0
- 2853              		.cfi_startproc
- 2854              		@ Function supports interworking.
- 2855              		@ args = 0, pretend = 0, frame = 0
- 2856              		@ frame_needed = 1, uses_anonymous_args = 0
- 2857 0708 0DC0A0E1 		mov	ip, sp
- 2858              	.LCFI4:
- 2859              		.cfi_def_cfa_register 12
- 2860 070c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2861 0710 04B04CE2 		sub	fp, ip, #4
- 2862              		.cfi_offset 14, -8
- 2863              		.cfi_offset 13, -12
- 2864              		.cfi_offset 11, -16
- 2865              	.LCFI5:
- 2866              		.cfi_def_cfa 11, 4
- 198:../jugada_por_botones.c **** 	ev_tp = 1;
- 2867              		.loc 1 198 0
- 2868 0714 14309FE5 		ldr	r3, .L37
- 2869 0718 0120A0E3 		mov	r2, #1
- 2870 071c 002083E5 		str	r2, [r3, #0]
- 199:../jugada_por_botones.c **** 	jugada_por_botones();
- 2871              		.loc 1 199 0
- 2872 0720 FEFFFFEB 		bl	jugada_por_botones
- 200:../jugada_por_botones.c **** }
- 2873              		.loc 1 200 0
- 2874 0724 0CD04BE2 		sub	sp, fp, #12
- 2875 0728 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2876 072c 1EFF2FE1 		bx	lr
- 2877              	.L38:
- 2878              		.align	2
- 2879              	.L37:
- 2880 0730 0C000000 		.word	ev_tp
- 2881              		.cfi_endproc
- 2882              	.LFE2:
- 2884              		.align	2
- 2885              		.global	jugada_ev_der
- 2887              	jugada_ev_der:
- 2888              	.LFB3:
- 201:../jugada_por_botones.c **** 
- 202:../jugada_por_botones.c **** //Se llama cuando el botón derecho es pulsado, para tratar el evento
- 203:../jugada_por_botones.c **** void jugada_ev_der()
- 204:../jugada_por_botones.c **** {
- 2889              		.loc 1 204 0
- 2890              		.cfi_startproc
- 2891              		@ Function supports interworking.
- 2892              		@ args = 0, pretend = 0, frame = 0
- 2893              		@ frame_needed = 1, uses_anonymous_args = 0
- 2894 0734 0DC0A0E1 		mov	ip, sp
- 2895              	.LCFI6:
- 2896              		.cfi_def_cfa_register 12
- 2897 0738 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2898 073c 04B04CE2 		sub	fp, ip, #4
- 2899              		.cfi_offset 14, -8
- 2900              		.cfi_offset 13, -12
- 2901              		.cfi_offset 11, -16
- 2902              	.LCFI7:
- 2903              		.cfi_def_cfa 11, 4
- 205:../jugada_por_botones.c **** 	ev_bot_der = 1;
- 2904              		.loc 1 205 0
- 2905 0740 14309FE5 		ldr	r3, .L40
- 2906 0744 0120A0E3 		mov	r2, #1
- 2907 0748 002083E5 		str	r2, [r3, #0]
- 206:../jugada_por_botones.c **** 	jugada_por_botones();
- 2908              		.loc 1 206 0
- 2909 074c FEFFFFEB 		bl	jugada_por_botones
- 207:../jugada_por_botones.c **** }
- 2910              		.loc 1 207 0
- 2911 0750 0CD04BE2 		sub	sp, fp, #12
- 2912 0754 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2913 0758 1EFF2FE1 		bx	lr
- 2914              	.L41:
- 2915              		.align	2
- 2916              	.L40:
- 2917 075c 08000000 		.word	ev_bot_der
- 2918              		.cfi_endproc
- 2919              	.LFE3:
- 2921              		.align	2
- 2922              		.global	jugada_ev_izq
- 2924              	jugada_ev_izq:
- 2925              	.LFB4:
- 208:../jugada_por_botones.c **** 
- 209:../jugada_por_botones.c **** //Se llama cuando, por autoincremento o por pulsación nueva,
- 210:../jugada_por_botones.c **** //	hay que incrementar el valor del 8Led y la variable asociada a él.
- 211:../jugada_por_botones.c **** void jugada_ev_izq()
- 212:../jugada_por_botones.c **** {
- 2926              		.loc 1 212 0
- 2927              		.cfi_startproc
- 2928              		@ Function supports interworking.
- 2929              		@ args = 0, pretend = 0, frame = 0
- 2930              		@ frame_needed = 1, uses_anonymous_args = 0
- 2931 0760 0DC0A0E1 		mov	ip, sp
- 2932              	.LCFI8:
- 2933              		.cfi_def_cfa_register 12
- 2934 0764 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2935 0768 04B04CE2 		sub	fp, ip, #4
- 2936              		.cfi_offset 14, -8
- 2937              		.cfi_offset 13, -12
- 2938              		.cfi_offset 11, -16
- 2939              	.LCFI9:
- 2940              		.cfi_def_cfa 11, 4
- 213:../jugada_por_botones.c **** 	ev_bot_izq = 1;
- 2941              		.loc 1 213 0
- 2942 076c 14309FE5 		ldr	r3, .L43
- 2943 0770 0120A0E3 		mov	r2, #1
- 2944 0774 002083E5 		str	r2, [r3, #0]
- 214:../jugada_por_botones.c **** 	jugada_por_botones();
- 2945              		.loc 1 214 0
- 2946 0778 FEFFFFEB 		bl	jugada_por_botones
- 215:../jugada_por_botones.c **** }
- 2947              		.loc 1 215 0
- 2948 077c 0CD04BE2 		sub	sp, fp, #12
- 2949 0780 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2950 0784 1EFF2FE1 		bx	lr
- 2951              	.L44:
- 2952              		.align	2
- 2953              	.L43:
- 2954 0788 04000000 		.word	ev_bot_izq
- 2955              		.cfi_endproc
- 2956              	.LFE4:
- 2958              		.align	2
- 2959              		.global	jugada_ev_timer
- 2961              	jugada_ev_timer:
- 2962              	.LFB5:
- 216:../jugada_por_botones.c **** //Se llama cuando haya que incrementar la cuenta de tiempo de juego en segundos
- 217:../jugada_por_botones.c **** void jugada_ev_timer()
- 218:../jugada_por_botones.c **** {
- 2963              		.loc 1 218 0
- 2964              		.cfi_startproc
- 2965              		@ Function supports interworking.
- 2966              		@ args = 0, pretend = 0, frame = 0
- 2967              		@ frame_needed = 1, uses_anonymous_args = 0
- 2968 078c 0DC0A0E1 		mov	ip, sp
- 2969              	.LCFI10:
- 2970              		.cfi_def_cfa_register 12
- 2971 0790 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2972 0794 04B04CE2 		sub	fp, ip, #4
- 2973              		.cfi_offset 14, -8
- 2974              		.cfi_offset 13, -12
- 2975              		.cfi_offset 11, -16
- 2976              	.LCFI11:
- 2977              		.cfi_def_cfa 11, 4
- 219:../jugada_por_botones.c **** 	ev_timer++;
- 2978              		.loc 1 219 0
- 2979 0798 1C309FE5 		ldr	r3, .L46
- 2980 079c 003093E5 		ldr	r3, [r3, #0]
- 2981 07a0 012083E2 		add	r2, r3, #1
- 2982 07a4 10309FE5 		ldr	r3, .L46
- 2983 07a8 002083E5 		str	r2, [r3, #0]
- 220:../jugada_por_botones.c **** 	jugada_por_botones();
- 2984              		.loc 1 220 0
- 2985 07ac FEFFFFEB 		bl	jugada_por_botones
- 221:../jugada_por_botones.c **** }
- 2986              		.loc 1 221 0
- 2987 07b0 0CD04BE2 		sub	sp, fp, #12
- 2988 07b4 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2989 07b8 1EFF2FE1 		bx	lr
- 2990              	.L47:
- 2991              		.align	2
- 2992              	.L46:
- 2993 07bc 18000000 		.word	ev_timer
- 2994              		.cfi_endproc
- 2995              	.LFE5:
- 2997              		.align	2
- 2998              		.global	termina_DMA
- 3000              	termina_DMA:
- 3001              	.LFB6:
- 222:../jugada_por_botones.c **** 
- 223:../jugada_por_botones.c **** //Se llama para avisar al autómata de que la transferencia por DMA ha terminado
- 224:../jugada_por_botones.c **** void termina_DMA()
- 225:../jugada_por_botones.c **** {
- 3002              		.loc 1 225 0
- 3003              		.cfi_startproc
- 3004              		@ Function supports interworking.
- 3005              		@ args = 0, pretend = 0, frame = 0
- 3006              		@ frame_needed = 1, uses_anonymous_args = 0
- 3007 07c0 0DC0A0E1 		mov	ip, sp
- 3008              	.LCFI12:
- 3009              		.cfi_def_cfa_register 12
- 3010 07c4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3011 07c8 04B04CE2 		sub	fp, ip, #4
- 3012              		.cfi_offset 14, -8
- 3013              		.cfi_offset 13, -12
- 3014              		.cfi_offset 11, -16
- 3015              	.LCFI13:
- 3016              		.cfi_def_cfa 11, 4
- 226:../jugada_por_botones.c **** 	haciendo_DMA = 0;
- 3017              		.loc 1 226 0
- 3018 07cc 14309FE5 		ldr	r3, .L49
- 3019 07d0 0020A0E3 		mov	r2, #0
- 3020 07d4 002083E5 		str	r2, [r3, #0]
- 227:../jugada_por_botones.c **** 	jugada_por_botones();
- 3021              		.loc 1 227 0
- 3022 07d8 FEFFFFEB 		bl	jugada_por_botones
- 228:../jugada_por_botones.c **** }
- 3023              		.loc 1 228 0
- 3024 07dc 0CD04BE2 		sub	sp, fp, #12
- 3025 07e0 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3026 07e4 1EFF2FE1 		bx	lr
- 3027              	.L50:
- 3028              		.align	2
- 3029              	.L49:
- 3030 07e8 00000000 		.word	haciendo_DMA
- 3031              		.cfi_endproc
- 3032              	.LFE6:
- 3034              		.align	2
- 3035              		.global	reiniciar_posicion_gris
- 3037              	reiniciar_posicion_gris:
- 3038              	.LFB7:
- 229:../jugada_por_botones.c **** 
- 230:../jugada_por_botones.c **** 
- 231:../jugada_por_botones.c **** //Se llama tras hacer un movimiento
- 232:../jugada_por_botones.c **** //	Devuelve la ficha gris a 0,0 o a la siguiente posición libre del tablero,
- 233:../jugada_por_botones.c **** //	para hacer la siguiente jugada.
- 234:../jugada_por_botones.c **** void reiniciar_posicion_gris()
- 235:../jugada_por_botones.c **** {
- 3039              		.loc 1 235 0
- 3040              		.cfi_startproc
- 3041              		@ Function supports interworking.
- 3042              		@ args = 0, pretend = 0, frame = 16
- 3043              		@ frame_needed = 1, uses_anonymous_args = 0
- 3044 07ec 0DC0A0E1 		mov	ip, sp
- 3045              	.LCFI14:
- 3046              		.cfi_def_cfa_register 12
- 3047 07f0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3048 07f4 04B04CE2 		sub	fp, ip, #4
- 3049              		.cfi_offset 14, -8
- 3050              		.cfi_offset 13, -12
- 3051              		.cfi_offset 11, -16
- 3052              	.LCFI15:
- 3053              		.cfi_def_cfa 11, 4
- 3054 07f8 10D04DE2 		sub	sp, sp, #16
- 236:../jugada_por_botones.c **** 	mi_fila = 0;
- 3055              		.loc 1 236 0
- 3056 07fc F4309FE5 		ldr	r3, .L59
- 3057 0800 0020A0E3 		mov	r2, #0
- 3058 0804 0020C3E5 		strb	r2, [r3, #0]
- 237:../jugada_por_botones.c **** 	mi_columna = 0;
- 3059              		.loc 1 237 0
- 3060 0808 EC309FE5 		ldr	r3, .L59+4
- 3061 080c 0020A0E3 		mov	r2, #0
- 3062 0810 0020C3E5 		strb	r2, [r3, #0]
- 238:../jugada_por_botones.c **** 	int i,j;
- 239:../jugada_por_botones.c **** 	int fin_bucle = 0;
- 3063              		.loc 1 239 0
- 3064 0814 0030A0E3 		mov	r3, #0
- 3065 0818 18300BE5 		str	r3, [fp, #-24]
- 240:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
- 3066              		.loc 1 240 0
- 3067 081c 0030A0E3 		mov	r3, #0
- 3068 0820 10300BE5 		str	r3, [fp, #-16]
- 3069 0824 210000EA 		b	.L52
- 3070              	.L58:
- 241:../jugada_por_botones.c **** 	{
- 242:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
- 3071              		.loc 1 242 0
- 3072 0828 0030A0E3 		mov	r3, #0
- 3073 082c 14300BE5 		str	r3, [fp, #-20]
- 3074 0830 150000EA 		b	.L53
- 3075              	.L56:
- 243:../jugada_por_botones.c **** 		{
- 244:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
- 3076              		.loc 1 244 0
- 3077 0834 C4209FE5 		ldr	r2, .L59+8
- 3078 0838 10301BE5 		ldr	r3, [fp, #-16]
- 3079 083c 8311A0E1 		mov	r1, r3, asl #3
- 3080 0840 14301BE5 		ldr	r3, [fp, #-20]
- 3081 0844 033081E0 		add	r3, r1, r3
- 3082 0848 033082E0 		add	r3, r2, r3
- 3083 084c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 3084 0850 000053E3 		cmp	r3, #0
- 3085 0854 0900001A 		bne	.L54
- 245:../jugada_por_botones.c **** 			{
- 246:../jugada_por_botones.c **** 				mi_fila = i;
- 3086              		.loc 1 246 0
- 3087 0858 10301BE5 		ldr	r3, [fp, #-16]
- 3088 085c FF2003E2 		and	r2, r3, #255
- 3089 0860 90309FE5 		ldr	r3, .L59
- 3090 0864 0020C3E5 		strb	r2, [r3, #0]
- 247:../jugada_por_botones.c **** 				mi_columna = j;
- 3091              		.loc 1 247 0
- 3092 0868 14301BE5 		ldr	r3, [fp, #-20]
- 3093 086c FF2003E2 		and	r2, r3, #255
- 3094 0870 84309FE5 		ldr	r3, .L59+4
- 3095 0874 0020C3E5 		strb	r2, [r3, #0]
- 248:../jugada_por_botones.c **** 				fin_bucle = 1;
- 3096              		.loc 1 248 0
- 3097 0878 0130A0E3 		mov	r3, #1
- 3098 087c 18300BE5 		str	r3, [fp, #-24]
- 3099              	.L54:
- 242:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
- 3100              		.loc 1 242 0
- 3101 0880 14301BE5 		ldr	r3, [fp, #-20]
- 3102 0884 013083E2 		add	r3, r3, #1
- 3103 0888 14300BE5 		str	r3, [fp, #-20]
- 3104              	.L53:
- 242:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
- 3105              		.loc 1 242 0 is_stmt 0 discriminator 1
- 3106 088c 14301BE5 		ldr	r3, [fp, #-20]
- 3107 0890 070053E3 		cmp	r3, #7
- 3108 0894 020000CA 		bgt	.L55
- 242:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
- 3109              		.loc 1 242 0 discriminator 2
- 3110 0898 18301BE5 		ldr	r3, [fp, #-24]
- 3111 089c 000053E3 		cmp	r3, #0
- 3112 08a0 E3FFFF0A 		beq	.L56
- 3113              	.L55:
- 240:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
- 3114              		.loc 1 240 0 is_stmt 1
- 3115 08a4 10301BE5 		ldr	r3, [fp, #-16]
- 3116 08a8 013083E2 		add	r3, r3, #1
- 3117 08ac 10300BE5 		str	r3, [fp, #-16]
- 3118              	.L52:
- 240:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
- 3119              		.loc 1 240 0 is_stmt 0 discriminator 1
- 3120 08b0 10301BE5 		ldr	r3, [fp, #-16]
- 3121 08b4 070053E3 		cmp	r3, #7
- 3122 08b8 020000CA 		bgt	.L57
- 240:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
- 3123              		.loc 1 240 0 discriminator 2
- 3124 08bc 18301BE5 		ldr	r3, [fp, #-24]
- 3125 08c0 000053E3 		cmp	r3, #0
- 3126 08c4 D7FFFF0A 		beq	.L58
- 3127              	.L57:
- 249:../jugada_por_botones.c **** 			}
- 250:../jugada_por_botones.c **** 		}
- 251:../jugada_por_botones.c **** 	}
- 252:../jugada_por_botones.c **** 	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
- 3128              		.loc 1 252 0 is_stmt 1
- 3129 08c8 28309FE5 		ldr	r3, .L59
- 3130 08cc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 3131 08d0 0320A0E1 		mov	r2, r3
- 3132 08d4 20309FE5 		ldr	r3, .L59+4
- 3133 08d8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 3134 08dc 0200A0E1 		mov	r0, r2
- 3135 08e0 0310A0E1 		mov	r1, r3
- 3136 08e4 0320A0E3 		mov	r2, #3
- 3137 08e8 FEFFFFEB 		bl	pintar_ficha
- 253:../jugada_por_botones.c **** }	
- 3138              		.loc 1 253 0
- 3139 08ec 0CD04BE2 		sub	sp, fp, #12
- 3140 08f0 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3141 08f4 1EFF2FE1 		bx	lr
- 3142              	.L60:
- 3143              		.align	2
- 3144              	.L59:
- 3145 08f8 10000000 		.word	mi_fila
- 3146 08fc 11000000 		.word	mi_columna
- 3147 0900 30000000 		.word	tablero_actual
- 3148              		.cfi_endproc
- 3149              	.LFE7:
- 3151              		.align	2
- 3152              		.global	actualizar_movimientos_pantalla
- 3154              	actualizar_movimientos_pantalla:
- 3155              	.LFB8:
- 254:../jugada_por_botones.c **** 
- 255:../jugada_por_botones.c **** void actualizar_movimientos_pantalla()
- 256:../jugada_por_botones.c **** {
- 3156              		.loc 1 256 0
- 3157              		.cfi_startproc
- 3158              		@ Function supports interworking.
- 3159              		@ args = 0, pretend = 0, frame = 8
- 3160              		@ frame_needed = 1, uses_anonymous_args = 0
- 3161 0904 0DC0A0E1 		mov	ip, sp
- 3162              	.LCFI16:
- 3163              		.cfi_def_cfa_register 12
- 3164 0908 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3165 090c 04B04CE2 		sub	fp, ip, #4
- 3166              		.cfi_offset 14, -8
- 3167              		.cfi_offset 13, -12
- 3168              		.cfi_offset 11, -16
- 3169              	.LCFI17:
- 3170              		.cfi_def_cfa 11, 4
- 3171 0910 08D04DE2 		sub	sp, sp, #8
- 257:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
- 3172              		.loc 1 257 0
- 3173 0914 04019FE5 		ldr	r0, .L67
- 3174 0918 FEFFFFEB 		bl	obtener_tablero
- 258:../jugada_por_botones.c **** 	int i,j;
- 259:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
- 3175              		.loc 1 259 0
- 3176 091c 0030A0E3 		mov	r3, #0
- 3177 0920 10300BE5 		str	r3, [fp, #-16]
- 3178 0924 370000EA 		b	.L62
- 3179              	.L66:
- 260:../jugada_por_botones.c **** 	{
- 261:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas; j++)
- 3180              		.loc 1 261 0
- 3181 0928 0030A0E3 		mov	r3, #0
- 3182 092c 14300BE5 		str	r3, [fp, #-20]
- 3183 0930 2E0000EA 		b	.L63
- 3184              	.L65:
- 262:../jugada_por_botones.c **** 		{
- 263:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
- 3185              		.loc 1 263 0
- 3186 0934 E4209FE5 		ldr	r2, .L67
- 3187 0938 10301BE5 		ldr	r3, [fp, #-16]
- 3188 093c 8311A0E1 		mov	r1, r3, asl #3
- 3189 0940 14301BE5 		ldr	r3, [fp, #-20]
- 3190 0944 033081E0 		add	r3, r1, r3
- 3191 0948 033082E0 		add	r3, r2, r3
- 3192 094c 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
- 3193 0950 CC109FE5 		ldr	r1, .L67+4
- 3194 0954 10301BE5 		ldr	r3, [fp, #-16]
- 3195 0958 8301A0E1 		mov	r0, r3, asl #3
- 3196 095c 14301BE5 		ldr	r3, [fp, #-20]
- 3197 0960 033080E0 		add	r3, r0, r3
- 3198 0964 033081E0 		add	r3, r1, r3
- 3199 0968 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 3200 096c 030052E1 		cmp	r2, r3
- 3201 0970 1B00000A 		beq	.L64
- 264:../jugada_por_botones.c **** 			{
- 265:../jugada_por_botones.c **** 				borrar_ficha(i,j);
- 3202              		.loc 1 265 0
- 3203 0974 10001BE5 		ldr	r0, [fp, #-16]
- 3204 0978 14101BE5 		ldr	r1, [fp, #-20]
- 3205 097c FEFFFFEB 		bl	borrar_ficha
- 266:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
- 3206              		.loc 1 266 0
- 3207 0980 98209FE5 		ldr	r2, .L67
- 3208 0984 10301BE5 		ldr	r3, [fp, #-16]
- 3209 0988 8311A0E1 		mov	r1, r3, asl #3
- 3210 098c 14301BE5 		ldr	r3, [fp, #-20]
- 3211 0990 033081E0 		add	r3, r1, r3
- 3212 0994 033082E0 		add	r3, r2, r3
- 3213 0998 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 3214 099c 10001BE5 		ldr	r0, [fp, #-16]
- 3215 09a0 14101BE5 		ldr	r1, [fp, #-20]
- 3216 09a4 0320A0E1 		mov	r2, r3
- 3217 09a8 FEFFFFEB 		bl	pintar_ficha
- 267:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
- 3218              		.loc 1 267 0
- 3219 09ac 6C209FE5 		ldr	r2, .L67
- 3220 09b0 10301BE5 		ldr	r3, [fp, #-16]
- 3221 09b4 8311A0E1 		mov	r1, r3, asl #3
- 3222 09b8 14301BE5 		ldr	r3, [fp, #-20]
- 3223 09bc 033081E0 		add	r3, r1, r3
- 3224 09c0 033082E0 		add	r3, r2, r3
- 3225 09c4 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
- 3226 09c8 54109FE5 		ldr	r1, .L67+4
- 3227 09cc 10301BE5 		ldr	r3, [fp, #-16]
- 3228 09d0 8301A0E1 		mov	r0, r3, asl #3
- 3229 09d4 14301BE5 		ldr	r3, [fp, #-20]
- 3230 09d8 033080E0 		add	r3, r0, r3
- 3231 09dc 033081E0 		add	r3, r1, r3
- 3232 09e0 0020C3E5 		strb	r2, [r3, #0]
- 3233              	.L64:
- 261:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas; j++)
- 3234              		.loc 1 261 0
- 3235 09e4 14301BE5 		ldr	r3, [fp, #-20]
- 3236 09e8 013083E2 		add	r3, r3, #1
- 3237 09ec 14300BE5 		str	r3, [fp, #-20]
- 3238              	.L63:
- 261:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas; j++)
- 3239              		.loc 1 261 0 is_stmt 0 discriminator 1
- 3240 09f0 14301BE5 		ldr	r3, [fp, #-20]
- 3241 09f4 070053E3 		cmp	r3, #7
- 3242 09f8 CDFFFFDA 		ble	.L65
- 259:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
- 3243              		.loc 1 259 0 is_stmt 1
- 3244 09fc 10301BE5 		ldr	r3, [fp, #-16]
- 3245 0a00 013083E2 		add	r3, r3, #1
- 3246 0a04 10300BE5 		str	r3, [fp, #-16]
- 3247              	.L62:
- 259:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
- 3248              		.loc 1 259 0 is_stmt 0 discriminator 1
- 3249 0a08 10301BE5 		ldr	r3, [fp, #-16]
- 3250 0a0c 070053E3 		cmp	r3, #7
- 3251 0a10 C4FFFFDA 		ble	.L66
- 268:../jugada_por_botones.c **** 			}
- 269:../jugada_por_botones.c **** 		}
- 270:../jugada_por_botones.c **** 	}
- 271:../jugada_por_botones.c **** }
- 3252              		.loc 1 271 0 is_stmt 1
- 3253 0a14 0CD04BE2 		sub	sp, fp, #12
- 3254 0a18 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3255 0a1c 1EFF2FE1 		bx	lr
- 3256              	.L68:
- 3257              		.align	2
- 3258              	.L67:
- 3259 0a20 30000000 		.word	tablero_actual
- 3260 0a24 70000000 		.word	tablero_anterior
- 3261              		.cfi_endproc
- 3262              	.LFE8:
- 3264              		.align	2
- 3265              		.global	jugada_ev_tecla0
- 3267              	jugada_ev_tecla0:
- 3268              	.LFB9:
- 272:../jugada_por_botones.c **** 
- 273:../jugada_por_botones.c **** void jugada_ev_tecla0(void)		//Pasar turno de jugador
- 274:../jugada_por_botones.c **** {
- 3269              		.loc 1 274 0
- 3270              		.cfi_startproc
- 3271              		@ Function supports interworking.
- 3272              		@ args = 0, pretend = 0, frame = 0
- 3273              		@ frame_needed = 1, uses_anonymous_args = 0
- 3274 0a28 0DC0A0E1 		mov	ip, sp
- 3275              	.LCFI18:
- 3276              		.cfi_def_cfa_register 12
- 3277 0a2c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3278 0a30 04B04CE2 		sub	fp, ip, #4
- 3279              		.cfi_offset 14, -8
- 3280              		.cfi_offset 13, -12
- 3281              		.cfi_offset 11, -16
- 3282              	.LCFI19:
- 3283              		.cfi_def_cfa 11, 4
- 275:../jugada_por_botones.c **** 
- 276:../jugada_por_botones.c **** }
- 3284              		.loc 1 276 0
- 3285 0a34 0CD04BE2 		sub	sp, fp, #12
- 3286 0a38 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3287 0a3c 1EFF2FE1 		bx	lr
- 3288              		.cfi_endproc
- 3289              	.LFE9:
- 3291              		.align	2
- 3292              		.global	jugada_ev_tecla1
- 3294              	jugada_ev_tecla1:
- 3295              	.LFB10:
+ 111:../jugada_por_botones.c **** 			ev_timer--;
+ 112:../jugada_por_botones.c **** 			//Actualizar tiempo total
+ 113:../jugada_por_botones.c **** 			tiempo_total++;
+ 114:../jugada_por_botones.c **** 			//DMA act pantalla con nuevos tiempos
+ 115:../jugada_por_botones.c **** 			pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 116:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 117:../jugada_por_botones.c **** 			iniciar_DMA();
+ 118:../jugada_por_botones.c **** 		}
+ 119:../jugada_por_botones.c **** 		if(ev_bot_der == 1)		//Incrementar fila
+ 120:../jugada_por_botones.c **** 		{
+ 121:../jugada_por_botones.c **** 			ev_bot_der = 0;
+ 122:../jugada_por_botones.c **** 			if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la
+ 123:../jugada_por_botones.c **** 			{
+ 124:../jugada_por_botones.c **** 				contar_fichas_final();
+ 125:../jugada_por_botones.c **** 			}
+ 126:../jugada_por_botones.c **** 			else
+ 127:../jugada_por_botones.c **** 			{
+ 128:../jugada_por_botones.c **** 				volatile int aux = mi_fila;
+ 129:../jugada_por_botones.c **** 				volatile int aux2 = mi_columna;
+ 130:../jugada_por_botones.c **** 				mi_fila = ((mi_fila + 1) % 8);
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 132:../jugada_por_botones.c **** 				{
+ 133:../jugada_por_botones.c **** 					mi_fila = ((mi_fila + 1) % 8);			//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_col
+ 134:../jugada_por_botones.c **** 				}
+ 135:../jugada_por_botones.c **** 				if(mi_fila == aux)							//Si la ficha gris se queda atrapada
+ 136:../jugada_por_botones.c **** 				{
+ 137:../jugada_por_botones.c **** 					volatile int i;
+ 138:../jugada_por_botones.c **** 					volatile int j;
+ 139:../jugada_por_botones.c **** 					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+ 140:../jugada_por_botones.c **** 					{										// se mueve a esa casilla libre para ver si se puede 'liberar'
+ 141:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 142:../jugada_por_botones.c **** 						{
+ 143:../jugada_por_botones.c **** 							if(tablero_actual[i][j] == CASILLA_VACIA)
+ 144:../jugada_por_botones.c **** 							{
+ 145:../jugada_por_botones.c **** 								mi_fila = i;
+ 146:../jugada_por_botones.c **** 								mi_columna = j;
+ 147:../jugada_por_botones.c **** 							}
+ 148:../jugada_por_botones.c **** 						}
+ 149:../jugada_por_botones.c **** 					}
+ 150:../jugada_por_botones.c **** 				}
+ 151:../jugada_por_botones.c **** 				while(haciendo_DMA != 0)
+ 152:../jugada_por_botones.c **** 				{
+ 153:../jugada_por_botones.c **** 				}
+ 154:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 155:../jugada_por_botones.c **** 				//DMA act ficha gris
+ 156:../jugada_por_botones.c **** 				mover_gris(mi_fila, mi_columna, aux, aux2);		//Mover en la pantalla
+ 157:../jugada_por_botones.c **** 			}
+ 158:../jugada_por_botones.c **** 		}
+ 159:../jugada_por_botones.c **** 		if(ev_bot_izq == 1)		//Incrementar columna
+ 160:../jugada_por_botones.c **** 		{
+ 161:../jugada_por_botones.c **** 			ev_bot_izq = 0;
+ 162:../jugada_por_botones.c **** 			if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la
+ 163:../jugada_por_botones.c **** 			{
+ 164:../jugada_por_botones.c **** 				contar_fichas_final();
+ 165:../jugada_por_botones.c **** 			}
+ 166:../jugada_por_botones.c **** 			else
+ 167:../jugada_por_botones.c **** 			{
+ 168:../jugada_por_botones.c **** 				volatile int aux = mi_columna;
+ 169:../jugada_por_botones.c **** 				volatile int aux2 = mi_fila;
+ 170:../jugada_por_botones.c **** 				mi_columna = ((mi_columna + 1) % 8);
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 172:../jugada_por_botones.c **** 				{
+ 173:../jugada_por_botones.c **** 					mi_columna = ((mi_columna + 1) % 8);		//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = nu
+ 174:../jugada_por_botones.c **** 				}
+ 175:../jugada_por_botones.c **** 				if(mi_columna == aux)							//Si la ficha gris se queda atrapada
+ 176:../jugada_por_botones.c **** 				{
+ 177:../jugada_por_botones.c **** 					volatile int i;
+ 178:../jugada_por_botones.c **** 					volatile int j;
+ 179:../jugada_por_botones.c **** 					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+ 180:../jugada_por_botones.c **** 					{										// se mueve a esa casilla libre para ver si se puede 'liberar'
+ 181:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 182:../jugada_por_botones.c **** 						{
+ 183:../jugada_por_botones.c **** 							if(tablero_actual[i][j] == CASILLA_VACIA)
+ 184:../jugada_por_botones.c **** 							{
+ 185:../jugada_por_botones.c **** 								mi_fila = i;
+ 186:../jugada_por_botones.c **** 								mi_columna = j;
+ 187:../jugada_por_botones.c **** 							}
+ 188:../jugada_por_botones.c **** 						}
+ 189:../jugada_por_botones.c **** 					}
+ 190:../jugada_por_botones.c **** 				}
+ 191:../jugada_por_botones.c **** 
+ 192:../jugada_por_botones.c **** 				while(haciendo_DMA != 0)
+ 193:../jugada_por_botones.c **** 				{
+ 194:../jugada_por_botones.c **** 				}
+ 195:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 196:../jugada_por_botones.c **** 				mover_gris(mi_fila, mi_columna, aux2, aux);	//Mover en la pantalla
+ 197:../jugada_por_botones.c **** 			}
+ 198:../jugada_por_botones.c **** 		}
+ 199:../jugada_por_botones.c **** 		if(ev_tp == 1)
+ 200:../jugada_por_botones.c **** 		{
+ 201:../jugada_por_botones.c **** 			ev_tp = 0;
+ 202:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 203:../jugada_por_botones.c **** 			{
+ 204:../jugada_por_botones.c **** 				unsigned int delta1 = timer2_leer();
+ 205:../jugada_por_botones.c **** 				reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de proce
+ 206:../jugada_por_botones.c **** 				unsigned int delta2 = timer2_leer();
+ 207:../jugada_por_botones.c **** 				tiempo_calc += (delta2-delta1);
+ 208:../jugada_por_botones.c **** 				if(obtener_jugada_valida() == 1)
+ 209:../jugada_por_botones.c **** 				{
+ 210:../jugada_por_botones.c **** 					borrar_ficha(mi_fila, mi_columna);
+ 211:../jugada_por_botones.c **** 					actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y vo
+ 212:../jugada_por_botones.c **** 					reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera 
+ 213:../jugada_por_botones.c **** 					//obtener datos de profiling
+ 214:../jugada_por_botones.c **** 					tiempo_pv += reversi_t_pv();
+ 215:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 216:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 217:../jugada_por_botones.c **** 					haciendo_DMA = 1;
+ 218:../jugada_por_botones.c **** 					iniciar_DMA();
+ 219:../jugada_por_botones.c **** 				}
+ 220:../jugada_por_botones.c **** 				else
+ 221:../jugada_por_botones.c **** 				{
+ 222:../jugada_por_botones.c **** 					tiempo_pv += reversi_t_pv();
+ 223:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 224:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 225:../jugada_por_botones.c **** 					haciendo_DMA = 1;
+ 226:../jugada_por_botones.c **** 					iniciar_DMA();
+ 227:../jugada_por_botones.c **** 				}
+ 228:../jugada_por_botones.c **** 				final = obtener_fin();
+ 229:../jugada_por_botones.c **** 			}
+ 230:../jugada_por_botones.c **** 		}
+ 231:../jugada_por_botones.c **** 		break;
+ 232:../jugada_por_botones.c **** 	default:	//case Fin
+ 233:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado inicial del autóm
+ 234:../jugada_por_botones.c **** 		{
+ 235:../jugada_por_botones.c **** 			Lcd_Clr();
+ 236:../jugada_por_botones.c **** 			inicializar_jugada_botones();
+ 237:../jugada_por_botones.c **** 		}
+ 238:../jugada_por_botones.c **** 		break;
+ 239:../jugada_por_botones.c **** 	}
+ 240:../jugada_por_botones.c **** }
+ 241:../jugada_por_botones.c **** 
+ 242:../jugada_por_botones.c **** //Se llama cuando se pulsa en tsp, confirmando la jugada
+ 243:../jugada_por_botones.c **** void jugada_ev_tsp()
+ 244:../jugada_por_botones.c **** {
+ 245:../jugada_por_botones.c **** 	ev_tp = 1;
+ 246:../jugada_por_botones.c **** 	jugada_por_botones();
+ 247:../jugada_por_botones.c **** }
+ 248:../jugada_por_botones.c **** 
+ 249:../jugada_por_botones.c **** //Se llama cuando el botón derecho es pulsado, para tratar el evento
+ 250:../jugada_por_botones.c **** void jugada_ev_der()
+ 251:../jugada_por_botones.c **** {
+ 252:../jugada_por_botones.c **** 	ev_bot_der = 1;
+ 253:../jugada_por_botones.c **** 	jugada_por_botones();
+ 254:../jugada_por_botones.c **** }
+ 255:../jugada_por_botones.c **** 
+ 256:../jugada_por_botones.c **** //Se llama cuando, por autoincremento o por pulsación nueva,
+ 257:../jugada_por_botones.c **** //	hay que incrementar el valor del 8Led y la variable asociada a él.
+ 258:../jugada_por_botones.c **** void jugada_ev_izq()
+ 259:../jugada_por_botones.c **** {
+ 260:../jugada_por_botones.c **** 	ev_bot_izq = 1;
+ 261:../jugada_por_botones.c **** 	jugada_por_botones();
+ 262:../jugada_por_botones.c **** }
+ 263:../jugada_por_botones.c **** //Se llama cuando haya que incrementar la cuenta de tiempo de juego en segundos
+ 264:../jugada_por_botones.c **** void jugada_ev_timer()
+ 265:../jugada_por_botones.c **** {
+ 266:../jugada_por_botones.c **** 	ev_timer++;
+ 267:../jugada_por_botones.c **** 	jugada_por_botones();
+ 268:../jugada_por_botones.c **** }
+ 269:../jugada_por_botones.c **** 
+ 270:../jugada_por_botones.c **** //Se llama para avisar al autómata de que la transferencia por DMA ha terminado
+ 271:../jugada_por_botones.c **** void termina_DMA()
+ 272:../jugada_por_botones.c **** {
+ 273:../jugada_por_botones.c **** 	haciendo_DMA = 0;
+ 274:../jugada_por_botones.c **** 	jugada_por_botones();
+ 275:../jugada_por_botones.c **** }
+ 276:../jugada_por_botones.c **** 
  277:../jugada_por_botones.c **** 
- 278:../jugada_por_botones.c **** void jugada_ev_tecla1()			//Finalizar la partida de forma prematura
- 279:../jugada_por_botones.c **** {
- 3296              		.loc 1 279 0
- 3297              		.cfi_startproc
- 3298              		@ Function supports interworking.
- 3299              		@ args = 0, pretend = 0, frame = 8
- 3300              		@ frame_needed = 1, uses_anonymous_args = 0
- 3301 0a40 0DC0A0E1 		mov	ip, sp
- 3302              	.LCFI20:
- 3303              		.cfi_def_cfa_register 12
- 3304 0a44 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3305 0a48 04B04CE2 		sub	fp, ip, #4
- 3306              		.cfi_offset 14, -8
- 3307              		.cfi_offset 13, -12
- 3308              		.cfi_offset 11, -16
- 3309              	.LCFI21:
- 3310              		.cfi_def_cfa 11, 4
- 3311 0a4c 08D04DE2 		sub	sp, sp, #8
- 280:../jugada_por_botones.c **** 	int blancas = contar_blancas();
- 3312              		.loc 1 280 0
- 3313 0a50 FEFFFFEB 		bl	contar_blancas
- 3314 0a54 10000BE5 		str	r0, [fp, #-16]
- 281:../jugada_por_botones.c **** 	int negras = contar_negras();
- 3315              		.loc 1 281 0
- 3316 0a58 FEFFFFEB 		bl	contar_negras
- 3317 0a5c 14000BE5 		str	r0, [fp, #-20]
- 282:../jugada_por_botones.c **** 	haciendo_DMA = 1;
- 3318              		.loc 1 282 0
- 3319 0a60 5C309FE5 		ldr	r3, .L74
- 3320 0a64 0120A0E3 		mov	r2, #1
- 3321 0a68 002083E5 		str	r2, [r3, #0]
- 283:../jugada_por_botones.c **** 	if(blancas > negras)
- 3322              		.loc 1 283 0
- 3323 0a6c 10201BE5 		ldr	r2, [fp, #-16]
- 3324 0a70 14301BE5 		ldr	r3, [fp, #-20]
- 3325 0a74 030052E1 		cmp	r2, r3
- 3326 0a78 030000DA 		ble	.L71
- 284:../jugada_por_botones.c **** 	{
- 285:../jugada_por_botones.c **** 		final = jugador_gana;
- 3327              		.loc 1 285 0
- 3328 0a7c 44309FE5 		ldr	r3, .L74+4
- 3329 0a80 0120A0E3 		mov	r2, #1
- 3330 0a84 0020C3E5 		strb	r2, [r3, #0]
- 3331 0a88 0A0000EA 		b	.L70
- 3332              	.L71:
- 286:../jugada_por_botones.c **** 	}
- 287:../jugada_por_botones.c **** 	else if(blancas < negras)
- 3333              		.loc 1 287 0
- 3334 0a8c 10201BE5 		ldr	r2, [fp, #-16]
- 3335 0a90 14301BE5 		ldr	r3, [fp, #-20]
- 3336 0a94 030052E1 		cmp	r2, r3
- 3337 0a98 030000AA 		bge	.L73
+ 278:../jugada_por_botones.c **** //Se llama tras hacer un movimiento
+ 279:../jugada_por_botones.c **** //	Devuelve la ficha gris a 0,0 o a la siguiente posición libre del tablero,
+ 280:../jugada_por_botones.c **** //	para hacer la siguiente jugada.
+ 281:../jugada_por_botones.c **** void reiniciar_posicion_gris()
+ 282:../jugada_por_botones.c **** {
+ 283:../jugada_por_botones.c **** 	mi_fila = 0;
+ 284:../jugada_por_botones.c **** 	mi_columna = 0;
+ 285:../jugada_por_botones.c **** 	int i,j;
+ 286:../jugada_por_botones.c **** 	int fin_bucle = 0;
+ 287:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
  288:../jugada_por_botones.c **** 	{
- 289:../jugada_por_botones.c **** 		final = cpu_gana;
- 3338              		.loc 1 289 0
- 3339 0a9c 24309FE5 		ldr	r3, .L74+4
- 3340 0aa0 0220A0E3 		mov	r2, #2
- 3341 0aa4 0020C3E5 		strb	r2, [r3, #0]
- 3342 0aa8 020000EA 		b	.L70
- 3343              	.L73:
- 290:../jugada_por_botones.c **** 	}
- 291:../jugada_por_botones.c **** 	else	//En caso de empate
- 292:../jugada_por_botones.c **** 	{
- 293:../jugada_por_botones.c **** 		final = empate;
- 3344              		.loc 1 293 0
- 3345 0aac 14309FE5 		ldr	r3, .L74+4
- 3346 0ab0 0320A0E3 		mov	r2, #3
- 3347 0ab4 0020C3E5 		strb	r2, [r3, #0]
- 3348              	.L70:
- 294:../jugada_por_botones.c **** 	}
- 295:../jugada_por_botones.c **** }
- 3349              		.loc 1 295 0
- 3350 0ab8 0CD04BE2 		sub	sp, fp, #12
- 3351 0abc 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3352 0ac0 1EFF2FE1 		bx	lr
- 3353              	.L75:
- 3354              		.align	2
- 3355              	.L74:
- 3356 0ac4 00000000 		.word	haciendo_DMA
- 3357 0ac8 1C000000 		.word	final
- 3358              		.cfi_endproc
- 3359              	.LFE10:
- 3361              	.Letext0:
+ 289:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
+ 290:../jugada_por_botones.c **** 		{
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 292:../jugada_por_botones.c **** 			{
+ 293:../jugada_por_botones.c **** 				mi_fila = i;
+ 294:../jugada_por_botones.c **** 				mi_columna = j;
+ 295:../jugada_por_botones.c **** 				fin_bucle = 1;
+ 296:../jugada_por_botones.c **** 			}
+ 297:../jugada_por_botones.c **** 		}
+ 298:../jugada_por_botones.c **** 	}
+ 299:../jugada_por_botones.c **** 	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
+ 300:../jugada_por_botones.c **** }	
+ 301:../jugada_por_botones.c **** 
+ 302:../jugada_por_botones.c **** void actualizar_movimientos_pantalla()
+ 303:../jugada_por_botones.c **** {
+ 304:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 305:../jugada_por_botones.c **** 	int i,j;
+ 306:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
+ 307:../jugada_por_botones.c **** 	{
+ 308:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas; j++)
+ 309:../jugada_por_botones.c **** 		{
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 311:../jugada_por_botones.c **** 			{
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 315:../jugada_por_botones.c **** 			}
+ 316:../jugada_por_botones.c **** 		}
+ 317:../jugada_por_botones.c **** 	}
+ 318:../jugada_por_botones.c **** }
+ 319:../jugada_por_botones.c **** 
+ 320:../jugada_por_botones.c **** void jugada_ev_tecla0(void)		//Pasar turno de jugador
+ 321:../jugada_por_botones.c **** {
+ 322:../jugada_por_botones.c **** 	if(jugada_botones == Jugando)
+ 323:../jugada_por_botones.c **** 	{
+ 324:../jugada_por_botones.c **** 		unsigned int delta1 = timer2_leer();
+ 325:../jugada_por_botones.c **** 		mover_IA();
+ 326:../jugada_por_botones.c **** 		unsigned int delta2 = timer2_leer();
+ 327:../jugada_por_botones.c **** 		tiempo_calc += (delta2-delta1);
+ 328:../jugada_por_botones.c **** 		borrar_ficha(mi_fila, mi_columna);
+ 329:../jugada_por_botones.c **** 		actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y volte
+ 330:../jugada_por_botones.c **** 		reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera cas
+ 331:../jugada_por_botones.c **** 		//obtener datos de profiling
+ 332:../jugada_por_botones.c **** 		tiempo_pv += reversi_t_pv();
+ 333:../jugada_por_botones.c **** 		veces_pv += reversi_veces_pv();
+ 334:../jugada_por_botones.c **** 		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 335:../jugada_por_botones.c **** 		haciendo_DMA = 1;
+ 336:../jugada_por_botones.c **** 		iniciar_DMA();
+ 337:../jugada_por_botones.c **** 		final = obtener_fin();
+ 338:../jugada_por_botones.c **** 	}
+ 339:../jugada_por_botones.c **** }
+ 340:../jugada_por_botones.c **** 
+ 341:../jugada_por_botones.c **** void contar_fichas_final()		//Para saber qué final poner, en caso de que el tablero esté lleno o se
+ 342:../jugada_por_botones.c **** {
+ 2202              		.loc 1 342 0
+ 2203              		.cfi_startproc
+ 2204              		@ Function supports interworking.
+ 2205              		@ args = 0, pretend = 0, frame = 0
+ 2206              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2207 0000 0DC0A0E1 		mov	ip, sp
+ 2208              	.LCFI0:
+ 2209              		.cfi_def_cfa_register 12
+ 2210 0004 18D82DE9 		stmfd	sp!, {r3, r4, fp, ip, lr, pc}
+ 2211 0008 04B04CE2 		sub	fp, ip, #4
+ 2212              		.cfi_offset 14, -8
+ 2213              		.cfi_offset 13, -12
+ 2214              		.cfi_offset 11, -16
+ 2215              		.cfi_offset 4, -20
+ 2216              		.cfi_offset 3, -24
+ 2217              	.LCFI1:
+ 2218              		.cfi_def_cfa 11, 4
+ 343:../jugada_por_botones.c **** 	int blancas = contar_blancas();
+ 2219              		.loc 1 343 0
+ 2220 000c FEFFFFEB 		bl	contar_blancas
+ 2221 0010 0040A0E1 		mov	r4, r0
+ 2222              	.LVL0:
+ 344:../jugada_por_botones.c **** 	int negras = contar_negras();
+ 2223              		.loc 1 344 0
+ 2224 0014 FEFFFFEB 		bl	contar_negras
+ 2225              	.LVL1:
+ 345:../jugada_por_botones.c **** 	if(blancas > negras)
+ 2226              		.loc 1 345 0
+ 2227 0018 000054E1 		cmp	r4, r0
+ 2228 001c 060000CA 		bgt	.L6
+ 346:../jugada_por_botones.c **** 	{
+ 347:../jugada_por_botones.c **** 		final = cpu_gana;
+ 348:../jugada_por_botones.c **** 	}
+ 349:../jugada_por_botones.c **** 	else if(blancas < negras)
+ 350:../jugada_por_botones.c **** 	{
+ 351:../jugada_por_botones.c **** 		final = jugador_gana;
+ 352:../jugada_por_botones.c **** 	}
+ 353:../jugada_por_botones.c **** 	else	//En caso de empate
+ 354:../jugada_por_botones.c **** 	{
+ 355:../jugada_por_botones.c **** 		final = empate;
+ 2229              		.loc 1 355 0
+ 2230 0020 24109FE5 		ldr	r1, .L7
+ 351:../jugada_por_botones.c **** 		final = jugador_gana;
+ 2231              		.loc 1 351 0
+ 2232 0024 0100A0B3 		movlt	r0, #1
+ 2233              	.LVL2:
+ 2234              		.loc 1 355 0
+ 2235 0028 0300A0A3 		movge	r0, #3
+ 2236 002c 0000C1E5 		strb	r0, [r1, #0]
+ 2237              	.L1:
+ 356:../jugada_por_botones.c **** 	}
+ 357:../jugada_por_botones.c **** }
+ 2238              		.loc 1 357 0
+ 2239 0030 14D04BE2 		sub	sp, fp, #20
+ 2240 0034 18689DE8 		ldmfd	sp, {r3, r4, fp, sp, lr}
+ 2241 0038 1EFF2FE1 		bx	lr
+ 2242              	.LVL3:
+ 2243              	.L6:
+ 347:../jugada_por_botones.c **** 		final = cpu_gana;
+ 2244              		.loc 1 347 0
+ 2245 003c 08309FE5 		ldr	r3, .L7
+ 2246 0040 0220A0E3 		mov	r2, #2
+ 2247 0044 0020C3E5 		strb	r2, [r3, #0]
+ 2248 0048 F8FFFFEA 		b	.L1
+ 2249              	.L8:
+ 2250              		.align	2
+ 2251              	.L7:
+ 2252 004c 00000000 		.word	.LANCHOR0
+ 2253              		.cfi_endproc
+ 2254              	.LFE10:
+ 2256              		.align	2
+ 2257              		.global	actualizar_movimientos_pantalla
+ 2259              	actualizar_movimientos_pantalla:
+ 2260              	.LFB8:
+ 303:../jugada_por_botones.c **** {
+ 2261              		.loc 1 303 0
+ 2262              		.cfi_startproc
+ 2263              		@ Function supports interworking.
+ 2264              		@ args = 0, pretend = 0, frame = 0
+ 2265              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2266 0050 0DC0A0E1 		mov	ip, sp
+ 2267              	.LCFI2:
+ 2268              		.cfi_def_cfa_register 12
+ 2269 0054 78D82DE9 		stmfd	sp!, {r3, r4, r5, r6, fp, ip, lr, pc}
+ 304:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2270              		.loc 1 304 0
+ 2271 0058 D0019FE5 		ldr	r0, .L20
+ 303:../jugada_por_botones.c **** {
+ 2272              		.loc 1 303 0
+ 2273 005c 04B04CE2 		sub	fp, ip, #4
+ 2274              		.cfi_offset 14, -8
+ 2275              		.cfi_offset 13, -12
+ 2276              		.cfi_offset 11, -16
+ 2277              		.cfi_offset 6, -20
+ 2278              		.cfi_offset 5, -24
+ 2279              		.cfi_offset 4, -28
+ 2280              		.cfi_offset 3, -32
+ 2281              	.LCFI3:
+ 2282              		.cfi_def_cfa 11, 4
+ 304:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2283              		.loc 1 304 0
+ 2284 0060 FEFFFFEB 		bl	obtener_tablero
+ 2285              	.LVL4:
+ 2286 0064 C4419FE5 		ldr	r4, .L20
+ 306:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
+ 2287              		.loc 1 306 0
+ 2288 0068 0060A0E3 		mov	r6, #0
+ 304:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2289              		.loc 1 304 0
+ 2290 006c 405084E2 		add	r5, r4, #64
+ 2291              	.LVL5:
+ 2292              	.L18:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2293              		.loc 1 310 0 discriminator 1
+ 2294 0070 0020D4E5 		ldrb	r2, [r4, #0]	@ zero_extendqisi2
+ 2295 0074 0030D5E5 		ldrb	r3, [r5, #0]	@ zero_extendqisi2
+ 2296 0078 030052E1 		cmp	r2, r3
+ 2297 007c 0800000A 		beq	.L10
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2298              		.loc 1 312 0
+ 2299 0080 0010A0E3 		mov	r1, #0
+ 2300 0084 0600A0E1 		mov	r0, r6
+ 2301 0088 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2302              		.loc 1 313 0
+ 2303 008c 0600A0E1 		mov	r0, r6
+ 2304 0090 0010A0E3 		mov	r1, #0
+ 2305 0094 0020D4E5 		ldrb	r2, [r4, #0]	@ zero_extendqisi2
+ 2306 0098 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2307              		.loc 1 314 0
+ 2308 009c 0000D4E5 		ldrb	r0, [r4, #0]	@ zero_extendqisi2
+ 2309 00a0 0000C5E5 		strb	r0, [r5, #0]
+ 2310              	.L10:
+ 2311              	.LVL6:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2312              		.loc 1 310 0
+ 2313 00a4 0110D4E5 		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 2314 00a8 01C0D5E5 		ldrb	ip, [r5, #1]	@ zero_extendqisi2
+ 2315 00ac 0C0051E1 		cmp	r1, ip
+ 2316 00b0 0800000A 		beq	.L11
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2317              		.loc 1 312 0
+ 2318 00b4 0110A0E3 		mov	r1, #1
+ 2319 00b8 0600A0E1 		mov	r0, r6
+ 2320 00bc FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2321              		.loc 1 313 0
+ 2322 00c0 0120D4E5 		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 2323 00c4 0600A0E1 		mov	r0, r6
+ 2324 00c8 0110A0E3 		mov	r1, #1
+ 2325 00cc FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2326              		.loc 1 314 0
+ 2327 00d0 0120D4E5 		ldrb	r2, [r4, #1]	@ zero_extendqisi2
+ 2328 00d4 0120C5E5 		strb	r2, [r5, #1]
+ 2329              	.L11:
+ 2330              	.LVL7:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2331              		.loc 1 310 0
+ 2332 00d8 02E0D4E5 		ldrb	lr, [r4, #2]	@ zero_extendqisi2
+ 2333 00dc 0230D5E5 		ldrb	r3, [r5, #2]	@ zero_extendqisi2
+ 2334 00e0 03005EE1 		cmp	lr, r3
+ 2335 00e4 0800000A 		beq	.L12
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2336              		.loc 1 312 0
+ 2337 00e8 0210A0E3 		mov	r1, #2
+ 2338 00ec 0600A0E1 		mov	r0, r6
+ 2339 00f0 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2340              		.loc 1 313 0
+ 2341 00f4 0600A0E1 		mov	r0, r6
+ 2342 00f8 0210A0E3 		mov	r1, #2
+ 2343 00fc 0220D4E5 		ldrb	r2, [r4, #2]	@ zero_extendqisi2
+ 2344 0100 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2345              		.loc 1 314 0
+ 2346 0104 0200D4E5 		ldrb	r0, [r4, #2]	@ zero_extendqisi2
+ 2347 0108 0200C5E5 		strb	r0, [r5, #2]
+ 2348              	.L12:
+ 2349              	.LVL8:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2350              		.loc 1 310 0
+ 2351 010c 0310D4E5 		ldrb	r1, [r4, #3]	@ zero_extendqisi2
+ 2352 0110 03C0D5E5 		ldrb	ip, [r5, #3]	@ zero_extendqisi2
+ 2353 0114 0C0051E1 		cmp	r1, ip
+ 2354 0118 0800000A 		beq	.L13
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2355              		.loc 1 312 0
+ 2356 011c 0310A0E3 		mov	r1, #3
+ 2357 0120 0600A0E1 		mov	r0, r6
+ 2358 0124 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2359              		.loc 1 313 0
+ 2360 0128 0320D4E5 		ldrb	r2, [r4, #3]	@ zero_extendqisi2
+ 2361 012c 0600A0E1 		mov	r0, r6
+ 2362 0130 0310A0E3 		mov	r1, #3
+ 2363 0134 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2364              		.loc 1 314 0
+ 2365 0138 0320D4E5 		ldrb	r2, [r4, #3]	@ zero_extendqisi2
+ 2366 013c 0320C5E5 		strb	r2, [r5, #3]
+ 2367              	.L13:
+ 2368              	.LVL9:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2369              		.loc 1 310 0
+ 2370 0140 04E0D4E5 		ldrb	lr, [r4, #4]	@ zero_extendqisi2
+ 2371 0144 0430D5E5 		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+ 2372 0148 03005EE1 		cmp	lr, r3
+ 2373 014c 0800000A 		beq	.L14
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2374              		.loc 1 312 0
+ 2375 0150 0410A0E3 		mov	r1, #4
+ 2376 0154 0600A0E1 		mov	r0, r6
+ 2377 0158 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2378              		.loc 1 313 0
+ 2379 015c 0600A0E1 		mov	r0, r6
+ 2380 0160 0410A0E3 		mov	r1, #4
+ 2381 0164 0420D4E5 		ldrb	r2, [r4, #4]	@ zero_extendqisi2
+ 2382 0168 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2383              		.loc 1 314 0
+ 2384 016c 0400D4E5 		ldrb	r0, [r4, #4]	@ zero_extendqisi2
+ 2385 0170 0400C5E5 		strb	r0, [r5, #4]
+ 2386              	.L14:
+ 2387              	.LVL10:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2388              		.loc 1 310 0
+ 2389 0174 0510D4E5 		ldrb	r1, [r4, #5]	@ zero_extendqisi2
+ 2390 0178 05C0D5E5 		ldrb	ip, [r5, #5]	@ zero_extendqisi2
+ 2391 017c 0C0051E1 		cmp	r1, ip
+ 2392 0180 0800000A 		beq	.L15
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2393              		.loc 1 312 0
+ 2394 0184 0510A0E3 		mov	r1, #5
+ 2395 0188 0600A0E1 		mov	r0, r6
+ 2396 018c FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2397              		.loc 1 313 0
+ 2398 0190 0520D4E5 		ldrb	r2, [r4, #5]	@ zero_extendqisi2
+ 2399 0194 0600A0E1 		mov	r0, r6
+ 2400 0198 0510A0E3 		mov	r1, #5
+ 2401 019c FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2402              		.loc 1 314 0
+ 2403 01a0 0520D4E5 		ldrb	r2, [r4, #5]	@ zero_extendqisi2
+ 2404 01a4 0520C5E5 		strb	r2, [r5, #5]
+ 2405              	.L15:
+ 2406              	.LVL11:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2407              		.loc 1 310 0
+ 2408 01a8 06E0D4E5 		ldrb	lr, [r4, #6]	@ zero_extendqisi2
+ 2409 01ac 0630D5E5 		ldrb	r3, [r5, #6]	@ zero_extendqisi2
+ 2410 01b0 03005EE1 		cmp	lr, r3
+ 2411 01b4 0800000A 		beq	.L16
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2412              		.loc 1 312 0
+ 2413 01b8 0610A0E3 		mov	r1, #6
+ 2414 01bc 0600A0E1 		mov	r0, r6
+ 2415 01c0 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2416              		.loc 1 313 0
+ 2417 01c4 0600A0E1 		mov	r0, r6
+ 2418 01c8 0610A0E3 		mov	r1, #6
+ 2419 01cc 0620D4E5 		ldrb	r2, [r4, #6]	@ zero_extendqisi2
+ 2420 01d0 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2421              		.loc 1 314 0
+ 2422 01d4 0600D4E5 		ldrb	r0, [r4, #6]	@ zero_extendqisi2
+ 2423 01d8 0600C5E5 		strb	r0, [r5, #6]
+ 2424              	.L16:
+ 2425              	.LVL12:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 2426              		.loc 1 310 0
+ 2427 01dc 0710D4E5 		ldrb	r1, [r4, #7]	@ zero_extendqisi2
+ 2428 01e0 07C0D5E5 		ldrb	ip, [r5, #7]	@ zero_extendqisi2
+ 2429 01e4 0C0051E1 		cmp	r1, ip
+ 2430 01e8 0800000A 		beq	.L17
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 2431              		.loc 1 312 0
+ 2432 01ec 0710A0E3 		mov	r1, #7
+ 2433 01f0 0600A0E1 		mov	r0, r6
+ 2434 01f4 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 2435              		.loc 1 313 0
+ 2436 01f8 0720D4E5 		ldrb	r2, [r4, #7]	@ zero_extendqisi2
+ 2437 01fc 0600A0E1 		mov	r0, r6
+ 2438 0200 0710A0E3 		mov	r1, #7
+ 2439 0204 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 2440              		.loc 1 314 0
+ 2441 0208 0720D4E5 		ldrb	r2, [r4, #7]	@ zero_extendqisi2
+ 2442 020c 0720C5E5 		strb	r2, [r5, #7]
+ 2443              	.L17:
+ 2444              	.LVL13:
+ 306:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
+ 2445              		.loc 1 306 0
+ 2446 0210 016086E2 		add	r6, r6, #1
+ 2447              	.LVL14:
+ 2448 0214 080056E3 		cmp	r6, #8
+ 2449 0218 084084E2 		add	r4, r4, #8
+ 2450 021c 085085E2 		add	r5, r5, #8
+ 2451 0220 92FFFF1A 		bne	.L18
+ 318:../jugada_por_botones.c **** }
+ 2452              		.loc 1 318 0
+ 2453 0224 1CD04BE2 		sub	sp, fp, #28
+ 2454 0228 78689DE8 		ldmfd	sp, {r3, r4, r5, r6, fp, sp, lr}
+ 2455 022c 1EFF2FE1 		bx	lr
+ 2456              	.L21:
+ 2457              		.align	2
+ 2458              	.L20:
+ 2459 0230 04000000 		.word	.LANCHOR0+4
+ 2460              		.cfi_endproc
+ 2461              	.LFE8:
+ 2463              		.align	2
+ 2464              		.global	reiniciar_posicion_gris
+ 2466              	reiniciar_posicion_gris:
+ 2467              	.LFB7:
+ 282:../jugada_por_botones.c **** {
+ 2468              		.loc 1 282 0
+ 2469              		.cfi_startproc
+ 2470              		@ Function supports interworking.
+ 2471              		@ args = 0, pretend = 0, frame = 0
+ 2472              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2473 0234 0DC0A0E1 		mov	ip, sp
+ 2474              	.LCFI4:
+ 2475              		.cfi_def_cfa_register 12
+ 2476 0238 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 283:../jugada_por_botones.c **** 	mi_fila = 0;
+ 2477              		.loc 1 283 0
+ 2478 023c F4E09FE5 		ldr	lr, .L39
+ 2479              		.cfi_offset 14, -8
+ 2480              		.cfi_offset 13, -12
+ 2481              		.cfi_offset 11, -16
+ 2482 0240 0020A0E3 		mov	r2, #0
+ 2483 0244 8420CEE5 		strb	r2, [lr, #132]
+ 284:../jugada_por_botones.c **** 	mi_columna = 0;
+ 2484              		.loc 1 284 0
+ 2485 0248 8520CEE5 		strb	r2, [lr, #133]
+ 2486              	.LVL15:
+ 282:../jugada_por_botones.c **** {
+ 2487              		.loc 1 282 0
+ 2488 024c 04B04CE2 		sub	fp, ip, #4
+ 2489              	.LCFI5:
+ 2490              		.cfi_def_cfa 11, 4
+ 284:../jugada_por_botones.c **** 	mi_columna = 0;
+ 2491              		.loc 1 284 0
+ 2492 0250 0230A0E1 		mov	r3, r2
+ 2493 0254 04108EE2 		add	r1, lr, #4
+ 2494              	.LVL16:
+ 2495              	.L23:
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 2496              		.loc 1 291 0 discriminator 1
+ 2497 0258 00C0D1E5 		ldrb	ip, [r1, #0]	@ zero_extendqisi2
+ 2498 025c 00005CE3 		cmp	ip, #0
+ 2499 0260 0C00000A 		beq	.L25
+ 2500              	.LVL17:
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 2501              		.loc 1 291 0 is_stmt 0
+ 2502 0264 0100D1E5 		ldrb	r0, [r1, #1]	@ zero_extendqisi2
+ 2503 0268 000050E3 		cmp	r0, #0
+ 2504 026c 1400000A 		beq	.L29
+ 2505              	.LVL18:
+ 2506 0270 0200D1E5 		ldrb	r0, [r1, #2]	@ zero_extendqisi2
+ 2507 0274 000050E3 		cmp	r0, #0
+ 2508 0278 1300000A 		beq	.L30
+ 2509              	.LVL19:
+ 2510 027c 0300D1E5 		ldrb	r0, [r1, #3]	@ zero_extendqisi2
+ 2511 0280 000050E3 		cmp	r0, #0
+ 2512 0284 1200000A 		beq	.L31
+ 2513              	.LVL20:
+ 2514 0288 0400D1E5 		ldrb	r0, [r1, #4]	@ zero_extendqisi2
+ 2515 028c 000050E3 		cmp	r0, #0
+ 2516 0290 1100001A 		bne	.L37
+ 289:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
+ 2517              		.loc 1 289 0 is_stmt 1
+ 2518 0294 04C0A0E3 		mov	ip, #4
+ 2519              	.LVL21:
+ 2520              	.L25:
+ 284:../jugada_por_botones.c **** 	mi_columna = 0;
+ 2521              		.loc 1 284 0
+ 2522 0298 FF3002E2 		and	r3, r2, #255
+ 294:../jugada_por_botones.c **** 				mi_columna = j;
+ 2523              		.loc 1 294 0
+ 2524 029c FFC00CE2 		and	ip, ip, #255
+ 2525              	.LVL22:
+ 2526              	.L24:
+ 299:../jugada_por_botones.c **** 	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
+ 2527              		.loc 1 299 0
+ 2528 02a0 0300A0E1 		mov	r0, r3
+ 2529 02a4 0C10A0E1 		mov	r1, ip
+ 2530 02a8 0320A0E3 		mov	r2, #3
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 2531              		.loc 1 291 0
+ 2532 02ac 8430CEE5 		strb	r3, [lr, #132]
+ 2533 02b0 85C0CEE5 		strb	ip, [lr, #133]
+ 299:../jugada_por_botones.c **** 	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
+ 2534              		.loc 1 299 0
+ 2535 02b4 FEFFFFEB 		bl	pintar_ficha
+ 300:../jugada_por_botones.c **** }	
+ 2536              		.loc 1 300 0
+ 2537 02b8 0CD04BE2 		sub	sp, fp, #12
+ 2538 02bc 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2539 02c0 1EFF2FE1 		bx	lr
+ 2540              	.LVL23:
+ 2541              	.L29:
+ 289:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
+ 2542              		.loc 1 289 0
+ 2543 02c4 01C0A0E3 		mov	ip, #1
+ 2544 02c8 F2FFFFEA 		b	.L25
+ 2545              	.LVL24:
+ 2546              	.L30:
+ 2547 02cc 02C0A0E3 		mov	ip, #2
+ 2548 02d0 F0FFFFEA 		b	.L25
+ 2549              	.LVL25:
+ 2550              	.L31:
+ 2551 02d4 03C0A0E3 		mov	ip, #3
+ 2552 02d8 EEFFFFEA 		b	.L25
+ 2553              	.LVL26:
+ 2554              	.L37:
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 2555              		.loc 1 291 0
+ 2556 02dc 0500D1E5 		ldrb	r0, [r1, #5]	@ zero_extendqisi2
+ 2557 02e0 000050E3 		cmp	r0, #0
+ 2558 02e4 0700000A 		beq	.L33
+ 2559              	.LVL27:
+ 2560 02e8 0600D1E5 		ldrb	r0, [r1, #6]	@ zero_extendqisi2
+ 2561 02ec 000050E3 		cmp	r0, #0
+ 2562 02f0 0600000A 		beq	.L34
+ 2563              	.LVL28:
+ 2564 02f4 0700D1E5 		ldrb	r0, [r1, #7]	@ zero_extendqisi2
+ 2565 02f8 000050E3 		cmp	r0, #0
+ 2566 02fc 0500001A 		bne	.L38
+ 2567 0300 07C0A0E3 		mov	ip, #7
+ 2568 0304 E3FFFFEA 		b	.L25
+ 2569              	.LVL29:
+ 2570              	.L33:
+ 289:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
+ 2571              		.loc 1 289 0
+ 2572 0308 05C0A0E3 		mov	ip, #5
+ 2573 030c E1FFFFEA 		b	.L25
+ 2574              	.LVL30:
+ 2575              	.L34:
+ 2576 0310 06C0A0E3 		mov	ip, #6
+ 2577 0314 DFFFFFEA 		b	.L25
+ 2578              	.LVL31:
+ 2579              	.L38:
+ 281:../jugada_por_botones.c **** void reiniciar_posicion_gris()
+ 2580              		.loc 1 281 0
+ 2581 0318 012082E2 		add	r2, r2, #1
+ 2582              	.LVL32:
+ 287:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
+ 2583              		.loc 1 287 0
+ 2584 031c 070052E3 		cmp	r2, #7
+ 2585 0320 00C0A0C3 		movgt	ip, #0
+ 2586 0324 01C0A0D3 		movle	ip, #1
+ 2587 0328 00005CE3 		cmp	ip, #0
+ 2588 032c 081081E2 		add	r1, r1, #8
+ 2589 0330 C8FFFF1A 		bne	.L23
+ 2590 0334 D9FFFFEA 		b	.L24
+ 2591              	.L40:
+ 2592              		.align	2
+ 2593              	.L39:
+ 2594 0338 00000000 		.word	.LANCHOR0
+ 2595              		.cfi_endproc
+ 2596              	.LFE7:
+ 2598              		.align	2
+ 2599              		.global	inicializar_jugada_botones
+ 2601              	inicializar_jugada_botones:
+ 2602              	.LFB0:
+  47:../jugada_por_botones.c **** {
+ 2603              		.loc 1 47 0
+ 2604              		.cfi_startproc
+ 2605              		@ Function supports interworking.
+ 2606              		@ args = 0, pretend = 0, frame = 0
+ 2607              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2608 033c 0DC0A0E1 		mov	ip, sp
+ 2609              	.LCFI6:
+ 2610              		.cfi_def_cfa_register 12
+ 2611 0340 30D82DE9 		stmfd	sp!, {r4, r5, fp, ip, lr, pc}
+  49:../jugada_por_botones.c **** 	haciendo_DMA = 1;
+ 2612              		.loc 1 49 0
+ 2613 0344 60409FE5 		ldr	r4, .L42
+ 2614              		.cfi_offset 14, -8
+ 2615              		.cfi_offset 13, -12
+ 2616              		.cfi_offset 11, -16
+ 2617              		.cfi_offset 5, -20
+ 2618              		.cfi_offset 4, -24
+  47:../jugada_por_botones.c **** {
+ 2619              		.loc 1 47 0
+ 2620 0348 04B04CE2 		sub	fp, ip, #4
+ 2621              	.LCFI7:
+ 2622              		.cfi_def_cfa 11, 4
+  48:../jugada_por_botones.c **** 	reversi8_inicializar();
+ 2623              		.loc 1 48 0
+ 2624 034c FEFFFFEB 		bl	reversi8_inicializar
+  50:../jugada_por_botones.c **** 	mi_fila = 0;
+ 2625              		.loc 1 50 0
+ 2626 0350 0050A0E3 		mov	r5, #0
+  49:../jugada_por_botones.c **** 	haciendo_DMA = 1;
+ 2627              		.loc 1 49 0
+ 2628 0354 0130A0E3 		mov	r3, #1
+  61:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2629              		.loc 1 61 0
+ 2630 0358 040084E2 		add	r0, r4, #4
+  49:../jugada_por_botones.c **** 	haciendo_DMA = 1;
+ 2631              		.loc 1 49 0
+ 2632 035c 883084E5 		str	r3, [r4, #136]
+  50:../jugada_por_botones.c **** 	mi_fila = 0;
+ 2633              		.loc 1 50 0
+ 2634 0360 8450C4E5 		strb	r5, [r4, #132]
+  51:../jugada_por_botones.c **** 	mi_columna = 0;
+ 2635              		.loc 1 51 0
+ 2636 0364 8550C4E5 		strb	r5, [r4, #133]
+  52:../jugada_por_botones.c **** 	ev_bot_izq = 0;
+ 2637              		.loc 1 52 0
+ 2638 0368 8C5084E5 		str	r5, [r4, #140]
+  53:../jugada_por_botones.c **** 	ev_bot_der = 0;
+ 2639              		.loc 1 53 0
+ 2640 036c 905084E5 		str	r5, [r4, #144]
+  54:../jugada_por_botones.c **** 	ev_tp = 0;
+ 2641              		.loc 1 54 0
+ 2642 0370 945084E5 		str	r5, [r4, #148]
+  55:../jugada_por_botones.c **** 	ev_timer = 0;
+ 2643              		.loc 1 55 0
+ 2644 0374 985084E5 		str	r5, [r4, #152]
+  56:../jugada_por_botones.c **** 	final = no_fin;
+ 2645              		.loc 1 56 0
+ 2646 0378 0050C4E5 		strb	r5, [r4, #0]
+  57:../jugada_por_botones.c **** 	tiempo_calc = 0;
+ 2647              		.loc 1 57 0
+ 2648 037c 9C5084E5 		str	r5, [r4, #156]
+  58:../jugada_por_botones.c **** 	tiempo_total = 0;
+ 2649              		.loc 1 58 0
+ 2650 0380 A05084E5 		str	r5, [r4, #160]
+  59:../jugada_por_botones.c **** 	tiempo_pv = 0;
+ 2651              		.loc 1 59 0
+ 2652 0384 A45084E5 		str	r5, [r4, #164]
+  60:../jugada_por_botones.c **** 	veces_pv = 0;
+ 2653              		.loc 1 60 0
+ 2654 0388 A85084E5 		str	r5, [r4, #168]
+  61:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2655              		.loc 1 61 0
+ 2656 038c FEFFFFEB 		bl	obtener_tablero
+  62:../jugada_por_botones.c **** 	obtener_tablero(tablero_anterior);
+ 2657              		.loc 1 62 0
+ 2658 0390 440084E2 		add	r0, r4, #68
+ 2659 0394 FEFFFFEB 		bl	obtener_tablero
+  63:../jugada_por_botones.c **** 	jugada_botones = Reglas;
+ 2660              		.loc 1 63 0
+ 2661 0398 AC50C4E5 		strb	r5, [r4, #172]
+  64:../jugada_por_botones.c **** 	pintar_reglas();
+ 2662              		.loc 1 64 0
+ 2663 039c FEFFFFEB 		bl	pintar_reglas
+  65:../jugada_por_botones.c **** }
+ 2664              		.loc 1 65 0
+ 2665 03a0 14D04BE2 		sub	sp, fp, #20
+ 2666 03a4 30689DE8 		ldmfd	sp, {r4, r5, fp, sp, lr}
+ 2667 03a8 1EFF2FE1 		bx	lr
+ 2668              	.L43:
+ 2669              		.align	2
+ 2670              	.L42:
+ 2671 03ac 00000000 		.word	.LANCHOR0
+ 2672              		.cfi_endproc
+ 2673              	.LFE0:
+ 2675              		.align	2
+ 2676              		.global	jugada_por_botones
+ 2678              	jugada_por_botones:
+ 2679              	.LFB1:
+  68:../jugada_por_botones.c **** {
+ 2680              		.loc 1 68 0
+ 2681              		.cfi_startproc
+ 2682              		@ Function supports interworking.
+ 2683              		@ args = 0, pretend = 0, frame = 16
+ 2684              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2685 03b0 0DC0A0E1 		mov	ip, sp
+ 2686              	.LCFI8:
+ 2687              		.cfi_def_cfa_register 12
+ 2688 03b4 F0D82DE9 		stmfd	sp!, {r4, r5, r6, r7, fp, ip, lr, pc}
+ 2689 03b8 04B04CE2 		sub	fp, ip, #4
+ 2690              		.cfi_offset 14, -8
+ 2691              		.cfi_offset 13, -12
+ 2692              		.cfi_offset 11, -16
+ 2693              		.cfi_offset 7, -20
+ 2694              		.cfi_offset 6, -24
+ 2695              		.cfi_offset 5, -28
+ 2696              		.cfi_offset 4, -32
+ 2697              	.LCFI9:
+ 2698              		.cfi_def_cfa 11, 4
+ 2699 03bc 10D04DE2 		sub	sp, sp, #16
+  69:../jugada_por_botones.c **** 	switch(jugada_botones)
+ 2700              		.loc 1 69 0
+ 2701 03c0 9C459FE5 		ldr	r4, .L112
+  69:../jugada_por_botones.c **** 	switch(jugada_botones)
+ 2702              		.loc 1 69 0
+ 2703 03c4 AC30D4E5 		ldrb	r3, [r4, #172]	@ zero_extendqisi2
+ 2704 03c8 000053E3 		cmp	r3, #0
+ 2705 03cc 0E00001A 		bne	.L95
+  72:../jugada_por_botones.c **** 		if(ev_bot_der > 0)
+ 2706              		.loc 1 72 0
+ 2707 03d0 902094E5 		ldr	r2, [r4, #144]
+ 2708 03d4 000052E3 		cmp	r2, #0
+  74:../jugada_por_botones.c **** 			ev_bot_der = 0;
+ 2709              		.loc 1 74 0
+ 2710 03d8 903084C5 		strgt	r3, [r4, #144]
+  76:../jugada_por_botones.c **** 		if(ev_bot_izq > 0)
+ 2711              		.loc 1 76 0
+ 2712 03dc 8C3094E5 		ldr	r3, [r4, #140]
+ 2713 03e0 000053E3 		cmp	r3, #0
+  78:../jugada_por_botones.c **** 			ev_bot_izq = 0;
+ 2714              		.loc 1 78 0
+ 2715 03e4 78359FC5 		ldrgt	r3, .L112
+ 2716 03e8 0020A0C3 		movgt	r2, #0
+ 2717 03ec 8C2083C5 		strgt	r2, [r3, #140]
+  80:../jugada_por_botones.c **** 		if(ev_tp == 1)
+ 2718              		.loc 1 80 0
+ 2719 03f0 943094E5 		ldr	r3, [r4, #148]
+ 2720 03f4 010053E3 		cmp	r3, #1
+ 2721 03f8 64259FE5 		ldr	r2, .L112
+ 2722 03fc 7900000A 		beq	.L96
+ 2723              	.LVL33:
+ 2724              	.L44:
+ 240:../jugada_por_botones.c **** }
+ 2725              		.loc 1 240 0
+ 2726 0400 1CD04BE2 		sub	sp, fp, #28
+ 2727 0404 F0689DE8 		ldmfd	sp, {r4, r5, r6, r7, fp, sp, lr}
+ 2728 0408 1EFF2FE1 		bx	lr
+ 2729              	.LVL34:
+ 2730              	.L95:
+  69:../jugada_por_botones.c **** 	switch(jugada_botones)
+ 2731              		.loc 1 69 0
+ 2732 040c 010053E3 		cmp	r3, #1
+ 2733 0410 1A00000A 		beq	.L97
+ 233:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado inicial del autóm
+ 2734              		.loc 1 233 0
+ 2735 0414 885094E5 		ldr	r5, [r4, #136]
+ 2736 0418 000055E3 		cmp	r5, #0
+ 2737 041c F7FFFF1A 		bne	.L44
+ 233:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado inicial del autóm
+ 2738              		.loc 1 233 0 is_stmt 0 discriminator 1
+ 2739 0420 946094E5 		ldr	r6, [r4, #148]
+ 2740 0424 010056E3 		cmp	r6, #1
+ 2741 0428 F4FFFF1A 		bne	.L44
+ 235:../jugada_por_botones.c **** 			Lcd_Clr();
+ 2742              		.loc 1 235 0 is_stmt 1
+ 2743 042c FEFFFFEB 		bl	Lcd_Clr
+ 2744              	.LBB12:
+ 2745              	.LBB13:
+  48:../jugada_por_botones.c **** 	reversi8_inicializar();
+ 2746              		.loc 1 48 0
+ 2747 0430 FEFFFFEB 		bl	reversi8_inicializar
+  61:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2748              		.loc 1 61 0
+ 2749 0434 040084E2 		add	r0, r4, #4
+  49:../jugada_por_botones.c **** 	haciendo_DMA = 1;
+ 2750              		.loc 1 49 0
+ 2751 0438 886084E5 		str	r6, [r4, #136]
+  50:../jugada_por_botones.c **** 	mi_fila = 0;
+ 2752              		.loc 1 50 0
+ 2753 043c 8450C4E5 		strb	r5, [r4, #132]
+  51:../jugada_por_botones.c **** 	mi_columna = 0;
+ 2754              		.loc 1 51 0
+ 2755 0440 8550C4E5 		strb	r5, [r4, #133]
+  52:../jugada_por_botones.c **** 	ev_bot_izq = 0;
+ 2756              		.loc 1 52 0
+ 2757 0444 8C5084E5 		str	r5, [r4, #140]
+  53:../jugada_por_botones.c **** 	ev_bot_der = 0;
+ 2758              		.loc 1 53 0
+ 2759 0448 905084E5 		str	r5, [r4, #144]
+  54:../jugada_por_botones.c **** 	ev_tp = 0;
+ 2760              		.loc 1 54 0
+ 2761 044c 945084E5 		str	r5, [r4, #148]
+  55:../jugada_por_botones.c **** 	ev_timer = 0;
+ 2762              		.loc 1 55 0
+ 2763 0450 985084E5 		str	r5, [r4, #152]
+  56:../jugada_por_botones.c **** 	final = no_fin;
+ 2764              		.loc 1 56 0
+ 2765 0454 0050C4E5 		strb	r5, [r4, #0]
+  57:../jugada_por_botones.c **** 	tiempo_calc = 0;
+ 2766              		.loc 1 57 0
+ 2767 0458 9C5084E5 		str	r5, [r4, #156]
+  58:../jugada_por_botones.c **** 	tiempo_total = 0;
+ 2768              		.loc 1 58 0
+ 2769 045c A05084E5 		str	r5, [r4, #160]
+  59:../jugada_por_botones.c **** 	tiempo_pv = 0;
+ 2770              		.loc 1 59 0
+ 2771 0460 A45084E5 		str	r5, [r4, #164]
+  60:../jugada_por_botones.c **** 	veces_pv = 0;
+ 2772              		.loc 1 60 0
+ 2773 0464 A85084E5 		str	r5, [r4, #168]
+  61:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 2774              		.loc 1 61 0
+ 2775 0468 FEFFFFEB 		bl	obtener_tablero
+  62:../jugada_por_botones.c **** 	obtener_tablero(tablero_anterior);
+ 2776              		.loc 1 62 0
+ 2777 046c 440084E2 		add	r0, r4, #68
+ 2778 0470 FEFFFFEB 		bl	obtener_tablero
+  63:../jugada_por_botones.c **** 	jugada_botones = Reglas;
+ 2779              		.loc 1 63 0
+ 2780 0474 AC50C4E5 		strb	r5, [r4, #172]
+  64:../jugada_por_botones.c **** 	pintar_reglas();
+ 2781              		.loc 1 64 0
+ 2782 0478 FEFFFFEB 		bl	pintar_reglas
+ 2783 047c DFFFFFEA 		b	.L44
+ 2784              	.L97:
+ 2785              	.LBE13:
+ 2786              	.LBE12:
+  92:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && final != no_fin)
+ 2787              		.loc 1 92 0
+ 2788 0480 885094E5 		ldr	r5, [r4, #136]
+ 2789 0484 000055E3 		cmp	r5, #0
+ 2790 0488 0F00001A 		bne	.L51
+  92:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && final != no_fin)
+ 2791              		.loc 1 92 0 is_stmt 0 discriminator 1
+ 2792 048c 0020D4E5 		ldrb	r2, [r4, #0]	@ zero_extendqisi2
+ 2793 0490 000052E3 		cmp	r2, #0
+ 2794 0494 0C00000A 		beq	.L51
+  95:../jugada_por_botones.c **** 			if(final == jugador_gana)
+ 2795              		.loc 1 95 0 is_stmt 1
+ 2796 0498 010052E3 		cmp	r2, #1
+  94:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 2797              		.loc 1 94 0
+ 2798 049c 883084E5 		str	r3, [r4, #136]
+  95:../jugada_por_botones.c **** 			if(final == jugador_gana)
+ 2799              		.loc 1 95 0
+ 2800 04a0 DC00000A 		beq	.L98
+  99:../jugada_por_botones.c **** 			else if(final == cpu_gana)
+ 2801              		.loc 1 99 0
+ 2802 04a4 020052E3 		cmp	r2, #2
+ 2803 04a8 BD00000A 		beq	.L99
+ 105:../jugada_por_botones.c **** 				pintar_fin_empate(contar_blancas(), contar_negras());
+ 2804              		.loc 1 105 0
+ 2805 04ac FEFFFFEB 		bl	contar_blancas
+ 2806 04b0 0060A0E1 		mov	r6, r0
+ 2807 04b4 FEFFFFEB 		bl	contar_negras
+ 2808 04b8 0010A0E1 		mov	r1, r0
+ 2809 04bc 0600A0E1 		mov	r0, r6
+ 2810 04c0 FEFFFFEB 		bl	pintar_fin_empate
+ 2811              	.L53:
+ 107:../jugada_por_botones.c **** 			jugada_botones = Fin;
+ 2812              		.loc 1 107 0
+ 2813 04c4 02C0A0E3 		mov	ip, #2
+ 2814 04c8 ACC0C4E5 		strb	ip, [r4, #172]
+ 2815              	.L51:
+ 109:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_timer > 0)
+ 2816              		.loc 1 109 0
+ 2817 04cc 882094E5 		ldr	r2, [r4, #136]
+ 2818 04d0 000052E3 		cmp	r2, #0
+ 2819 04d4 88549FE5 		ldr	r5, .L112
+ 2820 04d8 3100000A 		beq	.L100
+ 2821              	.L55:
+ 119:../jugada_por_botones.c **** 		if(ev_bot_der == 1)		//Incrementar fila
+ 2822              		.loc 1 119 0
+ 2823 04dc 905094E5 		ldr	r5, [r4, #144]
+ 2824 04e0 010055E3 		cmp	r5, #1
+ 2825 04e4 78549FE5 		ldr	r5, .L112
+ 2826 04e8 4700000A 		beq	.L101
+ 2827              	.LVL35:
+ 2828              	.L56:
+ 159:../jugada_por_botones.c **** 		if(ev_bot_izq == 1)		//Incrementar columna
+ 2829              		.loc 1 159 0
+ 2830 04ec 8C1094E5 		ldr	r1, [r4, #140]
+ 2831 04f0 010051E3 		cmp	r1, #1
+ 2832 04f4 68549FE5 		ldr	r5, .L112
+ 2833 04f8 6500000A 		beq	.L102
+ 2834              	.LVL36:
+ 2835              	.L69:
+ 199:../jugada_por_botones.c **** 		if(ev_tp == 1)
+ 2836              		.loc 1 199 0
+ 2837 04fc 946094E5 		ldr	r6, [r4, #148]
+ 2838 0500 010056E3 		cmp	r6, #1
+ 2839 0504 58549FE5 		ldr	r5, .L112
+ 2840 0508 BCFFFF1A 		bne	.L44
+ 202:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2841              		.loc 1 202 0
+ 2842 050c 883095E5 		ldr	r3, [r5, #136]
+ 201:../jugada_por_botones.c **** 			ev_tp = 0;
+ 2843              		.loc 1 201 0
+ 2844 0510 0010A0E3 		mov	r1, #0
+ 202:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2845              		.loc 1 202 0
+ 2846 0514 000053E3 		cmp	r3, #0
+ 201:../jugada_por_botones.c **** 			ev_tp = 0;
+ 2847              		.loc 1 201 0
+ 2848 0518 941085E5 		str	r1, [r5, #148]
+ 202:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2849              		.loc 1 202 0
+ 2850 051c B7FFFF1A 		bne	.L44
+ 2851              	.LBB14:
+ 204:../jugada_por_botones.c **** 				unsigned int delta1 = timer2_leer();
+ 2852              		.loc 1 204 0
+ 2853 0520 FEFFFFEB 		bl	timer2_leer
+ 205:../jugada_por_botones.c **** 				reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de proce
+ 2854              		.loc 1 205 0
+ 2855 0524 8510D5E5 		ldrb	r1, [r5, #133]	@ zero_extendqisi2
+ 204:../jugada_por_botones.c **** 				unsigned int delta1 = timer2_leer();
+ 2856              		.loc 1 204 0
+ 2857 0528 0070A0E1 		mov	r7, r0
+ 2858              	.LVL37:
+ 205:../jugada_por_botones.c **** 				reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de proce
+ 2859              		.loc 1 205 0
+ 2860 052c 8400D5E5 		ldrb	r0, [r5, #132]	@ zero_extendqisi2
+ 2861              	.LVL38:
+ 2862 0530 FEFFFFEB 		bl	reversi_procesar
+ 206:../jugada_por_botones.c **** 				unsigned int delta2 = timer2_leer();
+ 2863              		.loc 1 206 0
+ 2864 0534 FEFFFFEB 		bl	timer2_leer
+ 2865              	.LVL39:
+ 207:../jugada_por_botones.c **** 				tiempo_calc += (delta2-delta1);
+ 2866              		.loc 1 207 0
+ 2867 0538 9CC095E5 		ldr	ip, [r5, #156]
+ 2868 053c 0C2080E0 		add	r2, r0, ip
+ 2869 0540 027067E0 		rsb	r7, r7, r2
+ 2870              	.LVL40:
+ 2871 0544 9C7085E5 		str	r7, [r5, #156]
+ 208:../jugada_por_botones.c **** 				if(obtener_jugada_valida() == 1)
+ 2872              		.loc 1 208 0
+ 2873 0548 FEFFFFEB 		bl	obtener_jugada_valida
+ 2874              	.LVL41:
+ 2875 054c 010050E3 		cmp	r0, #1
+ 2876 0550 0070A0E1 		mov	r7, r0
+ 2877 0554 9900000A 		beq	.L103
+ 222:../jugada_por_botones.c **** 					tiempo_pv += reversi_t_pv();
+ 2878              		.loc 1 222 0
+ 2879 0558 FEFFFFEB 		bl	reversi_t_pv
+ 2880 055c A42095E5 		ldr	r2, [r5, #164]
+ 2881 0560 020080E0 		add	r0, r0, r2
+ 2882 0564 A40085E5 		str	r0, [r5, #164]
+ 223:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 2883              		.loc 1 223 0
+ 2884 0568 FEFFFFEB 		bl	reversi_veces_pv
+ 2885 056c A81095E5 		ldr	r1, [r5, #168]
+ 224:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 2886              		.loc 1 224 0
+ 2887 0570 A03095E5 		ldr	r3, [r5, #160]
+ 223:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 2888              		.loc 1 223 0
+ 2889 0574 01C080E0 		add	ip, r0, r1
+ 224:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 2890              		.loc 1 224 0
+ 2891 0578 A42095E5 		ldr	r2, [r5, #164]
+ 2892 057c 0300A0E1 		mov	r0, r3
+ 2893 0580 9C1095E5 		ldr	r1, [r5, #156]
+ 2894 0584 0C30A0E1 		mov	r3, ip
+ 223:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 2895              		.loc 1 223 0
+ 2896 0588 A8C085E5 		str	ip, [r5, #168]
+ 224:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 2897              		.loc 1 224 0
+ 2898 058c FEFFFFEB 		bl	pintar_profiling
+ 225:../jugada_por_botones.c **** 					haciendo_DMA = 1;
+ 2899              		.loc 1 225 0
+ 2900 0590 886085E5 		str	r6, [r5, #136]
+ 226:../jugada_por_botones.c **** 					iniciar_DMA();
+ 2901              		.loc 1 226 0
+ 2902 0594 FEFFFFEB 		bl	iniciar_DMA
+ 2903              	.L83:
+ 228:../jugada_por_botones.c **** 				final = obtener_fin();
+ 2904              		.loc 1 228 0
+ 2905 0598 FEFFFFEB 		bl	obtener_fin
+ 2906 059c 0000C4E5 		strb	r0, [r4, #0]
+ 2907 05a0 96FFFFEA 		b	.L44
+ 2908              	.LVL42:
+ 2909              	.L100:
+ 2910              	.LBE14:
+ 109:../jugada_por_botones.c **** 		if(haciendo_DMA == 0 && ev_timer > 0)
+ 2911              		.loc 1 109 0 discriminator 1
+ 2912 05a4 98C095E5 		ldr	ip, [r5, #152]
+ 2913 05a8 00005CE3 		cmp	ip, #0
+ 2914 05ac CAFFFFDA 		ble	.L55
+ 113:../jugada_por_botones.c **** 			tiempo_total++;
+ 2915              		.loc 1 113 0
+ 2916 05b0 A00095E5 		ldr	r0, [r5, #160]
+ 2917 05b4 011080E2 		add	r1, r0, #1
+ 2918 05b8 A01085E5 		str	r1, [r5, #160]
+ 111:../jugada_por_botones.c **** 			ev_timer--;
+ 2919              		.loc 1 111 0
+ 2920 05bc 01E04CE2 		sub	lr, ip, #1
+ 115:../jugada_por_botones.c **** 			pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 2921              		.loc 1 115 0
+ 2922 05c0 A83095E5 		ldr	r3, [r5, #168]
+ 2923 05c4 A00095E5 		ldr	r0, [r5, #160]
+ 2924 05c8 9C1095E5 		ldr	r1, [r5, #156]
+ 2925 05cc A42095E5 		ldr	r2, [r5, #164]
+ 111:../jugada_por_botones.c **** 			ev_timer--;
+ 2926              		.loc 1 111 0
+ 2927 05d0 98E085E5 		str	lr, [r5, #152]
+ 115:../jugada_por_botones.c **** 			pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 2928              		.loc 1 115 0
+ 2929 05d4 FEFFFFEB 		bl	pintar_profiling
+ 116:../jugada_por_botones.c **** 			haciendo_DMA = 1;
+ 2930              		.loc 1 116 0
+ 2931 05d8 0130A0E3 		mov	r3, #1
+ 2932 05dc 883085E5 		str	r3, [r5, #136]
+ 117:../jugada_por_botones.c **** 			iniciar_DMA();
+ 2933              		.loc 1 117 0
+ 2934 05e0 FEFFFFEB 		bl	iniciar_DMA
+ 2935 05e4 BCFFFFEA 		b	.L55
+ 2936              	.L96:
+  83:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2937              		.loc 1 83 0
+ 2938 05e8 880092E5 		ldr	r0, [r2, #136]
+  82:../jugada_por_botones.c **** 			ev_tp = 0;
+ 2939              		.loc 1 82 0
+ 2940 05ec 0010A0E3 		mov	r1, #0
+  83:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2941              		.loc 1 83 0
+ 2942 05f0 000050E3 		cmp	r0, #0
+  82:../jugada_por_botones.c **** 			ev_tp = 0;
+ 2943              		.loc 1 82 0
+ 2944 05f4 941082E5 		str	r1, [r2, #148]
+  83:../jugada_por_botones.c **** 			if(haciendo_DMA == 0)
+ 2945              		.loc 1 83 0
+ 2946 05f8 80FFFF1A 		bne	.L44
+  85:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 2947              		.loc 1 85 0
+ 2948 05fc 883082E5 		str	r3, [r2, #136]
+  86:../jugada_por_botones.c **** 				jugada_botones = Jugando;
+ 2949              		.loc 1 86 0
+ 2950 0600 AC30C2E5 		strb	r3, [r2, #172]
+  87:../jugada_por_botones.c **** 				pintar_jugando();
+ 2951              		.loc 1 87 0
+ 2952 0604 FEFFFFEB 		bl	pintar_jugando
+ 2953 0608 7CFFFFEA 		b	.L44
+ 2954              	.L101:
+ 121:../jugada_por_botones.c **** 			ev_bot_der = 0;
+ 2955              		.loc 1 121 0
+ 2956 060c 00C0A0E3 		mov	ip, #0
+ 2957 0610 90C085E5 		str	ip, [r5, #144]
+ 122:../jugada_por_botones.c **** 			if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la
+ 2958              		.loc 1 122 0
+ 2959 0614 FEFFFFEB 		bl	contar_blancas
+ 2960 0618 0060A0E1 		mov	r6, r0
+ 2961 061c FEFFFFEB 		bl	contar_negras
+ 2962 0620 066080E0 		add	r6, r0, r6
+ 2963 0624 400056E3 		cmp	r6, #64
+ 2964 0628 C900000A 		beq	.L104
+ 2965              	.LBB16:
+ 128:../jugada_por_botones.c **** 				volatile int aux = mi_fila;
+ 2966              		.loc 1 128 0
+ 2967 062c 8420D5E5 		ldrb	r2, [r5, #132]	@ zero_extendqisi2
+ 129:../jugada_por_botones.c **** 				volatile int aux2 = mi_columna;
+ 2968              		.loc 1 129 0
+ 2969 0630 8510D5E5 		ldrb	r1, [r5, #133]	@ zero_extendqisi2
+ 130:../jugada_por_botones.c **** 				mi_fila = ((mi_fila + 1) % 8);
+ 2970              		.loc 1 130 0
+ 2971 0634 013082E2 		add	r3, r2, #1
+ 2972 0638 070003E2 		and	r0, r3, #7
+ 128:../jugada_por_botones.c **** 				volatile int aux = mi_fila;
+ 2973              		.loc 1 128 0
+ 2974 063c 2C200BE5 		str	r2, [fp, #-44]
+ 2975              	.LVL43:
+ 130:../jugada_por_botones.c **** 				mi_fila = ((mi_fila + 1) % 8);
+ 2976              		.loc 1 130 0
+ 2977 0640 8400C5E5 		strb	r0, [r5, #132]
+ 129:../jugada_por_botones.c **** 				volatile int aux2 = mi_columna;
+ 2978              		.loc 1 129 0
+ 2979 0644 28100BE5 		str	r1, [fp, #-40]
+ 2980              	.LVL44:
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 2981              		.loc 1 131 0
+ 2982 0648 0C0000EA 		b	.L58
+ 2983              	.L106:
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 2984              		.loc 1 131 0 is_stmt 0 discriminator 2
+ 2985 064c 8400D4E5 		ldrb	r0, [r4, #132]	@ zero_extendqisi2
+ 2986 0650 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 2987 0654 FEFFFFEB 		bl	obtener_ficha_en
+ 2988 0658 020050E3 		cmp	r0, #2
+ 2989 065c 2E00001A 		bne	.L105
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 2990              		.loc 1 131 0 discriminator 1
+ 2991 0660 8400D5E5 		ldrb	r0, [r5, #132]	@ zero_extendqisi2
+ 2992 0664 2C601BE5 		ldr	r6, [fp, #-44]
+ 2993 0668 060050E1 		cmp	r0, r6
+ 2994 066c 2C00000A 		beq	.L61
+ 2995              	.L62:
+ 133:../jugada_por_botones.c **** 					mi_fila = ((mi_fila + 1) % 8);			//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_col
+ 2996              		.loc 1 133 0 is_stmt 1
+ 2997 0670 01E080E2 		add	lr, r0, #1
+ 2998 0674 07000EE2 		and	r0, lr, #7
+ 2999 0678 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 3000 067c 8400C4E5 		strb	r0, [r4, #132]
+ 3001              	.L58:
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3002              		.loc 1 131 0 discriminator 1
+ 3003 0680 FEFFFFEB 		bl	obtener_ficha_en
+ 3004 0684 010050E3 		cmp	r0, #1
+ 3005 0688 EFFFFF1A 		bne	.L106
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3006              		.loc 1 131 0 is_stmt 0
+ 3007 068c 8400D4E5 		ldrb	r0, [r4, #132]	@ zero_extendqisi2
+ 3008 0690 F6FFFFEA 		b	.L62
+ 3009              	.LVL45:
+ 3010              	.L102:
+ 3011              	.LBE16:
+ 161:../jugada_por_botones.c **** 			ev_bot_izq = 0;
+ 3012              		.loc 1 161 0 is_stmt 1
+ 3013 0694 00E0A0E3 		mov	lr, #0
+ 3014 0698 8CE085E5 		str	lr, [r5, #140]
+ 162:../jugada_por_botones.c **** 			if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la
+ 3015              		.loc 1 162 0
+ 3016 069c FEFFFFEB 		bl	contar_blancas
+ 3017 06a0 0060A0E1 		mov	r6, r0
+ 3018 06a4 FEFFFFEB 		bl	contar_negras
+ 3019 06a8 066080E0 		add	r6, r0, r6
+ 3020 06ac 400056E3 		cmp	r6, #64
+ 3021 06b0 A900000A 		beq	.L107
+ 3022              	.LBB18:
+ 168:../jugada_por_botones.c **** 				volatile int aux = mi_columna;
+ 3023              		.loc 1 168 0
+ 3024 06b4 8520D5E5 		ldrb	r2, [r5, #133]	@ zero_extendqisi2
+ 169:../jugada_por_botones.c **** 				volatile int aux2 = mi_fila;
+ 3025              		.loc 1 169 0
+ 3026 06b8 8400D5E5 		ldrb	r0, [r5, #132]	@ zero_extendqisi2
+ 170:../jugada_por_botones.c **** 				mi_columna = ((mi_columna + 1) % 8);
+ 3027              		.loc 1 170 0
+ 3028 06bc 013082E2 		add	r3, r2, #1
+ 3029 06c0 071003E2 		and	r1, r3, #7
+ 168:../jugada_por_botones.c **** 				volatile int aux = mi_columna;
+ 3030              		.loc 1 168 0
+ 3031 06c4 20200BE5 		str	r2, [fp, #-32]
+ 3032              	.LVL46:
+ 170:../jugada_por_botones.c **** 				mi_columna = ((mi_columna + 1) % 8);
+ 3033              		.loc 1 170 0
+ 3034 06c8 8510C5E5 		strb	r1, [r5, #133]
+ 169:../jugada_por_botones.c **** 				volatile int aux2 = mi_fila;
+ 3035              		.loc 1 169 0
+ 3036 06cc 24000BE5 		str	r0, [fp, #-36]
+ 3037              	.LVL47:
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3038              		.loc 1 171 0
+ 3039 06d0 0C0000EA 		b	.L71
+ 3040              	.L109:
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3041              		.loc 1 171 0 is_stmt 0 discriminator 2
+ 3042 06d4 8400D4E5 		ldrb	r0, [r4, #132]	@ zero_extendqisi2
+ 3043 06d8 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 3044 06dc FEFFFFEB 		bl	obtener_ficha_en
+ 3045 06e0 020050E3 		cmp	r0, #2
+ 3046 06e4 1D00001A 		bne	.L108
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3047              		.loc 1 171 0 discriminator 1
+ 3048 06e8 8510D5E5 		ldrb	r1, [r5, #133]	@ zero_extendqisi2
+ 3049 06ec 20001BE5 		ldr	r0, [fp, #-32]
+ 3050 06f0 000051E1 		cmp	r1, r0
+ 3051 06f4 1B00000A 		beq	.L74
+ 3052              	.L75:
+ 173:../jugada_por_botones.c **** 					mi_columna = ((mi_columna + 1) % 8);		//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = nu
+ 3053              		.loc 1 173 0 is_stmt 1
+ 3054 06f8 01C081E2 		add	ip, r1, #1
+ 3055 06fc 07100CE2 		and	r1, ip, #7
+ 3056 0700 8400D4E5 		ldrb	r0, [r4, #132]	@ zero_extendqisi2
+ 3057 0704 8510C4E5 		strb	r1, [r4, #133]
+ 3058              	.L71:
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3059              		.loc 1 171 0 discriminator 1
+ 3060 0708 FEFFFFEB 		bl	obtener_ficha_en
+ 3061 070c 010050E3 		cmp	r0, #1
+ 3062 0710 EFFFFF1A 		bne	.L109
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3063              		.loc 1 171 0 is_stmt 0
+ 3064 0714 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 3065 0718 F6FFFFEA 		b	.L75
+ 3066              	.LVL48:
+ 3067              	.L105:
+ 3068              	.LBE18:
+ 3069              	.LBB20:
+ 131:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3070              		.loc 1 131 0 is_stmt 1
+ 3071 071c 40129FE5 		ldr	r1, .L112
+ 3072 0720 8400D1E5 		ldrb	r0, [r1, #132]	@ zero_extendqisi2
+ 3073              	.L61:
+ 135:../jugada_por_botones.c **** 				if(mi_fila == aux)							//Si la ficha gris se queda atrapada
+ 3074              		.loc 1 135 0
+ 3075 0724 2C501BE5 		ldr	r5, [fp, #-44]
+ 3076 0728 000055E1 		cmp	r5, r0
+ 3077 072c 6400000A 		beq	.L110
+ 3078              	.LVL49:
+ 3079              	.L86:
+ 151:../jugada_por_botones.c **** 				while(haciendo_DMA != 0)
+ 3080              		.loc 1 151 0 discriminator 1
+ 3081 0730 880094E5 		ldr	r0, [r4, #136]
+ 3082 0734 000050E3 		cmp	r0, #0
+ 3083 0738 24129FE5 		ldr	r1, .L112
+ 3084 073c FBFFFF1A 		bne	.L86
+ 154:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 3085              		.loc 1 154 0
+ 3086 0740 01C0A0E3 		mov	ip, #1
+ 3087 0744 88C081E5 		str	ip, [r1, #136]
+ 156:../jugada_por_botones.c **** 				mover_gris(mi_fila, mi_columna, aux, aux2);		//Mover en la pantalla
+ 3088              		.loc 1 156 0
+ 3089 0748 2C201BE5 		ldr	r2, [fp, #-44]
+ 3090 074c 8400D1E5 		ldrb	r0, [r1, #132]	@ zero_extendqisi2
+ 3091 0750 28301BE5 		ldr	r3, [fp, #-40]
+ 3092 0754 8510D1E5 		ldrb	r1, [r1, #133]	@ zero_extendqisi2
+ 3093 0758 FEFFFFEB 		bl	mover_gris
+ 3094 075c 62FFFFEA 		b	.L56
+ 3095              	.LVL50:
+ 3096              	.L108:
+ 3097              	.LBE20:
+ 3098              	.LBB21:
+ 171:../jugada_por_botones.c **** 				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_
+ 3099              		.loc 1 171 0
+ 3100 0760 FC519FE5 		ldr	r5, .L112
+ 3101 0764 8510D5E5 		ldrb	r1, [r5, #133]	@ zero_extendqisi2
+ 3102              	.L74:
+ 175:../jugada_por_botones.c **** 				if(mi_columna == aux)							//Si la ficha gris se queda atrapada
+ 3103              		.loc 1 175 0
+ 3104 0768 20601BE5 		ldr	r6, [fp, #-32]
+ 3105 076c 010056E1 		cmp	r6, r1
+ 3106 0770 2F00000A 		beq	.L111
+ 3107              	.LVL51:
+ 3108              	.L84:
+ 192:../jugada_por_botones.c **** 				while(haciendo_DMA != 0)
+ 3109              		.loc 1 192 0 discriminator 1
+ 3110 0774 88C094E5 		ldr	ip, [r4, #136]
+ 3111 0778 00005CE3 		cmp	ip, #0
+ 3112 077c E0119FE5 		ldr	r1, .L112
+ 3113 0780 FBFFFF1A 		bne	.L84
+ 195:../jugada_por_botones.c **** 				haciendo_DMA = 1;
+ 3114              		.loc 1 195 0
+ 3115 0784 0100A0E3 		mov	r0, #1
+ 3116 0788 880081E5 		str	r0, [r1, #136]
+ 196:../jugada_por_botones.c **** 				mover_gris(mi_fila, mi_columna, aux2, aux);	//Mover en la pantalla
+ 3117              		.loc 1 196 0
+ 3118 078c 24201BE5 		ldr	r2, [fp, #-36]
+ 3119 0790 8400D1E5 		ldrb	r0, [r1, #132]	@ zero_extendqisi2
+ 3120 0794 20301BE5 		ldr	r3, [fp, #-32]
+ 3121 0798 8510D1E5 		ldrb	r1, [r1, #133]	@ zero_extendqisi2
+ 3122 079c FEFFFFEB 		bl	mover_gris
+ 3123 07a0 55FFFFEA 		b	.L69
+ 3124              	.LVL52:
+ 3125              	.L99:
+ 3126              	.LBE21:
+ 101:../jugada_por_botones.c **** 				pintar_fin_derrota(contar_blancas(), contar_negras());
+ 3127              		.loc 1 101 0
+ 3128 07a4 FEFFFFEB 		bl	contar_blancas
+ 3129 07a8 0050A0E1 		mov	r5, r0
+ 3130 07ac FEFFFFEB 		bl	contar_negras
+ 3131 07b0 0010A0E1 		mov	r1, r0
+ 3132 07b4 0500A0E1 		mov	r0, r5
+ 3133 07b8 FEFFFFEB 		bl	pintar_fin_derrota
+ 3134 07bc 40FFFFEA 		b	.L53
+ 3135              	.LVL53:
+ 3136              	.L103:
+ 3137              	.LBB22:
+ 3138              	.LBB15:
+ 210:../jugada_por_botones.c **** 					borrar_ficha(mi_fila, mi_columna);
+ 3139              		.loc 1 210 0
+ 3140 07c0 8510D5E5 		ldrb	r1, [r5, #133]	@ zero_extendqisi2
+ 3141 07c4 8400D5E5 		ldrb	r0, [r5, #132]	@ zero_extendqisi2
+ 3142 07c8 FEFFFFEB 		bl	borrar_ficha
+ 211:../jugada_por_botones.c **** 					actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y vo
+ 3143              		.loc 1 211 0
+ 3144 07cc FEFFFFEB 		bl	actualizar_movimientos_pantalla
+ 212:../jugada_por_botones.c **** 					reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera 
+ 3145              		.loc 1 212 0
+ 3146 07d0 FEFFFFEB 		bl	reiniciar_posicion_gris
+ 214:../jugada_por_botones.c **** 					tiempo_pv += reversi_t_pv();
+ 3147              		.loc 1 214 0
+ 3148 07d4 FEFFFFEB 		bl	reversi_t_pv
+ 3149 07d8 A42095E5 		ldr	r2, [r5, #164]
+ 3150 07dc 020080E0 		add	r0, r0, r2
+ 3151 07e0 A40085E5 		str	r0, [r5, #164]
+ 215:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 3152              		.loc 1 215 0
+ 3153 07e4 FEFFFFEB 		bl	reversi_veces_pv
+ 3154 07e8 A81095E5 		ldr	r1, [r5, #168]
+ 216:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 3155              		.loc 1 216 0
+ 3156 07ec A03095E5 		ldr	r3, [r5, #160]
+ 215:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 3157              		.loc 1 215 0
+ 3158 07f0 01C080E0 		add	ip, r0, r1
+ 216:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 3159              		.loc 1 216 0
+ 3160 07f4 A42095E5 		ldr	r2, [r5, #164]
+ 3161 07f8 0300A0E1 		mov	r0, r3
+ 3162 07fc 9C1095E5 		ldr	r1, [r5, #156]
+ 3163 0800 0C30A0E1 		mov	r3, ip
+ 215:../jugada_por_botones.c **** 					veces_pv += reversi_veces_pv();
+ 3164              		.loc 1 215 0
+ 3165 0804 A8C085E5 		str	ip, [r5, #168]
+ 216:../jugada_por_botones.c **** 					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 3166              		.loc 1 216 0
+ 3167 0808 FEFFFFEB 		bl	pintar_profiling
+ 217:../jugada_por_botones.c **** 					haciendo_DMA = 1;
+ 3168              		.loc 1 217 0
+ 3169 080c 887085E5 		str	r7, [r5, #136]
+ 218:../jugada_por_botones.c **** 					iniciar_DMA();
+ 3170              		.loc 1 218 0
+ 3171 0810 FEFFFFEB 		bl	iniciar_DMA
+ 3172 0814 5FFFFFEA 		b	.L83
+ 3173              	.LVL54:
+ 3174              	.L98:
+ 3175              	.LBE15:
+ 3176              	.LBE22:
+  97:../jugada_por_botones.c **** 				pintar_fin_victoria(contar_blancas(), contar_negras());
+ 3177              		.loc 1 97 0
+ 3178 0818 FEFFFFEB 		bl	contar_blancas
+ 3179 081c 0060A0E1 		mov	r6, r0
+ 3180 0820 FEFFFFEB 		bl	contar_negras
+ 3181 0824 0010A0E1 		mov	r1, r0
+ 3182 0828 0600A0E1 		mov	r0, r6
+ 3183 082c FEFFFFEB 		bl	pintar_fin_victoria
+ 3184 0830 23FFFFEA 		b	.L53
+ 3185              	.LVL55:
+ 3186              	.L111:
+ 3187              	.LBB23:
+ 3188              	.LBB19:
+ 179:../jugada_por_botones.c **** 					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+ 3189              		.loc 1 179 0
+ 3190 0834 0000A0E3 		mov	r0, #0
+ 3191 0838 28000BE5 		str	r0, [fp, #-40]
+ 3192              	.LVL56:
+ 3193 083c 28101BE5 		ldr	r1, [fp, #-40]
+ 3194 0840 070051E3 		cmp	r1, #7
+ 3195 0844 CAFFFFCA 		bgt	.L84
+ 3196 0848 84C0D4E5 		ldrb	ip, [r4, #132]	@ zero_extendqisi2
+ 3197 084c 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 3198              	.LVL57:
+ 3199              	.L80:
+ 181:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 3200              		.loc 1 181 0
+ 3201 0850 2C000BE5 		str	r0, [fp, #-44]
+ 3202 0854 2CE01BE5 		ldr	lr, [fp, #-44]
+ 3203 0858 07005EE3 		cmp	lr, #7
+ 3204 085c 0F0000CA 		bgt	.L77
+ 3205              	.L85:
+ 183:../jugada_por_botones.c **** 							if(tablero_actual[i][j] == CASILLA_VACIA)
+ 3206              		.loc 1 183 0
+ 3207 0860 28501BE5 		ldr	r5, [fp, #-40]
+ 3208 0864 2CE01BE5 		ldr	lr, [fp, #-44]
+ 3209 0868 853184E0 		add	r3, r4, r5, asl #3
+ 3210 086c 0E2083E0 		add	r2, r3, lr
+ 3211 0870 0460D2E5 		ldrb	r6, [r2, #4]	@ zero_extendqisi2
+ 3212 0874 000056E3 		cmp	r6, #0
+ 185:../jugada_por_botones.c **** 								mi_fila = i;
+ 3213              		.loc 1 185 0
+ 3214 0878 28E01B05 		ldreq	lr, [fp, #-40]
+ 186:../jugada_por_botones.c **** 								mi_columna = j;
+ 3215              		.loc 1 186 0
+ 3216 087c 2C601B05 		ldreq	r6, [fp, #-44]
+ 181:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 3217              		.loc 1 181 0
+ 3218 0880 2C501BE5 		ldr	r5, [fp, #-44]
+ 3219 0884 013085E2 		add	r3, r5, #1
+ 3220              	.LVL58:
+ 3221 0888 2C300BE5 		str	r3, [fp, #-44]
+ 3222              	.LVL59:
+ 3223 088c 2C201BE5 		ldr	r2, [fp, #-44]
+ 185:../jugada_por_botones.c **** 								mi_fila = i;
+ 3224              		.loc 1 185 0
+ 3225 0890 0EC0A001 		moveq	ip, lr
+ 186:../jugada_por_botones.c **** 								mi_columna = j;
+ 3226              		.loc 1 186 0
+ 3227 0894 0610A001 		moveq	r1, r6
+ 181:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 3228              		.loc 1 181 0
+ 3229 0898 070052E3 		cmp	r2, #7
+ 3230 089c EFFFFFDA 		ble	.L85
+ 3231              	.L77:
+ 179:../jugada_por_botones.c **** 					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+ 3232              		.loc 1 179 0
+ 3233 08a0 28201BE5 		ldr	r2, [fp, #-40]
+ 3234 08a4 01E082E2 		add	lr, r2, #1
+ 3235              	.LVL60:
+ 3236 08a8 28E00BE5 		str	lr, [fp, #-40]
+ 3237              	.LVL61:
+ 3238 08ac 28601BE5 		ldr	r6, [fp, #-40]
+ 3239 08b0 070056E3 		cmp	r6, #7
+ 3240 08b4 E5FFFFDA 		ble	.L80
+ 3241 08b8 84C0C4E5 		strb	ip, [r4, #132]
+ 3242 08bc 8510C4E5 		strb	r1, [r4, #133]
+ 3243 08c0 ABFFFFEA 		b	.L84
+ 3244              	.LVL62:
+ 3245              	.L110:
+ 3246              	.LBE19:
+ 3247              	.LBE23:
+ 3248              	.LBB24:
+ 3249              	.LBB17:
+ 139:../jugada_por_botones.c **** 					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+ 3250              		.loc 1 139 0
+ 3251 08c4 0000A0E3 		mov	r0, #0
+ 3252 08c8 24000BE5 		str	r0, [fp, #-36]
+ 3253              	.LVL63:
+ 3254 08cc 24C01BE5 		ldr	ip, [fp, #-36]
+ 3255 08d0 07005CE3 		cmp	ip, #7
+ 3256 08d4 95FFFFCA 		bgt	.L86
+ 3257 08d8 84C0D4E5 		ldrb	ip, [r4, #132]	@ zero_extendqisi2
+ 3258 08dc 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 3259              	.LVL64:
+ 3260              	.L67:
+ 141:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 3261              		.loc 1 141 0
+ 3262 08e0 20000BE5 		str	r0, [fp, #-32]
+ 3263 08e4 20201BE5 		ldr	r2, [fp, #-32]
+ 3264 08e8 070052E3 		cmp	r2, #7
+ 3265 08ec 0F0000CA 		bgt	.L64
+ 3266              	.L87:
+ 143:../jugada_por_botones.c **** 							if(tablero_actual[i][j] == CASILLA_VACIA)
+ 3267              		.loc 1 143 0
+ 3268 08f0 24601BE5 		ldr	r6, [fp, #-36]
+ 3269 08f4 20201BE5 		ldr	r2, [fp, #-32]
+ 3270 08f8 86E184E0 		add	lr, r4, r6, asl #3
+ 3271 08fc 02308EE0 		add	r3, lr, r2
+ 3272 0900 0450D3E5 		ldrb	r5, [r3, #4]	@ zero_extendqisi2
+ 3273 0904 000055E3 		cmp	r5, #0
+ 145:../jugada_por_botones.c **** 								mi_fila = i;
+ 3274              		.loc 1 145 0
+ 3275 0908 24201B05 		ldreq	r2, [fp, #-36]
+ 146:../jugada_por_botones.c **** 								mi_columna = j;
+ 3276              		.loc 1 146 0
+ 3277 090c 20501B05 		ldreq	r5, [fp, #-32]
+ 141:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 3278              		.loc 1 141 0
+ 3279 0910 20601BE5 		ldr	r6, [fp, #-32]
+ 3280 0914 01E086E2 		add	lr, r6, #1
+ 3281              	.LVL65:
+ 3282 0918 20E00BE5 		str	lr, [fp, #-32]
+ 3283              	.LVL66:
+ 3284 091c 20301BE5 		ldr	r3, [fp, #-32]
+ 145:../jugada_por_botones.c **** 								mi_fila = i;
+ 3285              		.loc 1 145 0
+ 3286 0920 02C0A001 		moveq	ip, r2
+ 146:../jugada_por_botones.c **** 								mi_columna = j;
+ 3287              		.loc 1 146 0
+ 3288 0924 0510A001 		moveq	r1, r5
+ 141:../jugada_por_botones.c **** 						for(j = 0; j < num_columnas; j++)
+ 3289              		.loc 1 141 0
+ 3290 0928 070053E3 		cmp	r3, #7
+ 3291 092c EFFFFFDA 		ble	.L87
+ 3292              	.L64:
+ 139:../jugada_por_botones.c **** 					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+ 3293              		.loc 1 139 0
+ 3294 0930 24301BE5 		ldr	r3, [fp, #-36]
+ 3295 0934 012083E2 		add	r2, r3, #1
+ 3296              	.LVL67:
+ 3297 0938 24200BE5 		str	r2, [fp, #-36]
+ 3298              	.LVL68:
+ 3299 093c 24501BE5 		ldr	r5, [fp, #-36]
+ 3300 0940 070055E3 		cmp	r5, #7
+ 3301 0944 E5FFFFDA 		ble	.L67
+ 3302 0948 84C0C4E5 		strb	ip, [r4, #132]
+ 3303 094c 8510C4E5 		strb	r1, [r4, #133]
+ 3304 0950 76FFFFEA 		b	.L86
+ 3305              	.LVL69:
+ 3306              	.L104:
+ 3307              	.LBE17:
+ 3308              	.LBE24:
+ 3309              	.LBB25:
+ 124:../jugada_por_botones.c **** 				contar_fichas_final();
+ 3310              		.loc 1 124 0
+ 3311 0954 FEFFFFEB 		bl	contar_fichas_final
+ 3312 0958 E3FEFFEA 		b	.L56
+ 3313              	.LVL70:
+ 3314              	.L107:
+ 3315              	.LBE25:
+ 3316              	.LBB26:
+ 164:../jugada_por_botones.c **** 				contar_fichas_final();
+ 3317              		.loc 1 164 0
+ 3318 095c FEFFFFEB 		bl	contar_fichas_final
+ 3319 0960 E5FEFFEA 		b	.L69
+ 3320              	.L113:
+ 3321              		.align	2
+ 3322              	.L112:
+ 3323 0964 00000000 		.word	.LANCHOR0
+ 3324              	.LBE26:
+ 3325              		.cfi_endproc
+ 3326              	.LFE1:
+ 3328              		.align	2
+ 3329              		.global	jugada_ev_tsp
+ 3331              	jugada_ev_tsp:
+ 3332              	.LFB2:
+ 244:../jugada_por_botones.c **** {
+ 3333              		.loc 1 244 0
+ 3334              		.cfi_startproc
+ 3335              		@ Function supports interworking.
+ 3336              		@ args = 0, pretend = 0, frame = 0
+ 3337              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3338              		@ link register save eliminated.
+ 245:../jugada_por_botones.c **** 	ev_tp = 1;
+ 3339              		.loc 1 245 0
+ 3340 0968 08309FE5 		ldr	r3, .L115
+ 3341 096c 0120A0E3 		mov	r2, #1
+ 3342 0970 942083E5 		str	r2, [r3, #148]
+ 247:../jugada_por_botones.c **** }
+ 3343              		.loc 1 247 0
+ 246:../jugada_por_botones.c **** 	jugada_por_botones();
+ 3344              		.loc 1 246 0
+ 3345 0974 FEFFFFEA 		b	jugada_por_botones
+ 3346              	.L116:
+ 3347              		.align	2
+ 3348              	.L115:
+ 3349 0978 00000000 		.word	.LANCHOR0
+ 3350              		.cfi_endproc
+ 3351              	.LFE2:
+ 3353              		.align	2
+ 3354              		.global	jugada_ev_der
+ 3356              	jugada_ev_der:
+ 3357              	.LFB3:
+ 251:../jugada_por_botones.c **** {
+ 3358              		.loc 1 251 0
+ 3359              		.cfi_startproc
+ 3360              		@ Function supports interworking.
+ 3361              		@ args = 0, pretend = 0, frame = 0
+ 3362              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3363              		@ link register save eliminated.
+ 252:../jugada_por_botones.c **** 	ev_bot_der = 1;
+ 3364              		.loc 1 252 0
+ 3365 097c 08309FE5 		ldr	r3, .L118
+ 3366 0980 0120A0E3 		mov	r2, #1
+ 3367 0984 902083E5 		str	r2, [r3, #144]
+ 254:../jugada_por_botones.c **** }
+ 3368              		.loc 1 254 0
+ 253:../jugada_por_botones.c **** 	jugada_por_botones();
+ 3369              		.loc 1 253 0
+ 3370 0988 FEFFFFEA 		b	jugada_por_botones
+ 3371              	.L119:
+ 3372              		.align	2
+ 3373              	.L118:
+ 3374 098c 00000000 		.word	.LANCHOR0
+ 3375              		.cfi_endproc
+ 3376              	.LFE3:
+ 3378              		.align	2
+ 3379              		.global	jugada_ev_izq
+ 3381              	jugada_ev_izq:
+ 3382              	.LFB4:
+ 259:../jugada_por_botones.c **** {
+ 3383              		.loc 1 259 0
+ 3384              		.cfi_startproc
+ 3385              		@ Function supports interworking.
+ 3386              		@ args = 0, pretend = 0, frame = 0
+ 3387              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3388              		@ link register save eliminated.
+ 260:../jugada_por_botones.c **** 	ev_bot_izq = 1;
+ 3389              		.loc 1 260 0
+ 3390 0990 08309FE5 		ldr	r3, .L121
+ 3391 0994 0120A0E3 		mov	r2, #1
+ 3392 0998 8C2083E5 		str	r2, [r3, #140]
+ 262:../jugada_por_botones.c **** }
+ 3393              		.loc 1 262 0
+ 261:../jugada_por_botones.c **** 	jugada_por_botones();
+ 3394              		.loc 1 261 0
+ 3395 099c FEFFFFEA 		b	jugada_por_botones
+ 3396              	.L122:
+ 3397              		.align	2
+ 3398              	.L121:
+ 3399 09a0 00000000 		.word	.LANCHOR0
+ 3400              		.cfi_endproc
+ 3401              	.LFE4:
+ 3403              		.align	2
+ 3404              		.global	jugada_ev_timer
+ 3406              	jugada_ev_timer:
+ 3407              	.LFB5:
+ 265:../jugada_por_botones.c **** {
+ 3408              		.loc 1 265 0
+ 3409              		.cfi_startproc
+ 3410              		@ Function supports interworking.
+ 3411              		@ args = 0, pretend = 0, frame = 0
+ 3412              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3413              		@ link register save eliminated.
+ 266:../jugada_por_botones.c **** 	ev_timer++;
+ 3414              		.loc 1 266 0
+ 3415 09a4 0C309FE5 		ldr	r3, .L124
+ 3416 09a8 980093E5 		ldr	r0, [r3, #152]
+ 3417 09ac 012080E2 		add	r2, r0, #1
+ 3418 09b0 982083E5 		str	r2, [r3, #152]
+ 268:../jugada_por_botones.c **** }
+ 3419              		.loc 1 268 0
+ 267:../jugada_por_botones.c **** 	jugada_por_botones();
+ 3420              		.loc 1 267 0
+ 3421 09b4 FEFFFFEA 		b	jugada_por_botones
+ 3422              	.L125:
+ 3423              		.align	2
+ 3424              	.L124:
+ 3425 09b8 00000000 		.word	.LANCHOR0
+ 3426              		.cfi_endproc
+ 3427              	.LFE5:
+ 3429              		.align	2
+ 3430              		.global	termina_DMA
+ 3432              	termina_DMA:
+ 3433              	.LFB6:
+ 272:../jugada_por_botones.c **** {
+ 3434              		.loc 1 272 0
+ 3435              		.cfi_startproc
+ 3436              		@ Function supports interworking.
+ 3437              		@ args = 0, pretend = 0, frame = 0
+ 3438              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3439              		@ link register save eliminated.
+ 273:../jugada_por_botones.c **** 	haciendo_DMA = 0;
+ 3440              		.loc 1 273 0
+ 3441 09bc 08309FE5 		ldr	r3, .L127
+ 3442 09c0 0020A0E3 		mov	r2, #0
+ 3443 09c4 882083E5 		str	r2, [r3, #136]
+ 275:../jugada_por_botones.c **** }
+ 3444              		.loc 1 275 0
+ 274:../jugada_por_botones.c **** 	jugada_por_botones();
+ 3445              		.loc 1 274 0
+ 3446 09c8 FEFFFFEA 		b	jugada_por_botones
+ 3447              	.L128:
+ 3448              		.align	2
+ 3449              	.L127:
+ 3450 09cc 00000000 		.word	.LANCHOR0
+ 3451              		.cfi_endproc
+ 3452              	.LFE6:
+ 3454              		.align	2
+ 3455              		.global	jugada_ev_tecla0
+ 3457              	jugada_ev_tecla0:
+ 3458              	.LFB9:
+ 321:../jugada_por_botones.c **** {
+ 3459              		.loc 1 321 0
+ 3460              		.cfi_startproc
+ 3461              		@ Function supports interworking.
+ 3462              		@ args = 0, pretend = 0, frame = 0
+ 3463              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3464 09d0 0DC0A0E1 		mov	ip, sp
+ 3465              	.LCFI10:
+ 3466              		.cfi_def_cfa_register 12
+ 3467 09d4 F8D92DE9 		stmfd	sp!, {r3, r4, r5, r6, r7, r8, fp, ip, lr, pc}
+ 322:../jugada_por_botones.c **** 	if(jugada_botones == Jugando)
+ 3468              		.loc 1 322 0
+ 3469 09d8 44439FE5 		ldr	r4, .L156
+ 3470              		.cfi_offset 14, -8
+ 3471              		.cfi_offset 13, -12
+ 3472              		.cfi_offset 11, -16
+ 3473              		.cfi_offset 8, -20
+ 3474              		.cfi_offset 7, -24
+ 3475              		.cfi_offset 6, -28
+ 3476              		.cfi_offset 5, -32
+ 3477              		.cfi_offset 4, -36
+ 3478              		.cfi_offset 3, -40
+ 3479 09dc AC30D4E5 		ldrb	r3, [r4, #172]	@ zero_extendqisi2
+ 3480 09e0 010053E3 		cmp	r3, #1
+ 321:../jugada_por_botones.c **** {
+ 3481              		.loc 1 321 0
+ 3482 09e4 04B04CE2 		sub	fp, ip, #4
+ 3483              	.LCFI11:
+ 3484              		.cfi_def_cfa 11, 4
+ 322:../jugada_por_botones.c **** 	if(jugada_botones == Jugando)
+ 3485              		.loc 1 322 0
+ 3486 09e8 0200000A 		beq	.L155
+ 3487              	.L129:
+ 339:../jugada_por_botones.c **** }
+ 3488              		.loc 1 339 0
+ 3489 09ec 24D04BE2 		sub	sp, fp, #36
+ 3490 09f0 F8699DE8 		ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, lr}
+ 3491 09f4 1EFF2FE1 		bx	lr
+ 3492              	.L155:
+ 3493              	.LBB32:
+ 324:../jugada_por_botones.c **** 		unsigned int delta1 = timer2_leer();
+ 3494              		.loc 1 324 0
+ 3495 09f8 FEFFFFEB 		bl	timer2_leer
+ 3496 09fc 0050A0E1 		mov	r5, r0
+ 3497              	.LVL71:
+ 325:../jugada_por_botones.c **** 		mover_IA();
+ 3498              		.loc 1 325 0
+ 3499 0a00 FEFFFFEB 		bl	mover_IA
+ 3500              	.LVL72:
+ 326:../jugada_por_botones.c **** 		unsigned int delta2 = timer2_leer();
+ 3501              		.loc 1 326 0
+ 3502 0a04 FEFFFFEB 		bl	timer2_leer
+ 3503              	.LVL73:
+ 327:../jugada_por_botones.c **** 		tiempo_calc += (delta2-delta1);
+ 3504              		.loc 1 327 0
+ 3505 0a08 9C1094E5 		ldr	r1, [r4, #156]
+ 3506 0a0c 010080E0 		add	r0, r0, r1
+ 3507              	.LVL74:
+ 3508 0a10 002065E0 		rsb	r2, r5, r0
+ 328:../jugada_por_botones.c **** 		borrar_ficha(mi_fila, mi_columna);
+ 3509              		.loc 1 328 0
+ 3510 0a14 8510D4E5 		ldrb	r1, [r4, #133]	@ zero_extendqisi2
+ 3511 0a18 8400D4E5 		ldrb	r0, [r4, #132]	@ zero_extendqisi2
+ 327:../jugada_por_botones.c **** 		tiempo_calc += (delta2-delta1);
+ 3512              		.loc 1 327 0
+ 3513 0a1c 9C2084E5 		str	r2, [r4, #156]
+ 328:../jugada_por_botones.c **** 		borrar_ficha(mi_fila, mi_columna);
+ 3514              		.loc 1 328 0
+ 3515 0a20 FEFFFFEB 		bl	borrar_ficha
+ 3516              	.LBB33:
+ 3517              	.LBB34:
+ 304:../jugada_por_botones.c **** 	obtener_tablero(tablero_actual);
+ 3518              		.loc 1 304 0
+ 3519 0a24 040084E2 		add	r0, r4, #4
+ 3520 0a28 FEFFFFEB 		bl	obtener_tablero
+ 3521              	.LVL75:
+ 3522 0a2c 048084E2 		add	r8, r4, #4
+ 3523 0a30 446084E2 		add	r6, r4, #68
+ 3524 0a34 0850A0E1 		mov	r5, r8
+ 3525              	.LVL76:
+ 306:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
+ 3526              		.loc 1 306 0
+ 3527 0a38 0070A0E3 		mov	r7, #0
+ 3528              	.LVL77:
+ 3529              	.L139:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3530              		.loc 1 310 0
+ 3531 0a3c 00C0D5E5 		ldrb	ip, [r5, #0]	@ zero_extendqisi2
+ 3532 0a40 00E0D6E5 		ldrb	lr, [r6, #0]	@ zero_extendqisi2
+ 3533 0a44 0E005CE1 		cmp	ip, lr
+ 3534 0a48 0800000A 		beq	.L131
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3535              		.loc 1 312 0
+ 3536 0a4c 0010A0E3 		mov	r1, #0
+ 3537 0a50 0700A0E1 		mov	r0, r7
+ 3538 0a54 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3539              		.loc 1 313 0
+ 3540 0a58 0700A0E1 		mov	r0, r7
+ 3541 0a5c 0010A0E3 		mov	r1, #0
+ 3542 0a60 0020D5E5 		ldrb	r2, [r5, #0]	@ zero_extendqisi2
+ 3543 0a64 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3544              		.loc 1 314 0
+ 3545 0a68 0030D5E5 		ldrb	r3, [r5, #0]	@ zero_extendqisi2
+ 3546 0a6c 0030C6E5 		strb	r3, [r6, #0]
+ 3547              	.L131:
+ 3548              	.LVL78:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3549              		.loc 1 310 0
+ 3550 0a70 0120D5E5 		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 3551 0a74 0100D6E5 		ldrb	r0, [r6, #1]	@ zero_extendqisi2
+ 3552 0a78 000052E1 		cmp	r2, r0
+ 3553 0a7c 0800000A 		beq	.L132
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3554              		.loc 1 312 0
+ 3555 0a80 0110A0E3 		mov	r1, #1
+ 3556 0a84 0700A0E1 		mov	r0, r7
+ 3557 0a88 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3558              		.loc 1 313 0
+ 3559 0a8c 0110A0E3 		mov	r1, #1
+ 3560 0a90 0700A0E1 		mov	r0, r7
+ 3561 0a94 0120D5E5 		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 3562 0a98 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3563              		.loc 1 314 0
+ 3564 0a9c 0110D5E5 		ldrb	r1, [r5, #1]	@ zero_extendqisi2
+ 3565 0aa0 0110C6E5 		strb	r1, [r6, #1]
+ 3566              	.L132:
+ 3567              	.LVL79:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3568              		.loc 1 310 0
+ 3569 0aa4 02C0D5E5 		ldrb	ip, [r5, #2]	@ zero_extendqisi2
+ 3570 0aa8 02E0D6E5 		ldrb	lr, [r6, #2]	@ zero_extendqisi2
+ 3571 0aac 0E005CE1 		cmp	ip, lr
+ 3572 0ab0 0800000A 		beq	.L133
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3573              		.loc 1 312 0
+ 3574 0ab4 0210A0E3 		mov	r1, #2
+ 3575 0ab8 0700A0E1 		mov	r0, r7
+ 3576 0abc FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3577              		.loc 1 313 0
+ 3578 0ac0 0700A0E1 		mov	r0, r7
+ 3579 0ac4 0210A0E3 		mov	r1, #2
+ 3580 0ac8 0220D5E5 		ldrb	r2, [r5, #2]	@ zero_extendqisi2
+ 3581 0acc FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3582              		.loc 1 314 0
+ 3583 0ad0 0230D5E5 		ldrb	r3, [r5, #2]	@ zero_extendqisi2
+ 3584 0ad4 0230C6E5 		strb	r3, [r6, #2]
+ 3585              	.L133:
+ 3586              	.LVL80:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3587              		.loc 1 310 0
+ 3588 0ad8 0320D5E5 		ldrb	r2, [r5, #3]	@ zero_extendqisi2
+ 3589 0adc 0300D6E5 		ldrb	r0, [r6, #3]	@ zero_extendqisi2
+ 3590 0ae0 000052E1 		cmp	r2, r0
+ 3591 0ae4 0800000A 		beq	.L134
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3592              		.loc 1 312 0
+ 3593 0ae8 0310A0E3 		mov	r1, #3
+ 3594 0aec 0700A0E1 		mov	r0, r7
+ 3595 0af0 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3596              		.loc 1 313 0
+ 3597 0af4 0310A0E3 		mov	r1, #3
+ 3598 0af8 0700A0E1 		mov	r0, r7
+ 3599 0afc 0320D5E5 		ldrb	r2, [r5, #3]	@ zero_extendqisi2
+ 3600 0b00 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3601              		.loc 1 314 0
+ 3602 0b04 0310D5E5 		ldrb	r1, [r5, #3]	@ zero_extendqisi2
+ 3603 0b08 0310C6E5 		strb	r1, [r6, #3]
+ 3604              	.L134:
+ 3605              	.LVL81:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3606              		.loc 1 310 0
+ 3607 0b0c 04C0D5E5 		ldrb	ip, [r5, #4]	@ zero_extendqisi2
+ 3608 0b10 04E0D6E5 		ldrb	lr, [r6, #4]	@ zero_extendqisi2
+ 3609 0b14 0E005CE1 		cmp	ip, lr
+ 3610 0b18 0800000A 		beq	.L135
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3611              		.loc 1 312 0
+ 3612 0b1c 0410A0E3 		mov	r1, #4
+ 3613 0b20 0700A0E1 		mov	r0, r7
+ 3614 0b24 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3615              		.loc 1 313 0
+ 3616 0b28 0700A0E1 		mov	r0, r7
+ 3617 0b2c 0410A0E3 		mov	r1, #4
+ 3618 0b30 0420D5E5 		ldrb	r2, [r5, #4]	@ zero_extendqisi2
+ 3619 0b34 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3620              		.loc 1 314 0
+ 3621 0b38 0430D5E5 		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+ 3622 0b3c 0430C6E5 		strb	r3, [r6, #4]
+ 3623              	.L135:
+ 3624              	.LVL82:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3625              		.loc 1 310 0
+ 3626 0b40 0520D5E5 		ldrb	r2, [r5, #5]	@ zero_extendqisi2
+ 3627 0b44 0500D6E5 		ldrb	r0, [r6, #5]	@ zero_extendqisi2
+ 3628 0b48 000052E1 		cmp	r2, r0
+ 3629 0b4c 0800000A 		beq	.L136
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3630              		.loc 1 312 0
+ 3631 0b50 0510A0E3 		mov	r1, #5
+ 3632 0b54 0700A0E1 		mov	r0, r7
+ 3633 0b58 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3634              		.loc 1 313 0
+ 3635 0b5c 0510A0E3 		mov	r1, #5
+ 3636 0b60 0700A0E1 		mov	r0, r7
+ 3637 0b64 0520D5E5 		ldrb	r2, [r5, #5]	@ zero_extendqisi2
+ 3638 0b68 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3639              		.loc 1 314 0
+ 3640 0b6c 0510D5E5 		ldrb	r1, [r5, #5]	@ zero_extendqisi2
+ 3641 0b70 0510C6E5 		strb	r1, [r6, #5]
+ 3642              	.L136:
+ 3643              	.LVL83:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3644              		.loc 1 310 0
+ 3645 0b74 06C0D5E5 		ldrb	ip, [r5, #6]	@ zero_extendqisi2
+ 3646 0b78 06E0D6E5 		ldrb	lr, [r6, #6]	@ zero_extendqisi2
+ 3647 0b7c 0E005CE1 		cmp	ip, lr
+ 3648 0b80 0800000A 		beq	.L137
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3649              		.loc 1 312 0
+ 3650 0b84 0610A0E3 		mov	r1, #6
+ 3651 0b88 0700A0E1 		mov	r0, r7
+ 3652 0b8c FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3653              		.loc 1 313 0
+ 3654 0b90 0700A0E1 		mov	r0, r7
+ 3655 0b94 0610A0E3 		mov	r1, #6
+ 3656 0b98 0620D5E5 		ldrb	r2, [r5, #6]	@ zero_extendqisi2
+ 3657 0b9c FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3658              		.loc 1 314 0
+ 3659 0ba0 0630D5E5 		ldrb	r3, [r5, #6]	@ zero_extendqisi2
+ 3660 0ba4 0630C6E5 		strb	r3, [r6, #6]
+ 3661              	.L137:
+ 3662              	.LVL84:
+ 310:../jugada_por_botones.c **** 			if(tablero_actual[i][j] != tablero_anterior[i][j])
+ 3663              		.loc 1 310 0
+ 3664 0ba8 0720D5E5 		ldrb	r2, [r5, #7]	@ zero_extendqisi2
+ 3665 0bac 0700D6E5 		ldrb	r0, [r6, #7]	@ zero_extendqisi2
+ 3666 0bb0 000052E1 		cmp	r2, r0
+ 3667 0bb4 0800000A 		beq	.L138
+ 312:../jugada_por_botones.c **** 				borrar_ficha(i,j);
+ 3668              		.loc 1 312 0
+ 3669 0bb8 0710A0E3 		mov	r1, #7
+ 3670 0bbc 0700A0E1 		mov	r0, r7
+ 3671 0bc0 FEFFFFEB 		bl	borrar_ficha
+ 313:../jugada_por_botones.c **** 				pintar_ficha(i, j, tablero_actual[i][j]);
+ 3672              		.loc 1 313 0
+ 3673 0bc4 0710A0E3 		mov	r1, #7
+ 3674 0bc8 0700A0E1 		mov	r0, r7
+ 3675 0bcc 0720D5E5 		ldrb	r2, [r5, #7]	@ zero_extendqisi2
+ 3676 0bd0 FEFFFFEB 		bl	pintar_ficha
+ 314:../jugada_por_botones.c **** 				tablero_anterior[i][j] = tablero_actual[i][j];
+ 3677              		.loc 1 314 0
+ 3678 0bd4 0710D5E5 		ldrb	r1, [r5, #7]	@ zero_extendqisi2
+ 3679 0bd8 0710C6E5 		strb	r1, [r6, #7]
+ 3680              	.L138:
+ 3681              	.LVL85:
+ 306:../jugada_por_botones.c **** 	for(i = 0; i < num_filas; i++)
+ 3682              		.loc 1 306 0
+ 3683 0bdc 017087E2 		add	r7, r7, #1
+ 3684              	.LVL86:
+ 3685 0be0 080057E3 		cmp	r7, #8
+ 3686 0be4 085085E2 		add	r5, r5, #8
+ 3687 0be8 086086E2 		add	r6, r6, #8
+ 3688 0bec 92FFFF1A 		bne	.L139
+ 3689              	.LBE34:
+ 3690              	.LBE33:
+ 3691              	.LBB35:
+ 3692              	.LBB36:
+ 283:../jugada_por_botones.c **** 	mi_fila = 0;
+ 3693              		.loc 1 283 0
+ 3694 0bf0 0020A0E3 		mov	r2, #0
+ 3695 0bf4 8420C4E5 		strb	r2, [r4, #132]
+ 284:../jugada_por_botones.c **** 	mi_columna = 0;
+ 3696              		.loc 1 284 0
+ 3697 0bf8 8520C4E5 		strb	r2, [r4, #133]
+ 3698 0bfc 0230A0E1 		mov	r3, r2
+ 3699              	.LVL87:
+ 3700              	.L140:
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 3701              		.loc 1 291 0
+ 3702 0c00 00C0D8E5 		ldrb	ip, [r8, #0]	@ zero_extendqisi2
+ 3703 0c04 00005CE3 		cmp	ip, #0
+ 3704 0c08 1D00000A 		beq	.L142
+ 3705              	.LVL88:
+ 3706 0c0c 01E0D8E5 		ldrb	lr, [r8, #1]	@ zero_extendqisi2
+ 3707 0c10 00005EE3 		cmp	lr, #0
+ 3708 0c14 3600000A 		beq	.L146
+ 3709              	.LVL89:
+ 3710 0c18 0200D8E5 		ldrb	r0, [r8, #2]	@ zero_extendqisi2
+ 3711 0c1c 000050E3 		cmp	r0, #0
+ 3712 0c20 3500000A 		beq	.L147
+ 3713              	.LVL90:
+ 3714 0c24 0310D8E5 		ldrb	r1, [r8, #3]	@ zero_extendqisi2
+ 3715 0c28 000051E3 		cmp	r1, #0
+ 3716 0c2c 3400000A 		beq	.L148
+ 3717              	.LVL91:
+ 3718 0c30 04E0D8E5 		ldrb	lr, [r8, #4]	@ zero_extendqisi2
+ 3719 0c34 00005EE3 		cmp	lr, #0
+ 3720 0c38 3300000A 		beq	.L149
+ 3721              	.LVL92:
+ 3722 0c3c 0500D8E5 		ldrb	r0, [r8, #5]	@ zero_extendqisi2
+ 3723 0c40 000050E3 		cmp	r0, #0
+ 3724 0c44 3200000A 		beq	.L150
+ 3725              	.LVL93:
+ 3726 0c48 0610D8E5 		ldrb	r1, [r8, #6]	@ zero_extendqisi2
+ 3727 0c4c 000051E3 		cmp	r1, #0
+ 3728 0c50 3100000A 		beq	.L151
+ 3729              	.LVL94:
+ 3730 0c54 07E0D8E5 		ldrb	lr, [r8, #7]	@ zero_extendqisi2
+ 3731 0c58 00005EE3 		cmp	lr, #0
+ 3732 0c5c 0700000A 		beq	.L152
+ 3733              	.LVL95:
+ 320:../jugada_por_botones.c **** void jugada_ev_tecla0(void)		//Pasar turno de jugador
+ 3734              		.loc 1 320 0
+ 3735 0c60 012082E2 		add	r2, r2, #1
+ 3736              	.LVL96:
+ 287:../jugada_por_botones.c **** 	for(i = 0; i < num_filas && fin_bucle == 0; i++)
+ 3737              		.loc 1 287 0
+ 3738 0c64 070052E3 		cmp	r2, #7
+ 3739 0c68 00C0A0C3 		movgt	ip, #0
+ 3740 0c6c 01C0A0D3 		movle	ip, #1
+ 3741 0c70 00005CE3 		cmp	ip, #0
+ 3742 0c74 088088E2 		add	r8, r8, #8
+ 3743 0c78 E0FFFF1A 		bne	.L140
+ 3744 0c7c 020000EA 		b	.L141
+ 3745              	.LVL97:
+ 3746              	.L152:
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 3747              		.loc 1 291 0
+ 3748 0c80 07C0A0E3 		mov	ip, #7
+ 3749              	.LVL98:
+ 3750              	.L142:
+ 284:../jugada_por_botones.c **** 	mi_columna = 0;
+ 3751              		.loc 1 284 0
+ 3752 0c84 FF3002E2 		and	r3, r2, #255
+ 294:../jugada_por_botones.c **** 				mi_columna = j;
+ 3753              		.loc 1 294 0
+ 3754 0c88 FFC00CE2 		and	ip, ip, #255
+ 3755              	.LVL99:
+ 3756              	.L141:
+ 299:../jugada_por_botones.c **** 	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
+ 3757              		.loc 1 299 0
+ 3758 0c8c 0C10A0E1 		mov	r1, ip
+ 3759 0c90 0320A0E3 		mov	r2, #3
+ 3760 0c94 0300A0E1 		mov	r0, r3
+ 291:../jugada_por_botones.c **** 			if(tablero_actual[i][j] == CASILLA_VACIA)
+ 3761              		.loc 1 291 0
+ 3762 0c98 8430C4E5 		strb	r3, [r4, #132]
+ 3763 0c9c 85C0C4E5 		strb	ip, [r4, #133]
+ 299:../jugada_por_botones.c **** 	pintar_ficha(mi_fila, mi_columna, FICHA_GRIS);
+ 3764              		.loc 1 299 0
+ 3765 0ca0 FEFFFFEB 		bl	pintar_ficha
+ 3766              	.LBE36:
+ 3767              	.LBE35:
+ 332:../jugada_por_botones.c **** 		tiempo_pv += reversi_t_pv();
+ 3768              		.loc 1 332 0
+ 3769 0ca4 FEFFFFEB 		bl	reversi_t_pv
+ 3770 0ca8 A41094E5 		ldr	r1, [r4, #164]
+ 3771 0cac 010080E0 		add	r0, r0, r1
+ 3772 0cb0 A40084E5 		str	r0, [r4, #164]
+ 333:../jugada_por_botones.c **** 		veces_pv += reversi_veces_pv();
+ 3773              		.loc 1 333 0
+ 3774 0cb4 FEFFFFEB 		bl	reversi_veces_pv
+ 3775 0cb8 A82094E5 		ldr	r2, [r4, #168]
+ 334:../jugada_por_botones.c **** 		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 3776              		.loc 1 334 0
+ 3777 0cbc A03094E5 		ldr	r3, [r4, #160]
+ 333:../jugada_por_botones.c **** 		veces_pv += reversi_veces_pv();
+ 3778              		.loc 1 333 0
+ 3779 0cc0 02C080E0 		add	ip, r0, r2
+ 334:../jugada_por_botones.c **** 		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 3780              		.loc 1 334 0
+ 3781 0cc4 9C1094E5 		ldr	r1, [r4, #156]
+ 3782 0cc8 0300A0E1 		mov	r0, r3
+ 3783 0ccc A42094E5 		ldr	r2, [r4, #164]
+ 3784 0cd0 0C30A0E1 		mov	r3, ip
+ 333:../jugada_por_botones.c **** 		veces_pv += reversi_veces_pv();
+ 3785              		.loc 1 333 0
+ 3786 0cd4 A8C084E5 		str	ip, [r4, #168]
+ 334:../jugada_por_botones.c **** 		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+ 3787              		.loc 1 334 0
+ 3788 0cd8 FEFFFFEB 		bl	pintar_profiling
+ 335:../jugada_por_botones.c **** 		haciendo_DMA = 1;
+ 3789              		.loc 1 335 0
+ 3790 0cdc 01C0A0E3 		mov	ip, #1
+ 3791 0ce0 88C084E5 		str	ip, [r4, #136]
+ 336:../jugada_por_botones.c **** 		iniciar_DMA();
+ 3792              		.loc 1 336 0
+ 3793 0ce4 FEFFFFEB 		bl	iniciar_DMA
+ 337:../jugada_por_botones.c **** 		final = obtener_fin();
+ 3794              		.loc 1 337 0
+ 3795 0ce8 FEFFFFEB 		bl	obtener_fin
+ 3796 0cec 0000C4E5 		strb	r0, [r4, #0]
+ 3797 0cf0 3DFFFFEA 		b	.L129
+ 3798              	.LVL100:
+ 3799              	.L146:
+ 3800              	.LBB38:
+ 3801              	.LBB37:
+ 289:../jugada_por_botones.c **** 		for(j = 0; j < num_columnas && fin_bucle == 0; j++)
+ 3802              		.loc 1 289 0
+ 3803 0cf4 01C0A0E3 		mov	ip, #1
+ 3804 0cf8 E1FFFFEA 		b	.L142
+ 3805              	.LVL101:
+ 3806              	.L147:
+ 3807 0cfc 02C0A0E3 		mov	ip, #2
+ 3808 0d00 DFFFFFEA 		b	.L142
+ 3809              	.LVL102:
+ 3810              	.L148:
+ 3811 0d04 03C0A0E3 		mov	ip, #3
+ 3812 0d08 DDFFFFEA 		b	.L142
+ 3813              	.LVL103:
+ 3814              	.L149:
+ 3815 0d0c 04C0A0E3 		mov	ip, #4
+ 3816 0d10 DBFFFFEA 		b	.L142
+ 3817              	.LVL104:
+ 3818              	.L150:
+ 3819 0d14 05C0A0E3 		mov	ip, #5
+ 3820 0d18 D9FFFFEA 		b	.L142
+ 3821              	.LVL105:
+ 3822              	.L151:
+ 3823 0d1c 06C0A0E3 		mov	ip, #6
+ 3824 0d20 D7FFFFEA 		b	.L142
+ 3825              	.L157:
+ 3826              		.align	2
+ 3827              	.L156:
+ 3828 0d24 00000000 		.word	.LANCHOR0
+ 3829              	.LBE37:
+ 3830              	.LBE38:
+ 3831              	.LBE32:
+ 3832              		.cfi_endproc
+ 3833              	.LFE9:
+ 3835              		.align	2
+ 3836              		.global	jugada_ev_tecla1
+ 3838              	jugada_ev_tecla1:
+ 3839              	.LFB11:
+ 358:../jugada_por_botones.c **** 
+ 359:../jugada_por_botones.c **** void jugada_ev_tecla1()			//Finalizar la partida de forma prematura
+ 360:../jugada_por_botones.c **** {
+ 3840              		.loc 1 360 0
+ 3841              		.cfi_startproc
+ 3842              		@ Function supports interworking.
+ 3843              		@ args = 0, pretend = 0, frame = 0
+ 3844              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3845 0d28 0DC0A0E1 		mov	ip, sp
+ 3846              	.LCFI12:
+ 3847              		.cfi_def_cfa_register 12
+ 3848 0d2c 30D82DE9 		stmfd	sp!, {r4, r5, fp, ip, lr, pc}
+ 3849 0d30 04B04CE2 		sub	fp, ip, #4
+ 3850              		.cfi_offset 14, -8
+ 3851              		.cfi_offset 13, -12
+ 3852              		.cfi_offset 11, -16
+ 3853              		.cfi_offset 5, -20
+ 3854              		.cfi_offset 4, -24
+ 3855              	.LCFI13:
+ 3856              		.cfi_def_cfa 11, 4
+ 3857              	.LBB41:
+ 3858              	.LBB42:
+ 343:../jugada_por_botones.c **** 	int blancas = contar_blancas();
+ 3859              		.loc 1 343 0
+ 3860 0d34 FEFFFFEB 		bl	contar_blancas
+ 3861 0d38 0040A0E1 		mov	r4, r0
+ 3862              	.LVL106:
+ 344:../jugada_por_botones.c **** 	int negras = contar_negras();
+ 3863              		.loc 1 344 0
+ 3864 0d3c FEFFFFEB 		bl	contar_negras
+ 3865              	.LVL107:
+ 345:../jugada_por_botones.c **** 	if(blancas > negras)
+ 3866              		.loc 1 345 0
+ 3867 0d40 000054E1 		cmp	r4, r0
+ 3868 0d44 060000CA 		bgt	.L162
+ 355:../jugada_por_botones.c **** 		final = empate;
+ 3869              		.loc 1 355 0
+ 3870 0d48 24109FE5 		ldr	r1, .L163
+ 351:../jugada_por_botones.c **** 		final = jugador_gana;
+ 3871              		.loc 1 351 0
+ 3872 0d4c 0100A0B3 		movlt	r0, #1
+ 3873              	.LVL108:
+ 355:../jugada_por_botones.c **** 		final = empate;
+ 3874              		.loc 1 355 0
+ 3875 0d50 0300A0A3 		movge	r0, #3
+ 3876 0d54 0000C1E5 		strb	r0, [r1, #0]
+ 3877              	.L160:
+ 3878              	.LBE42:
+ 3879              	.LBE41:
+ 361:../jugada_por_botones.c **** 	contar_fichas_final();
+ 362:../jugada_por_botones.c **** 	jugada_por_botones();
+ 363:../jugada_por_botones.c **** }
+ 3880              		.loc 1 363 0
+ 3881 0d58 14D04BE2 		sub	sp, fp, #20
+ 3882 0d5c 30689DE8 		ldmfd	sp, {r4, r5, fp, sp, lr}
+ 362:../jugada_por_botones.c **** 	jugada_por_botones();
+ 3883              		.loc 1 362 0
+ 3884 0d60 FEFFFFEA 		b	jugada_por_botones
+ 3885              	.LVL109:
+ 3886              	.L162:
+ 3887              	.LBB44:
+ 3888              	.LBB43:
+ 347:../jugada_por_botones.c **** 		final = cpu_gana;
+ 3889              		.loc 1 347 0
+ 3890 0d64 08309FE5 		ldr	r3, .L163
+ 3891 0d68 0220A0E3 		mov	r2, #2
+ 3892 0d6c 0020C3E5 		strb	r2, [r3, #0]
+ 3893 0d70 F8FFFFEA 		b	.L160
+ 3894              	.L164:
+ 3895              		.align	2
+ 3896              	.L163:
+ 3897 0d74 00000000 		.word	.LANCHOR0
+ 3898              	.LBE43:
+ 3899              	.LBE44:
+ 3900              		.cfi_endproc
+ 3901              	.LFE11:
+ 3903              		.global	haciendo_DMA
+ 3904              		.bss
+ 3905              		.align	2
+ 3906              		.set	.LANCHOR0,. + 0
+ 3909              	final:
+ 3910 0000 00       		.space	1
+ 3911 0001 000000   		.space	3
+ 3914              	tablero_actual:
+ 3915 0004 00000000 		.space	64
+ 3915      00000000 
+ 3915      00000000 
+ 3915      00000000 
+ 3915      00000000 
+ 3918              	tablero_anterior:
+ 3919 0044 00000000 		.space	64
+ 3919      00000000 
+ 3919      00000000 
+ 3919      00000000 
+ 3919      00000000 
+ 3922              	mi_fila:
+ 3923 0084 00       		.space	1
+ 3926              	mi_columna:
+ 3927 0085 00       		.space	1
+ 3928 0086 0000     		.space	2
+ 3931              	haciendo_DMA:
+ 3932 0088 00000000 		.space	4
+ 3935              	ev_bot_izq:
+ 3936 008c 00000000 		.space	4
+ 3939              	ev_bot_der:
+ 3940 0090 00000000 		.space	4
+ 3943              	ev_tp:
+ 3944 0094 00000000 		.space	4
+ 3947              	ev_timer:
+ 3948 0098 00000000 		.space	4
+ 3951              	tiempo_calc:
+ 3952 009c 00000000 		.space	4
+ 3955              	tiempo_total:
+ 3956 00a0 00000000 		.space	4
+ 3959              	tiempo_pv:
+ 3960 00a4 00000000 		.space	4
+ 3963              	veces_pv:
+ 3964 00a8 00000000 		.space	4
+ 3967              	jugada_botones:
+ 3968 00ac 00       		.space	1
+ 3969 00ad 000000   		.text
+ 3970              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 jugada_por_botones.c
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2174   .bss:00000000 jugada_botones
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2175   .bss:00000000 $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2177   .bss:00000004 ev_bot_izq
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2180   .bss:00000008 ev_bot_der
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2183   .bss:0000000c ev_tp
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2185   .bss:00000010 mi_fila
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2187   .bss:00000011 mi_columna
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2193   .bss:00000014 haciendo_DMA
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2196   .bss:00000018 ev_timer
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2198   .bss:0000001c final
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2201   .bss:00000020 tiempo_calc
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2204   .bss:00000024 tiempo_total
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2207   .bss:00000028 tiempo_pv
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2210   .bss:0000002c veces_pv
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2213   .bss:00000030 tablero_actual
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2216   .bss:00000070 tablero_anterior
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2219   .text:00000000 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2222   .text:00000000 inicializar_jugada_botones
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2308   .text:000000cc $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2326   .text:00000108 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2329   .text:00000108 jugada_por_botones
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2829   .text:000006cc $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3154   .text:00000904 actualizar_movimientos_pantalla
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3037   .text:000007ec reiniciar_posicion_gris
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2847   .text:00000708 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2850   .text:00000708 jugada_ev_tsp
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2880   .text:00000730 $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2884   .text:00000734 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2887   .text:00000734 jugada_ev_der
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2917   .text:0000075c $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2921   .text:00000760 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2924   .text:00000760 jugada_ev_izq
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2954   .text:00000788 $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2958   .text:0000078c $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2961   .text:0000078c jugada_ev_timer
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2993   .text:000007bc $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:2997   .text:000007c0 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3000   .text:000007c0 termina_DMA
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3030   .text:000007e8 $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3034   .text:000007ec $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3145   .text:000008f8 $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3151   .text:00000904 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3259   .text:00000a20 $d
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3264   .text:00000a28 $a
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3267   .text:00000a28 jugada_ev_tecla0
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3294   .text:00000a40 jugada_ev_tecla1
-C:\Users\pjper\AppData\Local\Temp\cc9tffim.s:3356   .text:00000ac4 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2197   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2200   .text:00000000 contar_fichas_final
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2252   .text:0000004c $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2256   .text:00000050 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2259   .text:00000050 actualizar_movimientos_pantalla
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2459   .text:00000230 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2463   .text:00000234 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2466   .text:00000234 reiniciar_posicion_gris
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2594   .text:00000338 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2598   .text:0000033c $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2601   .text:0000033c inicializar_jugada_botones
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2671   .text:000003ac $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2675   .text:000003b0 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:2678   .text:000003b0 jugada_por_botones
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3323   .text:00000964 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3328   .text:00000968 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3331   .text:00000968 jugada_ev_tsp
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3349   .text:00000978 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3353   .text:0000097c $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3356   .text:0000097c jugada_ev_der
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3374   .text:0000098c $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3378   .text:00000990 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3381   .text:00000990 jugada_ev_izq
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3399   .text:000009a0 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3403   .text:000009a4 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3406   .text:000009a4 jugada_ev_timer
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3425   .text:000009b8 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3429   .text:000009bc $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3432   .text:000009bc termina_DMA
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3450   .text:000009cc $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3454   .text:000009d0 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3457   .text:000009d0 jugada_ev_tecla0
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3828   .text:00000d24 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3835   .text:00000d28 $a
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3838   .text:00000d28 jugada_ev_tecla1
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3897   .text:00000d74 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3931   .bss:00000088 haciendo_DMA
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3905   .bss:00000000 $d
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3909   .bss:00000000 final
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3914   .bss:00000004 tablero_actual
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3918   .bss:00000044 tablero_anterior
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3922   .bss:00000084 mi_fila
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3926   .bss:00000085 mi_columna
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3935   .bss:0000008c ev_bot_izq
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3939   .bss:00000090 ev_bot_der
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3943   .bss:00000094 ev_tp
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3947   .bss:00000098 ev_timer
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3951   .bss:0000009c tiempo_calc
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3955   .bss:000000a0 tiempo_total
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3959   .bss:000000a4 tiempo_pv
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3963   .bss:000000a8 veces_pv
+C:\Users\guest\AppData\Local\Temp\cca7mhHt.s:3967   .bss:000000ac jugada_botones
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
-reversi8_inicializar
-obtener_tablero
-pintar_reglas
-pintar_jugando
 contar_blancas
 contar_negras
-pintar_fin_victoria
-pintar_fin_derrota
+obtener_tablero
+borrar_ficha
+pintar_ficha
+reversi8_inicializar
+pintar_reglas
+Lcd_Clr
 pintar_fin_empate
-obtener_ficha_en
-mover_gris_abajo
-mover_gris_derecha
-pintar_profiling
-iniciar_DMA
 timer2_leer
 reversi_procesar
 obtener_jugada_valida
-borrar_ficha
 reversi_t_pv
 reversi_veces_pv
+pintar_profiling
+iniciar_DMA
 obtener_fin
-Lcd_Clr
-pintar_ficha
+pintar_jugando
+obtener_ficha_en
+mover_gris
+pintar_fin_derrota
+pintar_fin_victoria
+mover_IA

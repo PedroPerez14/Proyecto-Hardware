@@ -27,6 +27,7 @@
 #include "jugada_por_botones.h"
 #include "tsp_antirebotes.h"
 #include "teclado_antirebotes.h"
+#include "keyboard.h"
 #include <stdint.h>
 
 /*--- variables ---*/
@@ -37,7 +38,7 @@ static char estado_led1;
 
 /*--- Código de funciones ---*/
 
-void reversi_main_inicializar(void)
+void reversi_main_inicializar()
 {
 	//Inicializar las variables que hagan falta para proesar bien los eventos
 	timer_init();
@@ -52,6 +53,8 @@ void reversi_main_inicializar(void)
 	led1_off();				//El led empieza apagado
 	botones_antirebotes_inicializar();
 	tsp_antirebotes_inicializar();
+	init_keyboard();
+	tec_antirebotes_inicializar();
 	inicializar_jugada_botones();
 }
 

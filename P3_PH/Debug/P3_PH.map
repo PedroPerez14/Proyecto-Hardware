@@ -1,23 +1,22 @@
 Archive member included because of file (symbol)
 
-c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
+c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
                               ./common/44blib.o (__aeabi_idiv)
-c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
-                              c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o) (__aeabi_idiv0)
-c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
+c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                              c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o) (__aeabi_idiv0)
+c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
                               ./common/44blib.o (__aeabi_dadd)
-c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
-                              ./common/44blib.o (__aeabi_ddiv)
-c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
+c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
+                              ./common/44blib.o (__aeabi_dmul)
+c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
                               ./common/44blib.o (__aeabi_d2iz)
-c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
+c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
                               ./lcd.o (strlen)
 
 Allocating common symbols
 Common symbol       size              file
 
 ucCursorBackUp      0x78              ./Bmp.o
-blancas             0x4               ./reversi8_2019.o
 f                   0x1               ./reversi8_2019.o
 ulMouseY            0x2               ./Bmp.o
 Ymin                0x4               ./main.o
@@ -27,7 +26,6 @@ ulMouseX            0x2               ./Bmp.o
 done                0x4               ./reversi8_2019.o
 c                   0x1               ./reversi8_2019.o
 Vx                  0x4               ./main.o
-negras              0x4               ./reversi8_2019.o
 Ymax                0x4               ./main.o
 causa_fallo         0x4               ./rutinas_excepciones.o
 oneTouch            0x4               ./main.o
@@ -74,382 +72,393 @@ LOAD ./timer2.o
 LOAD ./tp.o
 LOAD ./tsp_antirebotes.o
 START GROUP
-LOAD c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a
-LOAD c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a
+LOAD c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a
+LOAD c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a
 END GROUP
                 0x0c000000                . = 0xc000000
                 0x0c000000                Image_RO_Base = .
 
-.text           0x0c000000     0x925c
+.text           0x0c000000     0xe76c
  *(.text)
  .text          0x0c000000      0x70c ./common/44binit.o
- .text          0x0c00070c      0x8bc ./common/44blib.o
-                0x0c00070c                Delay
-                0x0c000844                DelayMs
-                0x0c0008a8                DelayTime
-                0x0c0008f0                Port_Init
-                0x0c000a80                Uart_Init
-                0x0c000ca8                Timer_Start
-                0x0c000d1c                Timer_Stop
-                0x0c000d5c                Beep
-                0x0c000dc0                ChangePllValue
-                0x0c000e0c                malloc
-                0x0c000eac                free
-                0x0c000edc                Cache_Flush
-                0x0c000f58                sys_init
- .text          0x0c000fc8        0x0 ./common/AscII6x8.o
- .text          0x0c000fc8        0x0 ./common/AscII8x16.o
- .text          0x0c000fc8       0x78 ./8led.o
-                0x0c000fc8                D8Led_init
-                0x0c000fec                D8Led_symbol
- .text          0x0c001040      0x800 ./Bmp.o
-                0x0c001040                BitmapView
-                0x0c0011cc                BitmapPush
-                0x0c001438                BitmapPop
-                0x0c0016c4                CursorInit
-                0x0c001718                CursorPush
-                0x0c001774                CursorPop
-                0x0c0017d0                CursorView
- .text          0x0c001840      0x334 ./botones_antirebotes.o
-                0x0c001840                botones_antirebotes_inicializar
-                0x0c001898                antirebotes
-                0x0c001abc                button_ev_pulsacion
-                0x0c001b14                button_ev_tick0
- .text          0x0c001b74      0x2f0 ./button.o
-                0x0c001b74                button_ISR
-                0x0c001c4c                button_iniciar
-                0x0c001d60                button_resetear
-                0x0c001db8                button_estado
- .text          0x0c001e64      0x378 ./cola_depuracion.o
-                0x0c001e64                cola_depuracion_inicializar
-                0x0c001f10                push_debug
-                0x0c0020c4                pop_debug
-                0x0c0021a8                esVacia
- .text          0x0c0021dc      0xb44 ./elementos_pantalla.o
-                0x0c0021dc                pintar_cuadricula
-                0x0c00238c                pintar_numeros_tablero
-                0x0c0024a8                pintar_textos
-                0x0c002590                pintar_ficha
-                0x0c002794                borrar_ficha
-                0x0c002904                mover_gris_abajo
-                0x0c00294c                mover_gris_derecha
-                0x0c002994                pintar_profiling
-                0x0c002ad0                pintar_jugando
-                0x0c002b60                pintar_prueba
-                0x0c002be8                pintar_reglas
-                0x0c002c20                pintar_fin_victoria
-                0x0c002c64                pintar_fin_derrota
-                0x0c002ca8                pintar_fin_empate
-                0x0c002d04                iniciar_DMA
- .text          0x0c002d20      0x268 ./funciones_itoa.o
-                0x0c002d20                swap
-                0x0c002d6c                reverse
-                0x0c002dec                itoa
- .text          0x0c002f88      0xacc ./jugada_por_botones.o
-                0x0c002f88                inicializar_jugada_botones
-                0x0c003090                jugada_por_botones
-                0x0c003690                jugada_ev_tsp
-                0x0c0036bc                jugada_ev_der
-                0x0c0036e8                jugada_ev_izq
-                0x0c003714                jugada_ev_timer
-                0x0c003748                termina_DMA
-                0x0c003774                reiniciar_posicion_gris
-                0x0c00388c                actualizar_movimientos_pantalla
-                0x0c0039b0                jugada_ev_tecla0
-                0x0c0039c8                jugada_ev_tecla1
- .text          0x0c003a54      0x4a4 ./keyboard.o
-                0x0c003a54                init_keyboard
-                0x0c003b48                close_keyboard
-                0x0c003b88                KeyboardInt
-                0x0c003c28                tec_resetear
-                0x0c003c70                key_read
- .text          0x0c003ef8     0x2070 ./lcd.o
-                0x0c003ef8                Lcd_Init
-                0x0c00408c                Lcd_Active_Clr
-                0x0c0040f4                LCD_GetPixel
-                0x0c0041c4                Lcd_Clr
-                0x0c004230                LcdClrRect
-                0x0c004880                Lcd_Draw_Box
-                0x0c00491c                Lcd_Draw_Line
-                0x0c005274                Lcd_Draw_HLine
-                0x0c00547c                Lcd_Draw_VLine
-                0x0c0056b4                Lcd_DisplayString
-                0x0c0056e0                Lcd_DspAscII8x16
-                0x0c0059f4                Lcd_DspAscII6x8
-                0x0c005bb8                ReverseLine
-                0x0c005cac                Zdma0Done
-                0x0c005cfc                Lcd_Dma_Trans
-                0x0c005d84                Lcd_Test
- .text          0x0c005f68      0x23c ./led.o
-                0x0c005f68                leds_on
-                0x0c005f88                leds_off
-                0x0c005fa8                led1_on
-                0x0c005fe8                led1_off
-                0x0c006028                led2_on
-                0x0c006068                led2_off
-                0x0c0060a8                leds_switch
-                0x0c0060e8                Led_Display
- .text          0x0c0061a4       0x98 ./main.o
-                0x0c0061a4                pasar_a_user
-                0x0c0061e8                Main
- .text          0x0c00623c        0x0 ./main_medidas_optimizaciones.o
- .text          0x0c00623c       0xa0 ./patron_volteo_arm_arm.o
-                0x0c00623c                patron_volteo_arm_arm
- .text          0x0c0062dc       0x80 ./patron_volteo_arm_arm_opt.o
-                0x0c0062dc                patron_volteo_arm_arm_opt
- .text          0x0c00635c       0x8c ./patron_volteo_arm_c.o
-                0x0c00635c                patron_volteo_arm_c
- .text          0x0c0063e8        0x0 ./pruebas_patron_volteo.o
- .text          0x0c0063e8      0x2dc ./pruebas_timer2.o
-                0x0c0063e8                pruebas_timer2
- .text          0x0c0066c4     0x1218 ./reversi8_2019.o
-                0x0c0066c4                obtener_jugada_valida
-                0x0c0066ec                obtener_fin
-                0x0c006770                obtener_tablero
-                0x0c006814                contar_blancas
-                0x0c00683c                contar_negras
-                0x0c006864                reversi_t_pv
-                0x0c00688c                reversi_veces_pv
-                0x0c0068b4                reversi_procesar
-                0x0c006914                obtener_ficha_en
-                0x0c00695c                init_table
-                0x0c006b28                ficha_valida
-                0x0c006bdc                patron_volteo
-                0x0c006d84                voltear
-                0x0c006e14                actualizar_tablero
-                0x0c006f1c                elegir_mov
-                0x0c007128                contar
-                0x0c007224                actualizar_candidatas
-                0x0c007510                reversi8_inicializar
-                0x0c00754c                mover_IA
-                0x0c007644                reversi8
- .text          0x0c0078dc      0x264 ./reversi_main.o
-                0x0c0078dc                reversi_main_inicializar
-                0x0c007938                dormir_procesador
-                0x0c007950                Latido_ev_new_tick
-                0x0c0079f0                tiempo_juego_ev_tick
-                0x0c007a40                reversi_main
- .text          0x0c007b40      0x1a4 ./rutinas_excepciones.o
-                0x0c007b40                __get_CPSR
-                0x0c007b64                parpadear_error
-                0x0c007ba4                Gestion_excepciones
-                0x0c007c88                Gestion_excepciones_init
- .text          0x0c007ce4      0x154 ./teclado_antirebotes.o
-                0x0c007ce4                tec_antirebotes_inicializar
-                0x0c007d2c                tec_antirebotes
-                0x0c007db4                tec_ev_pulsacion
-                0x0c007df0                tec_ev_tick0
- .text          0x0c007e38      0x18c ./timer.o
-                0x0c007e38                timer_ISR
-                0x0c007e80                timer_init
- .text          0x0c007fc4      0x26c ./timer2.o
-                0x0c007fc4                timer2_ISR
-                0x0c008014                timer2_inicializar
-                0x0c0080b4                timer2_empezar
-                0x0c008154                timer2_leer
-                0x0c0081f4                timer2_parar
- .text          0x0c008230      0x418 ./tp.o
-                0x0c008230                TSInt
-                0x0c008290                tsp_resetear
-                0x0c0082d8                TS_init
-                0x0c0083cc                TS_close
-                0x0c00840c                DesignREC
-                0x0c008540                Check_Sel
- .text          0x0c008648      0x154 ./tsp_antirebotes.o
-                0x0c008648                tsp_antirebotes_inicializar
-                0x0c008690                tsp_antirebotes
-                0x0c008718                tsp_ev_pulsacion
-                0x0c008754                tsp_ev_tick0
- .text          0x0c00879c      0x148 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
-                0x0c00879c                __divsi3
-                0x0c00879c                __aeabi_idiv
-                0x0c0088c4                __aeabi_idivmod
- .text          0x0c0088e4        0x4 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
-                0x0c0088e4                __aeabi_idiv0
-                0x0c0088e4                __aeabi_ldiv0
- .text          0x0c0088e8      0x41c c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
-                0x0c0088e8                __aeabi_drsub
-                0x0c0088f0                __aeabi_dsub
-                0x0c0088f0                __subdf3
-                0x0c0088f4                __aeabi_dadd
-                0x0c0088f4                __adddf3
-                0x0c008c04                __floatunsidf
-                0x0c008c04                __aeabi_ui2d
-                0x0c008c28                __floatsidf
-                0x0c008c28                __aeabi_i2d
-                0x0c008c50                __aeabi_f2d
-                0x0c008c50                __extendsfdf2
-                0x0c008c90                __floatundidf
-                0x0c008c90                __aeabi_ul2d
-                0x0c008ca4                __floatdidf
-                0x0c008ca4                __aeabi_l2d
- .text          0x0c008d04      0x49c c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
-                0x0c008d04                __aeabi_dmul
-                0x0c008d04                __muldf3
-                0x0c008f94                __divdf3
-                0x0c008f94                __aeabi_ddiv
- .text          0x0c0091a0       0x5c c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
-                0x0c0091a0                __aeabi_d2iz
-                0x0c0091a0                __fixdfsi
- .text          0x0c0091fc       0x60 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
-                0x0c0091fc                strlen
+ .text          0x0c00070c      0x5b4 ./common/44blib.o
+                0x0c000850                Delay
+                0x0c000990                DelayMs
+                0x0c000994                DelayTime
+                0x0c000998                Port_Init
+                0x0c000a60                Uart_Init
+                0x0c000b28                Timer_Start
+                0x0c000b58                Timer_Stop
+                0x0c000b78                Beep
+                0x0c000bac                ChangePllValue
+                0x0c000bc0                malloc
+                0x0c000bfc                free
+                0x0c000c0c                Cache_Flush
+                0x0c000c6c                sys_init
+ .text          0x0c000cc0        0x0 ./common/AscII6x8.o
+ .text          0x0c000cc0        0x0 ./common/AscII8x16.o
+ .text          0x0c000cc0       0x2c ./8led.o
+                0x0c000cc0                D8Led_init
+                0x0c000cd0                D8Led_symbol
+ .text          0x0c000cec      0xec4 ./Bmp.o
+                0x0c000cec                BitmapView
+                0x0c000fb0                BitmapPush
+                0x0c0012a0                BitmapPop
+                0x0c001590                CursorInit
+                0x0c001814                CursorPush
+                0x0c001860                CursorPop
+                0x0c0018bc                CursorView
+ .text          0x0c001bb0      0x1bc ./botones_antirebotes.o
+                0x0c001bb0                botones_antirebotes_inicializar
+                0x0c001bd0                antirebotes
+                0x0c001d18                button_ev_pulsacion
+                0x0c001d3c                button_ev_tick0
+ .text          0x0c001d6c      0x1c8 ./button.o
+                0x0c001d6c                button_ISR
+                0x0c001e14                button_iniciar
+                0x0c001eb0                button_resetear
+                0x0c001ee0                button_estado
+ .text          0x0c001f34      0x190 ./cola_depuracion.o
+                0x0c001f34                cola_depuracion_inicializar
+                0x0c001f8c                push_debug
+                0x0c00204c                pop_debug
+                0x0c0020ac                esVacia
+ .text          0x0c0020c4     0x1370 ./elementos_pantalla.o
+                0x0c0020c4                pintar_cuadricula
+                0x0c0021a4                pintar_numeros_tablero
+                0x0c00240c                pintar_textos
+                0x0c0024fc                pintar_ficha
+                0x0c0025bc                borrar_ficha
+                0x0c00261c                mover_gris
+                0x0c0026d4                pintar_profiling
+                0x0c0027f4                pintar_jugando
+                0x0c002d90                pintar_prueba
+                0x0c002f00                pintar_reglas
+                0x0c003088                pintar_resultados
+                0x0c003154                pintar_fin_victoria
+                0x0c003240                pintar_fin_derrota
+                0x0c00332c                pintar_fin_empate
+                0x0c003418                iniciar_DMA
+ .text          0x0c003434      0x158 ./funciones_itoa.o
+                0x0c003434                swap
+                0x0c003448                reverse
+                0x0c003484                itoa
+ .text          0x0c00358c      0xd78 ./jugada_por_botones.o
+                0x0c00358c                contar_fichas_final
+                0x0c0035dc                actualizar_movimientos_pantalla
+                0x0c0037c0                reiniciar_posicion_gris
+                0x0c0038c8                inicializar_jugada_botones
+                0x0c00393c                jugada_por_botones
+                0x0c003ef4                jugada_ev_tsp
+                0x0c003f08                jugada_ev_der
+                0x0c003f1c                jugada_ev_izq
+                0x0c003f30                jugada_ev_timer
+                0x0c003f48                termina_DMA
+                0x0c003f5c                jugada_ev_tecla0
+                0x0c0042b4                jugada_ev_tecla1
+ .text          0x0c004304      0x374 ./keyboard.o
+                0x0c004304                KeyboardInt
+                0x0c004494                init_keyboard
+                0x0c004520                close_keyboard
+                0x0c004544                tec_resetear
+                0x0c004564                key_read
+ .text          0x0c004678     0x58f8 ./lcd.o
+                0x0c004678                Zdma0Done
+                0x0c0046ac                Lcd_Init
+                0x0c0047ac                Lcd_Active_Clr
+                0x0c0047e0                LCD_GetPixel
+                0x0c00481c                Lcd_Clr
+                0x0c004854                LcdClrRect
+                0x0c004cfc                Lcd_Draw_Box
+                0x0c005424                Lcd_Draw_Line
+                0x0c0061c8                Lcd_Draw_HLine
+                0x0c0063cc                Lcd_Draw_VLine
+                0x0c0065bc                Lcd_DisplayString
+                0x0c0065c0                Lcd_DspAscII8x16
+                0x0c006c48                Lcd_DspAscII6x8
+                0x0c006f68                ReverseLine
+                0x0c006ff0                Lcd_Dma_Trans
+                0x0c007040                Lcd_Test
+ .text          0x0c009f70      0x278 ./led.o
+                0x0c009f70                leds_on
+                0x0c009fb0                leds_off
+                0x0c009fe4                led1_on
+                0x0c00a030                led1_off
+                0x0c00a074                led2_on
+                0x0c00a0d0                led2_off
+                0x0c00a128                leds_switch
+                0x0c00a18c                Led_Display
+ .text          0x0c00a1e8       0x60 ./main.o
+                0x0c00a1e8                Main
+ .text          0x0c00a248        0x0 ./main_medidas_optimizaciones.o
+ .text          0x0c00a248       0xa0 ./patron_volteo_arm_arm.o
+                0x0c00a248                patron_volteo_arm_arm
+ .text          0x0c00a2e8       0x80 ./patron_volteo_arm_arm_opt.o
+                0x0c00a2e8                patron_volteo_arm_arm_opt
+ .text          0x0c00a368       0x8c ./patron_volteo_arm_c.o
+                0x0c00a368                patron_volteo_arm_c
+ .text          0x0c00a3f4        0x0 ./pruebas_patron_volteo.o
+ .text          0x0c00a3f4      0x34c ./pruebas_timer2.o
+                0x0c00a3f4                pruebas_timer2
+ .text          0x0c00a740     0x2a5c ./reversi8_2019.o
+                0x0c00a740                contar
+                0x0c00ac08                obtener_jugada_valida
+                0x0c00ac18                obtener_fin
+                0x0c00ac4c                obtener_tablero
+                0x0c00af24                contar_blancas
+                0x0c00af34                contar_negras
+                0x0c00af44                reversi_t_pv
+                0x0c00af54                reversi_veces_pv
+                0x0c00af64                obtener_ficha_en
+                0x0c00af78                init_table
+                0x0c00b198                ficha_valida
+                0x0c00b1d0                patron_volteo
+                0x0c00b320                voltear
+                0x0c00b478                actualizar_tablero
+                0x0c00b664                elegir_mov
+                0x0c00b8b4                actualizar_candidatas
+                0x0c00b9c0                reversi8_inicializar
+                0x0c00ba9c                mover_IA
+                0x0c00c4d8                reversi8
+                0x0c00d180                reversi_procesar
+ .text          0x0c00d19c      0x274 ./reversi_main.o
+                0x0c00d19c                reversi_main_inicializar
+                0x0c00d1e8                dormir_procesador
+                0x0c00d1ec                Latido_ev_new_tick
+                0x0c00d25c                tiempo_juego_ev_tick
+                0x0c00d2a0                reversi_main
+ .text          0x0c00d410      0x11c ./rutinas_excepciones.o
+                0x0c00d410                __get_CPSR
+                0x0c00d41c                parpadear_error
+                0x0c00d45c                Gestion_excepciones
+                0x0c00d4fc                Gestion_excepciones_init
+ .text          0x0c00d52c      0x144 ./teclado_antirebotes.o
+                0x0c00d52c                tec_antirebotes_inicializar
+                0x0c00d548                tec_antirebotes
+                0x0c00d5a4                tec_ev_pulsacion
+                0x0c00d608                tec_ev_tick0
+ .text          0x0c00d670      0x100 ./timer.o
+                0x0c00d670                timer_ISR
+                0x0c00d6b0                timer_init
+ .text          0x0c00d770      0x17c ./timer2.o
+                0x0c00d770                timer2_ISR
+                0x0c00d7a0                timer2_inicializar
+                0x0c00d800                timer2_empezar
+                0x0c00d85c                timer2_leer
+                0x0c00d8a0                timer2_parar
+ .text          0x0c00d8ec      0x274 ./tp.o
+                0x0c00d8ec                TSInt
+                0x0c00d938                tsp_resetear
+                0x0c00d964                TS_init
+                0x0c00da58                TS_close
+                0x0c00da7c                DesignREC
+                0x0c00db3c                Check_Sel
+ .text          0x0c00db60      0x14c ./tsp_antirebotes.o
+                0x0c00db60                tsp_antirebotes_inicializar
+                0x0c00db7c                tsp_antirebotes
+                0x0c00dbdc                tsp_ev_pulsacion
+                0x0c00dc40                tsp_ev_tick0
+ .text          0x0c00dcac      0x148 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
+                0x0c00dcac                __divsi3
+                0x0c00dcac                __aeabi_idiv
+                0x0c00ddd4                __aeabi_idivmod
+ .text          0x0c00ddf4        0x4 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                0x0c00ddf4                __aeabi_idiv0
+                0x0c00ddf4                __aeabi_ldiv0
+ .text          0x0c00ddf8      0x41c c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
+                0x0c00ddf8                __aeabi_drsub
+                0x0c00de00                __aeabi_dsub
+                0x0c00de00                __subdf3
+                0x0c00de04                __aeabi_dadd
+                0x0c00de04                __adddf3
+                0x0c00e114                __floatunsidf
+                0x0c00e114                __aeabi_ui2d
+                0x0c00e138                __floatsidf
+                0x0c00e138                __aeabi_i2d
+                0x0c00e160                __aeabi_f2d
+                0x0c00e160                __extendsfdf2
+                0x0c00e1a0                __floatundidf
+                0x0c00e1a0                __aeabi_ul2d
+                0x0c00e1b4                __floatdidf
+                0x0c00e1b4                __aeabi_l2d
+ .text          0x0c00e214      0x49c c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
+                0x0c00e214                __aeabi_dmul
+                0x0c00e214                __muldf3
+                0x0c00e4a4                __divdf3
+                0x0c00e4a4                __aeabi_ddiv
+ .text          0x0c00e6b0       0x5c c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
+                0x0c00e6b0                __aeabi_d2iz
+                0x0c00e6b0                __fixdfsi
+ .text          0x0c00e70c       0x60 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
+                0x0c00e70c                strlen
 
-.glue_7         0x0c00925c        0x0
+.glue_7         0x0c00e76c        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x0c00925c        0x0
+.glue_7t        0x0c00e76c        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x0c00925c        0x0
+.vfp11_veneer   0x0c00e76c        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0c00925c        0x0
+.v4_bx          0x0c00e76c        0x0
  .v4_bx         0x00000000        0x0 linker stubs
-                0x0c00925c                . = ALIGN (0x4)
-                0x0c00925c                Image_RO_Limit = .
-                0x0c00925c                Image_RW_Base = .
+                0x0c00e76c                . = ALIGN (0x4)
+                0x0c00e76c                Image_RO_Limit = .
+                0x0c00e76c                Image_RW_Base = .
 
-.data           0x0c00925c       0x6d
+.data           0x0c00e76c       0x59
  *(.data)
- .data          0x0c00925c        0x6 ./common/44binit.o
-                0x0c00925c                BDRAMTYPE
- *fill*         0x0c009262        0x2 00
- .data          0x0c009264        0xc ./common/44blib.o
-                0x0c009264                mallocPt
-                0x0c009268                run
- .data          0x0c009270        0x0 ./common/AscII6x8.o
- .data          0x0c009270        0x0 ./common/AscII8x16.o
- .data          0x0c009270       0x44 ./8led.o
- .data          0x0c0092b4       0x10 ./Bmp.o
-                0x0c0092b4                Stru_Bitmap_gbMouse
- .data          0x0c0092c4        0x0 ./botones_antirebotes.o
- .data          0x0c0092c4        0x0 ./button.o
- .data          0x0c0092c4        0x0 ./cola_depuracion.o
- .data          0x0c0092c4        0x0 ./elementos_pantalla.o
- .data          0x0c0092c4        0x0 ./funciones_itoa.o
- .data          0x0c0092c4        0x0 ./jugada_por_botones.o
- .data          0x0c0092c4        0x4 ./keyboard.o
-                0x0c0092c4                keyboard_base
- .data          0x0c0092c8        0x1 ./lcd.o
- .data          0x0c0092c9        0x0 ./led.o
- .data          0x0c0092c9        0x0 ./main.o
- .data          0x0c0092c9        0x0 ./main_medidas_optimizaciones.o
- .data          0x0c0092c9        0x0 ./patron_volteo_arm_arm.o
- .data          0x0c0092c9        0x0 ./patron_volteo_arm_arm_opt.o
- .data          0x0c0092c9        0x0 ./patron_volteo_arm_c.o
- .data          0x0c0092c9        0x0 ./pruebas_patron_volteo.o
- .data          0x0c0092c9        0x0 ./pruebas_timer2.o
- .data          0x0c0092c9        0x0 ./reversi8_2019.o
- .data          0x0c0092c9        0x0 ./reversi_main.o
- .data          0x0c0092c9        0x0 ./rutinas_excepciones.o
- .data          0x0c0092c9        0x0 ./teclado_antirebotes.o
- .data          0x0c0092c9        0x0 ./timer.o
- .data          0x0c0092c9        0x0 ./timer2.o
- .data          0x0c0092c9        0x0 ./tp.o
- .data          0x0c0092c9        0x0 ./tsp_antirebotes.o
- .data          0x0c0092c9        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
- .data          0x0c0092c9        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
- .data          0x0c0092c9        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
- .data          0x0c0092c9        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
- .data          0x0c0092c9        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
- .data          0x0c0092c9        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
+ .data          0x0c00e76c        0x6 ./common/44binit.o
+                0x0c00e76c                BDRAMTYPE
+ *fill*         0x0c00e772        0x2 00
+ .data          0x0c00e774        0xc ./common/44blib.o
+                0x0c00e778                mallocPt
+                0x0c00e77c                run
+ .data          0x0c00e780        0x0 ./common/AscII6x8.o
+ .data          0x0c00e780        0x0 ./common/AscII8x16.o
+ .data          0x0c00e780        0x0 ./8led.o
+ .data          0x0c00e780       0x10 ./Bmp.o
+                0x0c00e780                Stru_Bitmap_gbMouse
+ .data          0x0c00e790        0x0 ./botones_antirebotes.o
+ .data          0x0c00e790        0x0 ./button.o
+ .data          0x0c00e790        0x0 ./cola_depuracion.o
+ .data          0x0c00e790       0x30 ./elementos_pantalla.o
+                0x0c00e790                Stru_Bitmap_fichaBlanca
+                0x0c00e7a0                Stru_Bitmap_fichaNegra
+                0x0c00e7b0                Stru_Bitmap_fichaGris
+ .data          0x0c00e7c0        0x0 ./funciones_itoa.o
+ .data          0x0c00e7c0        0x0 ./jugada_por_botones.o
+ .data          0x0c00e7c0        0x4 ./keyboard.o
+                0x0c00e7c0                keyboard_base
+ .data          0x0c00e7c4        0x1 ./lcd.o
+ .data          0x0c00e7c5        0x0 ./led.o
+ .data          0x0c00e7c5        0x0 ./main.o
+ .data          0x0c00e7c5        0x0 ./main_medidas_optimizaciones.o
+ .data          0x0c00e7c5        0x0 ./patron_volteo_arm_arm.o
+ .data          0x0c00e7c5        0x0 ./patron_volteo_arm_arm_opt.o
+ .data          0x0c00e7c5        0x0 ./patron_volteo_arm_c.o
+ .data          0x0c00e7c5        0x0 ./pruebas_patron_volteo.o
+ .data          0x0c00e7c5        0x0 ./pruebas_timer2.o
+ .data          0x0c00e7c5        0x0 ./reversi8_2019.o
+ .data          0x0c00e7c5        0x0 ./reversi_main.o
+ .data          0x0c00e7c5        0x0 ./rutinas_excepciones.o
+ .data          0x0c00e7c5        0x0 ./teclado_antirebotes.o
+ .data          0x0c00e7c5        0x0 ./timer.o
+ .data          0x0c00e7c5        0x0 ./timer2.o
+ .data          0x0c00e7c5        0x0 ./tp.o
+ .data          0x0c00e7c5        0x0 ./tsp_antirebotes.o
+ .data          0x0c00e7c5        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
+ .data          0x0c00e7c5        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+ .data          0x0c00e7c5        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
+ .data          0x0c00e7c5        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
+ .data          0x0c00e7c5        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
+ .data          0x0c00e7c5        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
 
-.rodata         0x0c0092d0     0x1668
+.rodata         0x0c00e7c8     0x1c50
  *(.rodata)
- .rodata        0x0c0092d0      0x400 ./common/AscII6x8.o
-                0x0c0092d0                g_auc_Ascii6x8
- .rodata        0x0c0096d0     0x1004 ./common/AscII8x16.o
-                0x0c0096d0                g_auc_Ascii8x16
- .rodata        0x0c00a6d4       0xf0 ./Bmp.o
-                0x0c00a6d4                ucMouseMap
- .rodata        0x0c00a7c4        0x4 ./cola_depuracion.o
-                0x0c00a7c4                _COLA_DEP_STARTADDRESS
- .rodata        0x0c00a7c8      0x100 ./elementos_pantalla.o
- .rodata        0x0c00a8c8       0x14 ./lcd.o
- *fill*         0x0c00a8dc        0x4 00
- .rodata        0x0c00a8e0       0x50 ./reversi8_2019.o
-                0x0c00a920                vSF
-                0x0c00a928                vSC
- .rodata        0x0c00a930        0x4 ./teclado_antirebotes.o
- .rodata        0x0c00a934        0x4 ./tsp_antirebotes.o
-                0x0c00a938                Image_RW_Limit = .
-                0x0c00a938                . = ALIGN (0x4)
-                0x0c00a938                Image_ZI_Base = .
+ .rodata        0x0c00e7c8      0x400 ./common/AscII6x8.o
+                0x0c00e7c8                g_auc_Ascii6x8
+ .rodata        0x0c00ebc8     0x1004 ./common/AscII8x16.o
+                0x0c00ebc8                g_auc_Ascii8x16
+ .rodata        0x0c00fbcc       0x44 ./8led.o
+ .rodata        0x0c00fc10       0xf0 ./Bmp.o
+                0x0c00fc10                ucMouseMap
+ .rodata        0x0c00fd00        0x4 ./cola_depuracion.o
+                0x0c00fd00                _COLA_DEP_STARTADDRESS
+ .rodata        0x0c00fd04      0x6c0 ./elementos_pantalla.o
+                0x0c00fd04                fichaBlancaMap
+                0x0c00ff44                fichaNegraMap
+                0x0c010184                fichaGrisMap
+ *fill*         0x0c0103c4        0x4 00
+ .rodata        0x0c0103c8       0x50 ./reversi8_2019.o
+                0x0c0103c8                vSF
+                0x0c0103d0                vSC
+                0x0c010418                Image_RW_Limit = .
 
-.bss            0x0c00a938      0x268
+.rodata.str1.4  0x0c010418      0x2c4
+ .rodata.str1.4
+                0x0c010418      0x2b0 ./elementos_pantalla.o
+ .rodata.str1.4
+                0x0c0106c8       0x14 ./lcd.o
+                0x0c0106dc                . = ALIGN (0x4)
+                0x0c0106dc                Image_ZI_Base = .
+
+.bss            0x0c0106e0      0x268
  *(.bss)
- .bss           0x0c00a938        0x0 ./common/44binit.o
- .bss           0x0c00a938        0x4 ./common/44blib.o
-                0x0c00a938                restart
- .bss           0x0c00a93c        0x0 ./common/AscII6x8.o
- .bss           0x0c00a93c        0x0 ./common/AscII8x16.o
- .bss           0x0c00a93c        0x0 ./8led.o
- .bss           0x0c00a93c        0x0 ./Bmp.o
- .bss           0x0c00a93c       0x18 ./botones_antirebotes.o
- .bss           0x0c00a954        0x0 ./button.o
- .bss           0x0c00a954       0x14 ./cola_depuracion.o
- .bss           0x0c00a968        0x0 ./elementos_pantalla.o
- .bss           0x0c00a968        0x0 ./funciones_itoa.o
- .bss           0x0c00a968       0xb0 ./jugada_por_botones.o
-                0x0c00a97c                haciendo_DMA
- .bss           0x0c00aa18        0x4 ./keyboard.o
- .bss           0x0c00aa1c        0x0 ./lcd.o
- .bss           0x0c00aa1c        0x4 ./led.o
- .bss           0x0c00aa20        0x0 ./main.o
- .bss           0x0c00aa20        0x0 ./main_medidas_optimizaciones.o
- .bss           0x0c00aa20        0x0 ./patron_volteo_arm_arm.o
- .bss           0x0c00aa20        0x0 ./patron_volteo_arm_arm_opt.o
- .bss           0x0c00aa20        0x0 ./patron_volteo_arm_c.o
- .bss           0x0c00aa20        0x0 ./pruebas_patron_volteo.o
- .bss           0x0c00aa20        0x0 ./pruebas_timer2.o
- .bss           0x0c00aa20       0x98 ./reversi8_2019.o
-                0x0c00aaac                move
-                0x0c00aab0                fin
- .bss           0x0c00aab8        0xc ./reversi_main.o
- .bss           0x0c00aac4        0x4 ./rutinas_excepciones.o
- .bss           0x0c00aac8        0xc ./teclado_antirebotes.o
- .bss           0x0c00aad4        0x0 ./timer.o
- .bss           0x0c00aad4        0x4 ./timer2.o
- .bss           0x0c00aad8        0x0 ./tp.o
- .bss           0x0c00aad8        0xc ./tsp_antirebotes.o
- .bss           0x0c00aae4        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
- .bss           0x0c00aae4        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
- .bss           0x0c00aae4        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
- .bss           0x0c00aae4        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
- .bss           0x0c00aae4        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
- .bss           0x0c00aae4        0x0 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
- COMMON         0x0c00aae4        0x8 ./common/44blib.o
-                0x0c00aae4                fileSize
-                0x0c00aae8                downPt
- COMMON         0x0c00aaec       0x7c ./Bmp.o
-                0x0c00aaec                ucCursorBackUp
-                0x0c00ab64                ulMouseY
-                0x0c00ab66                ulMouseX
- COMMON         0x0c00ab68       0x20 ./main.o
-                0x0c00ab68                Ymin
-                0x0c00ab6c                Xmax
-                0x0c00ab70                Vx
-                0x0c00ab74                Ymax
-                0x0c00ab78                oneTouch
-                0x0c00ab7c                Vy
-                0x0c00ab80                Xmin
-                0x0c00ab84                CheckTSP
- COMMON         0x0c00ab88       0x14 ./reversi8_2019.o
-                0x0c00ab88                blancas
-                0x0c00ab8c                f
-                0x0c00ab90                done
-                0x0c00ab94                c
-                0x0c00ab98                negras
- COMMON         0x0c00ab9c        0x4 ./rutinas_excepciones.o
-                0x0c00ab9c                causa_fallo
-                0x0c00aba0                Image_ZI_Limit = .
-                0x0c00aba0                __bss_start__ = .
-                0x0c00aba0                __bss_end__ = .
-                0x0c00aba0                __EH_FRAME_BEGIN__ = .
-                0x0c00aba0                __EH_FRAME_END__ = .
-                0x0c00aba0                PROVIDE (__stack, .)
-                0x0c00aba0                end = .
-                0x0c00aba0                _end = .
+ .bss           0x0c0106e0        0x0 ./common/44binit.o
+ .bss           0x0c0106e0        0x4 ./common/44blib.o
+                0x0c0106e0                restart
+ .bss           0x0c0106e4        0x0 ./common/AscII6x8.o
+ .bss           0x0c0106e4        0x0 ./common/AscII8x16.o
+ .bss           0x0c0106e4        0x0 ./8led.o
+ .bss           0x0c0106e4        0x0 ./Bmp.o
+ .bss           0x0c0106e4       0x18 ./botones_antirebotes.o
+ .bss           0x0c0106fc        0x0 ./button.o
+ .bss           0x0c0106fc       0x14 ./cola_depuracion.o
+ .bss           0x0c010710        0x0 ./elementos_pantalla.o
+ .bss           0x0c010710        0x0 ./funciones_itoa.o
+ .bss           0x0c010710       0xb0 ./jugada_por_botones.o
+                0x0c010798                haciendo_DMA
+ .bss           0x0c0107c0        0x4 ./keyboard.o
+ .bss           0x0c0107c4        0x0 ./lcd.o
+ .bss           0x0c0107c4        0x4 ./led.o
+ .bss           0x0c0107c8        0x0 ./main.o
+ .bss           0x0c0107c8        0x0 ./main_medidas_optimizaciones.o
+ .bss           0x0c0107c8        0x0 ./patron_volteo_arm_arm.o
+ .bss           0x0c0107c8        0x0 ./patron_volteo_arm_arm_opt.o
+ .bss           0x0c0107c8        0x0 ./patron_volteo_arm_c.o
+ .bss           0x0c0107c8        0x0 ./pruebas_patron_volteo.o
+ .bss           0x0c0107c8        0x0 ./pruebas_timer2.o
+ .bss           0x0c0107c8       0xa0 ./reversi8_2019.o
+                0x0c010854                fin
+                0x0c010858                blancas
+                0x0c01085c                negras
+                0x0c010860                move
+ .bss           0x0c010868        0xc ./reversi_main.o
+ .bss           0x0c010874        0x4 ./rutinas_excepciones.o
+ .bss           0x0c010878        0xc ./teclado_antirebotes.o
+ .bss           0x0c010884        0x0 ./timer.o
+ .bss           0x0c010884        0x4 ./timer2.o
+ .bss           0x0c010888        0x0 ./tp.o
+ .bss           0x0c010888        0xc ./tsp_antirebotes.o
+ .bss           0x0c010894        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
+ .bss           0x0c010894        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+ .bss           0x0c010894        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
+ .bss           0x0c010894        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
+ .bss           0x0c010894        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
+ .bss           0x0c010894        0x0 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
+ COMMON         0x0c010894        0x8 ./common/44blib.o
+                0x0c010894                fileSize
+                0x0c010898                downPt
+ COMMON         0x0c01089c       0x7c ./Bmp.o
+                0x0c01089c                ucCursorBackUp
+                0x0c010914                ulMouseY
+                0x0c010916                ulMouseX
+ COMMON         0x0c010918       0x20 ./main.o
+                0x0c010918                Ymin
+                0x0c01091c                Xmax
+                0x0c010920                Vx
+                0x0c010924                Ymax
+                0x0c010928                oneTouch
+                0x0c01092c                Vy
+                0x0c010930                Xmin
+                0x0c010934                CheckTSP
+ COMMON         0x0c010938        0x9 ./reversi8_2019.o
+                0x0c010938                f
+                0x0c01093c                done
+                0x0c010940                c
+ *fill*         0x0c010941        0x3 00
+ COMMON         0x0c010944        0x4 ./rutinas_excepciones.o
+                0x0c010944                causa_fallo
+                0x0c010948                Image_ZI_Limit = .
+                0x0c010948                __bss_start__ = .
+                0x0c010948                __bss_end__ = .
+                0x0c010948                __EH_FRAME_BEGIN__ = .
+                0x0c010948                __EH_FRAME_END__ = .
+                0x0c010948                PROVIDE (__stack, .)
+                0x0c010948                end = .
+                0x0c010948                _end = .
 
 .ARM.attributes
                 0x00000000       0x2e
@@ -514,17 +523,17 @@ END GROUP
  .ARM.attributes
                 0x0000056a       0x32 ./tsp_antirebotes.o
  .ARM.attributes
-                0x0000059c       0x1a c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
+                0x0000059c       0x1a c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
  .ARM.attributes
-                0x000005b6       0x18 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                0x000005b6       0x18 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
  .ARM.attributes
-                0x000005ce       0x1a c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
+                0x000005ce       0x1a c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_addsubdf3.o)
  .ARM.attributes
-                0x000005e8       0x1a c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
+                0x000005e8       0x1a c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_muldivdf3.o)
  .ARM.attributes
-                0x00000602       0x1a c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
+                0x00000602       0x1a c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_arm_fixdfsi.o)
  .ARM.attributes
-                0x0000061c       0x34 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
+                0x0000061c       0x34 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
 
 .comment        0x00000000       0x2a
  .comment       0x00000000       0x2a ./common/44blib.o
@@ -555,131 +564,131 @@ END GROUP
  .comment       0x00000000       0x2b ./tp.o
  .comment       0x00000000       0x2b ./tsp_antirebotes.o
 
-.debug_info     0x00000000     0x38eb
+.debug_info     0x00000000     0x5f3b
  *(.debug_info)
- .debug_info    0x00000000       0x5f ./common/44binit.o
- .debug_info    0x0000005f      0x380 ./common/44blib.o
- .debug_info    0x000003df       0x60 ./common/AscII6x8.o
- .debug_info    0x0000043f       0x60 ./common/AscII8x16.o
- .debug_info    0x0000049f      0x10d ./8led.o
- .debug_info    0x000005ac      0x33c ./Bmp.o
- .debug_info    0x000008e8      0x1a8 ./botones_antirebotes.o
- .debug_info    0x00000a90      0x15c ./button.o
- .debug_info    0x00000bec      0x1fc ./cola_depuracion.o
- .debug_info    0x00000de8      0x36e ./elementos_pantalla.o
- .debug_info    0x00001156      0x171 ./funciones_itoa.o
- .debug_info    0x000012c7      0x3c7 ./jugada_por_botones.o
- .debug_info    0x0000168e      0x1b1 ./keyboard.o
- .debug_info    0x0000183f      0x7bc ./lcd.o
- .debug_info    0x00001ffb       0xf6 ./led.o
- .debug_info    0x000020f1      0x15f ./main.o
- .debug_info    0x00002250       0x29 ./main_medidas_optimizaciones.o
- .debug_info    0x00002279       0x66 ./patron_volteo_arm_arm.o
- .debug_info    0x000022df       0x6a ./patron_volteo_arm_arm_opt.o
- .debug_info    0x00002349       0x64 ./patron_volteo_arm_c.o
- .debug_info    0x000023ad       0x29 ./pruebas_patron_volteo.o
- .debug_info    0x000023d6      0x1bf ./pruebas_timer2.o
- .debug_info    0x00002595      0x88f ./reversi8_2019.o
- .debug_info    0x00002e24      0x1f0 ./reversi_main.o
- .debug_info    0x00003014      0x153 ./rutinas_excepciones.o
- .debug_info    0x00003167      0x126 ./teclado_antirebotes.o
- .debug_info    0x0000328d       0xe8 ./timer.o
- .debug_info    0x00003375      0x143 ./timer2.o
- .debug_info    0x000034b8      0x27a ./tp.o
- .debug_info    0x00003732      0x1b9 ./tsp_antirebotes.o
+ .debug_info    0x00000000       0x58 ./common/44binit.o
+ .debug_info    0x00000058      0x3c9 ./common/44blib.o
+ .debug_info    0x00000421       0x60 ./common/AscII6x8.o
+ .debug_info    0x00000481       0x60 ./common/AscII8x16.o
+ .debug_info    0x000004e1      0x10f ./8led.o
+ .debug_info    0x000005f0      0x489 ./Bmp.o
+ .debug_info    0x00000a79      0x1a6 ./botones_antirebotes.o
+ .debug_info    0x00000c1f      0x158 ./button.o
+ .debug_info    0x00000d77      0x214 ./cola_depuracion.o
+ .debug_info    0x00000f8b      0x8bc ./elementos_pantalla.o
+ .debug_info    0x00001847      0x225 ./funciones_itoa.o
+ .debug_info    0x00001a6c      0x5b9 ./jugada_por_botones.o
+ .debug_info    0x00002025      0x1e0 ./keyboard.o
+ .debug_info    0x00002205     0x1a3f ./lcd.o
+ .debug_info    0x00003c44      0x1b7 ./led.o
+ .debug_info    0x00003dfb      0x178 ./main.o
+ .debug_info    0x00003f73       0x29 ./main_medidas_optimizaciones.o
+ .debug_info    0x00003f9c       0x5f ./patron_volteo_arm_arm.o
+ .debug_info    0x00003ffb       0x63 ./patron_volteo_arm_arm_opt.o
+ .debug_info    0x0000405e       0x5d ./patron_volteo_arm_c.o
+ .debug_info    0x000040bb       0x29 ./pruebas_patron_volteo.o
+ .debug_info    0x000040e4      0x16f ./pruebas_timer2.o
+ .debug_info    0x00004253     0x10dd ./reversi8_2019.o
+ .debug_info    0x00005330      0x230 ./reversi_main.o
+ .debug_info    0x00005560      0x153 ./rutinas_excepciones.o
+ .debug_info    0x000056b3      0x188 ./teclado_antirebotes.o
+ .debug_info    0x0000583b       0xe7 ./timer.o
+ .debug_info    0x00005922      0x187 ./timer2.o
+ .debug_info    0x00005aa9      0x277 ./tp.o
+ .debug_info    0x00005d20      0x21b ./tsp_antirebotes.o
 
-.debug_line     0x00000000     0x3c5a
+.debug_line     0x00000000     0x47e5
  *(.debug_line)
  .debug_line    0x00000000      0x10f ./common/44binit.o
- .debug_line    0x0000010f      0x4f8 ./common/44blib.o
- .debug_line    0x00000607       0x3e ./common/AscII6x8.o
- .debug_line    0x00000645       0x3f ./common/AscII8x16.o
- .debug_line    0x00000684       0x95 ./8led.o
- .debug_line    0x00000719      0x106 ./Bmp.o
- .debug_line    0x0000081f      0x2eb ./botones_antirebotes.o
- .debug_line    0x00000b0a      0x28a ./button.o
- .debug_line    0x00000d94      0x23f ./cola_depuracion.o
- .debug_line    0x00000fd3      0x175 ./elementos_pantalla.o
- .debug_line    0x00001148      0x448 ./funciones_itoa.o
- .debug_line    0x00001590      0x28d ./jugada_por_botones.o
- .debug_line    0x0000181d      0x2a4 ./keyboard.o
- .debug_line    0x00001ac1      0x355 ./lcd.o
- .debug_line    0x00001e16       0xa8 ./led.o
- .debug_line    0x00001ebe      0x31a ./main.o
- .debug_line    0x000021d8       0x41 ./main_medidas_optimizaciones.o
- .debug_line    0x00002219       0x73 ./patron_volteo_arm_arm.o
- .debug_line    0x0000228c       0x6f ./patron_volteo_arm_arm_opt.o
- .debug_line    0x000022fb       0x6c ./patron_volteo_arm_c.o
- .debug_line    0x00002367       0x3b ./pruebas_patron_volteo.o
- .debug_line    0x000023a2      0x164 ./pruebas_timer2.o
- .debug_line    0x00002506      0x26b ./reversi8_2019.o
- .debug_line    0x00002771      0x3a5 ./reversi_main.o
- .debug_line    0x00002b16      0x280 ./rutinas_excepciones.o
- .debug_line    0x00002d96      0x2b1 ./teclado_antirebotes.o
- .debug_line    0x00003047      0x254 ./timer.o
- .debug_line    0x0000329b      0x256 ./timer2.o
- .debug_line    0x000034f1      0x4bd ./tp.o
- .debug_line    0x000039ae      0x2ac ./tsp_antirebotes.o
+ .debug_line    0x0000010f      0x459 ./common/44blib.o
+ .debug_line    0x00000568       0x3e ./common/AscII6x8.o
+ .debug_line    0x000005a6       0x3f ./common/AscII8x16.o
+ .debug_line    0x000005e5       0x86 ./8led.o
+ .debug_line    0x0000066b      0x27a ./Bmp.o
+ .debug_line    0x000008e5      0x282 ./botones_antirebotes.o
+ .debug_line    0x00000b67      0x22a ./button.o
+ .debug_line    0x00000d91      0x1ef ./cola_depuracion.o
+ .debug_line    0x00000f80      0x242 ./elementos_pantalla.o
+ .debug_line    0x000011c2      0x382 ./funciones_itoa.o
+ .debug_line    0x00001544      0x396 ./jugada_por_botones.o
+ .debug_line    0x000018da      0x28d ./keyboard.o
+ .debug_line    0x00001b67      0x939 ./lcd.o
+ .debug_line    0x000024a0      0x133 ./led.o
+ .debug_line    0x000025d3      0x2b8 ./main.o
+ .debug_line    0x0000288b       0x41 ./main_medidas_optimizaciones.o
+ .debug_line    0x000028cc       0x73 ./patron_volteo_arm_arm.o
+ .debug_line    0x0000293f       0x6f ./patron_volteo_arm_arm_opt.o
+ .debug_line    0x000029ae       0x6c ./patron_volteo_arm_c.o
+ .debug_line    0x00002a1a       0x3b ./pruebas_patron_volteo.o
+ .debug_line    0x00002a55      0x143 ./pruebas_timer2.o
+ .debug_line    0x00002b98      0x9d6 ./reversi8_2019.o
+ .debug_line    0x0000356e      0x37e ./reversi_main.o
+ .debug_line    0x000038ec      0x211 ./rutinas_excepciones.o
+ .debug_line    0x00003afd      0x281 ./teclado_antirebotes.o
+ .debug_line    0x00003d7e      0x1f5 ./timer.o
+ .debug_line    0x00003f73      0x1fa ./timer2.o
+ .debug_line    0x0000416d      0x3fc ./tp.o
+ .debug_line    0x00004569      0x27c ./tsp_antirebotes.o
 
-.debug_abbrev   0x00000000     0x13b1
+.debug_abbrev   0x00000000     0x1ca5
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0x14 ./common/44binit.o
- .debug_abbrev  0x00000014      0x136 ./common/44blib.o
- .debug_abbrev  0x0000014a       0x4b ./common/AscII6x8.o
- .debug_abbrev  0x00000195       0x4b ./common/AscII8x16.o
- .debug_abbrev  0x000001e0       0xa7 ./8led.o
- .debug_abbrev  0x00000287       0xf8 ./Bmp.o
- .debug_abbrev  0x0000037f       0x9b ./botones_antirebotes.o
- .debug_abbrev  0x0000041a       0xaa ./button.o
- .debug_abbrev  0x000004c4       0xd6 ./cola_depuracion.o
- .debug_abbrev  0x0000059a      0x110 ./elementos_pantalla.o
- .debug_abbrev  0x000006aa       0xb2 ./funciones_itoa.o
- .debug_abbrev  0x0000075c      0x164 ./jugada_por_botones.o
- .debug_abbrev  0x000008c0       0xe9 ./keyboard.o
- .debug_abbrev  0x000009a9      0x1bc ./lcd.o
- .debug_abbrev  0x00000b65       0x69 ./led.o
- .debug_abbrev  0x00000bce       0xb1 ./main.o
- .debug_abbrev  0x00000c7f       0x16 ./main_medidas_optimizaciones.o
- .debug_abbrev  0x00000c95       0x14 ./patron_volteo_arm_arm.o
- .debug_abbrev  0x00000ca9       0x14 ./patron_volteo_arm_arm_opt.o
- .debug_abbrev  0x00000cbd       0x14 ./patron_volteo_arm_c.o
- .debug_abbrev  0x00000cd1       0x16 ./pruebas_patron_volteo.o
- .debug_abbrev  0x00000ce7       0x85 ./pruebas_timer2.o
- .debug_abbrev  0x00000d6c      0x1de ./reversi8_2019.o
- .debug_abbrev  0x00000f4a       0xb5 ./reversi_main.o
- .debug_abbrev  0x00000fff       0xe0 ./rutinas_excepciones.o
- .debug_abbrev  0x000010df       0x6f ./teclado_antirebotes.o
- .debug_abbrev  0x0000114e       0x57 ./timer.o
- .debug_abbrev  0x000011a5       0x9d ./timer2.o
- .debug_abbrev  0x00001242       0xd7 ./tp.o
- .debug_abbrev  0x00001319       0x98 ./tsp_antirebotes.o
+ .debug_abbrev  0x00000014      0x1cf ./common/44blib.o
+ .debug_abbrev  0x000001e3       0x4b ./common/AscII6x8.o
+ .debug_abbrev  0x0000022e       0x4b ./common/AscII8x16.o
+ .debug_abbrev  0x00000279       0xae ./8led.o
+ .debug_abbrev  0x00000327      0x191 ./Bmp.o
+ .debug_abbrev  0x000004b8       0xb0 ./botones_antirebotes.o
+ .debug_abbrev  0x00000568       0xaa ./button.o
+ .debug_abbrev  0x00000612      0x10c ./cola_depuracion.o
+ .debug_abbrev  0x0000071e      0x29a ./elementos_pantalla.o
+ .debug_abbrev  0x000009b8      0x121 ./funciones_itoa.o
+ .debug_abbrev  0x00000ad9      0x217 ./jugada_por_botones.o
+ .debug_abbrev  0x00000cf0      0x113 ./keyboard.o
+ .debug_abbrev  0x00000e03      0x37a ./lcd.o
+ .debug_abbrev  0x0000117d       0xab ./led.o
+ .debug_abbrev  0x00001228       0xcc ./main.o
+ .debug_abbrev  0x000012f4       0x16 ./main_medidas_optimizaciones.o
+ .debug_abbrev  0x0000130a       0x14 ./patron_volteo_arm_arm.o
+ .debug_abbrev  0x0000131e       0x14 ./patron_volteo_arm_arm_opt.o
+ .debug_abbrev  0x00001332       0x14 ./patron_volteo_arm_c.o
+ .debug_abbrev  0x00001346       0x16 ./pruebas_patron_volteo.o
+ .debug_abbrev  0x0000135c       0x97 ./pruebas_timer2.o
+ .debug_abbrev  0x000013f3      0x2b8 ./reversi8_2019.o
+ .debug_abbrev  0x000016ab       0xe3 ./reversi_main.o
+ .debug_abbrev  0x0000178e       0xef ./rutinas_excepciones.o
+ .debug_abbrev  0x0000187d       0xcb ./teclado_antirebotes.o
+ .debug_abbrev  0x00001948       0x6c ./timer.o
+ .debug_abbrev  0x000019b4       0xed ./timer2.o
+ .debug_abbrev  0x00001aa1      0x110 ./tp.o
+ .debug_abbrev  0x00001bb1       0xf4 ./tsp_antirebotes.o
 
-.debug_frame    0x00000000     0x1430
+.debug_frame    0x00000000     0x1308
  *(.debug_frame)
- .debug_frame   0x00000000      0x1bc ./common/44blib.o
- .debug_frame   0x000001bc       0x50 ./8led.o
- .debug_frame   0x0000020c       0xf4 ./Bmp.o
- .debug_frame   0x00000300       0x90 ./botones_antirebotes.o
- .debug_frame   0x00000390       0x9c ./button.o
- .debug_frame   0x0000042c       0x94 ./cola_depuracion.o
- .debug_frame   0x000004c0      0x1f4 ./elementos_pantalla.o
- .debug_frame   0x000006b4       0x70 ./funciones_itoa.o
- .debug_frame   0x00000724      0x174 ./jugada_por_botones.o
- .debug_frame   0x00000898       0xbc ./keyboard.o
- .debug_frame   0x00000954      0x21c ./lcd.o
- .debug_frame   0x00000b70      0x110 ./led.o
- .debug_frame   0x00000c80       0x54 ./main.o
- .debug_frame   0x00000cd4       0x30 ./pruebas_timer2.o
- .debug_frame   0x00000d04      0x290 ./reversi8_2019.o
- .debug_frame   0x00000f94       0xb0 ./reversi_main.o
- .debug_frame   0x00001044       0x9c ./rutinas_excepciones.o
- .debug_frame   0x000010e0       0x90 ./teclado_antirebotes.o
- .debug_frame   0x00001170       0x5c ./timer.o
- .debug_frame   0x000011cc       0xb8 ./timer2.o
- .debug_frame   0x00001284       0xdc ./tp.o
- .debug_frame   0x00001360       0x90 ./tsp_antirebotes.o
- .debug_frame   0x000013f0       0x20 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
- .debug_frame   0x00001410       0x20 c:/users/pjper/onedrive/escritorio/cosas/universidad/tercero/proyecto hardware/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
+ .debug_frame   0x00000000      0x158 ./common/44blib.o
+ .debug_frame   0x00000158       0x30 ./8led.o
+ .debug_frame   0x00000188      0x154 ./Bmp.o
+ .debug_frame   0x000002dc       0x68 ./botones_antirebotes.o
+ .debug_frame   0x00000344       0x6c ./button.o
+ .debug_frame   0x000003b0       0x80 ./cola_depuracion.o
+ .debug_frame   0x00000430      0x24c ./elementos_pantalla.o
+ .debug_frame   0x0000067c       0x74 ./funciones_itoa.o
+ .debug_frame   0x000006f0      0x184 ./jugada_por_botones.o
+ .debug_frame   0x00000874       0x7c ./keyboard.o
+ .debug_frame   0x000008f0      0x22c ./lcd.o
+ .debug_frame   0x00000b1c       0x90 ./led.o
+ .debug_frame   0x00000bac       0x30 ./main.o
+ .debug_frame   0x00000bdc       0x38 ./pruebas_timer2.o
+ .debug_frame   0x00000c14      0x2e4 ./reversi8_2019.o
+ .debug_frame   0x00000ef8       0xb8 ./reversi_main.o
+ .debug_frame   0x00000fb0       0x80 ./rutinas_excepciones.o
+ .debug_frame   0x00001030       0x98 ./teclado_antirebotes.o
+ .debug_frame   0x000010c8       0x4c ./timer.o
+ .debug_frame   0x00001114       0x6c ./timer2.o
+ .debug_frame   0x00001180       0xb0 ./tp.o
+ .debug_frame   0x00001230       0x98 ./tsp_antirebotes.o
+ .debug_frame   0x000012c8       0x20 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_divsi3.o)
+ .debug_frame   0x000012e8       0x20 c:/programas-practicas-isa/eclipsearm/sourcery-g++-lite-arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a(lib_a-strlen.o)
 OUTPUT(P3_PH.elf elf32-littlearm)
 
 .debug_aranges  0x00000000      0x340
@@ -736,86 +745,84 @@ OUTPUT(P3_PH.elf elf32-littlearm)
  .debug_aranges
                 0x00000320       0x20 ./tsp_antirebotes.o
 
-.debug_macinfo  0x00000000    0x77b1d
+.debug_macinfo  0x00000000    0x77e1f
  .debug_macinfo
-                0x00000000     0x8301 ./common/44blib.o
+                0x00000000     0x8300 ./common/44blib.o
  .debug_macinfo
-                0x00008301     0x2297 ./common/AscII6x8.o
+                0x00008300     0x2296 ./common/AscII6x8.o
  .debug_macinfo
-                0x0000a598     0x2297 ./common/AscII8x16.o
+                0x0000a596     0x2296 ./common/AscII8x16.o
  .debug_macinfo
-                0x0000c82f     0x50b9 ./8led.o
+                0x0000c82c     0x50b8 ./8led.o
  .debug_macinfo
-                0x000118e8     0x289a ./Bmp.o
+                0x000118e4     0x2899 ./Bmp.o
  .debug_macinfo
-                0x00014182     0x5a39 ./botones_antirebotes.o
+                0x0001417d     0x5a38 ./botones_antirebotes.o
  .debug_macinfo
-                0x00019bbb     0x5b71 ./button.o
+                0x00019bb5     0x5b70 ./button.o
  .debug_macinfo
-                0x0001f72c     0x2ba6 ./cola_depuracion.o
+                0x0001f725     0x2ba5 ./cola_depuracion.o
  .debug_macinfo
-                0x000222d2     0x2887 ./elementos_pantalla.o
+                0x000222ca     0x28e1 ./elementos_pantalla.o
  .debug_macinfo
-                0x00024b59     0x4cd3 ./funciones_itoa.o
+                0x00024bab     0x4cd2 ./funciones_itoa.o
  .debug_macinfo
-                0x0002982c     0x58ce ./jugada_por_botones.o
+                0x0002987d     0x5928 ./jugada_por_botones.o
  .debug_macinfo
-                0x0002f0fa     0x5b7b ./keyboard.o
+                0x0002f1a5     0x5b7a ./keyboard.o
  .debug_macinfo
-                0x00034c75     0x589b ./lcd.o
+                0x00034d1f     0x589a ./lcd.o
  .debug_macinfo
-                0x0003a510     0x50b8 ./led.o
+                0x0003a5b9     0x50b7 ./led.o
  .debug_macinfo
-                0x0003f5c8     0x61dd ./main.o
+                0x0003f670     0x6237 ./main.o
  .debug_macinfo
-                0x000457a5     0x20fc ./main_medidas_optimizaciones.o
+                0x000458a7     0x20fb ./main_medidas_optimizaciones.o
  .debug_macinfo
-                0x000478a1     0x20fc ./pruebas_patron_volteo.o
+                0x000479a2     0x20fb ./pruebas_patron_volteo.o
  .debug_macinfo
-                0x0004999d     0x2288 ./pruebas_timer2.o
+                0x00049a9d     0x2287 ./pruebas_timer2.o
  .debug_macinfo
-                0x0004bc25     0x2155 ./reversi8_2019.o
+                0x0004bd24     0x2333 ./reversi8_2019.o
  .debug_macinfo
-                0x0004dd7a     0x5afe ./reversi_main.o
+                0x0004e057     0x5b29 ./reversi_main.o
  .debug_macinfo
-                0x00053878     0x5b6b ./rutinas_excepciones.o
+                0x00053b80     0x5b6a ./rutinas_excepciones.o
  .debug_macinfo
-                0x000593e3     0x5a43 ./teclado_antirebotes.o
+                0x000596ea     0x5a42 ./teclado_antirebotes.o
  .debug_macinfo
-                0x0005ee26     0x59dc ./timer.o
+                0x0005f12c     0x59db ./timer.o
  .debug_macinfo
-                0x00064802     0x59cb ./timer2.o
+                0x00064b07     0x59ca ./timer2.o
  .debug_macinfo
-                0x0006a1cd     0x7da9 ./tp.o
+                0x0006a4d1     0x7da8 ./tp.o
  .debug_macinfo
-                0x00071f76     0x5ba7 ./tsp_antirebotes.o
+                0x00072279     0x5ba6 ./tsp_antirebotes.o
 
-.debug_loc      0x00000000     0x18ec
- .debug_loc     0x00000000      0x23c ./common/44blib.o
- .debug_loc     0x0000023c       0x58 ./8led.o
- .debug_loc     0x00000294      0x134 ./Bmp.o
- .debug_loc     0x000003c8       0xb0 ./botones_antirebotes.o
- .debug_loc     0x00000478       0xb0 ./button.o
- .debug_loc     0x00000528       0xb0 ./cola_depuracion.o
- .debug_loc     0x000005d8      0x294 ./elementos_pantalla.o
- .debug_loc     0x0000086c       0x84 ./funciones_itoa.o
- .debug_loc     0x000008f0      0x1e4 ./jugada_por_botones.o
- .debug_loc     0x00000ad4       0xdc ./keyboard.o
- .debug_loc     0x00000bb0      0x2c0 ./lcd.o
- .debug_loc     0x00000e70      0x160 ./led.o
- .debug_loc     0x00000fd0       0x58 ./main.o
- .debug_loc     0x00001028       0x2c ./pruebas_timer2.o
- .debug_loc     0x00001054      0x370 ./reversi8_2019.o
- .debug_loc     0x000013c4       0xdc ./reversi_main.o
- .debug_loc     0x000014a0       0xb0 ./rutinas_excepciones.o
- .debug_loc     0x00001550       0xb0 ./teclado_antirebotes.o
- .debug_loc     0x00001600       0x58 ./timer.o
- .debug_loc     0x00001658       0xdc ./timer2.o
- .debug_loc     0x00001734      0x108 ./tp.o
- .debug_loc     0x0000183c       0xb0 ./tsp_antirebotes.o
+.debug_loc      0x00000000     0x58fc
+ .debug_loc     0x00000000      0x2a2 ./common/44blib.o
+ .debug_loc     0x000002a2      0x451 ./Bmp.o
+ .debug_loc     0x000006f3       0x4e ./botones_antirebotes.o
+ .debug_loc     0x00000741       0x2c ./button.o
+ .debug_loc     0x0000076d      0x12b ./cola_depuracion.o
+ .debug_loc     0x00000898      0x69e ./elementos_pantalla.o
+ .debug_loc     0x00000f36      0x231 ./funciones_itoa.o
+ .debug_loc     0x00001167      0x7fa ./jugada_por_botones.o
+ .debug_loc     0x00001961       0x2c ./keyboard.o
+ .debug_loc     0x0000198d     0x16e3 ./lcd.o
+ .debug_loc     0x00003070       0x60 ./main.o
+ .debug_loc     0x000030d0       0x40 ./pruebas_timer2.o
+ .debug_loc     0x00003110     0x2381 ./reversi8_2019.o
+ .debug_loc     0x00005491      0x11c ./reversi_main.o
+ .debug_loc     0x000055ad       0x96 ./rutinas_excepciones.o
+ .debug_loc     0x00005643       0x84 ./teclado_antirebotes.o
+ .debug_loc     0x000056c7       0x2c ./timer.o
+ .debug_loc     0x000056f3       0x6c ./timer2.o
+ .debug_loc     0x0000575f      0x119 ./tp.o
+ .debug_loc     0x00005878       0x84 ./tsp_antirebotes.o
 
 .debug_pubnames
-                0x00000000      0xe03
+                0x00000000      0xe8a
  .debug_pubnames
                 0x00000000       0xf7 ./common/44blib.o
  .debug_pubnames
@@ -833,40 +840,40 @@ OUTPUT(P3_PH.elf elf32-littlearm)
  .debug_pubnames
                 0x0000030d       0x76 ./cola_depuracion.o
  .debug_pubnames
-                0x00000383      0x144 ./elementos_pantalla.o
+                0x00000383      0x1c4 ./elementos_pantalla.o
  .debug_pubnames
-                0x000004c7       0x30 ./funciones_itoa.o
+                0x00000547       0x30 ./funciones_itoa.o
  .debug_pubnames
-                0x000004f7      0x11d ./jugada_por_botones.o
+                0x00000577      0x135 ./jugada_por_botones.o
  .debug_pubnames
-                0x00000614       0x77 ./keyboard.o
+                0x000006ac       0x77 ./keyboard.o
  .debug_pubnames
-                0x0000068b      0x123 ./lcd.o
+                0x00000723      0x123 ./lcd.o
  .debug_pubnames
-                0x000007ae       0x7d ./led.o
+                0x00000846       0x7d ./led.o
  .debug_pubnames
-                0x0000082b       0x78 ./main.o
+                0x000008c3       0x67 ./main.o
  .debug_pubnames
-                0x000008a3       0x25 ./pruebas_timer2.o
+                0x0000092a       0x25 ./pruebas_timer2.o
  .debug_pubnames
-                0x000008c8      0x1ce ./reversi8_2019.o
+                0x0000094f      0x1ce ./reversi8_2019.o
  .debug_pubnames
-                0x00000a96       0x86 ./reversi_main.o
+                0x00000b1d       0x86 ./reversi_main.o
  .debug_pubnames
-                0x00000b1c       0x7a ./rutinas_excepciones.o
+                0x00000ba3       0x7a ./rutinas_excepciones.o
  .debug_pubnames
-                0x00000b96       0x6c ./teclado_antirebotes.o
+                0x00000c1d       0x6c ./teclado_antirebotes.o
  .debug_pubnames
-                0x00000c02       0x2f ./timer.o
+                0x00000c89       0x2f ./timer.o
  .debug_pubnames
-                0x00000c31       0x6c ./timer2.o
+                0x00000cb8       0x6c ./timer2.o
  .debug_pubnames
-                0x00000c9d       0xae ./tp.o
+                0x00000d24       0xae ./tp.o
  .debug_pubnames
-                0x00000d4b       0xb8 ./tsp_antirebotes.o
+                0x00000dd2       0xb8 ./tsp_antirebotes.o
 
 .debug_pubtypes
-                0x00000000      0x2bb
+                0x00000000      0x2d6
  .debug_pubtypes
                 0x00000000       0x12 ./common/44blib.o
  .debug_pubtypes
@@ -878,84 +885,98 @@ OUTPUT(P3_PH.elf elf32-littlearm)
  .debug_pubtypes
                 0x00000093       0x2b ./cola_depuracion.o
  .debug_pubtypes
-                0x000000be       0x25 ./elementos_pantalla.o
+                0x000000be       0x40 ./elementos_pantalla.o
  .debug_pubtypes
-                0x000000e3       0x12 ./funciones_itoa.o
+                0x000000fe       0x12 ./funciones_itoa.o
  .debug_pubtypes
-                0x000000f5       0x43 ./jugada_por_botones.o
+                0x00000110       0x43 ./jugada_por_botones.o
  .debug_pubtypes
-                0x00000138       0x12 ./keyboard.o
+                0x00000153       0x12 ./keyboard.o
  .debug_pubtypes
-                0x0000014a       0x2d ./lcd.o
+                0x00000165       0x2d ./lcd.o
  .debug_pubtypes
-                0x00000177       0x1f ./main.o
+                0x00000192       0x1f ./main.o
  .debug_pubtypes
-                0x00000196       0x37 ./reversi8_2019.o
+                0x000001b1       0x37 ./reversi8_2019.o
  .debug_pubtypes
-                0x000001cd       0x3d ./reversi_main.o
+                0x000001e8       0x3d ./reversi_main.o
  .debug_pubtypes
-                0x0000020a       0x1f ./rutinas_excepciones.o
+                0x00000225       0x1f ./rutinas_excepciones.o
  .debug_pubtypes
-                0x00000229       0x2e ./teclado_antirebotes.o
+                0x00000244       0x2e ./teclado_antirebotes.o
  .debug_pubtypes
-                0x00000257       0x12 ./timer.o
+                0x00000272       0x12 ./timer.o
  .debug_pubtypes
-                0x00000269       0x12 ./timer2.o
+                0x00000284       0x12 ./timer2.o
  .debug_pubtypes
-                0x0000027b       0x12 ./tp.o
+                0x00000296       0x12 ./tp.o
  .debug_pubtypes
-                0x0000028d       0x2e ./tsp_antirebotes.o
+                0x000002a8       0x2e ./tsp_antirebotes.o
 
-.debug_str      0x00000000     0x1366
- .debug_str     0x00000000      0x19b ./common/44blib.o
-                                0x1d9 (size before relaxing)
- .debug_str     0x0000019b       0x24 ./common/AscII6x8.o
-                                 0x6b (size before relaxing)
- .debug_str     0x000001bf       0x26 ./common/AscII8x16.o
-                                 0x6d (size before relaxing)
- .debug_str     0x000001e5       0x6c ./8led.o
-                                 0xa5 (size before relaxing)
- .debug_str     0x00000251       0xfc ./Bmp.o
-                                0x15d (size before relaxing)
- .debug_str     0x0000034d      0x18a ./botones_antirebotes.o
-                                0x24e (size before relaxing)
- .debug_str     0x000004d7       0xbb ./button.o
-                                0x1a0 (size before relaxing)
- .debug_str     0x00000592       0xb9 ./cola_depuracion.o
-                                0x16e (size before relaxing)
- .debug_str     0x0000064b      0x1c9 ./elementos_pantalla.o
-                                0x229 (size before relaxing)
- .debug_str     0x00000814       0x26 ./funciones_itoa.o
-                                 0xed (size before relaxing)
- .debug_str     0x0000083a      0x1b7 ./jugada_por_botones.o
-                                0x292 (size before relaxing)
- .debug_str     0x000009f1       0x6d ./keyboard.o
-                                0x190 (size before relaxing)
- .debug_str     0x00000a5e      0x19c ./lcd.o
-                                0x2a8 (size before relaxing)
- .debug_str     0x00000bfa       0x68 ./led.o
-                                 0x94 (size before relaxing)
- .debug_str     0x00000c62       0x48 ./main.o
-                                0x118 (size before relaxing)
- .debug_str     0x00000caa       0x21 ./main_medidas_optimizaciones.o
-                                 0x4d (size before relaxing)
- .debug_str     0x00000ccb       0x1b ./pruebas_patron_volteo.o
-                                 0x47 (size before relaxing)
- .debug_str     0x00000ce6       0x9f ./pruebas_timer2.o
-                                 0xd8 (size before relaxing)
- .debug_str     0x00000d85      0x1c0 ./reversi8_2019.o
-                                0x2e7 (size before relaxing)
- .debug_str     0x00000f45       0xd8 ./reversi_main.o
-                                0x257 (size before relaxing)
- .debug_str     0x0000101d       0x9b ./rutinas_excepciones.o
-                                0x159 (size before relaxing)
- .debug_str     0x000010b8       0xd6 ./teclado_antirebotes.o
-                                0x19d (size before relaxing)
- .debug_str     0x0000118e       0x20 ./timer.o
-                                0x138 (size before relaxing)
- .debug_str     0x000011ae       0xbd ./timer2.o
-                                0x16d (size before relaxing)
- .debug_str     0x0000126b       0x40 ./tp.o
-                                0x183 (size before relaxing)
- .debug_str     0x000012ab       0xbb ./tsp_antirebotes.o
-                                0x1bb (size before relaxing)
+.debug_str      0x00000000     0x13da
+ .debug_str     0x00000000      0x194 ./common/44blib.o
+                                0x1d2 (size before relaxing)
+ .debug_str     0x00000194       0x24 ./common/AscII6x8.o
+                                 0x64 (size before relaxing)
+ .debug_str     0x000001b8       0x26 ./common/AscII8x16.o
+                                 0x66 (size before relaxing)
+ .debug_str     0x000001de       0x6c ./8led.o
+                                 0x9e (size before relaxing)
+ .debug_str     0x0000024a       0xfc ./Bmp.o
+                                0x156 (size before relaxing)
+ .debug_str     0x00000346      0x18a ./botones_antirebotes.o
+                                0x247 (size before relaxing)
+ .debug_str     0x000004d0       0xbb ./button.o
+                                0x199 (size before relaxing)
+ .debug_str     0x0000058b       0xb9 ./cola_depuracion.o
+                                0x167 (size before relaxing)
+ .debug_str     0x00000644      0x22b ./elementos_pantalla.o
+                                0x2f1 (size before relaxing)
+ .debug_str     0x0000086f       0x26 ./funciones_itoa.o
+                                 0xe6 (size before relaxing)
+ .debug_str     0x00000895      0x1d9 ./jugada_por_botones.o
+                                0x2ce (size before relaxing)
+ .debug_str     0x00000a6e       0x6d ./keyboard.o
+                                0x189 (size before relaxing)
+ .debug_str     0x00000adb      0x19c ./lcd.o
+                                0x2a1 (size before relaxing)
+ .debug_str     0x00000c77       0x68 ./led.o
+                                 0x8d (size before relaxing)
+ .debug_str     0x00000cdf       0x48 ./main.o
+                                0x111 (size before relaxing)
+ .debug_str     0x00000d27       0x21 ./main_medidas_optimizaciones.o
+                                 0x46 (size before relaxing)
+ .debug_str     0x00000d48       0x1b ./pruebas_patron_volteo.o
+                                 0x40 (size before relaxing)
+ .debug_str     0x00000d63       0x9f ./pruebas_timer2.o
+                                 0xd1 (size before relaxing)
+ .debug_str     0x00000e02      0x1b7 ./reversi8_2019.o
+                                0x301 (size before relaxing)
+ .debug_str     0x00000fb9       0xd8 ./reversi_main.o
+                                0x250 (size before relaxing)
+ .debug_str     0x00001091       0x9b ./rutinas_excepciones.o
+                                0x152 (size before relaxing)
+ .debug_str     0x0000112c       0xd6 ./teclado_antirebotes.o
+                                0x196 (size before relaxing)
+ .debug_str     0x00001202       0x20 ./timer.o
+                                0x131 (size before relaxing)
+ .debug_str     0x00001222       0xbd ./timer2.o
+                                0x166 (size before relaxing)
+ .debug_str     0x000012df       0x40 ./tp.o
+                                0x17c (size before relaxing)
+ .debug_str     0x0000131f       0xbb ./tsp_antirebotes.o
+                                0x1b4 (size before relaxing)
+
+.debug_ranges   0x00000000      0x990
+ .debug_ranges  0x00000000      0x128 ./Bmp.o
+ .debug_ranges  0x00000128      0x110 ./elementos_pantalla.o
+ .debug_ranges  0x00000238       0x90 ./funciones_itoa.o
+ .debug_ranges  0x000002c8       0xb8 ./jugada_por_botones.o
+ .debug_ranges  0x00000380       0x50 ./keyboard.o
+ .debug_ranges  0x000003d0      0x118 ./lcd.o
+ .debug_ranges  0x000004e8       0xa0 ./led.o
+ .debug_ranges  0x00000588       0x50 ./pruebas_timer2.o
+ .debug_ranges  0x000005d8      0x2c0 ./reversi8_2019.o
+ .debug_ranges  0x00000898       0x78 ./reversi_main.o
+ .debug_ranges  0x00000910       0x40 ./teclado_antirebotes.o
+ .debug_ranges  0x00000950       0x40 ./tsp_antirebotes.o

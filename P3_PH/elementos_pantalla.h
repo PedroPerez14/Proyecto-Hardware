@@ -8,13 +8,14 @@
 #ifndef _ELEMENTOS_PANTALLA_H_
 #define _ELEMENTOS_PANTALLA_H_
 #include "definiciones_juego.h"
+#include "Bmp.h"
+
 /* Funciones disponibles para el usuario */
 void pintar_ficha(int fila, int col, enum estado_casilla color);
 void borrar_ficha(int fila, int columna);							//TODO hace falta ponerla 'publica'?
 void pintar_profiling(int t_total, int t_calc, int t_pvolteo, int veces_pvolteo);
 void pintar_jugando(void);
-void mover_gris_abajo(int fila, int columna, int fila_anterior_gris);
-void mover_gris_derecha(int fila, int columna, int columna_anterior_gris);
+void mover_gris(int fila, int columna, int fila_anterior_gris, int columna_anterior_gris);
 void pintar_prueba(void);
 void pintar_reglas(void);
 void pintar_fin_victoria(int blancas, int negras);

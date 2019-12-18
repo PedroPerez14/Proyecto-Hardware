@@ -119,7 +119,7 @@ void Lcd_Clr(void)
 *********************************************************************************************/
 void LcdClrRect(INT16 usLeft, INT16 usTop, INT16 usRight, INT16 usBottom, INT8U ucColor)
 {
-	INT16 i,k,l,m;
+	volatile INT16 i,k,l,m;
 	
 	INT32U ulColor = (ucColor << 28) | (ucColor << 24) | (ucColor << 20) | (ucColor << 16) | 
 				     (ucColor << 12) | (ucColor << 8) | (ucColor << 4) | ucColor;

@@ -6,7 +6,7 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"AscII8x16.c"
   21              	.Ltext0:
@@ -4114,7 +4114,7 @@
  5148              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 AscII8x16.c
-C:\Users\pjper\AppData\Local\Temp\ccWt0xLT.s:1049   .rodata:00000000 g_auc_Ascii8x16
-C:\Users\pjper\AppData\Local\Temp\ccWt0xLT.s:1046   .rodata:00000000 $d
+C:\Users\guest\AppData\Local\Temp\cc6wLWzh.s:1049   .rodata:00000000 g_auc_Ascii8x16
+C:\Users\guest\AppData\Local\Temp\cc6wLWzh.s:1046   .rodata:00000000 $d
 
 NO UNDEFINED SYMBOLS

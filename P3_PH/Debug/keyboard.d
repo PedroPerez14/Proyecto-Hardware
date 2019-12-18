@@ -1,18 +1,15 @@
-keyboard.d keyboard.o: ../keyboard.c \
- C:\hlocal\workspace\P3_PH\common/44b.h \
- C:\hlocal\workspace\P3_PH\common/option.h \
- C:\hlocal\workspace\P3_PH\common/44blib.h \
- C:\hlocal\workspace\P3_PH\common/def.h ../keyboard.h \
- ../codigos_eventos.h ../cola_depuracion.h \
- C:\hlocal\workspace\P3_PH\common/option.h ../timer2.h
+keyboard.d keyboard.o: ../keyboard.c D:\workspace\P3_PH\common/44b.h \
+ D:\workspace\P3_PH\common/option.h D:\workspace\P3_PH\common/44blib.h \
+ D:\workspace\P3_PH\common/def.h ../keyboard.h ../codigos_eventos.h \
+ ../cola_depuracion.h D:\workspace\P3_PH\common/option.h ../timer2.h
 
-C:\hlocal\workspace\P3_PH\common/44b.h:
+D:\workspace\P3_PH\common/44b.h:
 
-C:\hlocal\workspace\P3_PH\common/option.h:
+D:\workspace\P3_PH\common/option.h:
 
-C:\hlocal\workspace\P3_PH\common/44blib.h:
+D:\workspace\P3_PH\common/44blib.h:
 
-C:\hlocal\workspace\P3_PH\common/def.h:
+D:\workspace\P3_PH\common/def.h:
 
 ../keyboard.h:
 
@@ -20,6 +17,6 @@ C:\hlocal\workspace\P3_PH\common/def.h:
 
 ../cola_depuracion.h:
 
-C:\hlocal\workspace\P3_PH\common/option.h:
+D:\workspace\P3_PH\common/option.h:
 
 ../timer2.h:

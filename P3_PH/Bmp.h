@@ -25,7 +25,7 @@ typedef struct BITMAP
 
 #define BLACK 		0xf
 #define WHITE 		0x0
-#define LIGHTGRAY   0x5
+#define LIGHTGRAY   0x9
 #define DARKGRAY    0xa
 #define TRANSPARENCY 0xff
 

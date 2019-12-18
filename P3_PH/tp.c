@@ -42,8 +42,9 @@ void TSInt(void)
 void tsp_resetear(void)
 {
 	/* Por precaucion, se vuelven a borrar los bits de INTPND */
-	rI_ISPC   |= BIT_EINT2;			// borra el bit pendiente en INTPND
+	rI_ISPC   |= (BIT_EINT2);			// borra el bit pendiente en INTPND
 	rINTMSK    &= ~(BIT_EINT2); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
+	rI_ISPC   |= (BIT_EINT2);			// borra el bit pendiente en INTPND
 }
 
 /*********************************************************************************************
@@ -54,7 +55,7 @@ void tsp_resetear(void)
 * modify:
 * comment:		
 *********************************************************************************************/
-void TS_init(void)
+void __attribute__ ((optimize("O0"))) TS_init(void)
 {
     /* enable interrupt */
 	rINTMOD &= ~(BIT_EINT2);		 // Configura las linas de TSP como de tipo IRQ

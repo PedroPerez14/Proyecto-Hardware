@@ -40,14 +40,14 @@ void tec_antirebotes(void)
 	switch(maquina_estados_tec)
 	{
 		case Inicio :
-			if(atendiendo_pulsacion_tec)
+			if(atendiendo_pulsacion_tec == 1)
 			{
 				//Las interrupciones de tec se deshabilitan en el propio tec por si acaso
 				maquina_estados_tec = deshabilitadas_int;
 			}
 			break;
 		default: //Si estamos en deshabilitadas_int
-			if(cuenta_ticks_tec == t_tec_espera_ticks_timer0)
+			if(cuenta_ticks_tec >= t_tec_espera_ticks_timer0)
 			{	//Si ha pasado trd, rehabilitamos interrupciones tec y volvemos a admitir el procesado de otras pulsaciones
 				tec_resetear();
 				tec_antirebotes_inicializar();
@@ -58,7 +58,7 @@ void tec_antirebotes(void)
 
 void tec_ev_pulsacion()
 {
-	if(!atendiendo_pulsacion_tec)
+	if(atendiendo_pulsacion_tec == 0)
 	{
 		atendiendo_pulsacion_tec = 1;
 		tec_antirebotes();					//Se avisa a la máquina de estados para que inicie su ejecución
@@ -69,7 +69,7 @@ void tec_ev_tick0(void)
 {	//Solo se incrementa el contador si es útil para la máquina de estados
 	//	por tanto, si no estamos atendiendo ningún evento de pulsación no
 	//	nos molestamos en hacer nada
-	if(atendiendo_pulsacion_tec)
+	if(atendiendo_pulsacion_tec == 1)
 	{
 		cuenta_ticks_tec += 1;
 		tec_antirebotes();

@@ -1,9 +1,8 @@
 rutinas_excepciones.d rutinas_excepciones.o: ../rutinas_excepciones.c \
  ../rutinas_excepciones.h ../8led.h ../led.h \
- C:\hlocal\workspace\P3_PH\common/44blib.h \
- C:\hlocal\workspace\P3_PH\common/44b.h \
- C:\hlocal\workspace\P3_PH\common/option.h \
- C:\hlocal\workspace\P3_PH\common/def.h ../debug.h
+ D:\workspace\P3_PH\common/44blib.h D:\workspace\P3_PH\common/44b.h \
+ D:\workspace\P3_PH\common/option.h D:\workspace\P3_PH\common/def.h \
+ ../debug.h
 
 ../rutinas_excepciones.h:
 
@@ -11,12 +10,12 @@ rutinas_excepciones.d rutinas_excepciones.o: ../rutinas_excepciones.c \
 
 ../led.h:
 
-C:\hlocal\workspace\P3_PH\common/44blib.h:
+D:\workspace\P3_PH\common/44blib.h:
 
-C:\hlocal\workspace\P3_PH\common/44b.h:
+D:\workspace\P3_PH\common/44b.h:
 
-C:\hlocal\workspace\P3_PH\common/option.h:
+D:\workspace\P3_PH\common/option.h:
 
-C:\hlocal\workspace\P3_PH\common/def.h:
+D:\workspace\P3_PH\common/def.h:
 
 ../debug.h:

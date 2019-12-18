@@ -26,9 +26,6 @@ void KeyboardInt(void) __attribute__ ((interrupt ("IRQ")));
 
 volatile static int teclaPulsada;
 
-
-
-
 /*********************************************************************************************
 * name:		init_keyboard
 * func:		init keyboard interrupt
@@ -84,7 +81,7 @@ void close_keyboard()
 ********************************************************************************************/
 void KeyboardInt(void)
 {
-	rINTMOD |= (BIT_EINT1); 		// Desactiva las interrupciones de EINT1 para el antirebotes
+	rINTMSK |= (BIT_EINT1); 		// Desactiva las interrupciones de EINT1 para el antirebotes
 	int value;
 	rI_ISPC |= BIT_EINT1;			// clear pending bit
 	
@@ -93,7 +90,7 @@ void KeyboardInt(void)
 	if (teclaPulsada == 0) {
 		push_debug(ev_keyboard, tecla_0);
 	}
-	else if (teclaPulsada == 0) {
+	else if (teclaPulsada == 1) {
 		push_debug(ev_keyboard, tecla_1);
 	}
 
@@ -111,7 +108,7 @@ void tec_resetear(void)
 {
 	/* Por precaucion, se vuelven a borrar los bits de INTPND */
 	rI_ISPC   |= (BIT_EINT1);			// borra el bit pendiente en INTPND
-	rINTMSK    &= ~(BIT_EINT1); 		// habilitamos interrupcion linea eint1 en vector de mascaras
+	rINTMSK   &= ~(BIT_EINT1); 		// habilitamos interrupcion linea eint1 en vector de mascaras
 }
 
 /*********************************************************************************************

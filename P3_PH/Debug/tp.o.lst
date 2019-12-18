@@ -6,15 +6,15 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"tp.c"
   21              	.Ltext0:
   22              		.file 1 "../tp.c"
- 2981              		.align	2
- 2982              		.global	TSInt
- 2984              	TSInt:
- 2985              	.LFB0:
+ 2973              		.align	2
+ 2974              		.global	TSInt
+ 2976              	TSInt:
+ 2977              	.LFB0:
    1:../tp.c       **** /*********************************************************************************************
    2:../tp.c       **** * File£º	tp.c
    3:../tp.c       **** * Author:	embest	
@@ -42,64 +42,67 @@
   25:../tp.c       **** ********************************************************************************************/
   26:../tp.c       **** void TSInt(void)
   27:../tp.c       **** {
- 2986              		.loc 1 27 0
- 2987              		.cfi_startproc
- 2988              		@ Interrupt Service Routine.
- 2989              		@ args = 0, pretend = 0, frame = 0
- 2990              		@ frame_needed = 1, uses_anonymous_args = 0
- 2991 0000 04C02DE5 		str	ip, [sp, #-4]!
- 2992 0004 0DC0A0E1 		mov	ip, sp
- 2993              	.LCFI0:
- 2994              		.cfi_def_cfa_register 12
- 2995 0008 0FD82DE9 		stmfd	sp!, {r0, r1, r2, r3, fp, ip, lr, pc}
- 2996 000c 04B04CE2 		sub	fp, ip, #4
- 2997              		.cfi_offset 14, -8
- 2998              		.cfi_offset 13, -12
- 2999              		.cfi_offset 11, -16
- 3000              		.cfi_offset 3, -20
- 3001              		.cfi_offset 2, -24
- 3002              		.cfi_offset 1, -28
- 3003              		.cfi_offset 0, -32
- 3004              	.LCFI1:
- 3005              		.cfi_def_cfa 11, 4
+ 2978              		.loc 1 27 0
+ 2979              		.cfi_startproc
+ 2980              		@ Interrupt Service Routine.
+ 2981              		@ args = 0, pretend = 0, frame = 0
+ 2982              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2983 0000 04C02DE5 		str	ip, [sp, #-4]!
+ 2984 0004 0DC0A0E1 		mov	ip, sp
+ 2985              	.LCFI0:
+ 2986              		.cfi_def_cfa_register 12
+ 2987 0008 3FD82DE9 		stmfd	sp!, {r0, r1, r2, r3, r4, r5, fp, ip, lr, pc}
   28:../tp.c       **** 	rINTMSK |= (BIT_EINT2);	//Deshabilitamos interrupcion linea eint1 en vector de mascaras para el an
- 3006              		.loc 1 28 0
- 3007 0010 3C309FE5 		ldr	r3, .L2
- 3008 0014 38209FE5 		ldr	r2, .L2
- 3009 0018 002092E5 		ldr	r2, [r2, #0]
- 3010 001c 022582E3 		orr	r2, r2, #8388608
- 3011 0020 002083E5 		str	r2, [r3, #0]
+ 2988              		.loc 1 28 0
+ 2989 000c 1E46A0E3 		mov	r4, #31457280
+ 2990              		.cfi_offset 14, -8
+ 2991              		.cfi_offset 13, -12
+ 2992              		.cfi_offset 11, -16
+ 2993              		.cfi_offset 5, -20
+ 2994              		.cfi_offset 4, -24
+ 2995              		.cfi_offset 3, -28
+ 2996              		.cfi_offset 2, -32
+ 2997              		.cfi_offset 1, -36
+ 2998              		.cfi_offset 0, -40
+ 2999 0010 0C1094E5 		ldr	r1, [r4, #12]
+ 3000 0014 022581E3 		orr	r2, r1, #8388608
   29:../tp.c       **** 	push_debug(ev_tsp, no_info);
- 3012              		.loc 1 29 0
- 3013 0024 1100A0E3 		mov	r0, #17
- 3014 0028 28109FE5 		ldr	r1, .L2+4
- 3015 002c FEFFFFEB 		bl	push_debug
+ 3001              		.loc 1 29 0
+ 3002 0018 1100A0E3 		mov	r0, #17
+  27:../tp.c       **** {
+ 3003              		.loc 1 27 0
+ 3004 001c 04B04CE2 		sub	fp, ip, #4
+ 3005              	.LCFI1:
+ 3006              		.cfi_def_cfa 11, 4
+ 3007              		.loc 1 29 0
+ 3008 0020 20109FE5 		ldr	r1, .L2
+  28:../tp.c       **** 	rINTMSK |= (BIT_EINT2);	//Deshabilitamos interrupcion linea eint1 en vector de mascaras para el an
+ 3009              		.loc 1 28 0
+ 3010 0024 0C2084E5 		str	r2, [r4, #12]
+ 3011              		.loc 1 29 0
+ 3012 0028 FEFFFFEB 		bl	push_debug
   30:../tp.c       **** 	rI_ISPC |= BIT_EINT2;	//Limpiar bit pendiente en INTPND
- 3016              		.loc 1 30 0
- 3017 0030 24309FE5 		ldr	r3, .L2+8
- 3018 0034 20209FE5 		ldr	r2, .L2+8
- 3019 0038 002092E5 		ldr	r2, [r2, #0]
- 3020 003c 022582E3 		orr	r2, r2, #8388608
- 3021 0040 002083E5 		str	r2, [r3, #0]
+ 3013              		.loc 1 30 0
+ 3014 002c 240094E5 		ldr	r0, [r4, #36]
+ 3015 0030 023580E3 		orr	r3, r0, #8388608
+ 3016 0034 243084E5 		str	r3, [r4, #36]
   31:../tp.c       **** 	//El código que había aquí ha sido eliminado porque no nos hace falta
   32:../tp.c       **** }
- 3022              		.loc 1 32 0
- 3023 0044 1CD04BE2 		sub	sp, fp, #28
- 3024 0048 0F689DE8 		ldmfd	sp, {r0, r1, r2, r3, fp, sp, lr}
- 3025 004c 04C09DE4 		ldmfd	sp!, {ip}
- 3026 0050 04F05EE2 		subs	pc, lr, #4
- 3027              	.L3:
- 3028              		.align	2
- 3029              	.L2:
- 3030 0054 0C00E001 		.word	31457292
- 3031 0058 AAAAAAAA 		.word	-1431655766
- 3032 005c 2400E001 		.word	31457316
- 3033              		.cfi_endproc
- 3034              	.LFE0:
- 3036              		.align	2
- 3037              		.global	tsp_resetear
- 3039              	tsp_resetear:
- 3040              	.LFB1:
+ 3017              		.loc 1 32 0
+ 3018 0038 24D04BE2 		sub	sp, fp, #36
+ 3019 003c 3F689DE8 		ldmfd	sp, {r0, r1, r2, r3, r4, r5, fp, sp, lr}
+ 3020 0040 04C09DE4 		ldmfd	sp!, {ip}
+ 3021 0044 04F05EE2 		subs	pc, lr, #4
+ 3022              	.L3:
+ 3023              		.align	2
+ 3024              	.L2:
+ 3025 0048 AAAAAAAA 		.word	-1431655766
+ 3026              		.cfi_endproc
+ 3027              	.LFE0:
+ 3029              		.align	2
+ 3030              		.global	tsp_resetear
+ 3032              	tsp_resetear:
+ 3033              	.LFB1:
   33:../tp.c       **** 			
   34:../tp.c       **** /*********************************************************************************************
   35:../tp.c       **** * name:		tsp_resetear()
@@ -111,552 +114,466 @@
   41:../tp.c       **** *********************************************************************************************/
   42:../tp.c       **** void tsp_resetear(void)
   43:../tp.c       **** {
- 3041              		.loc 1 43 0
- 3042              		.cfi_startproc
- 3043              		@ Function supports interworking.
- 3044              		@ args = 0, pretend = 0, frame = 0
- 3045              		@ frame_needed = 1, uses_anonymous_args = 0
- 3046 0060 0DC0A0E1 		mov	ip, sp
- 3047              	.LCFI2:
- 3048              		.cfi_def_cfa_register 12
- 3049 0064 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3050 0068 04B04CE2 		sub	fp, ip, #4
- 3051              		.cfi_offset 14, -8
- 3052              		.cfi_offset 13, -12
- 3053              		.cfi_offset 11, -16
- 3054              	.LCFI3:
- 3055              		.cfi_def_cfa 11, 4
+ 3034              		.loc 1 43 0
+ 3035              		.cfi_startproc
+ 3036              		@ Function supports interworking.
+ 3037              		@ args = 0, pretend = 0, frame = 0
+ 3038              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3039              		@ link register save eliminated.
   44:../tp.c       **** 	/* Por precaucion, se vuelven a borrar los bits de INTPND */
-  45:../tp.c       **** 	rI_ISPC   |= BIT_EINT2;			// borra el bit pendiente en INTPND
- 3056              		.loc 1 45 0
- 3057 006c 2C309FE5 		ldr	r3, .L5
- 3058 0070 28209FE5 		ldr	r2, .L5
- 3059 0074 002092E5 		ldr	r2, [r2, #0]
- 3060 0078 022582E3 		orr	r2, r2, #8388608
- 3061 007c 002083E5 		str	r2, [r3, #0]
+  45:../tp.c       **** 	rI_ISPC   |= (BIT_EINT2);			// borra el bit pendiente en INTPND
+ 3040              		.loc 1 45 0
+ 3041 004c 1E36A0E3 		mov	r3, #31457280
+ 3042 0050 240093E5 		ldr	r0, [r3, #36]
+ 3043 0054 022580E3 		orr	r2, r0, #8388608
+ 3044 0058 242083E5 		str	r2, [r3, #36]
   46:../tp.c       **** 	rINTMSK    &= ~(BIT_EINT2); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
- 3062              		.loc 1 46 0
- 3063 0080 1C309FE5 		ldr	r3, .L5+4
- 3064 0084 18209FE5 		ldr	r2, .L5+4
- 3065 0088 002092E5 		ldr	r2, [r2, #0]
- 3066 008c 0225C2E3 		bic	r2, r2, #8388608
- 3067 0090 002083E5 		str	r2, [r3, #0]
-  47:../tp.c       **** }
- 3068              		.loc 1 47 0
- 3069 0094 0CD04BE2 		sub	sp, fp, #12
- 3070 0098 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3071 009c 1EFF2FE1 		bx	lr
- 3072              	.L6:
- 3073              		.align	2
- 3074              	.L5:
- 3075 00a0 2400E001 		.word	31457316
- 3076 00a4 0C00E001 		.word	31457292
- 3077              		.cfi_endproc
- 3078              	.LFE1:
- 3080              		.align	2
- 3081              		.global	TS_init
- 3083              	TS_init:
- 3084              	.LFB2:
-  48:../tp.c       **** 
-  49:../tp.c       **** /*********************************************************************************************
-  50:../tp.c       **** * name:		TS_init
-  51:../tp.c       **** * func:		initialize TouchScreen
-  52:../tp.c       **** * para:		none
-  53:../tp.c       **** * ret:		none
-  54:../tp.c       **** * modify:
-  55:../tp.c       **** * comment:		
-  56:../tp.c       **** *********************************************************************************************/
-  57:../tp.c       **** void TS_init(void)
-  58:../tp.c       **** {
- 3085              		.loc 1 58 0
- 3086              		.cfi_startproc
- 3087              		@ Function supports interworking.
- 3088              		@ args = 0, pretend = 0, frame = 0
- 3089              		@ frame_needed = 1, uses_anonymous_args = 0
- 3090 00a8 0DC0A0E1 		mov	ip, sp
- 3091              	.LCFI4:
- 3092              		.cfi_def_cfa_register 12
- 3093 00ac 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3094 00b0 04B04CE2 		sub	fp, ip, #4
- 3095              		.cfi_offset 14, -8
- 3096              		.cfi_offset 13, -12
- 3097              		.cfi_offset 11, -16
- 3098              	.LCFI5:
- 3099              		.cfi_def_cfa 11, 4
-  59:../tp.c       ****     /* enable interrupt */
-  60:../tp.c       **** 	rINTMOD &= ~(BIT_EINT2);		 // Configura las linas de TSP como de tipo IRQ
- 3100              		.loc 1 60 0
- 3101 00b4 B0309FE5 		ldr	r3, .L8
- 3102 00b8 AC209FE5 		ldr	r2, .L8
- 3103 00bc 002092E5 		ldr	r2, [r2, #0]
- 3104 00c0 0225C2E3 		bic	r2, r2, #8388608
- 3105 00c4 002083E5 		str	r2, [r3, #0]
-  61:../tp.c       **** 	rINTCON &= 0x1;					 // Habilita int. vectorizadas y la linea IRQ (FIQ la deja como estuviera)
- 3106              		.loc 1 61 0
- 3107 00c8 1E36A0E3 		mov	r3, #31457280
- 3108 00cc 1E26A0E3 		mov	r2, #31457280
- 3109 00d0 002092E5 		ldr	r2, [r2, #0]
- 3110 00d4 012002E2 		and	r2, r2, #1
- 3111 00d8 002083E5 		str	r2, [r3, #0]
-  62:../tp.c       ****     rI_ISPC |= BIT_EINT2;            // clear pending_bit
- 3112              		.loc 1 62 0
- 3113 00dc 8C309FE5 		ldr	r3, .L8+4
- 3114 00e0 88209FE5 		ldr	r2, .L8+4
- 3115 00e4 002092E5 		ldr	r2, [r2, #0]
- 3116 00e8 022582E3 		orr	r2, r2, #8388608
- 3117 00ec 002083E5 		str	r2, [r3, #0]
-  63:../tp.c       **** 	
-  64:../tp.c       **** 	// TSPX(GPE4_Q4(-)) TSPY(GPE5_Q3(-)) TSMY(GPE6_Q2(-)) TSMX(GPE7_Q1(+)) 
-  65:../tp.c       **** 	//          1               1                0                 1
-  66:../tp.c       ****     rPUPE  = 0x0;	                 // Pull up
- 3118              		.loc 1 66 0
- 3119 00f0 7C309FE5 		ldr	r3, .L8+8
- 3120 00f4 0020A0E3 		mov	r2, #0
- 3121 00f8 002083E5 		str	r2, [r3, #0]
-  67:../tp.c       ****     rPDATE = 0xb8;                   // should be enabled	
- 3122              		.loc 1 67 0
- 3123 00fc 74309FE5 		ldr	r3, .L8+12
- 3124 0100 B820A0E3 		mov	r2, #184
- 3125 0104 002083E5 		str	r2, [r3, #0]
-  68:../tp.c       ****     //Delay(100);
-  69:../tp.c       ****     
-  70:../tp.c       ****     rEXTINT |= 0x200;                // falling edge trigger
- 3126              		.loc 1 70 0
- 3127 0108 6C309FE5 		ldr	r3, .L8+16
- 3128 010c 68209FE5 		ldr	r2, .L8+16
- 3129 0110 002092E5 		ldr	r2, [r2, #0]
- 3130 0114 022C82E3 		orr	r2, r2, #512
- 3131 0118 002083E5 		str	r2, [r3, #0]
-  71:../tp.c       ****     pISR_EINT2=(unsigned *)TSInt;    // set interrupt handler
- 3132              		.loc 1 71 0
- 3133 011c 5C309FE5 		ldr	r3, .L8+20
- 3134 0120 5C209FE5 		ldr	r2, .L8+24
- 3135 0124 002083E5 		str	r2, [r3, #0]
-  72:../tp.c       ****     
-  73:../tp.c       ****     rCLKCON = 0x7ff8;                // enable clock
- 3136              		.loc 1 73 0
- 3137 0128 58309FE5 		ldr	r3, .L8+28
- 3138 012c 58209FE5 		ldr	r2, .L8+32
- 3139 0130 002083E5 		str	r2, [r3, #0]
-  74:../tp.c       ****     rADCPSR = 0x1;//0x4;             // A/D prescaler
- 3140              		.loc 1 74 0
- 3141 0134 54309FE5 		ldr	r3, .L8+36
- 3142 0138 0120A0E3 		mov	r2, #1
- 3143 013c 002083E5 		str	r2, [r3, #0]
-  75:../tp.c       ****     rINTMSK &= ~(BIT_EINT2);
- 3144              		.loc 1 75 0
- 3145 0140 4C309FE5 		ldr	r3, .L8+40
- 3146 0144 48209FE5 		ldr	r2, .L8+40
- 3147 0148 002092E5 		ldr	r2, [r2, #0]
- 3148 014c 0225C2E3 		bic	r2, r2, #8388608
- 3149 0150 002083E5 		str	r2, [r3, #0]
-  76:../tp.c       **** 
-  77:../tp.c       ****     oneTouch = 0;
- 3150              		.loc 1 77 0
- 3151 0154 3C309FE5 		ldr	r3, .L8+44
- 3152 0158 0020A0E3 		mov	r2, #0
- 3153 015c 002083E5 		str	r2, [r3, #0]
-  78:../tp.c       **** }
- 3154              		.loc 1 78 0
- 3155 0160 0CD04BE2 		sub	sp, fp, #12
- 3156 0164 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3157 0168 1EFF2FE1 		bx	lr
- 3158              	.L9:
- 3159              		.align	2
- 3160              	.L8:
- 3161 016c 0800E001 		.word	31457288
- 3162 0170 2400E001 		.word	31457316
- 3163 0174 3000D201 		.word	30539824
- 3164 0178 2C00D201 		.word	30539820
- 3165 017c 5000D201 		.word	30539856
- 3166 0180 7CFF7F0C 		.word	209715068
- 3167 0184 00000000 		.word	TSInt
- 3168 0188 0400D801 		.word	30932996
- 3169 018c F87F0000 		.word	32760
- 3170 0190 0400D401 		.word	30670852
- 3171 0194 0C00E001 		.word	31457292
- 3172 0198 00000000 		.word	oneTouch
- 3173              		.cfi_endproc
- 3174              	.LFE2:
- 3176              		.align	2
- 3177              		.global	TS_close
- 3179              	TS_close:
- 3180              	.LFB3:
-  79:../tp.c       **** 
-  80:../tp.c       **** /*********************************************************************************************
-  81:../tp.c       **** * name:		TS_close
-  82:../tp.c       **** * func:		close TouchScreen
-  83:../tp.c       **** * para:		none
-  84:../tp.c       **** * ret:		none
-  85:../tp.c       **** * modify:
-  86:../tp.c       **** * comment:		
-  87:../tp.c       **** *********************************************************************************************/
-  88:../tp.c       **** void TS_close(void)
-  89:../tp.c       **** {
- 3181              		.loc 1 89 0
- 3182              		.cfi_startproc
- 3183              		@ Function supports interworking.
- 3184              		@ args = 0, pretend = 0, frame = 0
- 3185              		@ frame_needed = 1, uses_anonymous_args = 0
- 3186 019c 0DC0A0E1 		mov	ip, sp
- 3187              	.LCFI6:
- 3188              		.cfi_def_cfa_register 12
- 3189 01a0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3190 01a4 04B04CE2 		sub	fp, ip, #4
- 3191              		.cfi_offset 14, -8
- 3192              		.cfi_offset 13, -12
- 3193              		.cfi_offset 11, -16
- 3194              	.LCFI7:
- 3195              		.cfi_def_cfa 11, 4
-  90:../tp.c       **** 	/* Mask interrupt */
-  91:../tp.c       **** 	rINTMSK |=BIT_GLOBAL|BIT_EINT2;
- 3196              		.loc 1 91 0
- 3197 01a8 24309FE5 		ldr	r3, .L11
- 3198 01ac 20209FE5 		ldr	r2, .L11
- 3199 01b0 002092E5 		ldr	r2, [r2, #0]
- 3200 01b4 122582E3 		orr	r2, r2, #75497472
- 3201 01b8 002083E5 		str	r2, [r3, #0]
-  92:../tp.c       **** 	pISR_EINT2 = (int)NULL;
- 3202              		.loc 1 92 0
- 3203 01bc 14309FE5 		ldr	r3, .L11+4
- 3204 01c0 0020A0E3 		mov	r2, #0
- 3205 01c4 002083E5 		str	r2, [r3, #0]
-  93:../tp.c       **** }
- 3206              		.loc 1 93 0
- 3207 01c8 0CD04BE2 		sub	sp, fp, #12
- 3208 01cc 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3209 01d0 1EFF2FE1 		bx	lr
- 3210              	.L12:
- 3211              		.align	2
- 3212              	.L11:
- 3213 01d4 0C00E001 		.word	31457292
- 3214 01d8 7CFF7F0C 		.word	209715068
- 3215              		.cfi_endproc
- 3216              	.LFE3:
- 3218              		.align	2
- 3219              		.global	DesignREC
- 3221              	DesignREC:
- 3222              	.LFB4:
-  94:../tp.c       **** 
-  95:../tp.c       **** /*********************************************************************************************
-  96:../tp.c       **** * name:		DesignREC
-  97:../tp.c       **** * func:		confirm the coordinate rang
-  98:../tp.c       **** * para:		none
-  99:../tp.c       **** * ret:		none
- 100:../tp.c       **** * modify:
- 101:../tp.c       **** * comment:		
- 102:../tp.c       **** *********************************************************************************************/
- 103:../tp.c       **** void DesignREC(ULONG tx, ULONG ty)
- 104:../tp.c       **** {
- 3223              		.loc 1 104 0
- 3224              		.cfi_startproc
- 3225              		@ Function supports interworking.
- 3226              		@ args = 0, pretend = 0, frame = 16
- 3227              		@ frame_needed = 1, uses_anonymous_args = 0
- 3228 01dc 0DC0A0E1 		mov	ip, sp
- 3229              	.LCFI8:
- 3230              		.cfi_def_cfa_register 12
- 3231 01e0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3232 01e4 04B04CE2 		sub	fp, ip, #4
- 3233              		.cfi_offset 14, -8
- 3234              		.cfi_offset 13, -12
- 3235              		.cfi_offset 11, -16
- 3236              	.LCFI9:
- 3237              		.cfi_def_cfa 11, 4
- 3238 01e8 10D04DE2 		sub	sp, sp, #16
- 3239 01ec 18000BE5 		str	r0, [fp, #-24]
- 3240 01f0 1C100BE5 		str	r1, [fp, #-28]
- 105:../tp.c       ****     int tm;
- 106:../tp.c       ****     
- 107:../tp.c       **** //  Uart_Printf("\n\r User touch coordinate(X,Y) is :");
- 108:../tp.c       **** //	Uart_Printf("(%04d",tx);	
- 109:../tp.c       **** //	Uart_Printf(",%04d)\n",ty);    
- 110:../tp.c       ****     if(oneTouch == 0)
- 3241              		.loc 1 110 0
- 3242 01f4 F4309FE5 		ldr	r3, .L18
- 3243 01f8 003093E5 		ldr	r3, [r3, #0]
- 3244 01fc 000053E3 		cmp	r3, #0
- 3245 0200 0900001A 		bne	.L14
- 111:../tp.c       ****      {
- 112:../tp.c       ****        Vx = tx;                   // Vx as Xmax
- 3246              		.loc 1 112 0
- 3247 0204 E8309FE5 		ldr	r3, .L18+4
- 3248 0208 18201BE5 		ldr	r2, [fp, #-24]
- 3249 020c 002083E5 		str	r2, [r3, #0]
- 113:../tp.c       ****        Vy = ty;                   // Vy as Ymax
- 3250              		.loc 1 113 0
- 3251 0210 E0309FE5 		ldr	r3, .L18+8
- 3252 0214 1C201BE5 		ldr	r2, [fp, #-28]
- 3253 0218 002083E5 		str	r2, [r3, #0]
- 114:../tp.c       ****        oneTouch = 1;       		           
- 3254              		.loc 1 114 0
- 3255 021c CC309FE5 		ldr	r3, .L18
- 3256 0220 0120A0E3 		mov	r2, #1
- 3257 0224 002083E5 		str	r2, [r3, #0]
- 3258 0228 2D0000EA 		b	.L13
- 3259              	.L14:
- 115:../tp.c       ****     }else{
- 116:../tp.c       ****     
- 117:../tp.c       ****     if(Vx < tx )
- 3260              		.loc 1 117 0
- 3261 022c C0309FE5 		ldr	r3, .L18+4
- 3262 0230 002093E5 		ldr	r2, [r3, #0]
- 3263 0234 18301BE5 		ldr	r3, [fp, #-24]
- 3264 0238 030052E1 		cmp	r2, r3
- 3265 023c 0700002A 		bcs	.L16
- 118:../tp.c       ****      {
- 119:../tp.c       ****        tm = tx; tx = Vx; Vx = tm; // tx as Xmin
- 3266              		.loc 1 119 0
- 3267 0240 18301BE5 		ldr	r3, [fp, #-24]
- 3268 0244 10300BE5 		str	r3, [fp, #-16]
- 3269 0248 A4309FE5 		ldr	r3, .L18+4
- 3270 024c 003093E5 		ldr	r3, [r3, #0]
- 3271 0250 18300BE5 		str	r3, [fp, #-24]
- 3272 0254 10201BE5 		ldr	r2, [fp, #-16]
- 3273 0258 94309FE5 		ldr	r3, .L18+4
- 3274 025c 002083E5 		str	r2, [r3, #0]
- 3275              	.L16:
- 120:../tp.c       ****      }
- 121:../tp.c       ****     if(Vy < ty )
- 3276              		.loc 1 121 0
- 3277 0260 90309FE5 		ldr	r3, .L18+8
- 3278 0264 002093E5 		ldr	r2, [r3, #0]
- 3279 0268 1C301BE5 		ldr	r3, [fp, #-28]
- 3280 026c 030052E1 		cmp	r2, r3
- 3281 0270 0700002A 		bcs	.L17
- 122:../tp.c       ****      { 
- 123:../tp.c       ****        tm = ty; ty = Vy; Vy = tm; // ty as Ymin
- 3282              		.loc 1 123 0
- 3283 0274 1C301BE5 		ldr	r3, [fp, #-28]
- 3284 0278 10300BE5 		str	r3, [fp, #-16]
- 3285 027c 74309FE5 		ldr	r3, .L18+8
- 3286 0280 003093E5 		ldr	r3, [r3, #0]
- 3287 0284 1C300BE5 		str	r3, [fp, #-28]
- 3288 0288 10201BE5 		ldr	r2, [fp, #-16]
- 3289 028c 64309FE5 		ldr	r3, .L18+8
- 3290 0290 002083E5 		str	r2, [r3, #0]
- 3291              	.L17:
- 124:../tp.c       ****      }
- 125:../tp.c       ****      
- 126:../tp.c       ****     Xmax = Vx;    Xmin = tx;
- 3292              		.loc 1 126 0
- 3293 0294 58309FE5 		ldr	r3, .L18+4
- 3294 0298 002093E5 		ldr	r2, [r3, #0]
- 3295 029c 58309FE5 		ldr	r3, .L18+12
- 3296 02a0 002083E5 		str	r2, [r3, #0]
- 3297 02a4 54309FE5 		ldr	r3, .L18+16
- 3298 02a8 18201BE5 		ldr	r2, [fp, #-24]
- 3299 02ac 002083E5 		str	r2, [r3, #0]
- 127:../tp.c       ****     Ymax = Vy;    Ymin = ty;
- 3300              		.loc 1 127 0
- 3301 02b0 40309FE5 		ldr	r3, .L18+8
- 3302 02b4 002093E5 		ldr	r2, [r3, #0]
- 3303 02b8 44309FE5 		ldr	r3, .L18+20
- 3304 02bc 002083E5 		str	r2, [r3, #0]
- 3305 02c0 40309FE5 		ldr	r3, .L18+24
- 3306 02c4 1C201BE5 		ldr	r2, [fp, #-28]
- 3307 02c8 002083E5 		str	r2, [r3, #0]
- 128:../tp.c       ****     
- 129:../tp.c       ****     oneTouch = 0;
- 3308              		.loc 1 129 0
- 3309 02cc 1C309FE5 		ldr	r3, .L18
- 3310 02d0 0020A0E3 		mov	r2, #0
- 3311 02d4 002083E5 		str	r2, [r3, #0]
- 130:../tp.c       **** 	CheckTSP = 0;// has checked
- 3312              		.loc 1 130 0
- 3313 02d8 2C309FE5 		ldr	r3, .L18+28
- 3314 02dc 0020A0E3 		mov	r2, #0
- 3315 02e0 002083E5 		str	r2, [r3, #0]
- 3316              	.L13:
- 131:../tp.c       **** 	
- 132:../tp.c       **** 	}// end if(oneTouch == 0)
- 133:../tp.c       **** 
- 134:../tp.c       **** }
- 3317              		.loc 1 134 0
- 3318 02e4 0CD04BE2 		sub	sp, fp, #12
- 3319 02e8 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3320 02ec 1EFF2FE1 		bx	lr
- 3321              	.L19:
- 3322              		.align	2
- 3323              	.L18:
- 3324 02f0 00000000 		.word	oneTouch
- 3325 02f4 00000000 		.word	Vx
- 3326 02f8 00000000 		.word	Vy
- 3327 02fc 00000000 		.word	Xmax
- 3328 0300 00000000 		.word	Xmin
- 3329 0304 00000000 		.word	Ymax
- 3330 0308 00000000 		.word	Ymin
- 3331 030c 00000000 		.word	CheckTSP
- 3332              		.cfi_endproc
- 3333              	.LFE4:
- 3335              		.align	2
- 3336              		.global	Check_Sel
- 3338              	Check_Sel:
- 3339              	.LFB5:
- 135:../tp.c       **** 
+ 3045              		.loc 1 46 0
+ 3046 005c 0CC093E5 		ldr	ip, [r3, #12]
+ 3047 0060 0215CCE3 		bic	r1, ip, #8388608
+ 3048 0064 0C1083E5 		str	r1, [r3, #12]
+  47:../tp.c       **** 	rI_ISPC   |= (BIT_EINT2);			// borra el bit pendiente en INTPND
+ 3049              		.loc 1 47 0
+ 3050 0068 240093E5 		ldr	r0, [r3, #36]
+ 3051 006c 022580E3 		orr	r2, r0, #8388608
+ 3052 0070 242083E5 		str	r2, [r3, #36]
+  48:../tp.c       **** }
+ 3053              		.loc 1 48 0
+ 3054 0074 1EFF2FE1 		bx	lr
+ 3055              		.cfi_endproc
+ 3056              	.LFE1:
+ 3058              		.align	2
+ 3059              		.global	TS_init
+ 3061              	TS_init:
+ 3062              	.LFB2:
+  49:../tp.c       **** 
+  50:../tp.c       **** /*********************************************************************************************
+  51:../tp.c       **** * name:		TS_init
+  52:../tp.c       **** * func:		initialize TouchScreen
+  53:../tp.c       **** * para:		none
+  54:../tp.c       **** * ret:		none
+  55:../tp.c       **** * modify:
+  56:../tp.c       **** * comment:		
+  57:../tp.c       **** *********************************************************************************************/
+  58:../tp.c       **** void __attribute__ ((optimize("O0"))) TS_init(void)
+  59:../tp.c       **** {
+ 3063              		.loc 1 59 0
+ 3064              		.cfi_startproc
+ 3065              		@ Function supports interworking.
+ 3066              		@ args = 0, pretend = 0, frame = 0
+ 3067              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3068 0078 0DC0A0E1 		mov	ip, sp
+ 3069              	.LCFI2:
+ 3070              		.cfi_def_cfa_register 12
+ 3071 007c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3072 0080 04B04CE2 		sub	fp, ip, #4
+ 3073              		.cfi_offset 14, -8
+ 3074              		.cfi_offset 13, -12
+ 3075              		.cfi_offset 11, -16
+ 3076              	.LCFI3:
+ 3077              		.cfi_def_cfa 11, 4
+  60:../tp.c       ****     /* enable interrupt */
+  61:../tp.c       **** 	rINTMOD &= ~(BIT_EINT2);		 // Configura las linas de TSP como de tipo IRQ
+ 3078              		.loc 1 61 0
+ 3079 0084 B0309FE5 		ldr	r3, .L6
+ 3080 0088 AC209FE5 		ldr	r2, .L6
+ 3081 008c 002092E5 		ldr	r2, [r2, #0]
+ 3082 0090 0225C2E3 		bic	r2, r2, #8388608
+ 3083 0094 002083E5 		str	r2, [r3, #0]
+  62:../tp.c       **** 	rINTCON &= 0x1;					 // Habilita int. vectorizadas y la linea IRQ (FIQ la deja como estuviera)
+ 3084              		.loc 1 62 0
+ 3085 0098 1E36A0E3 		mov	r3, #31457280
+ 3086 009c 1E26A0E3 		mov	r2, #31457280
+ 3087 00a0 002092E5 		ldr	r2, [r2, #0]
+ 3088 00a4 012002E2 		and	r2, r2, #1
+ 3089 00a8 002083E5 		str	r2, [r3, #0]
+  63:../tp.c       ****     rI_ISPC |= BIT_EINT2;            // clear pending_bit
+ 3090              		.loc 1 63 0
+ 3091 00ac 8C309FE5 		ldr	r3, .L6+4
+ 3092 00b0 88209FE5 		ldr	r2, .L6+4
+ 3093 00b4 002092E5 		ldr	r2, [r2, #0]
+ 3094 00b8 022582E3 		orr	r2, r2, #8388608
+ 3095 00bc 002083E5 		str	r2, [r3, #0]
+  64:../tp.c       **** 	
+  65:../tp.c       **** 	// TSPX(GPE4_Q4(-)) TSPY(GPE5_Q3(-)) TSMY(GPE6_Q2(-)) TSMX(GPE7_Q1(+)) 
+  66:../tp.c       **** 	//          1               1                0                 1
+  67:../tp.c       ****     rPUPE  = 0x0;	                 // Pull up
+ 3096              		.loc 1 67 0
+ 3097 00c0 7C309FE5 		ldr	r3, .L6+8
+ 3098 00c4 0020A0E3 		mov	r2, #0
+ 3099 00c8 002083E5 		str	r2, [r3, #0]
+  68:../tp.c       ****     rPDATE = 0xb8;                   // should be enabled	
+ 3100              		.loc 1 68 0
+ 3101 00cc 74309FE5 		ldr	r3, .L6+12
+ 3102 00d0 B820A0E3 		mov	r2, #184
+ 3103 00d4 002083E5 		str	r2, [r3, #0]
+  69:../tp.c       ****     //Delay(100);
+  70:../tp.c       ****     
+  71:../tp.c       ****     rEXTINT |= 0x200;                // falling edge trigger
+ 3104              		.loc 1 71 0
+ 3105 00d8 6C309FE5 		ldr	r3, .L6+16
+ 3106 00dc 68209FE5 		ldr	r2, .L6+16
+ 3107 00e0 002092E5 		ldr	r2, [r2, #0]
+ 3108 00e4 022C82E3 		orr	r2, r2, #512
+ 3109 00e8 002083E5 		str	r2, [r3, #0]
+  72:../tp.c       ****     pISR_EINT2=(unsigned *)TSInt;    // set interrupt handler
+ 3110              		.loc 1 72 0
+ 3111 00ec 5C309FE5 		ldr	r3, .L6+20
+ 3112 00f0 5C209FE5 		ldr	r2, .L6+24
+ 3113 00f4 002083E5 		str	r2, [r3, #0]
+  73:../tp.c       ****     
+  74:../tp.c       ****     rCLKCON = 0x7ff8;                // enable clock
+ 3114              		.loc 1 74 0
+ 3115 00f8 58309FE5 		ldr	r3, .L6+28
+ 3116 00fc 58209FE5 		ldr	r2, .L6+32
+ 3117 0100 002083E5 		str	r2, [r3, #0]
+  75:../tp.c       ****     rADCPSR = 0x1;//0x4;             // A/D prescaler
+ 3118              		.loc 1 75 0
+ 3119 0104 54309FE5 		ldr	r3, .L6+36
+ 3120 0108 0120A0E3 		mov	r2, #1
+ 3121 010c 002083E5 		str	r2, [r3, #0]
+  76:../tp.c       ****     rINTMSK &= ~(BIT_EINT2);
+ 3122              		.loc 1 76 0
+ 3123 0110 4C309FE5 		ldr	r3, .L6+40
+ 3124 0114 48209FE5 		ldr	r2, .L6+40
+ 3125 0118 002092E5 		ldr	r2, [r2, #0]
+ 3126 011c 0225C2E3 		bic	r2, r2, #8388608
+ 3127 0120 002083E5 		str	r2, [r3, #0]
+  77:../tp.c       **** 
+  78:../tp.c       ****     oneTouch = 0;
+ 3128              		.loc 1 78 0
+ 3129 0124 3C309FE5 		ldr	r3, .L6+44
+ 3130 0128 0020A0E3 		mov	r2, #0
+ 3131 012c 002083E5 		str	r2, [r3, #0]
+  79:../tp.c       **** }
+ 3132              		.loc 1 79 0
+ 3133 0130 0CD04BE2 		sub	sp, fp, #12
+ 3134 0134 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3135 0138 1EFF2FE1 		bx	lr
+ 3136              	.L7:
+ 3137              		.align	2
+ 3138              	.L6:
+ 3139 013c 0800E001 		.word	31457288
+ 3140 0140 2400E001 		.word	31457316
+ 3141 0144 3000D201 		.word	30539824
+ 3142 0148 2C00D201 		.word	30539820
+ 3143 014c 5000D201 		.word	30539856
+ 3144 0150 7CFF7F0C 		.word	209715068
+ 3145 0154 00000000 		.word	TSInt
+ 3146 0158 0400D801 		.word	30932996
+ 3147 015c F87F0000 		.word	32760
+ 3148 0160 0400D401 		.word	30670852
+ 3149 0164 0C00E001 		.word	31457292
+ 3150 0168 00000000 		.word	oneTouch
+ 3151              		.cfi_endproc
+ 3152              	.LFE2:
+ 3154              		.align	2
+ 3155              		.global	TS_close
+ 3157              	TS_close:
+ 3158              	.LFB3:
+  80:../tp.c       **** 
+  81:../tp.c       **** /*********************************************************************************************
+  82:../tp.c       **** * name:		TS_close
+  83:../tp.c       **** * func:		close TouchScreen
+  84:../tp.c       **** * para:		none
+  85:../tp.c       **** * ret:		none
+  86:../tp.c       **** * modify:
+  87:../tp.c       **** * comment:		
+  88:../tp.c       **** *********************************************************************************************/
+  89:../tp.c       **** void TS_close(void)
+  90:../tp.c       **** {
+ 3159              		.loc 1 90 0
+ 3160              		.cfi_startproc
+ 3161              		@ Function supports interworking.
+ 3162              		@ args = 0, pretend = 0, frame = 0
+ 3163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3164              		@ link register save eliminated.
+  91:../tp.c       **** 	/* Mask interrupt */
+  92:../tp.c       **** 	rINTMSK |=BIT_GLOBAL|BIT_EINT2;
+ 3165              		.loc 1 92 0
+ 3166 016c 1E16A0E3 		mov	r1, #31457280
+ 3167 0170 0CC091E5 		ldr	ip, [r1, #12]
+  93:../tp.c       **** 	pISR_EINT2 = (int)NULL;
+ 3168              		.loc 1 93 0
+ 3169 0174 10309FE5 		ldr	r3, .L9
+  92:../tp.c       **** 	rINTMSK |=BIT_GLOBAL|BIT_EINT2;
+ 3170              		.loc 1 92 0
+ 3171 0178 12058CE3 		orr	r0, ip, #75497472
+ 3172              		.loc 1 93 0
+ 3173 017c 0020A0E3 		mov	r2, #0
+  92:../tp.c       **** 	rINTMSK |=BIT_GLOBAL|BIT_EINT2;
+ 3174              		.loc 1 92 0
+ 3175 0180 0C0081E5 		str	r0, [r1, #12]
+ 3176              		.loc 1 93 0
+ 3177 0184 832003E5 		str	r2, [r3, #-131]
+  94:../tp.c       **** }
+ 3178              		.loc 1 94 0
+ 3179 0188 1EFF2FE1 		bx	lr
+ 3180              	.L10:
+ 3181              		.align	2
+ 3182              	.L9:
+ 3183 018c FFFF7F0C 		.word	209715199
+ 3184              		.cfi_endproc
+ 3185              	.LFE3:
+ 3187              		.align	2
+ 3188              		.global	DesignREC
+ 3190              	DesignREC:
+ 3191              	.LFB4:
+  95:../tp.c       **** 
+  96:../tp.c       **** /*********************************************************************************************
+  97:../tp.c       **** * name:		DesignREC
+  98:../tp.c       **** * func:		confirm the coordinate rang
+  99:../tp.c       **** * para:		none
+ 100:../tp.c       **** * ret:		none
+ 101:../tp.c       **** * modify:
+ 102:../tp.c       **** * comment:		
+ 103:../tp.c       **** *********************************************************************************************/
+ 104:../tp.c       **** void DesignREC(ULONG tx, ULONG ty)
+ 105:../tp.c       **** {
+ 3192              		.loc 1 105 0
+ 3193              		.cfi_startproc
+ 3194              		@ Function supports interworking.
+ 3195              		@ args = 0, pretend = 0, frame = 0
+ 3196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3197              		@ link register save eliminated.
+ 3198              	.LVL0:
+ 106:../tp.c       ****     int tm;
+ 107:../tp.c       ****     
+ 108:../tp.c       **** //  Uart_Printf("\n\r User touch coordinate(X,Y) is :");
+ 109:../tp.c       **** //	Uart_Printf("(%04d",tx);	
+ 110:../tp.c       **** //	Uart_Printf(",%04d)\n",ty);    
+ 111:../tp.c       ****     if(oneTouch == 0)
+ 3199              		.loc 1 111 0
+ 3200 0190 98309FE5 		ldr	r3, .L18
+ 3201 0194 002093E5 		ldr	r2, [r3, #0]
+ 3202 0198 000052E3 		cmp	r2, #0
+ 105:../tp.c       **** {
+ 3203              		.loc 1 105 0
+ 3204 019c 30002DE9 		stmfd	sp!, {r4, r5}
+ 3205              	.LCFI4:
+ 3206              		.cfi_def_cfa_offset 8
+ 3207              		.loc 1 111 0
+ 3208 01a0 1B00000A 		beq	.L17
+ 3209              		.cfi_offset 5, -4
+ 3210              		.cfi_offset 4, -8
+ 112:../tp.c       ****      {
+ 113:../tp.c       ****        Vx = tx;                   // Vx as Xmax
+ 114:../tp.c       ****        Vy = ty;                   // Vy as Ymax
+ 115:../tp.c       ****        oneTouch = 1;       		           
+ 116:../tp.c       ****     }else{
+ 117:../tp.c       ****     
+ 118:../tp.c       ****     if(Vx < tx )
+ 3211              		.loc 1 118 0
+ 3212 01a4 88209FE5 		ldr	r2, .L18+4
+ 3213 01a8 00C092E5 		ldr	ip, [r2, #0]
+ 3214 01ac 0C0050E1 		cmp	r0, ip
+ 3215              	.LVL1:
+ 119:../tp.c       ****      {
+ 120:../tp.c       ****        tm = tx; tx = Vx; Vx = tm; // tx as Xmin
+ 3216              		.loc 1 120 0
+ 3217 01b0 0040A081 		movhi	r4, r0
+ 3218 01b4 00008285 		strhi	r0, [r2, #0]
+ 3219 01b8 0C00A081 		movhi	r0, ip
+ 3220              	.LVL2:
+ 3221 01bc 04C0A081 		movhi	ip, r4
+ 3222              	.LVL3:
+ 121:../tp.c       ****      }
+ 122:../tp.c       ****     if(Vy < ty )
+ 3223              		.loc 1 122 0
+ 3224 01c0 70409FE5 		ldr	r4, .L18+8
+ 3225 01c4 002094E5 		ldr	r2, [r4, #0]
+ 3226 01c8 020051E1 		cmp	r1, r2
+ 3227              	.LVL4:
+ 123:../tp.c       ****      { 
+ 124:../tp.c       ****        tm = ty; ty = Vy; Vy = tm; // ty as Ymin
+ 3228              		.loc 1 124 0
+ 3229 01cc 00108485 		strhi	r1, [r4, #0]
+ 125:../tp.c       ****      }
+ 126:../tp.c       ****      
+ 127:../tp.c       ****     Xmax = Vx;    Xmin = tx;
+ 128:../tp.c       ****     Ymax = Vy;    Ymin = ty;
+ 129:../tp.c       ****     
+ 130:../tp.c       ****     oneTouch = 0;
+ 3230              		.loc 1 130 0
+ 3231 01d0 0040A0E3 		mov	r4, #0
+ 3232 01d4 004083E5 		str	r4, [r3, #0]
+ 127:../tp.c       ****     Xmax = Vx;    Xmin = tx;
+ 3233              		.loc 1 127 0
+ 3234 01d8 5C309FE5 		ldr	r3, .L18+12
+ 3235 01dc 00C083E5 		str	ip, [r3, #0]
+ 3236 01e0 58309FE5 		ldr	r3, .L18+16
+ 124:../tp.c       ****        tm = ty; ty = Vy; Vy = tm; // ty as Ymin
+ 3237              		.loc 1 124 0
+ 3238 01e4 0150A081 		movhi	r5, r1
+ 127:../tp.c       ****     Xmax = Vx;    Xmin = tx;
+ 3239              		.loc 1 127 0
+ 3240 01e8 000083E5 		str	r0, [r3, #0]
+ 128:../tp.c       ****     Ymax = Vy;    Ymin = ty;
+ 3241              		.loc 1 128 0
+ 3242 01ec 50C09FE5 		ldr	ip, .L18+20
+ 3243 01f0 50009FE5 		ldr	r0, .L18+24
+ 3244              	.LVL5:
+ 131:../tp.c       **** 	CheckTSP = 0;// has checked
+ 3245              		.loc 1 131 0
+ 3246 01f4 50309FE5 		ldr	r3, .L18+28
+ 124:../tp.c       ****        tm = ty; ty = Vy; Vy = tm; // ty as Ymin
+ 3247              		.loc 1 124 0
+ 3248 01f8 0210A081 		movhi	r1, r2
+ 3249              	.LVL6:
+ 3250 01fc 0520A081 		movhi	r2, r5
+ 3251              	.LVL7:
+ 128:../tp.c       ****     Ymax = Vy;    Ymin = ty;
+ 3252              		.loc 1 128 0
+ 3253 0200 00208CE5 		str	r2, [ip, #0]
+ 3254 0204 001080E5 		str	r1, [r0, #0]
+ 3255              		.loc 1 131 0
+ 3256 0208 004083E5 		str	r4, [r3, #0]
+ 3257              	.LVL8:
+ 3258              	.L11:
+ 132:../tp.c       **** 	
+ 133:../tp.c       **** 	}// end if(oneTouch == 0)
+ 134:../tp.c       **** 
+ 135:../tp.c       **** }
+ 3259              		.loc 1 135 0
+ 3260 020c 3000BDE8 		ldmfd	sp!, {r4, r5}
+ 3261 0210 1EFF2FE1 		bx	lr
+ 3262              	.LVL9:
+ 3263              	.L17:
+ 113:../tp.c       ****        Vx = tx;                   // Vx as Xmax
+ 3264              		.loc 1 113 0
+ 3265 0214 18209FE5 		ldr	r2, .L18+4
+ 114:../tp.c       ****        Vy = ty;                   // Vy as Ymax
+ 3266              		.loc 1 114 0
+ 3267 0218 18C09FE5 		ldr	ip, .L18+8
+ 113:../tp.c       ****        Vx = tx;                   // Vx as Xmax
+ 3268              		.loc 1 113 0
+ 3269 021c 000082E5 		str	r0, [r2, #0]
+ 115:../tp.c       ****        oneTouch = 1;       		           
+ 3270              		.loc 1 115 0
+ 3271 0220 0100A0E3 		mov	r0, #1
+ 3272              	.LVL10:
+ 114:../tp.c       ****        Vy = ty;                   // Vy as Ymax
+ 3273              		.loc 1 114 0
+ 3274 0224 00108CE5 		str	r1, [ip, #0]
+ 115:../tp.c       ****        oneTouch = 1;       		           
+ 3275              		.loc 1 115 0
+ 3276 0228 000083E5 		str	r0, [r3, #0]
+ 3277 022c F6FFFFEA 		b	.L11
+ 3278              	.L19:
+ 3279              		.align	2
+ 3280              	.L18:
+ 3281 0230 00000000 		.word	oneTouch
+ 3282 0234 00000000 		.word	Vx
+ 3283 0238 00000000 		.word	Vy
+ 3284 023c 00000000 		.word	Xmax
+ 3285 0240 00000000 		.word	Xmin
+ 3286 0244 00000000 		.word	Ymax
+ 3287 0248 00000000 		.word	Ymin
+ 3288 024c 00000000 		.word	CheckTSP
+ 3289              		.cfi_endproc
+ 3290              	.LFE4:
+ 3292              		.align	2
+ 3293              		.global	Check_Sel
+ 3295              	Check_Sel:
+ 3296              	.LFB5:
  136:../tp.c       **** 
  137:../tp.c       **** 
- 138:../tp.c       **** void Check_Sel(void)
- 139:../tp.c       **** {
- 3340              		.loc 1 139 0
- 3341              		.cfi_startproc
- 3342              		@ Function supports interworking.
- 3343              		@ args = 0, pretend = 0, frame = 8
- 3344              		@ frame_needed = 1, uses_anonymous_args = 0
- 3345 0310 0DC0A0E1 		mov	ip, sp
- 3346              	.LCFI10:
- 3347              		.cfi_def_cfa_register 12
- 3348 0314 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 3349 0318 04B04CE2 		sub	fp, ip, #4
- 3350              		.cfi_offset 14, -8
- 3351              		.cfi_offset 13, -12
- 3352              		.cfi_offset 11, -16
- 3353              	.LCFI11:
- 3354              		.cfi_def_cfa 11, 4
- 3355 031c 08D04DE2 		sub	sp, sp, #8
- 3356              	.L24:
- 140:../tp.c       **** 	char yn;
- 141:../tp.c       ****     
- 142:../tp.c       **** 	do{
- 143:../tp.c       **** 	  
- 144:../tp.c       **** 	  rINTMSK |=BIT_GLOBAL|BIT_EINT2;
- 3357              		.loc 1 144 0
- 3358 0320 CC309FE5 		ldr	r3, .L26
- 3359 0324 C8209FE5 		ldr	r2, .L26
- 3360 0328 002092E5 		ldr	r2, [r2, #0]
- 3361 032c 122582E3 		orr	r2, r2, #75497472
- 3362 0330 002083E5 		str	r2, [r3, #0]
- 145:../tp.c       **** //    Uart_Printf("\n\r Touch Screen coordinate Rang in:\n");
- 146:../tp.c       **** //    Uart_Printf("   (Xmin,Ymin) is :(%04d,%04d)\n",Xmin,Ymin);	
- 147:../tp.c       **** //	  Uart_Printf("   (Xmax,Ymax) is :(%04d,%04d)\n",Xmax,Ymax);	
- 148:../tp.c       **** //	  Uart_Printf("\n  To use current settings. Press N/n key. ");
- 149:../tp.c       **** //	  Uart_Printf("\n\n\r  Want to Set Again(Y/N)? ");	        	      
- 150:../tp.c       **** //	  yn = Uart_Getch();
- 151:../tp.c       ****       rI_ISPC = BIT_EINT2;              // clear pending_bit
- 3363              		.loc 1 151 0
- 3364 0334 BC309FE5 		ldr	r3, .L26+4
- 3365 0338 0225A0E3 		mov	r2, #8388608
- 3366 033c 002083E5 		str	r2, [r3, #0]
- 152:../tp.c       ****       rINTMSK =~(BIT_GLOBAL|BIT_EINT2);
- 3367              		.loc 1 152 0
- 3368 0340 AC309FE5 		ldr	r3, .L26
- 3369 0344 1225E0E3 		mvn	r2, #75497472
- 3370 0348 002083E5 		str	r2, [r3, #0]
- 153:../tp.c       **** //	  if((yn == 0x59)|(yn == 0x79)|(yn == 0x4E)|(yn == 0x6E)) Uart_SendByte(yn);	  
- 154:../tp.c       **** 	  if((yn == 0x59)|(yn == 0x79))
- 3371              		.loc 1 154 0
- 3372 034c 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
- 3373 0350 590053E3 		cmp	r3, #89
- 3374 0354 0030A013 		movne	r3, #0
- 3375 0358 0130A003 		moveq	r3, #1
- 3376 035c FF2003E2 		and	r2, r3, #255
- 3377 0360 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
- 3378 0364 790053E3 		cmp	r3, #121
- 3379 0368 0030A013 		movne	r3, #0
- 3380 036c 0130A003 		moveq	r3, #1
- 3381 0370 FF3003E2 		and	r3, r3, #255
- 3382 0374 033082E1 		orr	r3, r2, r3
- 3383 0378 FF3003E2 		and	r3, r3, #255
- 3384 037c 000053E3 		cmp	r3, #0
- 3385 0380 1700000A 		beq	.L25
- 155:../tp.c       **** 	    {
- 156:../tp.c       **** //	      Uart_Printf("\n\n Touch TSP's Cornor to ensure Xmax,Ymax,Xmax,Xmin");	      
- 157:../tp.c       **** 
- 158:../tp.c       ****          //Init X Y rectangle
- 159:../tp.c       ****           Xmax = 750;    Xmin = 200;
- 3386              		.loc 1 159 0
- 3387 0384 70309FE5 		ldr	r3, .L26+8
- 3388 0388 70209FE5 		ldr	r2, .L26+12
- 3389 038c 002083E5 		str	r2, [r3, #0]
- 3390 0390 6C309FE5 		ldr	r3, .L26+16
- 3391 0394 C820A0E3 		mov	r2, #200
- 3392 0398 002083E5 		str	r2, [r3, #0]
- 160:../tp.c       ****           Ymax = 620;    Ymin = 120;
- 3393              		.loc 1 160 0
- 3394 039c 64309FE5 		ldr	r3, .L26+20
- 3395 03a0 9B2FA0E3 		mov	r2, #620
- 3396 03a4 002083E5 		str	r2, [r3, #0]
- 3397 03a8 5C309FE5 		ldr	r3, .L26+24
- 3398 03ac 7820A0E3 		mov	r2, #120
- 3399 03b0 002083E5 		str	r2, [r3, #0]
- 161:../tp.c       **** 
- 162:../tp.c       **** 	      oneTouch = 0;
- 3400              		.loc 1 162 0
- 3401 03b4 54309FE5 		ldr	r3, .L26+28
- 3402 03b8 0020A0E3 		mov	r2, #0
- 3403 03bc 002083E5 		str	r2, [r3, #0]
- 163:../tp.c       **** 	      CheckTSP = 1; // mask to check
- 3404              		.loc 1 163 0
- 3405 03c0 4C309FE5 		ldr	r3, .L26+32
- 3406 03c4 0120A0E3 		mov	r2, #1
- 3407 03c8 002083E5 		str	r2, [r3, #0]
- 164:../tp.c       **** 	      while(CheckTSP);
- 3408              		.loc 1 164 0
- 3409 03cc 0000A0E1 		mov	r0, r0	@ nop
- 3410              	.L22:
- 3411              		.loc 1 164 0 is_stmt 0 discriminator 1
- 3412 03d0 3C309FE5 		ldr	r3, .L26+32
- 3413 03d4 003093E5 		ldr	r3, [r3, #0]
- 3414 03d8 000053E3 		cmp	r3, #0
- 3415 03dc FBFFFF1A 		bne	.L22
- 165:../tp.c       **** 	      
- 166:../tp.c       **** 	    }else break;	    
- 167:../tp.c       **** 	  
- 168:../tp.c       **** 	}while(1);
- 3416              		.loc 1 168 0 is_stmt 1
- 3417 03e0 CEFFFFEA 		b	.L24
- 3418              	.L25:
- 169:../tp.c       **** 	
- 170:../tp.c       **** }
- 3419              		.loc 1 170 0
- 3420 03e4 0000A0E1 		mov	r0, r0	@ nop
- 3421              	.L20:
- 3422 03e8 0CD04BE2 		sub	sp, fp, #12
- 3423 03ec 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 3424 03f0 1EFF2FE1 		bx	lr
- 3425              	.L27:
- 3426              		.align	2
- 3427              	.L26:
- 3428 03f4 0C00E001 		.word	31457292
- 3429 03f8 2400E001 		.word	31457316
- 3430 03fc 00000000 		.word	Xmax
- 3431 0400 EE020000 		.word	750
- 3432 0404 00000000 		.word	Xmin
- 3433 0408 00000000 		.word	Ymax
- 3434 040c 00000000 		.word	Ymin
- 3435 0410 00000000 		.word	oneTouch
- 3436 0414 00000000 		.word	CheckTSP
- 3437              		.cfi_endproc
- 3438              	.LFE5:
- 3440              	.Letext0:
+ 138:../tp.c       **** 
+ 139:../tp.c       **** void Check_Sel(void)
+ 140:../tp.c       **** {
+ 3297              		.loc 1 140 0
+ 3298              		.cfi_startproc
+ 3299              		@ Function supports interworking.
+ 3300              		@ args = 0, pretend = 0, frame = 0
+ 3301              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3302              		@ link register save eliminated.
+ 141:../tp.c       **** 	char yn;
+ 142:../tp.c       ****     
+ 143:../tp.c       **** 	do{
+ 144:../tp.c       **** 	  
+ 145:../tp.c       **** 	  rINTMSK |=BIT_GLOBAL|BIT_EINT2;
+ 3303              		.loc 1 145 0
+ 3304 0250 1E36A0E3 		mov	r3, #31457280
+ 3305 0254 0CC093E5 		ldr	ip, [r3, #12]
+ 146:../tp.c       **** //    Uart_Printf("\n\r Touch Screen coordinate Rang in:\n");
+ 147:../tp.c       **** //    Uart_Printf("   (Xmin,Ymin) is :(%04d,%04d)\n",Xmin,Ymin);	
+ 148:../tp.c       **** //	  Uart_Printf("   (Xmax,Ymax) is :(%04d,%04d)\n",Xmax,Ymax);	
+ 149:../tp.c       **** //	  Uart_Printf("\n  To use current settings. Press N/n key. ");
+ 150:../tp.c       **** //	  Uart_Printf("\n\n\r  Want to Set Again(Y/N)? ");	        	      
+ 151:../tp.c       **** //	  yn = Uart_Getch();
+ 152:../tp.c       ****       rI_ISPC = BIT_EINT2;              // clear pending_bit
+ 3306              		.loc 1 152 0
+ 3307 0258 0205A0E3 		mov	r0, #8388608
+ 145:../tp.c       **** 	  rINTMSK |=BIT_GLOBAL|BIT_EINT2;
+ 3308              		.loc 1 145 0
+ 3309 025c 12158CE3 		orr	r1, ip, #75497472
+ 153:../tp.c       ****       rINTMSK =~(BIT_GLOBAL|BIT_EINT2);
+ 3310              		.loc 1 153 0
+ 3311 0260 1225E0E3 		mvn	r2, #75497472
+ 145:../tp.c       **** 	  rINTMSK |=BIT_GLOBAL|BIT_EINT2;
+ 3312              		.loc 1 145 0
+ 3313 0264 0C1083E5 		str	r1, [r3, #12]
+ 152:../tp.c       ****       rI_ISPC = BIT_EINT2;              // clear pending_bit
+ 3314              		.loc 1 152 0
+ 3315 0268 240083E5 		str	r0, [r3, #36]
+ 3316              		.loc 1 153 0
+ 3317 026c 0C2083E5 		str	r2, [r3, #12]
+ 154:../tp.c       **** //	  if((yn == 0x59)|(yn == 0x79)|(yn == 0x4E)|(yn == 0x6E)) Uart_SendByte(yn);	  
+ 155:../tp.c       **** 	  if((yn == 0x59)|(yn == 0x79))
+ 156:../tp.c       **** 	    {
+ 157:../tp.c       **** //	      Uart_Printf("\n\n Touch TSP's Cornor to ensure Xmax,Ymax,Xmax,Xmin");	      
+ 158:../tp.c       **** 
+ 159:../tp.c       ****          //Init X Y rectangle
+ 160:../tp.c       ****           Xmax = 750;    Xmin = 200;
+ 161:../tp.c       ****           Ymax = 620;    Ymin = 120;
+ 162:../tp.c       **** 
+ 163:../tp.c       **** 	      oneTouch = 0;
+ 164:../tp.c       **** 	      CheckTSP = 1; // mask to check
+ 165:../tp.c       **** 	      while(CheckTSP);
+ 166:../tp.c       **** 	      
+ 167:../tp.c       **** 	    }else break;	    
+ 168:../tp.c       **** 	  
+ 169:../tp.c       **** 	}while(1);
+ 170:../tp.c       **** 	
+ 171:../tp.c       **** }
+ 3318              		.loc 1 171 0
+ 3319 0270 1EFF2FE1 		bx	lr
+ 3320              		.cfi_endproc
+ 3321              	.LFE5:
+ 3323              		.comm	CheckTSP,4,4
+ 3324              		.comm	oneTouch,4,4
+ 3325              		.comm	Vx,4,4
+ 3326              		.comm	Vy,4,4
+ 3327              		.comm	Xmax,4,4
+ 3328              		.comm	Ymax,4,4
+ 3329              		.comm	Xmin,4,4
+ 3330              		.comm	Ymin,4,4
+ 3331              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 tp.c
-                            *COM*:00000004 CheckTSP
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:2973   .text:00000000 $a
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:2976   .text:00000000 TSInt
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3025   .text:00000048 $d
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3029   .text:0000004c $a
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3032   .text:0000004c tsp_resetear
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3061   .text:00000078 TS_init
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3139   .text:0000013c $d
                             *COM*:00000004 oneTouch
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3154   .text:0000016c $a
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3157   .text:0000016c TS_close
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3183   .text:0000018c $d
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3187   .text:00000190 $a
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3190   .text:00000190 DesignREC
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3281   .text:00000230 $d
                             *COM*:00000004 Vx
                             *COM*:00000004 Vy
                             *COM*:00000004 Xmax
-                            *COM*:00000004 Ymax
                             *COM*:00000004 Xmin
+                            *COM*:00000004 Ymax
                             *COM*:00000004 Ymin
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:2981   .text:00000000 $a
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:2984   .text:00000000 TSInt
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3030   .text:00000054 $d
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3036   .text:00000060 $a
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3039   .text:00000060 tsp_resetear
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3075   .text:000000a0 $d
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3080   .text:000000a8 $a
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3083   .text:000000a8 TS_init
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3161   .text:0000016c $d
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3176   .text:0000019c $a
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3179   .text:0000019c TS_close
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3213   .text:000001d4 $d
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3218   .text:000001dc $a
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3221   .text:000001dc DesignREC
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3324   .text:000002f0 $d
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3335   .text:00000310 $a
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3338   .text:00000310 Check_Sel
-C:\Users\pjper\AppData\Local\Temp\cct6SzKi.s:3428   .text:000003f4 $d
+                            *COM*:00000004 CheckTSP
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3292   .text:00000250 $a
+C:\Users\guest\AppData\Local\Temp\ccW6B4hg.s:3295   .text:00000250 Check_Sel
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
