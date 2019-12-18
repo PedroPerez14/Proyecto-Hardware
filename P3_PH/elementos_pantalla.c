@@ -1,5 +1,5 @@
 /*********************************************************************************************
-* File£º	elementos_pantalla.h
+* File: 	elementos_pantalla.h
 * Author:	Fernando Peña Bes (756012) y Pedro José Pérez García (756642)
 * Descrip:	Colección de funciones y variables que permiten dibujar en el LCD las pantallas
 * 			que corresponden a la ejecución del juego reversi8 en la placa.
@@ -8,6 +8,7 @@
 #include "lcd.h"
 #include "elementos_pantalla.h"
 #include "funciones_itoa.h"
+#include "bmp.h"
 
 void pintar_cuadricula()
 {
@@ -48,6 +49,8 @@ void pintar_textos()
 
 void pintar_ficha(int fila, int col, enum estado_casilla color)
 {
+	// Fichas con letras
+	/*
 	switch(color)
 	{
 		case FICHA_BLANCA:
@@ -58,6 +61,22 @@ void pintar_ficha(int fila, int col, enum estado_casilla color)
 			break;
 		case FICHA_GRIS:
 			Lcd_DspAscII8x16(110+25*col, 25+25*fila,0xd, "@");
+			break;
+	}
+	*/
+
+	// Fichas circulares
+
+	switch(color)
+	{
+		case FICHA_BLANCA:
+			BitmapView(110+25*col, 25+25*fila, Stru_Bitmap_fichaBlanca);
+			break;
+		case FICHA_NEGRA:
+			BitmapView(110+25*col, 25+25*fila, Stru_Bitmap_fichaNegra);
+			break;
+		case FICHA_GRIS:
+			BitmapView(110+25*col, 25+25*fila, Stru_Bitmap_fichaGris);
 			break;
 	}
 }
@@ -161,14 +180,14 @@ void pintar_fin_victoria(int blancas, int negras)
 	Lcd_Dma_Trans();
 }
 
-void pintar_fin_derrota(int blancas, int negas)
+void pintar_fin_derrota(int blancas, int negras)
 {
 	Lcd_Active_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
 	Lcd_Dma_Trans();
 }
 
-void pintar_fin_empate(int blancas, int negas)
+void pintar_fin_empate(int blancas, int negras)
 {
 	Lcd_Active_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
