@@ -12,6 +12,7 @@ C_SRCS += \
 ../elementos_pantalla.c \
 ../funciones_itoa.c \
 ../jugada_por_botones.c \
+../keyboard.c \
 ../lcd.c \
 ../led.c \
 ../main.c \
@@ -21,9 +22,11 @@ C_SRCS += \
 ../reversi8_2019.c \
 ../reversi_main.c \
 ../rutinas_excepciones.c \
+../teclado_antirebotes.c \
 ../timer.c \
 ../timer2.c \
-../tp.c 
+../tp.c \
+../tsp_antirebotes.c 
 
 ASM_SRCS += \
 ../patron_volteo_arm_arm.asm \
@@ -39,6 +42,7 @@ OBJS += \
 ./elementos_pantalla.o \
 ./funciones_itoa.o \
 ./jugada_por_botones.o \
+./keyboard.o \
 ./lcd.o \
 ./led.o \
 ./main.o \
@@ -51,9 +55,11 @@ OBJS += \
 ./reversi8_2019.o \
 ./reversi_main.o \
 ./rutinas_excepciones.o \
+./teclado_antirebotes.o \
 ./timer.o \
 ./timer2.o \
-./tp.o 
+./tp.o \
+./tsp_antirebotes.o 
 
 C_DEPS += \
 ./8led.d \
@@ -64,6 +70,7 @@ C_DEPS += \
 ./elementos_pantalla.d \
 ./funciones_itoa.d \
 ./jugada_por_botones.d \
+./keyboard.d \
 ./lcd.d \
 ./led.d \
 ./main.d \
@@ -73,9 +80,11 @@ C_DEPS += \
 ./reversi8_2019.d \
 ./reversi_main.d \
 ./rutinas_excepciones.d \
+./teclado_antirebotes.d \
 ./timer.d \
 ./timer2.d \
-./tp.d 
+./tp.d \
+./tsp_antirebotes.d 
 
 ASM_DEPS += \
 ./patron_volteo_arm_arm.d \
@@ -87,14 +96,14 @@ ASM_DEPS += \
 %.o: ../%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: ARM Sourcery Windows GCC C Compiler'
-	arm-none-eabi-gcc -I"D:\workspace\P3_PH\common" -O0 -Wall -Wa,-adhlns="$@.lst" -c -fmessage-length=0 -mapcs-frame -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=arm7tdmi -g3 -gdwarf-2 -o "$@" "$<"
+	arm-none-eabi-gcc -I"C:\hlocal\workspace\P3_PH\common" -O0 -Wall -Wa,-adhlns="$@.lst" -c -fmessage-length=0 -mapcs-frame -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=arm7tdmi -g3 -gdwarf-2 -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
 %.o: ../%.asm
 	@echo 'Building file: $<'
 	@echo 'Invoking: ARM Sourcery Windows GCC Assembler'
-	arm-none-eabi-gcc -x assembler-with-cpp -I"D:\workspace\P3_PH\common" -Wall -Wa,-adhlns="$@.lst" -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=arm7tdmi -g3 -gdwarf-2 -o "$@" "$<"
+	arm-none-eabi-gcc -x assembler-with-cpp -I"C:\hlocal\workspace\P3_PH\common" -Wall -Wa,-adhlns="$@.lst" -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=arm7tdmi -g3 -gdwarf-2 -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

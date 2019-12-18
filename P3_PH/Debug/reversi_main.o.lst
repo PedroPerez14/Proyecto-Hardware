@@ -11,19 +11,19 @@
   11              		.file	"reversi_main.c"
   21              	.Ltext0:
   22              		.file 1 "../reversi_main.c"
- 2234              		.align	2
- 2235              	cuenta_int_latido:
- 2236 0000 00000000 		.space	4
- 2237              		.align	2
- 2238              	cuenta_int_t_juego:
- 2239 0004 00000000 		.space	4
- 2240              	estado_led1:
- 2241 0008 00       		.space	1
- 2242 0009 000000   		.text
- 2243              		.align	2
- 2244              		.global	reversi_main_inicializar
- 2246              	reversi_main_inicializar:
- 2247              	.LFB0:
+ 2250              		.align	2
+ 2251              	cuenta_int_latido:
+ 2252 0000 00000000 		.space	4
+ 2253              		.align	2
+ 2254              	cuenta_int_t_juego:
+ 2255 0004 00000000 		.space	4
+ 2256              	estado_led1:
+ 2257 0008 00       		.space	1
+ 2258 0009 000000   		.text
+ 2259              		.align	2
+ 2260              		.global	reversi_main_inicializar
+ 2262              	reversi_main_inicializar:
+ 2263              	.LFB0:
    1:../reversi_main.c **** /*********************************************************************************************
    2:../reversi_main.c **** * Fichero:		reversi_main.c
    3:../reversi_main.c **** * Autor:		Fernando Peña Bes (NIA: 756012)
@@ -51,462 +51,525 @@
   25:../reversi_main.c **** #include "codigos_eventos.h"
   26:../reversi_main.c **** #include "botones_antirebotes.h"
   27:../reversi_main.c **** #include "jugada_por_botones.h"
-  28:../reversi_main.c **** #include <stdint.h>
-  29:../reversi_main.c **** 
-  30:../reversi_main.c **** /*--- variables ---*/
-  31:../reversi_main.c **** static enum {ticks_latido_A = 7, ticks_latido_B = 8, ticks_segundo_de_juego = 60};
-  32:../reversi_main.c **** static int cuenta_int_latido;
-  33:../reversi_main.c **** static int cuenta_int_t_juego;
-  34:../reversi_main.c **** static char estado_led1;
-  35:../reversi_main.c **** 
-  36:../reversi_main.c **** /*--- Código de funciones ---*/
+  28:../reversi_main.c **** #include "tsp_antirebotes.h"
+  29:../reversi_main.c **** #include "teclado_antirebotes.h"
+  30:../reversi_main.c **** #include <stdint.h>
+  31:../reversi_main.c **** 
+  32:../reversi_main.c **** /*--- variables ---*/
+  33:../reversi_main.c **** static enum {ticks_latido_A = 7, ticks_latido_B = 8, ticks_segundo_de_juego = 60};
+  34:../reversi_main.c **** static int cuenta_int_latido;
+  35:../reversi_main.c **** static int cuenta_int_t_juego;
+  36:../reversi_main.c **** static char estado_led1;
   37:../reversi_main.c **** 
-  38:../reversi_main.c **** void reversi_main_inicializar(void)
-  39:../reversi_main.c **** {
- 2248              		.loc 1 39 0
- 2249              		.cfi_startproc
- 2250              		@ Function supports interworking.
- 2251              		@ args = 0, pretend = 0, frame = 0
- 2252              		@ frame_needed = 1, uses_anonymous_args = 0
- 2253 0000 0DC0A0E1 		mov	ip, sp
- 2254              	.LCFI0:
- 2255              		.cfi_def_cfa_register 12
- 2256 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2257 0008 04B04CE2 		sub	fp, ip, #4
- 2258              		.cfi_offset 14, -8
- 2259              		.cfi_offset 13, -12
- 2260              		.cfi_offset 11, -16
- 2261              	.LCFI1:
- 2262              		.cfi_def_cfa 11, 4
-  40:../reversi_main.c **** 	//Inicializar las variables que hagan falta para proesar bien los eventos
-  41:../reversi_main.c **** 	timer_init();
- 2263              		.loc 1 41 0
- 2264 000c FEFFFFEB 		bl	timer_init
-  42:../reversi_main.c **** 	cuenta_int_t_juego = 0;	//Cada 60 interrupciones de timer0 pasa un segundo, y tendremos que aument
- 2265              		.loc 1 42 0
- 2266 0010 34309FE5 		ldr	r3, .L2
- 2267 0014 0020A0E3 		mov	r2, #0
- 2268 0018 002083E5 		str	r2, [r3, #0]
-  43:../reversi_main.c **** 	estado_led1 = 0;		//Para decidir si hay que esperar 7 u 8 eventos de tipo tick_latido (en la teorí
- 2269              		.loc 1 43 0
- 2270 001c 2C309FE5 		ldr	r3, .L2+4
- 2271 0020 0020A0E3 		mov	r2, #0
- 2272 0024 0020C3E5 		strb	r2, [r3, #0]
-  44:../reversi_main.c **** 							//Porque timer0 interrumpe 60 veces/seg. y el led debe latir(encender y apagar) 4 veces por 
-  45:../reversi_main.c **** 							// 	por tanto 60/4 = 15, y 15/2 = 7.5, el número de interrupciones del timer
-  46:../reversi_main.c **** 							//	tras el que debe cambiar su estado (on/off)
-  47:../reversi_main.c **** 							//También codifica el estado del led1 si estado_led1 == 0, codifica apagado y 1, encendido
-  48:../reversi_main.c **** 
-  49:../reversi_main.c **** 	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, como ya se ha explicado
- 2273              		.loc 1 49 0
- 2274 0028 24309FE5 		ldr	r3, .L2+8
- 2275 002c 0020A0E3 		mov	r2, #0
- 2276 0030 002083E5 		str	r2, [r3, #0]
-  50:../reversi_main.c **** 	led1_off();				//El led empieza apagado
- 2277              		.loc 1 50 0
- 2278 0034 FEFFFFEB 		bl	led1_off
-  51:../reversi_main.c **** 	botones_antirebotes_inicializar();
- 2279              		.loc 1 51 0
- 2280 0038 FEFFFFEB 		bl	botones_antirebotes_inicializar
-  52:../reversi_main.c **** 	inicializar_jugada_botones();
- 2281              		.loc 1 52 0
- 2282 003c FEFFFFEB 		bl	inicializar_jugada_botones
-  53:../reversi_main.c **** }
- 2283              		.loc 1 53 0
- 2284 0040 0CD04BE2 		sub	sp, fp, #12
- 2285 0044 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2286 0048 1EFF2FE1 		bx	lr
- 2287              	.L3:
- 2288              		.align	2
- 2289              	.L2:
- 2290 004c 04000000 		.word	cuenta_int_t_juego
- 2291 0050 08000000 		.word	estado_led1
- 2292 0054 00000000 		.word	cuenta_int_latido
- 2293              		.cfi_endproc
- 2294              	.LFE0:
- 2296              		.align	2
- 2297              		.global	dormir_procesador
- 2299              	dormir_procesador:
- 2300              	.LFB1:
-  54:../reversi_main.c **** 
-  55:../reversi_main.c **** void dormir_procesador(void)
-  56:../reversi_main.c **** {
+  38:../reversi_main.c **** /*--- Código de funciones ---*/
+  39:../reversi_main.c **** 
+  40:../reversi_main.c **** void reversi_main_inicializar(void)
+  41:../reversi_main.c **** {
+ 2264              		.loc 1 41 0
+ 2265              		.cfi_startproc
+ 2266              		@ Function supports interworking.
+ 2267              		@ args = 0, pretend = 0, frame = 0
+ 2268              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2269 0000 0DC0A0E1 		mov	ip, sp
+ 2270              	.LCFI0:
+ 2271              		.cfi_def_cfa_register 12
+ 2272 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2273 0008 04B04CE2 		sub	fp, ip, #4
+ 2274              		.cfi_offset 14, -8
+ 2275              		.cfi_offset 13, -12
+ 2276              		.cfi_offset 11, -16
+ 2277              	.LCFI1:
+ 2278              		.cfi_def_cfa 11, 4
+  42:../reversi_main.c **** 	//Inicializar las variables que hagan falta para proesar bien los eventos
+  43:../reversi_main.c **** 	timer_init();
+ 2279              		.loc 1 43 0
+ 2280 000c FEFFFFEB 		bl	timer_init
+  44:../reversi_main.c **** 	cuenta_int_t_juego = 0;	//Cada 60 interrupciones de timer0 pasa un segundo, y tendremos que aument
+ 2281              		.loc 1 44 0
+ 2282 0010 38309FE5 		ldr	r3, .L2
+ 2283 0014 0020A0E3 		mov	r2, #0
+ 2284 0018 002083E5 		str	r2, [r3, #0]
+  45:../reversi_main.c **** 	estado_led1 = 0;		//Para decidir si hay que esperar 7 u 8 eventos de tipo tick_latido (en la teorí
+ 2285              		.loc 1 45 0
+ 2286 001c 30309FE5 		ldr	r3, .L2+4
+ 2287 0020 0020A0E3 		mov	r2, #0
+ 2288 0024 0020C3E5 		strb	r2, [r3, #0]
+  46:../reversi_main.c **** 							//Porque timer0 interrumpe 60 veces/seg. y el led debe latir(encender y apagar) 4 veces por 
+  47:../reversi_main.c **** 							// 	por tanto 60/4 = 15, y 15/2 = 7.5, el número de interrupciones del timer
+  48:../reversi_main.c **** 							//	tras el que debe cambiar su estado (on/off)
+  49:../reversi_main.c **** 							//También codifica el estado del led1 si estado_led1 == 0, codifica apagado y 1, encendido
+  50:../reversi_main.c **** 
+  51:../reversi_main.c **** 	cuenta_int_latido = 0;	//Cada 7 u 8 hay que cambiar el led izquierdo, como ya se ha explicado
+ 2289              		.loc 1 51 0
+ 2290 0028 28309FE5 		ldr	r3, .L2+8
+ 2291 002c 0020A0E3 		mov	r2, #0
+ 2292 0030 002083E5 		str	r2, [r3, #0]
+  52:../reversi_main.c **** 	led1_off();				//El led empieza apagado
+ 2293              		.loc 1 52 0
+ 2294 0034 FEFFFFEB 		bl	led1_off
+  53:../reversi_main.c **** 	botones_antirebotes_inicializar();
+ 2295              		.loc 1 53 0
+ 2296 0038 FEFFFFEB 		bl	botones_antirebotes_inicializar
+  54:../reversi_main.c **** 	tsp_antirebotes_inicializar();
+ 2297              		.loc 1 54 0
+ 2298 003c FEFFFFEB 		bl	tsp_antirebotes_inicializar
+  55:../reversi_main.c **** 	inicializar_jugada_botones();
+ 2299              		.loc 1 55 0
+ 2300 0040 FEFFFFEB 		bl	inicializar_jugada_botones
+  56:../reversi_main.c **** }
  2301              		.loc 1 56 0
- 2302              		.cfi_startproc
- 2303              		@ Function supports interworking.
- 2304              		@ args = 0, pretend = 0, frame = 0
- 2305              		@ frame_needed = 1, uses_anonymous_args = 0
- 2306 0058 0DC0A0E1 		mov	ip, sp
- 2307              	.LCFI2:
- 2308              		.cfi_def_cfa_register 12
- 2309 005c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2310 0060 04B04CE2 		sub	fp, ip, #4
- 2311              		.cfi_offset 14, -8
- 2312              		.cfi_offset 13, -12
- 2313              		.cfi_offset 11, -16
- 2314              	.LCFI3:
- 2315              		.cfi_def_cfa 11, 4
-  57:../reversi_main.c **** 	;						//La función que más me ha costado hacer en toda mi vida
-  58:../reversi_main.c **** }
- 2316              		.loc 1 58 0
- 2317 0064 0CD04BE2 		sub	sp, fp, #12
- 2318 0068 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2319 006c 1EFF2FE1 		bx	lr
- 2320              		.cfi_endproc
- 2321              	.LFE1:
- 2323              		.align	2
- 2324              		.global	Latido_ev_new_tick
- 2326              	Latido_ev_new_tick:
- 2327              	.LFB2:
-  59:../reversi_main.c **** 
-  60:../reversi_main.c **** void Latido_ev_new_tick(void)
-  61:../reversi_main.c **** {
- 2328              		.loc 1 61 0
- 2329              		.cfi_startproc
- 2330              		@ Function supports interworking.
- 2331              		@ args = 0, pretend = 0, frame = 0
- 2332              		@ frame_needed = 1, uses_anonymous_args = 0
- 2333 0070 0DC0A0E1 		mov	ip, sp
- 2334              	.LCFI4:
- 2335              		.cfi_def_cfa_register 12
- 2336 0074 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2337 0078 04B04CE2 		sub	fp, ip, #4
- 2338              		.cfi_offset 14, -8
- 2339              		.cfi_offset 13, -12
- 2340              		.cfi_offset 11, -16
- 2341              	.LCFI5:
- 2342              		.cfi_def_cfa 11, 4
-  62:../reversi_main.c **** 	cuenta_int_latido += 1;
- 2343              		.loc 1 62 0
- 2344 007c 84309FE5 		ldr	r3, .L8
- 2345 0080 003093E5 		ldr	r3, [r3, #0]
- 2346 0084 012083E2 		add	r2, r3, #1
- 2347 0088 78309FE5 		ldr	r3, .L8
- 2348 008c 002083E5 		str	r2, [r3, #0]
-  63:../reversi_main.c **** 	if(estado_led1 == 0)	//Unas veces 7 y otras 8, 7.5 de media
- 2349              		.loc 1 63 0
- 2350 0090 74309FE5 		ldr	r3, .L8+4
- 2351 0094 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 2352 0098 000053E3 		cmp	r3, #0
- 2353 009c 0B00001A 		bne	.L6
-  64:../reversi_main.c **** 	{
-  65:../reversi_main.c **** 		if(cuenta_int_latido == ticks_latido_A)
- 2354              		.loc 1 65 0
- 2355 00a0 60309FE5 		ldr	r3, .L8
- 2356 00a4 003093E5 		ldr	r3, [r3, #0]
- 2357 00a8 070053E3 		cmp	r3, #7
- 2358 00ac 1200001A 		bne	.L5
-  66:../reversi_main.c **** 		{
-  67:../reversi_main.c **** 			estado_led1 = 1;
- 2359              		.loc 1 67 0
- 2360 00b0 54309FE5 		ldr	r3, .L8+4
- 2361 00b4 0120A0E3 		mov	r2, #1
- 2362 00b8 0020C3E5 		strb	r2, [r3, #0]
-  68:../reversi_main.c **** 			led1_on();
- 2363              		.loc 1 68 0
- 2364 00bc FEFFFFEB 		bl	led1_on
-  69:../reversi_main.c **** 			cuenta_int_latido = 0;
- 2365              		.loc 1 69 0
- 2366 00c0 40309FE5 		ldr	r3, .L8
- 2367 00c4 0020A0E3 		mov	r2, #0
- 2368 00c8 002083E5 		str	r2, [r3, #0]
- 2369 00cc 0A0000EA 		b	.L5
- 2370              	.L6:
-  70:../reversi_main.c **** 		}
-  71:../reversi_main.c **** 	}
-  72:../reversi_main.c **** 	else
-  73:../reversi_main.c **** 	{
-  74:../reversi_main.c **** 		if(cuenta_int_latido == ticks_latido_B)
- 2371              		.loc 1 74 0
- 2372 00d0 30309FE5 		ldr	r3, .L8
- 2373 00d4 003093E5 		ldr	r3, [r3, #0]
- 2374 00d8 080053E3 		cmp	r3, #8
- 2375 00dc 0600001A 		bne	.L5
-  75:../reversi_main.c **** 		{
-  76:../reversi_main.c **** 			estado_led1 = 0;
- 2376              		.loc 1 76 0
- 2377 00e0 24309FE5 		ldr	r3, .L8+4
- 2378 00e4 0020A0E3 		mov	r2, #0
- 2379 00e8 0020C3E5 		strb	r2, [r3, #0]
-  77:../reversi_main.c **** 			led1_off();
- 2380              		.loc 1 77 0
- 2381 00ec FEFFFFEB 		bl	led1_off
-  78:../reversi_main.c **** 			cuenta_int_latido = 0;
- 2382              		.loc 1 78 0
- 2383 00f0 10309FE5 		ldr	r3, .L8
- 2384 00f4 0020A0E3 		mov	r2, #0
- 2385 00f8 002083E5 		str	r2, [r3, #0]
- 2386              	.L5:
-  79:../reversi_main.c **** 		}
-  80:../reversi_main.c **** 	}
-  81:../reversi_main.c **** }
- 2387              		.loc 1 81 0
- 2388 00fc 0CD04BE2 		sub	sp, fp, #12
- 2389 0100 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2390 0104 1EFF2FE1 		bx	lr
- 2391              	.L9:
- 2392              		.align	2
- 2393              	.L8:
- 2394 0108 00000000 		.word	cuenta_int_latido
- 2395 010c 08000000 		.word	estado_led1
- 2396              		.cfi_endproc
- 2397              	.LFE2:
- 2399              		.align	2
- 2400              		.global	tiempo_juego_ev_tick
- 2402              	tiempo_juego_ev_tick:
- 2403              	.LFB3:
-  82:../reversi_main.c **** 
-  83:../reversi_main.c **** void tiempo_juego_ev_tick()
-  84:../reversi_main.c **** {
- 2404              		.loc 1 84 0
- 2405              		.cfi_startproc
- 2406              		@ Function supports interworking.
- 2407              		@ args = 0, pretend = 0, frame = 0
- 2408              		@ frame_needed = 1, uses_anonymous_args = 0
- 2409 0110 0DC0A0E1 		mov	ip, sp
- 2410              	.LCFI6:
- 2411              		.cfi_def_cfa_register 12
- 2412 0114 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2413 0118 04B04CE2 		sub	fp, ip, #4
- 2414              		.cfi_offset 14, -8
- 2415              		.cfi_offset 13, -12
- 2416              		.cfi_offset 11, -16
- 2417              	.LCFI7:
- 2418              		.cfi_def_cfa 11, 4
-  85:../reversi_main.c **** 	cuenta_int_t_juego++;
- 2419              		.loc 1 85 0
- 2420 011c 38309FE5 		ldr	r3, .L12
- 2421 0120 003093E5 		ldr	r3, [r3, #0]
- 2422 0124 012083E2 		add	r2, r3, #1
- 2423 0128 2C309FE5 		ldr	r3, .L12
- 2424 012c 002083E5 		str	r2, [r3, #0]
-  86:../reversi_main.c **** 	if(cuenta_int_t_juego == ticks_segundo_de_juego)
- 2425              		.loc 1 86 0
- 2426 0130 24309FE5 		ldr	r3, .L12
- 2427 0134 003093E5 		ldr	r3, [r3, #0]
- 2428 0138 3C0053E3 		cmp	r3, #60
- 2429 013c 0300001A 		bne	.L10
-  87:../reversi_main.c **** 	{
-  88:../reversi_main.c **** 		cuenta_int_t_juego = 0;
- 2430              		.loc 1 88 0
- 2431 0140 14309FE5 		ldr	r3, .L12
- 2432 0144 0020A0E3 		mov	r2, #0
- 2433 0148 002083E5 		str	r2, [r3, #0]
-  89:../reversi_main.c **** 		jugada_ev_timer();
- 2434              		.loc 1 89 0
- 2435 014c FEFFFFEB 		bl	jugada_ev_timer
- 2436              	.L10:
-  90:../reversi_main.c **** 	}
-  91:../reversi_main.c **** }
- 2437              		.loc 1 91 0
- 2438 0150 0CD04BE2 		sub	sp, fp, #12
- 2439 0154 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 2440 0158 1EFF2FE1 		bx	lr
- 2441              	.L13:
- 2442              		.align	2
- 2443              	.L12:
- 2444 015c 04000000 		.word	cuenta_int_t_juego
- 2445              		.cfi_endproc
- 2446              	.LFE3:
- 2448              		.align	2
- 2449              		.global	reversi_main
- 2451              	reversi_main:
- 2452              	.LFB4:
-  92:../reversi_main.c **** 
-  93:../reversi_main.c **** void reversi_main()
-  94:../reversi_main.c **** {
- 2453              		.loc 1 94 0
- 2454              		.cfi_startproc
- 2455              		@ Function supports interworking.
- 2456              		@ args = 0, pretend = 0, frame = 8
- 2457              		@ frame_needed = 1, uses_anonymous_args = 0
- 2458 0160 0DC0A0E1 		mov	ip, sp
- 2459              	.LCFI8:
- 2460              		.cfi_def_cfa_register 12
- 2461 0164 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 2462 0168 04B04CE2 		sub	fp, ip, #4
- 2463              		.cfi_offset 14, -8
- 2464              		.cfi_offset 13, -12
- 2465              		.cfi_offset 11, -16
- 2466              	.LCFI9:
- 2467              		.cfi_def_cfa 11, 4
- 2468 016c 08D04DE2 		sub	sp, sp, #8
-  95:../reversi_main.c **** 	reversi_main_inicializar();
- 2469              		.loc 1 95 0
- 2470 0170 FEFFFFEB 		bl	reversi_main_inicializar
-  96:../reversi_main.c **** 	while(1)
-  97:../reversi_main.c **** 	{
-  98:../reversi_main.c **** 		while(!esVacia())
- 2471              		.loc 1 98 0
- 2472 0174 240000EA 		b	.L15
- 2473              	.L24:
- 2474              	.LBB2:
-  99:../reversi_main.c **** 		{
- 100:../reversi_main.c **** 			//Desencolar para poder procesar la información
- 101:../reversi_main.c **** 			uint8_t evento;
- 102:../reversi_main.c **** 			uint32_t info;
- 103:../reversi_main.c **** 			pop_debug(&evento, &info);
- 2475              		.loc 1 103 0
- 2476 0178 0D204BE2 		sub	r2, fp, #13
- 2477 017c 14304BE2 		sub	r3, fp, #20
- 2478 0180 0200A0E1 		mov	r0, r2
- 2479 0184 0310A0E1 		mov	r1, r3
- 2480 0188 FEFFFFEB 		bl	pop_debug
- 104:../reversi_main.c **** 			switch(evento)
- 2481              		.loc 1 104 0
- 2482 018c 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
- 2483 0190 690053E3 		cmp	r3, #105
- 2484 0194 1700000A 		beq	.L18
- 2485 0198 690053E3 		cmp	r3, #105
- 2486 019c 020000CA 		bgt	.L21
- 2487 01a0 110053E3 		cmp	r3, #17
- 2488 01a4 1500000A 		beq	.L17
- 105:../reversi_main.c **** 			{
- 106:../reversi_main.c **** 			case ev_tick_timer0 :	//Atender eventos de timer0
- 107:../reversi_main.c **** 				Latido_ev_new_tick();
- 108:../reversi_main.c **** 				tiempo_juego_ev_tick();
- 109:../reversi_main.c **** 				button_ev_tick0();
- 110:../reversi_main.c **** 				break;
- 111:../reversi_main.c **** 			case ev_button_int :	//Atender eventos de los botones
- 112:../reversi_main.c **** 				if(info == button_izq)
- 113:../reversi_main.c **** 				{	//Botón izquierdo
- 114:../reversi_main.c **** 					button_ev_pulsacion(button_iz);
- 115:../reversi_main.c **** 					jugada_ev_izq();
- 116:../reversi_main.c **** 				}
- 117:../reversi_main.c **** 				else
- 118:../reversi_main.c **** 				{	//Botón derecho
- 119:../reversi_main.c **** 					button_ev_pulsacion(button_dr);
- 120:../reversi_main.c **** 					jugada_ev_der();
+ 2302 0044 0CD04BE2 		sub	sp, fp, #12
+ 2303 0048 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2304 004c 1EFF2FE1 		bx	lr
+ 2305              	.L3:
+ 2306              		.align	2
+ 2307              	.L2:
+ 2308 0050 04000000 		.word	cuenta_int_t_juego
+ 2309 0054 08000000 		.word	estado_led1
+ 2310 0058 00000000 		.word	cuenta_int_latido
+ 2311              		.cfi_endproc
+ 2312              	.LFE0:
+ 2314              		.align	2
+ 2315              		.global	dormir_procesador
+ 2317              	dormir_procesador:
+ 2318              	.LFB1:
+  57:../reversi_main.c **** 
+  58:../reversi_main.c **** void dormir_procesador(void)
+  59:../reversi_main.c **** {
+ 2319              		.loc 1 59 0
+ 2320              		.cfi_startproc
+ 2321              		@ Function supports interworking.
+ 2322              		@ args = 0, pretend = 0, frame = 0
+ 2323              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2324 005c 0DC0A0E1 		mov	ip, sp
+ 2325              	.LCFI2:
+ 2326              		.cfi_def_cfa_register 12
+ 2327 0060 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2328 0064 04B04CE2 		sub	fp, ip, #4
+ 2329              		.cfi_offset 14, -8
+ 2330              		.cfi_offset 13, -12
+ 2331              		.cfi_offset 11, -16
+ 2332              	.LCFI3:
+ 2333              		.cfi_def_cfa 11, 4
+  60:../reversi_main.c **** 	;						//La función que más me ha costado hacer en toda mi vida
+  61:../reversi_main.c **** }
+ 2334              		.loc 1 61 0
+ 2335 0068 0CD04BE2 		sub	sp, fp, #12
+ 2336 006c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2337 0070 1EFF2FE1 		bx	lr
+ 2338              		.cfi_endproc
+ 2339              	.LFE1:
+ 2341              		.align	2
+ 2342              		.global	Latido_ev_new_tick
+ 2344              	Latido_ev_new_tick:
+ 2345              	.LFB2:
+  62:../reversi_main.c **** 
+  63:../reversi_main.c **** void Latido_ev_new_tick(void)
+  64:../reversi_main.c **** {
+ 2346              		.loc 1 64 0
+ 2347              		.cfi_startproc
+ 2348              		@ Function supports interworking.
+ 2349              		@ args = 0, pretend = 0, frame = 0
+ 2350              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2351 0074 0DC0A0E1 		mov	ip, sp
+ 2352              	.LCFI4:
+ 2353              		.cfi_def_cfa_register 12
+ 2354 0078 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2355 007c 04B04CE2 		sub	fp, ip, #4
+ 2356              		.cfi_offset 14, -8
+ 2357              		.cfi_offset 13, -12
+ 2358              		.cfi_offset 11, -16
+ 2359              	.LCFI5:
+ 2360              		.cfi_def_cfa 11, 4
+  65:../reversi_main.c **** 	cuenta_int_latido += 1;
+ 2361              		.loc 1 65 0
+ 2362 0080 84309FE5 		ldr	r3, .L8
+ 2363 0084 003093E5 		ldr	r3, [r3, #0]
+ 2364 0088 012083E2 		add	r2, r3, #1
+ 2365 008c 78309FE5 		ldr	r3, .L8
+ 2366 0090 002083E5 		str	r2, [r3, #0]
+  66:../reversi_main.c **** 	if(estado_led1 == 0)	//Unas veces 7 y otras 8, 7.5 de media
+ 2367              		.loc 1 66 0
+ 2368 0094 74309FE5 		ldr	r3, .L8+4
+ 2369 0098 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2370 009c 000053E3 		cmp	r3, #0
+ 2371 00a0 0B00001A 		bne	.L6
+  67:../reversi_main.c **** 	{
+  68:../reversi_main.c **** 		if(cuenta_int_latido == ticks_latido_A)
+ 2372              		.loc 1 68 0
+ 2373 00a4 60309FE5 		ldr	r3, .L8
+ 2374 00a8 003093E5 		ldr	r3, [r3, #0]
+ 2375 00ac 070053E3 		cmp	r3, #7
+ 2376 00b0 1200001A 		bne	.L5
+  69:../reversi_main.c **** 		{
+  70:../reversi_main.c **** 			estado_led1 = 1;
+ 2377              		.loc 1 70 0
+ 2378 00b4 54309FE5 		ldr	r3, .L8+4
+ 2379 00b8 0120A0E3 		mov	r2, #1
+ 2380 00bc 0020C3E5 		strb	r2, [r3, #0]
+  71:../reversi_main.c **** 			led1_on();
+ 2381              		.loc 1 71 0
+ 2382 00c0 FEFFFFEB 		bl	led1_on
+  72:../reversi_main.c **** 			cuenta_int_latido = 0;
+ 2383              		.loc 1 72 0
+ 2384 00c4 40309FE5 		ldr	r3, .L8
+ 2385 00c8 0020A0E3 		mov	r2, #0
+ 2386 00cc 002083E5 		str	r2, [r3, #0]
+ 2387 00d0 0A0000EA 		b	.L5
+ 2388              	.L6:
+  73:../reversi_main.c **** 		}
+  74:../reversi_main.c **** 	}
+  75:../reversi_main.c **** 	else
+  76:../reversi_main.c **** 	{
+  77:../reversi_main.c **** 		if(cuenta_int_latido == ticks_latido_B)
+ 2389              		.loc 1 77 0
+ 2390 00d4 30309FE5 		ldr	r3, .L8
+ 2391 00d8 003093E5 		ldr	r3, [r3, #0]
+ 2392 00dc 080053E3 		cmp	r3, #8
+ 2393 00e0 0600001A 		bne	.L5
+  78:../reversi_main.c **** 		{
+  79:../reversi_main.c **** 			estado_led1 = 0;
+ 2394              		.loc 1 79 0
+ 2395 00e4 24309FE5 		ldr	r3, .L8+4
+ 2396 00e8 0020A0E3 		mov	r2, #0
+ 2397 00ec 0020C3E5 		strb	r2, [r3, #0]
+  80:../reversi_main.c **** 			led1_off();
+ 2398              		.loc 1 80 0
+ 2399 00f0 FEFFFFEB 		bl	led1_off
+  81:../reversi_main.c **** 			cuenta_int_latido = 0;
+ 2400              		.loc 1 81 0
+ 2401 00f4 10309FE5 		ldr	r3, .L8
+ 2402 00f8 0020A0E3 		mov	r2, #0
+ 2403 00fc 002083E5 		str	r2, [r3, #0]
+ 2404              	.L5:
+  82:../reversi_main.c **** 		}
+  83:../reversi_main.c **** 	}
+  84:../reversi_main.c **** }
+ 2405              		.loc 1 84 0
+ 2406 0100 0CD04BE2 		sub	sp, fp, #12
+ 2407 0104 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2408 0108 1EFF2FE1 		bx	lr
+ 2409              	.L9:
+ 2410              		.align	2
+ 2411              	.L8:
+ 2412 010c 00000000 		.word	cuenta_int_latido
+ 2413 0110 08000000 		.word	estado_led1
+ 2414              		.cfi_endproc
+ 2415              	.LFE2:
+ 2417              		.align	2
+ 2418              		.global	tiempo_juego_ev_tick
+ 2420              	tiempo_juego_ev_tick:
+ 2421              	.LFB3:
+  85:../reversi_main.c **** 
+  86:../reversi_main.c **** void tiempo_juego_ev_tick()
+  87:../reversi_main.c **** {
+ 2422              		.loc 1 87 0
+ 2423              		.cfi_startproc
+ 2424              		@ Function supports interworking.
+ 2425              		@ args = 0, pretend = 0, frame = 0
+ 2426              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2427 0114 0DC0A0E1 		mov	ip, sp
+ 2428              	.LCFI6:
+ 2429              		.cfi_def_cfa_register 12
+ 2430 0118 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2431 011c 04B04CE2 		sub	fp, ip, #4
+ 2432              		.cfi_offset 14, -8
+ 2433              		.cfi_offset 13, -12
+ 2434              		.cfi_offset 11, -16
+ 2435              	.LCFI7:
+ 2436              		.cfi_def_cfa 11, 4
+  88:../reversi_main.c **** 	cuenta_int_t_juego++;
+ 2437              		.loc 1 88 0
+ 2438 0120 38309FE5 		ldr	r3, .L12
+ 2439 0124 003093E5 		ldr	r3, [r3, #0]
+ 2440 0128 012083E2 		add	r2, r3, #1
+ 2441 012c 2C309FE5 		ldr	r3, .L12
+ 2442 0130 002083E5 		str	r2, [r3, #0]
+  89:../reversi_main.c **** 	if(cuenta_int_t_juego == ticks_segundo_de_juego)
+ 2443              		.loc 1 89 0
+ 2444 0134 24309FE5 		ldr	r3, .L12
+ 2445 0138 003093E5 		ldr	r3, [r3, #0]
+ 2446 013c 3C0053E3 		cmp	r3, #60
+ 2447 0140 0300001A 		bne	.L10
+  90:../reversi_main.c **** 	{
+  91:../reversi_main.c **** 		cuenta_int_t_juego = 0;
+ 2448              		.loc 1 91 0
+ 2449 0144 14309FE5 		ldr	r3, .L12
+ 2450 0148 0020A0E3 		mov	r2, #0
+ 2451 014c 002083E5 		str	r2, [r3, #0]
+  92:../reversi_main.c **** 		jugada_ev_timer();
+ 2452              		.loc 1 92 0
+ 2453 0150 FEFFFFEB 		bl	jugada_ev_timer
+ 2454              	.L10:
+  93:../reversi_main.c **** 	}
+  94:../reversi_main.c **** }
+ 2455              		.loc 1 94 0
+ 2456 0154 0CD04BE2 		sub	sp, fp, #12
+ 2457 0158 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2458 015c 1EFF2FE1 		bx	lr
+ 2459              	.L13:
+ 2460              		.align	2
+ 2461              	.L12:
+ 2462 0160 04000000 		.word	cuenta_int_t_juego
+ 2463              		.cfi_endproc
+ 2464              	.LFE3:
+ 2466              		.align	2
+ 2467              		.global	reversi_main
+ 2469              	reversi_main:
+ 2470              	.LFB4:
+  95:../reversi_main.c **** 
+  96:../reversi_main.c **** void reversi_main()
+  97:../reversi_main.c **** {
+ 2471              		.loc 1 97 0
+ 2472              		.cfi_startproc
+ 2473              		@ Function supports interworking.
+ 2474              		@ args = 0, pretend = 0, frame = 8
+ 2475              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2476 0164 0DC0A0E1 		mov	ip, sp
+ 2477              	.LCFI8:
+ 2478              		.cfi_def_cfa_register 12
+ 2479 0168 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2480 016c 04B04CE2 		sub	fp, ip, #4
+ 2481              		.cfi_offset 14, -8
+ 2482              		.cfi_offset 13, -12
+ 2483              		.cfi_offset 11, -16
+ 2484              	.LCFI9:
+ 2485              		.cfi_def_cfa 11, 4
+ 2486 0170 08D04DE2 		sub	sp, sp, #8
+  98:../reversi_main.c **** 	reversi_main_inicializar();
+ 2487              		.loc 1 98 0
+ 2488 0174 FEFFFFEB 		bl	reversi_main_inicializar
+  99:../reversi_main.c **** 	while(1)
+ 100:../reversi_main.c **** 	{
+ 101:../reversi_main.c **** 		while(!esVacia())
+ 2489              		.loc 1 101 0
+ 2490 0178 320000EA 		b	.L15
+ 2491              	.L27:
+ 2492              	.LBB2:
+ 102:../reversi_main.c **** 		{
+ 103:../reversi_main.c **** 			//Desencolar para poder procesar la información
+ 104:../reversi_main.c **** 			uint8_t evento;
+ 105:../reversi_main.c **** 			uint32_t info;
+ 106:../reversi_main.c **** 			pop_debug(&evento, &info);
+ 2493              		.loc 1 106 0
+ 2494 017c 0D204BE2 		sub	r2, fp, #13
+ 2495 0180 14304BE2 		sub	r3, fp, #20
+ 2496 0184 0200A0E1 		mov	r0, r2
+ 2497 0188 0310A0E1 		mov	r1, r3
+ 2498 018c FEFFFFEB 		bl	pop_debug
+ 107:../reversi_main.c **** 			switch(evento)
+ 2499              		.loc 1 107 0
+ 2500 0190 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
+ 2501 0194 690053E3 		cmp	r3, #105
+ 2502 0198 1B00000A 		beq	.L19
+ 2503 019c 690053E3 		cmp	r3, #105
+ 2504 01a0 040000CA 		bgt	.L22
+ 2505 01a4 110053E3 		cmp	r3, #17
+ 2506 01a8 1900000A 		beq	.L17
+ 2507 01ac 220053E3 		cmp	r3, #34
+ 2508 01b0 1A00000A 		beq	.L18
+ 108:../reversi_main.c **** 			{
+ 109:../reversi_main.c **** 			case ev_tick_timer0 :	//Atender eventos de timer0
+ 110:../reversi_main.c **** 				Latido_ev_new_tick();
+ 111:../reversi_main.c **** 				tiempo_juego_ev_tick();
+ 112:../reversi_main.c **** 				button_ev_tick0();
+ 113:../reversi_main.c **** 				tsp_ev_tick0();
+ 114:../reversi_main.c **** 				tec_ev_tick0();
+ 115:../reversi_main.c **** 				break;
+ 116:../reversi_main.c **** 			case ev_button_int :	//Atender eventos de los botones
+ 117:../reversi_main.c **** 				if(info == button_izq)
+ 118:../reversi_main.c **** 				{	//Botón izquierdo
+ 119:../reversi_main.c **** 					button_ev_pulsacion(button_iz);
+ 120:../reversi_main.c **** 					jugada_ev_izq();
  121:../reversi_main.c **** 				}
- 122:../reversi_main.c **** 				break;
- 123:../reversi_main.c **** 			case ev_finLCD:
- 124:../reversi_main.c **** 				termina_DMA();
- 125:../reversi_main.c **** 				break;
- 126:../reversi_main.c **** 			case ev_tsp:
- 127:../reversi_main.c **** 				jugada_ev_tsp();
- 128:../reversi_main.c **** 				break;
- 129:../reversi_main.c **** 			default : //Si es otra cosa desconocida, no lo atendemos
+ 122:../reversi_main.c **** 				else
+ 123:../reversi_main.c **** 				{	//Botón derecho
+ 124:../reversi_main.c **** 					button_ev_pulsacion(button_dr);
+ 125:../reversi_main.c **** 					jugada_ev_der();
+ 126:../reversi_main.c **** 				}
+ 127:../reversi_main.c **** 				break;
+ 128:../reversi_main.c **** 			case ev_finLCD:
+ 129:../reversi_main.c **** 				termina_DMA();
  130:../reversi_main.c **** 				break;
- 2489              		.loc 1 130 0
- 2490 01a8 170000EA 		b	.L15
- 2491              	.L21:
- 104:../reversi_main.c **** 			switch(evento)
- 2492              		.loc 1 104 0
- 2493 01ac BB0053E3 		cmp	r3, #187
- 2494 01b0 0500000A 		beq	.L19
- 2495 01b4 FF0053E3 		cmp	r3, #255
- 2496 01b8 1200001A 		bne	.L26
- 2497              	.L20:
- 107:../reversi_main.c **** 				Latido_ev_new_tick();
- 2498              		.loc 1 107 0
- 2499 01bc FEFFFFEB 		bl	Latido_ev_new_tick
- 108:../reversi_main.c **** 				tiempo_juego_ev_tick();
- 2500              		.loc 1 108 0
- 2501 01c0 FEFFFFEB 		bl	tiempo_juego_ev_tick
- 109:../reversi_main.c **** 				button_ev_tick0();
- 2502              		.loc 1 109 0
- 2503 01c4 FEFFFFEB 		bl	button_ev_tick0
- 110:../reversi_main.c **** 				break;
- 2504              		.loc 1 110 0
- 2505 01c8 0F0000EA 		b	.L15
- 2506              	.L19:
- 112:../reversi_main.c **** 				if(info == button_izq)
- 2507              		.loc 1 112 0
- 2508 01cc 14301BE5 		ldr	r3, [fp, #-20]
- 2509 01d0 0F0053E3 		cmp	r3, #15
- 2510 01d4 0300001A 		bne	.L22
- 114:../reversi_main.c **** 					button_ev_pulsacion(button_iz);
- 2511              		.loc 1 114 0
- 2512 01d8 0100A0E3 		mov	r0, #1
- 2513 01dc FEFFFFEB 		bl	button_ev_pulsacion
- 115:../reversi_main.c **** 					jugada_ev_izq();
- 2514              		.loc 1 115 0
- 2515 01e0 FEFFFFEB 		bl	jugada_ev_izq
- 122:../reversi_main.c **** 				break;
- 2516              		.loc 1 122 0
- 2517 01e4 080000EA 		b	.L15
- 2518              	.L22:
- 119:../reversi_main.c **** 					button_ev_pulsacion(button_dr);
- 2519              		.loc 1 119 0
- 2520 01e8 0200A0E3 		mov	r0, #2
- 2521 01ec FEFFFFEB 		bl	button_ev_pulsacion
- 120:../reversi_main.c **** 					jugada_ev_der();
- 2522              		.loc 1 120 0
- 2523 01f0 FEFFFFEB 		bl	jugada_ev_der
- 122:../reversi_main.c **** 				break;
- 2524              		.loc 1 122 0
- 2525 01f4 040000EA 		b	.L15
- 2526              	.L18:
- 124:../reversi_main.c **** 				termina_DMA();
- 2527              		.loc 1 124 0
- 2528 01f8 FEFFFFEB 		bl	termina_DMA
- 125:../reversi_main.c **** 				break;
- 2529              		.loc 1 125 0
- 2530 01fc 020000EA 		b	.L15
- 2531              	.L17:
- 127:../reversi_main.c **** 				jugada_ev_tsp();
- 2532              		.loc 1 127 0
- 2533 0200 FEFFFFEB 		bl	jugada_ev_tsp
- 128:../reversi_main.c **** 				break;
- 2534              		.loc 1 128 0
- 2535 0204 000000EA 		b	.L15
- 2536              	.L26:
- 2537              		.loc 1 130 0
- 2538 0208 0000A0E1 		mov	r0, r0	@ nop
- 2539              	.L15:
- 2540              	.LBE2:
-  98:../reversi_main.c **** 		while(!esVacia())
- 2541              		.loc 1 98 0 discriminator 1
- 2542 020c FEFFFFEB 		bl	esVacia
- 2543 0210 0030A0E1 		mov	r3, r0
- 2544 0214 000053E3 		cmp	r3, #0
- 2545 0218 D6FFFF0A 		beq	.L24
- 131:../reversi_main.c **** 			}
- 132:../reversi_main.c **** 		}
- 133:../reversi_main.c **** 		dormir_procesador();
- 2546              		.loc 1 133 0
- 2547 021c FEFFFFEB 		bl	dormir_procesador
- 134:../reversi_main.c **** 	}
- 2548              		.loc 1 134 0
- 2549 0220 0000A0E1 		mov	r0, r0	@ nop
-  98:../reversi_main.c **** 		while(!esVacia())
- 2550              		.loc 1 98 0
- 2551 0224 F8FFFFEA 		b	.L15
- 2552              		.cfi_endproc
- 2553              	.LFE4:
- 2555              	.Letext0:
+ 131:../reversi_main.c **** 			case ev_tsp:
+ 132:../reversi_main.c **** 				tsp_ev_pulsacion();
+ 133:../reversi_main.c **** 				jugada_ev_tsp();
+ 134:../reversi_main.c **** 				break;
+ 135:../reversi_main.c **** 			case ev_keyboard:
+ 136:../reversi_main.c **** 				if(info == tecla_0)
+ 137:../reversi_main.c **** 				{	//tecla 0
+ 138:../reversi_main.c **** 					tec_ev_pulsacion();
+ 139:../reversi_main.c **** 					jugada_ev_tecla0();
+ 140:../reversi_main.c **** 				}
+ 141:../reversi_main.c **** 				else
+ 142:../reversi_main.c **** 				{	//tecla 1
+ 143:../reversi_main.c **** 					tec_ev_pulsacion();
+ 144:../reversi_main.c **** 					jugada_ev_tecla1();
+ 145:../reversi_main.c **** 				}
+ 146:../reversi_main.c **** 				break;
+ 147:../reversi_main.c **** 			default : //Si es otra cosa desconocida, no lo atendemos
+ 148:../reversi_main.c **** 				break;
+ 2509              		.loc 1 148 0
+ 2510 01b4 230000EA 		b	.L15
+ 2511              	.L22:
+ 107:../reversi_main.c **** 			switch(evento)
+ 2512              		.loc 1 107 0
+ 2513 01b8 BB0053E3 		cmp	r3, #187
+ 2514 01bc 0700000A 		beq	.L20
+ 2515 01c0 FF0053E3 		cmp	r3, #255
+ 2516 01c4 1E00001A 		bne	.L29
+ 2517              	.L21:
+ 110:../reversi_main.c **** 				Latido_ev_new_tick();
+ 2518              		.loc 1 110 0
+ 2519 01c8 FEFFFFEB 		bl	Latido_ev_new_tick
+ 111:../reversi_main.c **** 				tiempo_juego_ev_tick();
+ 2520              		.loc 1 111 0
+ 2521 01cc FEFFFFEB 		bl	tiempo_juego_ev_tick
+ 112:../reversi_main.c **** 				button_ev_tick0();
+ 2522              		.loc 1 112 0
+ 2523 01d0 FEFFFFEB 		bl	button_ev_tick0
+ 113:../reversi_main.c **** 				tsp_ev_tick0();
+ 2524              		.loc 1 113 0
+ 2525 01d4 FEFFFFEB 		bl	tsp_ev_tick0
+ 114:../reversi_main.c **** 				tec_ev_tick0();
+ 2526              		.loc 1 114 0
+ 2527 01d8 FEFFFFEB 		bl	tec_ev_tick0
+ 115:../reversi_main.c **** 				break;
+ 2528              		.loc 1 115 0
+ 2529 01dc 190000EA 		b	.L15
+ 2530              	.L20:
+ 117:../reversi_main.c **** 				if(info == button_izq)
+ 2531              		.loc 1 117 0
+ 2532 01e0 14301BE5 		ldr	r3, [fp, #-20]
+ 2533 01e4 0F0053E3 		cmp	r3, #15
+ 2534 01e8 0300001A 		bne	.L23
+ 119:../reversi_main.c **** 					button_ev_pulsacion(button_iz);
+ 2535              		.loc 1 119 0
+ 2536 01ec 0100A0E3 		mov	r0, #1
+ 2537 01f0 FEFFFFEB 		bl	button_ev_pulsacion
+ 120:../reversi_main.c **** 					jugada_ev_izq();
+ 2538              		.loc 1 120 0
+ 2539 01f4 FEFFFFEB 		bl	jugada_ev_izq
+ 127:../reversi_main.c **** 				break;
+ 2540              		.loc 1 127 0
+ 2541 01f8 120000EA 		b	.L15
+ 2542              	.L23:
+ 124:../reversi_main.c **** 					button_ev_pulsacion(button_dr);
+ 2543              		.loc 1 124 0
+ 2544 01fc 0200A0E3 		mov	r0, #2
+ 2545 0200 FEFFFFEB 		bl	button_ev_pulsacion
+ 125:../reversi_main.c **** 					jugada_ev_der();
+ 2546              		.loc 1 125 0
+ 2547 0204 FEFFFFEB 		bl	jugada_ev_der
+ 127:../reversi_main.c **** 				break;
+ 2548              		.loc 1 127 0
+ 2549 0208 0E0000EA 		b	.L15
+ 2550              	.L19:
+ 129:../reversi_main.c **** 				termina_DMA();
+ 2551              		.loc 1 129 0
+ 2552 020c FEFFFFEB 		bl	termina_DMA
+ 130:../reversi_main.c **** 				break;
+ 2553              		.loc 1 130 0
+ 2554 0210 0C0000EA 		b	.L15
+ 2555              	.L17:
+ 132:../reversi_main.c **** 				tsp_ev_pulsacion();
+ 2556              		.loc 1 132 0
+ 2557 0214 FEFFFFEB 		bl	tsp_ev_pulsacion
+ 133:../reversi_main.c **** 				jugada_ev_tsp();
+ 2558              		.loc 1 133 0
+ 2559 0218 FEFFFFEB 		bl	jugada_ev_tsp
+ 134:../reversi_main.c **** 				break;
+ 2560              		.loc 1 134 0
+ 2561 021c 090000EA 		b	.L15
+ 2562              	.L18:
+ 136:../reversi_main.c **** 				if(info == tecla_0)
+ 2563              		.loc 1 136 0
+ 2564 0220 14301BE5 		ldr	r3, [fp, #-20]
+ 2565 0224 700053E3 		cmp	r3, #112
+ 2566 0228 0200001A 		bne	.L25
+ 138:../reversi_main.c **** 					tec_ev_pulsacion();
+ 2567              		.loc 1 138 0
+ 2568 022c FEFFFFEB 		bl	tec_ev_pulsacion
+ 139:../reversi_main.c **** 					jugada_ev_tecla0();
+ 2569              		.loc 1 139 0
+ 2570 0230 FEFFFFEB 		bl	jugada_ev_tecla0
+ 146:../reversi_main.c **** 				break;
+ 2571              		.loc 1 146 0
+ 2572 0234 030000EA 		b	.L15
+ 2573              	.L25:
+ 143:../reversi_main.c **** 					tec_ev_pulsacion();
+ 2574              		.loc 1 143 0
+ 2575 0238 FEFFFFEB 		bl	tec_ev_pulsacion
+ 144:../reversi_main.c **** 					jugada_ev_tecla1();
+ 2576              		.loc 1 144 0
+ 2577 023c FEFFFFEB 		bl	jugada_ev_tecla1
+ 146:../reversi_main.c **** 				break;
+ 2578              		.loc 1 146 0
+ 2579 0240 000000EA 		b	.L15
+ 2580              	.L29:
+ 2581              		.loc 1 148 0
+ 2582 0244 0000A0E1 		mov	r0, r0	@ nop
+ 2583              	.L15:
+ 2584              	.LBE2:
+ 101:../reversi_main.c **** 		while(!esVacia())
+ 2585              		.loc 1 101 0 discriminator 1
+ 2586 0248 FEFFFFEB 		bl	esVacia
+ 2587 024c 0030A0E1 		mov	r3, r0
+ 2588 0250 000053E3 		cmp	r3, #0
+ 2589 0254 C8FFFF0A 		beq	.L27
+ 149:../reversi_main.c **** 			}
+ 150:../reversi_main.c **** 		}
+ 151:../reversi_main.c **** 		dormir_procesador();
+ 2590              		.loc 1 151 0
+ 2591 0258 FEFFFFEB 		bl	dormir_procesador
+ 152:../reversi_main.c **** 	}
+ 2592              		.loc 1 152 0
+ 2593 025c 0000A0E1 		mov	r0, r0	@ nop
+ 101:../reversi_main.c **** 		while(!esVacia())
+ 2594              		.loc 1 101 0
+ 2595 0260 F8FFFFEA 		b	.L15
+ 2596              		.cfi_endproc
+ 2597              	.LFE4:
+ 2599              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 reversi_main.c
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2234   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2235   .bss:00000000 cuenta_int_latido
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2238   .bss:00000004 cuenta_int_t_juego
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2240   .bss:00000008 estado_led1
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2243   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2246   .text:00000000 reversi_main_inicializar
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2290   .text:0000004c $d
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2296   .text:00000058 $a
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2299   .text:00000058 dormir_procesador
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2326   .text:00000070 Latido_ev_new_tick
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2394   .text:00000108 $d
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2399   .text:00000110 $a
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2402   .text:00000110 tiempo_juego_ev_tick
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2444   .text:0000015c $d
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2448   .text:00000160 $a
-C:\Users\guest\AppData\Local\Temp\ccFUJ0zj.s:2451   .text:00000160 reversi_main
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2250   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2251   .bss:00000000 cuenta_int_latido
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2254   .bss:00000004 cuenta_int_t_juego
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2256   .bss:00000008 estado_led1
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2259   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2262   .text:00000000 reversi_main_inicializar
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2308   .text:00000050 $d
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2314   .text:0000005c $a
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2317   .text:0000005c dormir_procesador
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2344   .text:00000074 Latido_ev_new_tick
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2412   .text:0000010c $d
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2417   .text:00000114 $a
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2420   .text:00000114 tiempo_juego_ev_tick
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2462   .text:00000160 $d
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2466   .text:00000164 $a
+C:\Users\pjper\AppData\Local\Temp\ccBj6pKI.s:2469   .text:00000164 reversi_main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
 timer_init
 led1_off
 botones_antirebotes_inicializar
+tsp_antirebotes_inicializar
 inicializar_jugada_botones
 led1_on
 jugada_ev_timer
 pop_debug
 button_ev_tick0
+tsp_ev_tick0
+tec_ev_tick0
 button_ev_pulsacion
 jugada_ev_izq
 jugada_ev_der
 termina_DMA
+tsp_ev_pulsacion
 jugada_ev_tsp
+tec_ev_pulsacion
+jugada_ev_tecla0
+jugada_ev_tecla1
 esVacia

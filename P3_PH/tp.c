@@ -25,70 +25,27 @@ void TSInt(void) __attribute__((interrupt("IRQ")));
 ********************************************************************************************/
 void TSInt(void)
 {
+	rINTMSK |= (BIT_EINT2);	//Deshabilitamos interrupcion linea eint1 en vector de mascaras para el antirebotes de tsp
 	push_debug(ev_tsp, no_info);
-	rI_ISPC |= BIT_EINT2;
-	/*
-    int   i;
-    char fail = 0;
-    ULONG tmp;
-    ULONG Pt[6];
-
-	// <X-Position Read>
-	// TSPX(GPE4_Q4(+)) TSPY(GPE5_Q3(-)) TSMY(GPE6_Q2(+)) TSMX(GPE7_Q1(-))
-    //       0               1                 1                0
-	rPDATE=0x68;
-	rADCCON=0x1<<2;			// AIN1
-	
-	Delay(1000);                // delay to set up the next channel
-	for( i=0; i<5; i++ )
-	{
-		rADCCON |= 0x1;				// Start X-position A/D conversion
-	    while( rADCCON & 0x1 );		// Check if Enable_start is low
-    	while( !(rADCCON & 0x40) );	// Check ECFLG
-	    Pt[i] = (0x3ff&rADCDAT);
-	}
-	// read X-position average value
-	Pt[5] = (Pt[0]+Pt[1]+Pt[2]+Pt[3]+Pt[4])/5;
-	
-	tmp = Pt[5];	
-	
-    // <Y-Position Read>
-	// TSPX(GPE4_Q4(-)) TSPY(GPE5_Q3(+)) TSMY(GPE6_Q2(-)) TSMX(GPE7_Q1(+))
-    //       1               0                 0                1
-	rPDATE=0x98;
-	rADCCON=0x0<<2;		        	// AIN0
-	
-	Delay(1000);                // delay to set up the next channel
-	for( i=0; i<5; i++ )
-	{
-    	rADCCON |= 0x1;             // Start Y-position conversion
-	    while( rADCCON & 0x1 );     // Check if Enable_start is low
-    	while( !(rADCCON & 0x40) ); // Check ECFLG
-	    Pt[i] = (0x3ff&rADCDAT);
-	}
-	// read Y-position average value
-	Pt[5] = (Pt[0]+Pt[1]+Pt[2]+Pt[3]+Pt[4])/5;
-     
-	if(!(CheckTSP|(tmp < Xmin)|(tmp > Xmax)|(Pt[5] < Ymin)|(Pt[5] > Ymax)))   // Is valid value?
-	  {
-		tmp = 320*(tmp - Xmin)/(Xmax - Xmin);   // X - position
-//		Uart_Printf("X-Posion[AIN1] is %04d   ", tmp);
-			
-		Pt[5] = 240*(Pt[5] - Xmin)/(Ymax - Ymin);
-//		Uart_Printf("  Y-Posion[AIN0] is %04d\n", Pt[5]);
-      }
-
-    if(CheckTSP)
- 	//----------- check to ensure Xmax Ymax Xmin Ymin ------------
- 	    DesignREC(tmp,Pt[5]);
-
-	rPDATE = 0xb8;                  // should be enabled	
-	Delay(3000);                // delay to set up the next channel
-
-    rI_ISPC = BIT_EINT2;            // clear pending_bit
-    */
+	rI_ISPC |= BIT_EINT2;	//Limpiar bit pendiente en INTPND
+	//El código que había aquí ha sido eliminado porque no nos hace falta
 }
 			
+/*********************************************************************************************
+* name:		tsp_resetear()
+* func:		Rehabilita las interrupciones en tsp
+* para:		none
+* ret:		none
+* modify:
+* comment:
+*********************************************************************************************/
+void tsp_resetear(void)
+{
+	/* Por precaucion, se vuelven a borrar los bits de INTPND */
+	rI_ISPC   |= BIT_EINT2;			// borra el bit pendiente en INTPND
+	rINTMSK    &= ~(BIT_EINT2); 	// habilitamos interrupcion linea eint4567 en vector de mascaras
+}
+
 /*********************************************************************************************
 * name:		TS_init
 * func:		initialize TouchScreen
@@ -111,7 +68,7 @@ void TS_init(void)
     //Delay(100);
     
     rEXTINT |= 0x200;                // falling edge trigger
-    pISR_EINT2=(unsigned *)TSInt;       // set interrupt handler
+    pISR_EINT2=(unsigned *)TSInt;    // set interrupt handler
     
     rCLKCON = 0x7ff8;                // enable clock
     rADCPSR = 0x1;//0x4;             // A/D prescaler

@@ -5,5 +5,6 @@
 
 void init_keyboard(void);
 void close_keyboard(void);
+void tec_resetear(void);
 
 #endif /* __keyboard_H__ */

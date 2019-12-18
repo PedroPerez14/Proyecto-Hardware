@@ -10,7 +10,8 @@
 #include "44blib.h"
 #include "def.h"
 #include "keyboard.h"
-
+#include "codigos_eventos.h"
+#include "cola_depuracion.h"
 
 /*--- global variables ---*/
 
@@ -83,18 +84,34 @@ void close_keyboard()
 ********************************************************************************************/
 void KeyboardInt(void)
 {
+	rINTMOD |= (BIT_EINT1); 		// Desactiva las interrupciones de EINT1 para el antirebotes
 	int value;
 	rI_ISPC |= BIT_EINT1;			// clear pending bit
 	
 	teclaPulsada = key_read();
 
 	if (teclaPulsada == 0) {
-		push_debug(ev_keyboard, tecla_0)
+		push_debug(ev_keyboard, tecla_0);
 	}
 	else if (teclaPulsada == 0) {
-		push_debug(ev_keyboard, tecla_1)
+		push_debug(ev_keyboard, tecla_1);
 	}
 
+}
+
+/*********************************************************************************************
+* name:		tec_resetear()
+* func:		Rehabilita las interrupciones en teclado
+* para:		none
+* ret:		none
+* modify:
+* comment:
+*********************************************************************************************/
+void tec_resetear(void)
+{
+	/* Por precaucion, se vuelven a borrar los bits de INTPND */
+	rI_ISPC   |= (BIT_EINT1);			// borra el bit pendiente en INTPND
+	rINTMSK    &= ~(BIT_EINT1); 		// habilitamos interrupcion linea eint1 en vector de mascaras
 }
 
 /*********************************************************************************************

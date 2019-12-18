@@ -26,4 +26,4 @@ void TS_close(void);
 void Lcd_TC(void);
 void DesignREC(ULONG tx, ULONG ty);
 void Check_Sel(void);
-//void user_irq1(void);
+void tsp_resetear(void);

@@ -1,0 +1,328 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"teclado_antirebotes.c"
+  21              	.Ltext0:
+  22              		.file 1 "../teclado_antirebotes.c"
+ 2181              		.align	2
+ 2184              	t_tec_espera_ticks_timer0:
+ 2185 0000 1E000000 		.word	30
+ 2186              		.bss
+ 2187              		.align	2
+ 2188              	cuenta_ticks_tec:
+ 2189 0000 00000000 		.space	4
+ 2190              		.align	2
+ 2191              	atendiendo_pulsacion_tec:
+ 2192 0004 00000000 		.space	4
+ 2193              	maquina_estados_tec:
+ 2194 0008 00       		.space	1
+ 2195 0009 000000   		.text
+ 2196              		.align	2
+ 2197              		.global	tec_antirebotes_inicializar
+ 2199              	tec_antirebotes_inicializar:
+ 2200              	.LFB0:
+   1:../teclado_antirebotes.c **** /*********************************************************************************************
+   2:../teclado_antirebotes.c **** * Fichero:		teclado_antirebotes.h
+   3:../teclado_antirebotes.c **** * Autor:		Pedro José Pérez García (756642) y Fernando Peña Bes (756012)
+   4:../teclado_antirebotes.c **** * Descrip:		Máquina de estados que elimina los rebotes del teclado matricial.
+   5:../teclado_antirebotes.c **** * Version:
+   6:../teclado_antirebotes.c **** *********************************************************************************************/
+   7:../teclado_antirebotes.c **** 
+   8:../teclado_antirebotes.c **** /*--- ficheros de cabecera ---*/
+   9:../teclado_antirebotes.c **** #include "led.h"
+  10:../teclado_antirebotes.c **** #include "44b.h"
+  11:../teclado_antirebotes.c **** #include "44blib.h"
+  12:../teclado_antirebotes.c **** #include "teclado_antirebotes.h"
+  13:../teclado_antirebotes.c **** #include "keyboard.h"
+  14:../teclado_antirebotes.c **** #include "cola_depuracion.h"
+  15:../teclado_antirebotes.c **** #include "codigos_eventos.h"
+  16:../teclado_antirebotes.c **** #include "jugada_por_botones.h"
+  17:../teclado_antirebotes.c **** 
+  18:../teclado_antirebotes.c **** /*--- variables del módulo ---*/
+  19:../teclado_antirebotes.c **** 
+  20:../teclado_antirebotes.c **** static const int t_tec_espera_ticks_timer0 = 30;	//TODO para probarlo usa un valor exagerado
+  21:../teclado_antirebotes.c **** static int cuenta_ticks_tec = 0;
+  22:../teclado_antirebotes.c **** static int atendiendo_pulsacion_tec = 0;
+  23:../teclado_antirebotes.c **** 
+  24:../teclado_antirebotes.c **** /*
+  25:../teclado_antirebotes.c ****    Los valores se pueden cambiar en función de la placa para controlar mejor los rebotes
+  26:../teclado_antirebotes.c **** 	Desactivamos las interrupciones durante 30 ticks = 30 * 1/60 seg = 0.5 segundos.
+  27:../teclado_antirebotes.c **** */
+  28:../teclado_antirebotes.c **** static enum estados_tec_antirebotes{Inicio, deshabilitadas_int} maquina_estados_tec;
+  29:../teclado_antirebotes.c **** //Estados de la máquina de estados
+  30:../teclado_antirebotes.c **** 
+  31:../teclado_antirebotes.c **** void tec_antirebotes_inicializar()
+  32:../teclado_antirebotes.c **** {
+ 2201              		.loc 1 32 0
+ 2202              		.cfi_startproc
+ 2203              		@ Function supports interworking.
+ 2204              		@ args = 0, pretend = 0, frame = 0
+ 2205              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2206 0000 0DC0A0E1 		mov	ip, sp
+ 2207              	.LCFI0:
+ 2208              		.cfi_def_cfa_register 12
+ 2209 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2210 0008 04B04CE2 		sub	fp, ip, #4
+ 2211              		.cfi_offset 14, -8
+ 2212              		.cfi_offset 13, -12
+ 2213              		.cfi_offset 11, -16
+ 2214              	.LCFI1:
+ 2215              		.cfi_def_cfa 11, 4
+  33:../teclado_antirebotes.c **** 	maquina_estados_tec = Inicio;
+ 2216              		.loc 1 33 0
+ 2217 000c 28309FE5 		ldr	r3, .L2
+ 2218 0010 0020A0E3 		mov	r2, #0
+ 2219 0014 0020C3E5 		strb	r2, [r3, #0]
+  34:../teclado_antirebotes.c **** 	cuenta_ticks_tec = 0;
+ 2220              		.loc 1 34 0
+ 2221 0018 20309FE5 		ldr	r3, .L2+4
+ 2222 001c 0020A0E3 		mov	r2, #0
+ 2223 0020 002083E5 		str	r2, [r3, #0]
+  35:../teclado_antirebotes.c **** 	atendiendo_pulsacion_tec = 0; 			//Inicialmente no se está atendiendo ninguna pulsación, por eso s
+ 2224              		.loc 1 35 0
+ 2225 0024 18309FE5 		ldr	r3, .L2+8
+ 2226 0028 0020A0E3 		mov	r2, #0
+ 2227 002c 002083E5 		str	r2, [r3, #0]
+  36:../teclado_antirebotes.c **** }
+ 2228              		.loc 1 36 0
+ 2229 0030 0CD04BE2 		sub	sp, fp, #12
+ 2230 0034 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2231 0038 1EFF2FE1 		bx	lr
+ 2232              	.L3:
+ 2233              		.align	2
+ 2234              	.L2:
+ 2235 003c 08000000 		.word	maquina_estados_tec
+ 2236 0040 00000000 		.word	cuenta_ticks_tec
+ 2237 0044 04000000 		.word	atendiendo_pulsacion_tec
+ 2238              		.cfi_endproc
+ 2239              	.LFE0:
+ 2241              		.align	2
+ 2242              		.global	tec_antirebotes
+ 2244              	tec_antirebotes:
+ 2245              	.LFB1:
+  37:../teclado_antirebotes.c **** 
+  38:../teclado_antirebotes.c **** void tec_antirebotes(void)
+  39:../teclado_antirebotes.c **** {
+ 2246              		.loc 1 39 0
+ 2247              		.cfi_startproc
+ 2248              		@ Function supports interworking.
+ 2249              		@ args = 0, pretend = 0, frame = 0
+ 2250              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2251 0048 0DC0A0E1 		mov	ip, sp
+ 2252              	.LCFI2:
+ 2253              		.cfi_def_cfa_register 12
+ 2254 004c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2255 0050 04B04CE2 		sub	fp, ip, #4
+ 2256              		.cfi_offset 14, -8
+ 2257              		.cfi_offset 13, -12
+ 2258              		.cfi_offset 11, -16
+ 2259              	.LCFI3:
+ 2260              		.cfi_def_cfa 11, 4
+  40:../teclado_antirebotes.c **** 	switch(maquina_estados_tec)
+ 2261              		.loc 1 40 0
+ 2262 0054 64309FE5 		ldr	r3, .L13
+ 2263 0058 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2264 005c 000053E3 		cmp	r3, #0
+ 2265 0060 0700001A 		bne	.L10
+ 2266              	.L6:
+  41:../teclado_antirebotes.c **** 	{
+  42:../teclado_antirebotes.c **** 		case Inicio :
+  43:../teclado_antirebotes.c **** 			if(atendiendo_pulsacion_tec)
+ 2267              		.loc 1 43 0
+ 2268 0064 58309FE5 		ldr	r3, .L13+4
+ 2269 0068 003093E5 		ldr	r3, [r3, #0]
+ 2270 006c 000053E3 		cmp	r3, #0
+ 2271 0070 0C00000A 		beq	.L11
+  44:../teclado_antirebotes.c **** 			{
+  45:../teclado_antirebotes.c **** 				//Las interrupciones de tec se deshabilitan en el propio tec por si acaso
+  46:../teclado_antirebotes.c **** 				maquina_estados_tec = deshabilitadas_int;
+ 2272              		.loc 1 46 0
+ 2273 0074 44309FE5 		ldr	r3, .L13
+ 2274 0078 0120A0E3 		mov	r2, #1
+ 2275 007c 0020C3E5 		strb	r2, [r3, #0]
+  47:../teclado_antirebotes.c **** 			}
+  48:../teclado_antirebotes.c **** 			break;
+ 2276              		.loc 1 48 0
+ 2277 0080 0B0000EA 		b	.L4
+ 2278              	.L10:
+  49:../teclado_antirebotes.c **** 		default: //Si estamos en deshabilitadas_int
+  50:../teclado_antirebotes.c **** 			if(cuenta_ticks_tec == t_tec_espera_ticks_timer0)
+ 2279              		.loc 1 50 0
+ 2280 0084 3C309FE5 		ldr	r3, .L13+8
+ 2281 0088 002093E5 		ldr	r2, [r3, #0]
+ 2282 008c 38309FE5 		ldr	r3, .L13+12
+ 2283 0090 003093E5 		ldr	r3, [r3, #0]
+ 2284 0094 030052E1 		cmp	r2, r3
+ 2285 0098 0400001A 		bne	.L12
+  51:../teclado_antirebotes.c **** 			{	//Si ha pasado trd, rehabilitamos interrupciones tec y volvemos a admitir el procesado de otra
+  52:../teclado_antirebotes.c **** 				tec_resetear();
+ 2286              		.loc 1 52 0
+ 2287 009c FEFFFFEB 		bl	tec_resetear
+  53:../teclado_antirebotes.c **** 				tec_antirebotes_inicializar();
+ 2288              		.loc 1 53 0
+ 2289 00a0 FEFFFFEB 		bl	tec_antirebotes_inicializar
+  54:../teclado_antirebotes.c **** 			}
+  55:../teclado_antirebotes.c **** 			break;
+ 2290              		.loc 1 55 0
+ 2291 00a4 020000EA 		b	.L4
+ 2292              	.L11:
+  48:../teclado_antirebotes.c **** 			break;
+ 2293              		.loc 1 48 0
+ 2294 00a8 0000A0E1 		mov	r0, r0	@ nop
+ 2295 00ac 000000EA 		b	.L4
+ 2296              	.L12:
+ 2297              		.loc 1 55 0
+ 2298 00b0 0000A0E1 		mov	r0, r0	@ nop
+ 2299              	.L4:
+  56:../teclado_antirebotes.c **** 	}
+  57:../teclado_antirebotes.c **** }
+ 2300              		.loc 1 57 0
+ 2301 00b4 0CD04BE2 		sub	sp, fp, #12
+ 2302 00b8 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2303 00bc 1EFF2FE1 		bx	lr
+ 2304              	.L14:
+ 2305              		.align	2
+ 2306              	.L13:
+ 2307 00c0 08000000 		.word	maquina_estados_tec
+ 2308 00c4 04000000 		.word	atendiendo_pulsacion_tec
+ 2309 00c8 00000000 		.word	cuenta_ticks_tec
+ 2310 00cc 00000000 		.word	t_tec_espera_ticks_timer0
+ 2311              		.cfi_endproc
+ 2312              	.LFE1:
+ 2314              		.align	2
+ 2315              		.global	tec_ev_pulsacion
+ 2317              	tec_ev_pulsacion:
+ 2318              	.LFB2:
+  58:../teclado_antirebotes.c **** 
+  59:../teclado_antirebotes.c **** void tec_ev_pulsacion()
+  60:../teclado_antirebotes.c **** {
+ 2319              		.loc 1 60 0
+ 2320              		.cfi_startproc
+ 2321              		@ Function supports interworking.
+ 2322              		@ args = 0, pretend = 0, frame = 0
+ 2323              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2324 00d0 0DC0A0E1 		mov	ip, sp
+ 2325              	.LCFI4:
+ 2326              		.cfi_def_cfa_register 12
+ 2327 00d4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2328 00d8 04B04CE2 		sub	fp, ip, #4
+ 2329              		.cfi_offset 14, -8
+ 2330              		.cfi_offset 13, -12
+ 2331              		.cfi_offset 11, -16
+ 2332              	.LCFI5:
+ 2333              		.cfi_def_cfa 11, 4
+  61:../teclado_antirebotes.c **** 	if(!atendiendo_pulsacion_tec)
+ 2334              		.loc 1 61 0
+ 2335 00dc 24309FE5 		ldr	r3, .L17
+ 2336 00e0 003093E5 		ldr	r3, [r3, #0]
+ 2337 00e4 000053E3 		cmp	r3, #0
+ 2338 00e8 0300001A 		bne	.L15
+  62:../teclado_antirebotes.c **** 	{
+  63:../teclado_antirebotes.c **** 		atendiendo_pulsacion_tec = 1;
+ 2339              		.loc 1 63 0
+ 2340 00ec 14309FE5 		ldr	r3, .L17
+ 2341 00f0 0120A0E3 		mov	r2, #1
+ 2342 00f4 002083E5 		str	r2, [r3, #0]
+  64:../teclado_antirebotes.c **** 		tec_antirebotes();					//Se avisa a la máquina de estados para que inicie su ejecución
+ 2343              		.loc 1 64 0
+ 2344 00f8 FEFFFFEB 		bl	tec_antirebotes
+ 2345              	.L15:
+  65:../teclado_antirebotes.c **** 	}
+  66:../teclado_antirebotes.c **** }
+ 2346              		.loc 1 66 0
+ 2347 00fc 0CD04BE2 		sub	sp, fp, #12
+ 2348 0100 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2349 0104 1EFF2FE1 		bx	lr
+ 2350              	.L18:
+ 2351              		.align	2
+ 2352              	.L17:
+ 2353 0108 04000000 		.word	atendiendo_pulsacion_tec
+ 2354              		.cfi_endproc
+ 2355              	.LFE2:
+ 2357              		.align	2
+ 2358              		.global	tec_ev_tick0
+ 2360              	tec_ev_tick0:
+ 2361              	.LFB3:
+  67:../teclado_antirebotes.c **** 
+  68:../teclado_antirebotes.c **** void tec_ev_tick0(void)
+  69:../teclado_antirebotes.c **** {	//Solo se incrementa el contador si es útil para la máquina de estados
+ 2362              		.loc 1 69 0
+ 2363              		.cfi_startproc
+ 2364              		@ Function supports interworking.
+ 2365              		@ args = 0, pretend = 0, frame = 0
+ 2366              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2367 010c 0DC0A0E1 		mov	ip, sp
+ 2368              	.LCFI6:
+ 2369              		.cfi_def_cfa_register 12
+ 2370 0110 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2371 0114 04B04CE2 		sub	fp, ip, #4
+ 2372              		.cfi_offset 14, -8
+ 2373              		.cfi_offset 13, -12
+ 2374              		.cfi_offset 11, -16
+ 2375              	.LCFI7:
+ 2376              		.cfi_def_cfa 11, 4
+  70:../teclado_antirebotes.c **** 	//	por tanto, si no estamos atendiendo ningún evento de pulsación no
+  71:../teclado_antirebotes.c **** 	//	nos molestamos en hacer nada
+  72:../teclado_antirebotes.c **** 	if(atendiendo_pulsacion_tec)
+ 2377              		.loc 1 72 0
+ 2378 0118 2C309FE5 		ldr	r3, .L21
+ 2379 011c 003093E5 		ldr	r3, [r3, #0]
+ 2380 0120 000053E3 		cmp	r3, #0
+ 2381 0124 0500000A 		beq	.L19
+  73:../teclado_antirebotes.c **** 	{
+  74:../teclado_antirebotes.c **** 		cuenta_ticks_tec += 1;
+ 2382              		.loc 1 74 0
+ 2383 0128 20309FE5 		ldr	r3, .L21+4
+ 2384 012c 003093E5 		ldr	r3, [r3, #0]
+ 2385 0130 012083E2 		add	r2, r3, #1
+ 2386 0134 14309FE5 		ldr	r3, .L21+4
+ 2387 0138 002083E5 		str	r2, [r3, #0]
+  75:../teclado_antirebotes.c **** 		tec_antirebotes();
+ 2388              		.loc 1 75 0
+ 2389 013c FEFFFFEB 		bl	tec_antirebotes
+ 2390              	.L19:
+  76:../teclado_antirebotes.c **** 	}
+  77:../teclado_antirebotes.c **** }
+ 2391              		.loc 1 77 0
+ 2392 0140 0CD04BE2 		sub	sp, fp, #12
+ 2393 0144 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2394 0148 1EFF2FE1 		bx	lr
+ 2395              	.L22:
+ 2396              		.align	2
+ 2397              	.L21:
+ 2398 014c 04000000 		.word	atendiendo_pulsacion_tec
+ 2399 0150 00000000 		.word	cuenta_ticks_tec
+ 2400              		.cfi_endproc
+ 2401              	.LFE3:
+ 2403              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 teclado_antirebotes.c
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2181   .rodata:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2184   .rodata:00000000 t_tec_espera_ticks_timer0
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2187   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2188   .bss:00000000 cuenta_ticks_tec
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2191   .bss:00000004 atendiendo_pulsacion_tec
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2193   .bss:00000008 maquina_estados_tec
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2196   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2199   .text:00000000 tec_antirebotes_inicializar
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2235   .text:0000003c $d
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2241   .text:00000048 $a
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2244   .text:00000048 tec_antirebotes
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2307   .text:000000c0 $d
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2314   .text:000000d0 $a
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2317   .text:000000d0 tec_ev_pulsacion
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2353   .text:00000108 $d
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2357   .text:0000010c $a
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2360   .text:0000010c tec_ev_tick0
+C:\Users\pjper\AppData\Local\Temp\ccIpgZAN.s:2398   .text:0000014c $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+tec_resetear

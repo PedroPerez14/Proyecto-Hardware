@@ -169,27 +169,46 @@ void pintar_prueba()
 void pintar_reglas()
 {
 	Lcd_Active_Clr();
-	Lcd_DspAscII8x16(1,30,BLACK,"REGLAS");
+	Lcd_DspAscII8x16(1,30,BLACK,"REVERSI 8");
+
+
+	Lcd_DspAscII8x16(1,50,BLACK,"En cada turno, coloca una ficha que voltee");
+	Lcd_DspAscII8x16(1,60,BLACK,"alguna del rival.");
+
+	Lcd_DspAscII8x16(1,80,BLACK,"El juego termina cuando nadie puede");
+	Lcd_DspAscII8x16(1,70,BLACK,"mover. El jugador que tenga más fichas");
+	Lcd_DspAscII8x16(1,90,BLACK,"volteadas con su color, gana.");
+
+
+	Lcd_DspAscII8x16(1,110,BLACK,"Selecciona una posición con los botones");
+	Lcd_DspAscII8x16(1,120,BLACK,"y coloca tu ficha tocando la pantalla.");
+
+
+
+
+	Lcd_DspAscII8x16(1,180,BLACK,"Pedro José Pérez García");
+	Lcd_DspAscII8x16(1,190,BLACK,"Fernando Peña");
+
 	Lcd_Dma_Trans();
 }
 
 void pintar_fin_victoria(int blancas, int negras)
 {
-	Lcd_Active_Clr();
+	Lcd_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"HAS GANADO!");
 	Lcd_Dma_Trans();
 }
 
 void pintar_fin_derrota(int blancas, int negras)
 {
-	Lcd_Active_Clr();
+	Lcd_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"HAS PERDIDO, TROZO DE ESCORIA!");
 	Lcd_Dma_Trans();
 }
 
 void pintar_fin_empate(int blancas, int negras)
 {
-	Lcd_Active_Clr();
+	Lcd_Clr();
 	Lcd_DspAscII8x16(1,30,BLACK,"ERES TAN INÚTIL QUE NO GANAS PERO");
 	Lcd_DspAscII8x16(1,50,BLACK,"TAMPOCO PIERDES CON UNA PUTA CPU!");
 	Lcd_Dma_Trans();
