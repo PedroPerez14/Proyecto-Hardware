@@ -1,0 +1,188 @@
+\documentclass[landscape,a4paper]{article}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{underscore}
+\usepackage[utf8]{inputenc}
+
+\usepackage{float}
+\usepackage{booktabs}
+
+% Comando para poner la etiqueta de un arco del grafo de forma horizontal
+\newcommand{\ltag}[2]{\ttfamily\footnotesize \begin{tabular}{l}#1\end{tabular}\rmfamily\huge/\normalsize\ttfamily\footnotesize\begin{tabular}{l}#2\end{tabular}}
+% Comando para poner la etiqueta de un arco del grafo de forma vertical
+\newcommand{\ptag}[2]{\ttfamily\footnotesize \begin{tabular}{l}#1\end{tabular}\\\rmfamily\huge/\normalsize\ttfamily\footnotesize\begin{tabular}{l}#2\end{tabular}}
+% Espacio horizontal para simular tabulado dentro de entorno tabular
+\newcommand{\tab}{\hspace{0.2cm}}
+
+
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows, shapes.geometric}
+\tikzset{
+	->, % hace que los arcos sean dirigidos
+	>=stealth, % las cabezas de las flechas son en negrita
+	node distance=3cm, % Especifica la mínima distancia entre dos nodos, se puede cambiar si es necesario.
+	every state/.style={thick, fill=gray!10}, % establece las propiedades para cada nodo estado. En tickz cada objeto que se pone es un nodo. Se pueden poner arcos entre esos nodos.
+	initial text=$ $, % establece el texto que aparece en la flecha inicial
+	elliptic state/.style={draw,ellipse},
+}
+
+\definecolor{error}{rgb}{1,0.4,0.4}
+
+\definecolor{bien}{rgb}{0.8, 1, 0.5}
+
+\begin{document}
+{\Large \bf \sffamily Práctica 3 Proyecto Hardware - Máquinas de estados}
+
+{\sffamily \large Fernando Peña Bes (NIA: 756012) y Pedro José Pérez García (NIA: 756642)}
+
+\emph{\sffamily \large  Curso 2019-20, Universidad de Zaragoza}
+
+\vspace{2cm}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[thick,scale=1, every node/.style={scale=1}]
+	\node[elliptic state, initial, align=center] (q0) {\bf Reglas};
+	\node[elliptic state, above of=q0, xshift=7cm, yshift=5cm, align=center] (q1) {\bf Fin};
+	\node[elliptic state, right of=q0, xshift=10cm, align=center] (q2) {\bf Jugando};
+	
+	
+	\draw
+
+	% Estado Reglas
+	(q0) edge[loop, in=100, out=130, looseness=10, above, align=center] node {\ptag{ev_bot_iz == 1}{ev_bot_iz = 0}} (q0)
+	(q0) edge[loop, in=220, out=240, looseness=20, below, align=center] node {\ptag{ev_bot_der == 1}{ev_bot_der = 0}} (q0)
+	(q0) edge[loop, in=300, out=320, looseness=10, below right, align=center] node {\ptag{ev_tp == 1 \&\& \\ haciendo_DMA == 1}{ev_tp = 0}} (q0)
+
+	(q0) edge[below, align=center] node {\ptag{ev_tp == 1 \&\& haciendo_DMA == 0}{ev_tp = 0, \\ haciendo_DMA = 1, \\ pintar_jugando()}} (q2)
+
+
+	% Estado Jugando
+	(q2) edge[loop, out=210, in=230, looseness=30, below, align=left] node {\ptag{haciendo_DMA == 0 \&\& \\ ev_timer >\ 0}{\\ev_timer--, \\ tiempo_total++, \\ haciendo_DMA = 1, \\ pintar_profiling(tiempo_total, ...) }} (q2)
+	
+
+	(q2) edge[loop, out=330, in=340, looseness=70, below right, align=center] node {\ptag{ev_bot_der == 1 \&\& \\ haciendo_DMA == 1}{ev_bot_der = 0}} (q2)
+	(q2) edge[loop, out=300, in=320, looseness=50, below, align=center] node {\ptag{ev_bot_izq == 1 \&\& \\ haciendo_DMA == 1}{ev_bot_izq = 0}} (q2)
+	
+
+	(q2) edge[loop, out=350, in=360, looseness=40, right, align=center] node {\ptag{ev_tp == 1 \&\& \\ haciendo_DMA == 1}{ev_tp = 0}} (q2)
+
+
+	(q2) edge[loop, out=20, in=30, looseness=70, right, align=left] node {\ptag{ev_bot_der == 1 \&\& haciendo_DMA == 0}{\\ev_bot_der = 0, \\ haciendo_DMA = 1, \\ calcular_mov_gris(), \\ mover_gris(mi_fila, mi_columna, aux, aux2)}} (q2)
+	(q2) edge[loop, out=70, in=90, looseness=80, above right, align=left] node {\ptag{ev_bot_izq == 1 \&\& haciendo_DMA == 0}{\\ev_bot_izq = 0, \\ haciendo_DMA = 1, \\ calcular_mov_gris(), \\ mover_gris(mi_fila, mi_columna, aux, aux2)}} (q2)
+
+
+
+	(q2) edge[loop, out=140, in=160, looseness=20, left, align=center] node {\ptag{ev_tp == 1 \&\& \\ haciendo_DMA == 0}{haciendo_DMA = 1, \\ procesar_jugada()}} (q2)
+
+
+	% A estado fin
+
+	(q2) edge[above, align=center, sloped] node {\ptag{haciendo_DMA == 0 \&\& final != no_fin}{pintar_fin(), \\ haciendo_DMA = 1}} (q1)
+
+
+
+	% Estado Fin
+	(q1) edge[align=center, above, sloped] node {\ptag{haciendo_DMA == 0 \&\& ev_tp == 1}{ev_tp = 0, LCD_Clr(), \\ inicializar_jugada_botones()}} (q0)
+
+	
+	%(q3) edge[loop, in=30, out=60, looseness=8, right] node{\ltag{latido 0 de C\\ E = []} {nuevaVista \\ V = \{_,_,_\} \\ T = \{n+1,P,C\} \\ send T}} (q3)
+
+	% Q4
+	% Q4 a Q5
+	
+	
+	
+	
+	% Recibir de nodos que no son ni P ni C
+	%(q4) edge[loop, out=40, in=65, looseness=20, sloped, above, align=center] node{\ptag{latido != (P|C) \\ latido not 0 de P o C}{manda T \\ \emph{if} not in E, \\ \tab\tab \emph{do:} E ++ [nodo]}} (q4)
+
+
+			   ;
+\end{tikzpicture}
+\caption{Autómata de \texttt{jugada_por_botones.c}}
+\end{figure}
+
+\pagebreak
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}[thick,scale=1, every node/.style={scale=1}]
+		\node[elliptic state, initial, align=center] (q1) {\bf  Inicio};
+		\node[elliptic state, right of=q1, xshift=10cm, align=center] (q2) {\bf Contando \tt trp};
+		\node[elliptic state, below of=q1, yshift=-7cm, align=center] (q4) {\bf Contando \tt trd};
+		\node[elliptic state, below of=q2, yshift=-7cm, align=center] (q3) {\bf Encuestando cada 30\,ms};
+		
+		\draw 	
+		
+		
+				(q1) edge[below, align=center] node{\ptag{atendiendoPulsacion == 1}{cuenta_ticks = 0}} (q2)
+
+				(q2) edge[above, align=center, sloped] node{\ptag{cuenta_ticks == trp_en_ticks_timer0}{cuenta_ticks = 0}} (q3)
+
+
+
+
+				(q3) edge[loop, right, out=20, in=10, looseness=15, align=left] node{        \ptag{cuenta_ticks == TICKS_PARA_30_MS \&\& \\ button_estado() == que_button \&\& \\ cuenta_autoincremento == int_timer0_enable_autoincr \&\& \\ que_button == button_iz}{cuenta_autoincremento = 0, \\ hay_autoincremento = 1, \\ jugada_ev_izq()}} (q3)
+				(q3) edge[loop, below right, out=345, in=350, looseness=22, align=left] node{\ptag{cuenta_ticks == TICKS_PARA_30_MS \&\& \\ button_estado() == que_button \&\& \\ cuenta_autoincremento == int_timer0_enable_autoincr \&\& \\ que_button == button_dr}{cuenta_autoincremento = 0, \\ hay_autoincremento = 1, \\ jugada_ev_der()}} (q3)
+				(q3) edge[loop, above, out=140, in=160, looseness=30, align=left] node{      \ptag{cuenta_ticks == TICKS_PARA_30_MS \&\& \\ button_estado() == que_button \&\& \\ hay_autoincremento \&\& \\ cuenta_autoincremento == int_timer0_enable_autoincr \&\& \\ que_button == button_iz}{cuenta_autoincremento = 0, \\ jugada_ev_izq()}} (q3)
+				(q3) edge[loop, out=260, in=290, looseness=30, below, align=left] node{      \ptag{cuenta_ticks == TICKS_PARA_30_MS \&\& \\ button_estado() == que_button \&\& \\ hay_autoincremento \&\& \\ cuenta_autoincremento == int_timer0_enable_autoincr \&\& \\ que_button == button_dr}{cuenta_autoincremento = 0, \\ jugada_ev_der()}} (q3)
+
+
+
+
+
+
+				(q3) edge[below, align=center] node{\ptag{cuenta_ticks == TICKS_PARA_30_MS \&\& \\ button_estado() != que_button}{cuenta_ticks = 0, \\ cuenta_autoincremento = 0}} (q4)
+
+				(q4) edge[above, align=center, sloped] node{\ptag{cuenta_ticks == trd_en_ticks_timer0}{button_resetear(), \\ atendiendoPulsacion = 0,\\  cuenta_ticks = 0}} (q1)
+
+
+				;
+	\end{tikzpicture}
+	\caption{Autómata de \texttt{botones_antirebotes.c}}
+	\end{figure}
+
+	\pagebreak
+
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}[thick,scale=1, every node/.style={scale=1}]
+			\node[elliptic state, initial, align=center] (q1) {\bf  Inicio};
+			\node[elliptic state, right of=q1, xshift=10cm, align=center] (q2) {\bf Esperar \tt trd};
+			
+			\draw 	
+			
+			
+					(q1) edge[above, bend left, align=center] node{\ptag{atendiendoPulsacion == 1}{-}} (q2)
+	
+					(q2) edge[below, bend left, align=center] node{\ptag{cuenta_ticks_tsp == t_tsp_espera_ticks_timer0}{tsp_resetear(), \\ tsp_antirebotes_inicializar()}} (q1)
+	
+					;
+		\end{tikzpicture}
+		\caption{Autómata de \texttt{tsp_antirebotes.c}}
+		\end{figure}
+
+		\pagebreak
+
+		\begin{figure}[h]
+			\centering
+			\begin{tikzpicture}[thick,scale=1, every node/.style={scale=1}]
+				\node[elliptic state, initial, align=center] (q1) {\bf  Inicio};
+				\node[elliptic state, right of=q1, xshift=10cm, align=center] (q2) {\bf Esperar \tt trd};
+				
+				\draw 	
+				
+				
+						(q1) edge[above, bend left, align=center] node{\ptag{atendiendoPulsacion == 1}{-}} (q2)
+		
+						(q2) edge[below, bend left, align=center] node{\ptag{cuenta_ticks_tec == t_tec_espera_ticks_timer0}{tec_resetear(), \\ tec_antirebores_inicializar()}} (q1)
+		
+						;
+			\end{tikzpicture}
+			\caption{Autómata de \texttt{teclado_antirebotes.c}}
+			\end{figure}
+
+				   
+		       	
+	
+\end{document}
