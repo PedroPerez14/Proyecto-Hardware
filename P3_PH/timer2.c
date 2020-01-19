@@ -31,13 +31,11 @@ void timer2_ISR(void)
 void timer2_inicializar(void)
 {
 	/* Configuraion controlador de interrupciones */
-	rINTMOD |= BIT_TIMER2; //Configura la lÃ¯Â¿Â½nea del timer2 como IRQ
-	rINTCON &= 0x6; // Habilita int. vectorizadas y la linea IRQ, dejando FIQ como estuviera
-	rINTMSK &= ~(BIT_TIMER2); // habilitamos en vector de mascaras de interrupcion el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 estÃ¯Â¿Â½n definidos en 44b.h)
-
-	/* Establece la rutina de servicio para TIMER0 */
+	rINTMOD |= BIT_TIMER2; //Configura la línea del timer2 como IRQ
+	rINTCON &= 0x6; // Habilita int. vectorizadas y la linea FIQ, dejando IRQ como estuviera
+	rINTMSK &= ~(BIT_TIMER2); // habilitamos en vector de mascaras de interrupcion el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 están definidos en 44b.h)
+	/* Establece la rutina de servicio para TIMER2 */
 	pISR_FIQ = (unsigned) timer2_ISR;
-
 	/* Configura el Timer2 */
 	rTCFG0 &= 0xFFFF00FF; // ajusta el preescalado a 0
 	rTCFG1 &= 0xFFFFF0FF; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde a un divisor de 1/2.
@@ -62,15 +60,16 @@ unsigned int timer2_leer(void)
 {
 	unsigned int num_int_1 = timer2_num_int;
 	unsigned int num_int_2 = timer2_num_int;
-	if(num_int_2 > num_int_1) //Con esto, evitamos posibles incrementos no deseados en timer2_num_int
+	//Con esto, evitamos posibles incrementos no deseados en timer2_num_int
+	if(num_int_2 > num_int_1)
 	{
 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
-		//Si queremos optimizar, como la multiplicaciï¿½n es por 2048, se pueden mover los bits 16 lugares a al izquierda y en la divisiï¿½n, al ser por 32, se pueden mover 5 a la derecha.
+		//Si queremos optimizar, como la multiplicación es por 2048, se pueden mover los bits 16 lugares a al izquierda
+		// y en la división, al ser por 32, se pueden mover 5 a la derecha.
 	}
 	else
 	{
 		return num_int_1 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
-		//Si queremos optimizar, como la multiplicaciï¿½n es por 2048, se pueden mover los bits 16 lugares a al izquierda y en la divisiï¿½n, al ser por 32, se pueden mover 5 a la derecha.
 	}
 }
 

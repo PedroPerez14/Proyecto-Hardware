@@ -88,13 +88,13 @@
  2191              		@ frame_needed = 0, uses_anonymous_args = 0
  2192              		@ link register save eliminated.
   33:../timer2.c   **** 	/* Configuraion controlador de interrupciones */
-  34:../timer2.c   **** 	rINTMOD |= BIT_TIMER2; //Configura la lï¿½nea del timer2 como IRQ
+  34:../timer2.c   **** 	rINTMOD |= BIT_TIMER2; //Configura la l�nea del timer2 como IRQ
  2193              		.loc 1 34 0
  2194 0030 1E36A0E3 		mov	r3, #31457280
  2195 0034 08C093E5 		ldr	ip, [r3, #8]
  2196 0038 021B8CE3 		orr	r1, ip, #2048
  2197 003c 081083E5 		str	r1, [r3, #8]
-  35:../timer2.c   **** 	rINTCON &= 0x6; // Habilita int. vectorizadas y la linea IRQ, dejando FIQ como estuviera
+  35:../timer2.c   **** 	rINTCON &= 0x6; // Habilita int. vectorizadas y la linea FIQ, dejando IRQ como estuviera
  2198              		.loc 1 35 0
  2199 0040 000093E5 		ldr	r0, [r3, #0]
  2200 0044 062000E2 		and	r2, r0, #6
@@ -104,33 +104,31 @@
  2203 004c 0CC093E5 		ldr	ip, [r3, #12]
  2204 0050 021BCCE3 		bic	r1, ip, #2048
  2205 0054 0C1083E5 		str	r1, [r3, #12]
-  37:../timer2.c   **** 
-  38:../timer2.c   **** 	/* Establece la rutina de servicio para TIMER0 */
-  39:../timer2.c   **** 	pISR_FIQ = (unsigned) timer2_ISR;
-  40:../timer2.c   **** 
-  41:../timer2.c   **** 	/* Configura el Timer2 */
-  42:../timer2.c   **** 	rTCFG0 &= 0xFFFF00FF; // ajusta el preescalado a 0
- 2206              		.loc 1 42 0
+  37:../timer2.c   **** 	/* Establece la rutina de servicio para TIMER2 */
+  38:../timer2.c   **** 	pISR_FIQ = (unsigned) timer2_ISR;
+  39:../timer2.c   **** 	/* Configura el Timer2 */
+  40:../timer2.c   **** 	rTCFG0 &= 0xFFFF00FF; // ajusta el preescalado a 0
+ 2206              		.loc 1 40 0
  2207 0058 24309FE5 		ldr	r3, .L5
  2208 005c 000093E5 		ldr	r0, [r3, #0]
  2209 0060 FF2CC0E3 		bic	r2, r0, #65280
  2210 0064 002083E5 		str	r2, [r3, #0]
-  43:../timer2.c   **** 	rTCFG1 &= 0xFFFFF0FF; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde
- 2211              		.loc 1 43 0
+  41:../timer2.c   **** 	rTCFG1 &= 0xFFFFF0FF; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde
+ 2211              		.loc 1 41 0
  2212 0068 04C093E5 		ldr	ip, [r3, #4]
-  39:../timer2.c   **** 	pISR_FIQ = (unsigned) timer2_ISR;
- 2213              		.loc 1 39 0
+  38:../timer2.c   **** 	pISR_FIQ = (unsigned) timer2_ISR;
+ 2213              		.loc 1 38 0
  2214 006c 14009FE5 		ldr	r0, .L5+4
  2215 0070 14109FE5 		ldr	r1, .L5+8
- 2216              		.loc 1 43 0
+ 2216              		.loc 1 41 0
  2217 0074 0F2CCCE3 		bic	r2, ip, #3840
-  39:../timer2.c   **** 	pISR_FIQ = (unsigned) timer2_ISR;
- 2218              		.loc 1 39 0
+  38:../timer2.c   **** 	pISR_FIQ = (unsigned) timer2_ISR;
+ 2218              		.loc 1 38 0
  2219 0078 E30001E5 		str	r0, [r1, #-227]
- 2220              		.loc 1 43 0
+ 2220              		.loc 1 41 0
  2221 007c 042083E5 		str	r2, [r3, #4]
-  44:../timer2.c   **** }
- 2222              		.loc 1 44 0
+  42:../timer2.c   **** }
+ 2222              		.loc 1 42 0
  2223 0080 1EFF2FE1 		bx	lr
  2224              	.L6:
  2225              		.align	2
@@ -144,59 +142,59 @@
  2234              		.global	timer2_empezar
  2236              	timer2_empezar:
  2237              	.LFB2:
-  45:../timer2.c   **** 
-  46:../timer2.c   **** void timer2_empezar(void)
-  47:../timer2.c   **** {
- 2238              		.loc 1 47 0
+  43:../timer2.c   **** 
+  44:../timer2.c   **** void timer2_empezar(void)
+  45:../timer2.c   **** {
+ 2238              		.loc 1 45 0
  2239              		.cfi_startproc
  2240              		@ Function supports interworking.
  2241              		@ args = 0, pretend = 0, frame = 0
  2242              		@ frame_needed = 0, uses_anonymous_args = 0
  2243              		@ link register save eliminated.
-  48:../timer2.c   **** 	timer2_num_int = 0;	//Reinicia la variable que usamos para contar interrupciones.
-  49:../timer2.c   **** 
-  50:../timer2.c   **** 	rTCNTB2 = MAX_COUNT;// valor inicial de cuenta (la cuenta es descendente)
- 2244              		.loc 1 50 0
+  46:../timer2.c   **** 	timer2_num_int = 0;	//Reinicia la variable que usamos para contar interrupciones.
+  47:../timer2.c   **** 
+  48:../timer2.c   **** 	rTCNTB2 = MAX_COUNT;// valor inicial de cuenta (la cuenta es descendente)
+ 2244              		.loc 1 48 0
  2245 0090 48309FE5 		ldr	r3, .L8
-  48:../timer2.c   **** 	timer2_num_int = 0;	//Reinicia la variable que usamos para contar interrupciones.
- 2246              		.loc 1 48 0
+  46:../timer2.c   **** 	timer2_num_int = 0;	//Reinicia la variable que usamos para contar interrupciones.
+ 2246              		.loc 1 46 0
  2247 0094 48109FE5 		ldr	r1, .L8+4
- 2248              		.loc 1 50 0
+ 2248              		.loc 1 48 0
  2249 0098 48009FE5 		ldr	r0, .L8+8
-  48:../timer2.c   **** 	timer2_num_int = 0;	//Reinicia la variable que usamos para contar interrupciones.
- 2250              		.loc 1 48 0
+  46:../timer2.c   **** 	timer2_num_int = 0;	//Reinicia la variable que usamos para contar interrupciones.
+ 2250              		.loc 1 46 0
  2251 009c 0020A0E3 		mov	r2, #0
  2252 00a0 002081E5 		str	r2, [r1, #0]
- 2253              		.loc 1 50 0
+ 2253              		.loc 1 48 0
  2254 00a4 240083E5 		str	r0, [r3, #36]
-  51:../timer2.c   **** 	rTCMPB2 = COMP_VALUE;// valor de comparaciï¿½n
- 2255              		.loc 1 51 0
+  49:../timer2.c   **** 	rTCMPB2 = COMP_VALUE;// valor de comparaciï¿½n
+ 2255              		.loc 1 49 0
  2256 00a8 282083E5 		str	r2, [r3, #40]
-  52:../timer2.c   **** 	
-  53:../timer2.c   **** 	/* establecer update=manual (bit 13) */
-  54:../timer2.c   **** 	rTCON &= 0xFFFF0FFF;
- 2257              		.loc 1 54 0
+  50:../timer2.c   **** 	
+  51:../timer2.c   **** 	/* establecer update=manual (bit 13) */
+  52:../timer2.c   **** 	rTCON &= 0xFFFF0FFF;
+ 2257              		.loc 1 52 0
  2258 00ac 08C093E5 		ldr	ip, [r3, #8]
  2259 00b0 0F1ACCE3 		bic	r1, ip, #61440
  2260 00b4 081083E5 		str	r1, [r3, #8]
-  55:../timer2.c   **** 	rTCON |= 0x00002000;
- 2261              		.loc 1 55 0
+  53:../timer2.c   **** 	rTCON |= 0x00002000;
+ 2261              		.loc 1 53 0
  2262 00b8 080093E5 		ldr	r0, [r3, #8]
  2263 00bc 022A80E3 		orr	r2, r0, #8192
  2264 00c0 082083E5 		str	r2, [r3, #8]
-  56:../timer2.c   **** 	/*Empezar la cuenta*/
-  57:../timer2.c   **** 	rTCON &= 0xFFFF0FFF;
- 2265              		.loc 1 57 0
+  54:../timer2.c   **** 	/*Empezar la cuenta*/
+  55:../timer2.c   **** 	rTCON &= 0xFFFF0FFF;
+ 2265              		.loc 1 55 0
  2266 00c4 08C093E5 		ldr	ip, [r3, #8]
  2267 00c8 0F1ACCE3 		bic	r1, ip, #61440
  2268 00cc 081083E5 		str	r1, [r3, #8]
-  58:../timer2.c   **** 	rTCON |= 0x00009000;
- 2269              		.loc 1 58 0
+  56:../timer2.c   **** 	rTCON |= 0x00009000;
+ 2269              		.loc 1 56 0
  2270 00d0 080093E5 		ldr	r0, [r3, #8]
  2271 00d4 092A80E3 		orr	r2, r0, #36864
  2272 00d8 082083E5 		str	r2, [r3, #8]
-  59:../timer2.c   **** }
- 2273              		.loc 1 59 0
+  57:../timer2.c   **** }
+ 2273              		.loc 1 57 0
  2274 00dc 1EFF2FE1 		bx	lr
  2275              	.L9:
  2276              		.align	2
@@ -210,37 +208,39 @@
  2285              		.global	timer2_leer
  2287              	timer2_leer:
  2288              	.LFB3:
-  60:../timer2.c   **** 
-  61:../timer2.c   **** unsigned int timer2_leer(void)
-  62:../timer2.c   **** {
- 2289              		.loc 1 62 0
+  58:../timer2.c   **** 
+  59:../timer2.c   **** unsigned int timer2_leer(void)
+  60:../timer2.c   **** {
+ 2289              		.loc 1 60 0
  2290              		.cfi_startproc
  2291              		@ Function supports interworking.
  2292              		@ args = 0, pretend = 0, frame = 0
  2293              		@ frame_needed = 0, uses_anonymous_args = 0
  2294              		@ link register save eliminated.
-  63:../timer2.c   **** 	unsigned int num_int_1 = timer2_num_int;
- 2295              		.loc 1 63 0
+  61:../timer2.c   **** 	unsigned int num_int_1 = timer2_num_int;
+ 2295              		.loc 1 61 0
  2296 00ec 34009FE5 		ldr	r0, .L13
  2297 00f0 002090E5 		ldr	r2, [r0, #0]
  2298              	.LVL0:
-  64:../timer2.c   **** 	unsigned int num_int_2 = timer2_num_int;
- 2299              		.loc 1 64 0
+  62:../timer2.c   **** 	unsigned int num_int_2 = timer2_num_int;
+ 2299              		.loc 1 62 0
  2300 00f4 003090E5 		ldr	r3, [r0, #0]
  2301              	.LVL1:
-  65:../timer2.c   **** 	if(num_int_2 > num_int_1) //Con esto, evitamos posibles incrementos no deseados en timer2_num_int
-  66:../timer2.c   **** 	{
-  67:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
- 2302              		.loc 1 67 0
+  63:../timer2.c   **** 	//Con esto, evitamos posibles incrementos no deseados en timer2_num_int
+  64:../timer2.c   **** 	if(num_int_2 > num_int_1)
+  65:../timer2.c   **** 	{
+  66:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+ 2302              		.loc 1 66 0
  2303 00f8 2C109FE5 		ldr	r1, .L13+4
-  65:../timer2.c   **** 	if(num_int_2 > num_int_1) //Con esto, evitamos posibles incrementos no deseados en timer2_num_int
- 2304              		.loc 1 65 0
+  64:../timer2.c   **** 	if(num_int_2 > num_int_1)
+ 2304              		.loc 1 64 0
  2305 00fc 030052E1 		cmp	r2, r3
- 2306              		.loc 1 67 0
+ 2306              		.loc 1 66 0
  2307 0100 240091E5 		ldr	r0, [r1, #36]
  2308 0104 2C209135 		ldrcc	r2, [r1, #44]
  2309              	.LVL2:
-  68:../timer2.c   **** 		//Si queremos optimizar, como la multiplicaci�n es por 2048, se pueden mover los bits 16 lugare
+  67:../timer2.c   **** 		//Si queremos optimizar, como la multiplicaci�n es por 2048, se pueden mover los bits 16 lugares 
+  68:../timer2.c   **** 		// y en la divisi�n, al ser por 32, se pueden mover 5 a la derecha.
   69:../timer2.c   **** 	}
   70:../timer2.c   **** 	else
   71:../timer2.c   **** 	{
@@ -248,22 +248,21 @@
  2310              		.loc 1 72 0
  2311 0108 2C309125 		ldrcs	r3, [r1, #44]
  2312              	.LVL3:
-  67:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
- 2313              		.loc 1 67 0
+  66:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+ 2313              		.loc 1 66 0
  2314 010c 8335A031 		movcc	r3, r3, asl #11
  2315 0110 00006230 		rsbcc	r0, r2, r0
  2316              		.loc 1 72 0
  2317 0114 8225A021 		movcs	r2, r2, asl #11
  2318 0118 00006320 		rsbcs	r0, r3, r0
-  67:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
- 2319              		.loc 1 67 0
+  66:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+ 2319              		.loc 1 66 0
  2320 011c A0028330 		addcc	r0, r3, r0, lsr #5
  2321              		.loc 1 72 0
  2322 0120 A0028220 		addcs	r0, r2, r0, lsr #5
-  73:../timer2.c   **** 		//Si queremos optimizar, como la multiplicaci�n es por 2048, se pueden mover los bits 16 lugare
-  74:../timer2.c   **** 	}
-  75:../timer2.c   **** }
- 2323              		.loc 1 75 0
+  73:../timer2.c   **** 	}
+  74:../timer2.c   **** }
+ 2323              		.loc 1 74 0
  2324 0124 1EFF2FE1 		bx	lr
  2325              	.L14:
  2326              		.align	2
@@ -276,41 +275,41 @@
  2334              		.global	timer2_parar
  2336              	timer2_parar:
  2337              	.LFB4:
-  76:../timer2.c   **** 
-  77:../timer2.c   **** unsigned int timer2_parar(void)
-  78:../timer2.c   **** {
- 2338              		.loc 1 78 0
+  75:../timer2.c   **** 
+  76:../timer2.c   **** unsigned int timer2_parar(void)
+  77:../timer2.c   **** {
+ 2338              		.loc 1 77 0
  2339              		.cfi_startproc
  2340              		@ Function supports interworking.
  2341              		@ args = 0, pretend = 0, frame = 0
  2342              		@ frame_needed = 0, uses_anonymous_args = 0
  2343              		@ link register save eliminated.
-  79:../timer2.c   **** 	rTCON &= 0xFFFF0FFF;	//Detener la cuenta
- 2344              		.loc 1 79 0
+  78:../timer2.c   **** 	rTCON &= 0xFFFF0FFF;	//Detener la cuenta
+ 2344              		.loc 1 78 0
  2345 0130 3CC09FE5 		ldr	ip, .L18
  2346 0134 08309CE5 		ldr	r3, [ip, #8]
  2347 0138 0F1AC3E3 		bic	r1, r3, #61440
  2348 013c 08108CE5 		str	r1, [ip, #8]
  2349              	.LBB4:
  2350              	.LBB5:
-  63:../timer2.c   **** 	unsigned int num_int_1 = timer2_num_int;
- 2351              		.loc 1 63 0
+  61:../timer2.c   **** 	unsigned int num_int_1 = timer2_num_int;
+ 2351              		.loc 1 61 0
  2352 0140 30009FE5 		ldr	r0, .L18+4
  2353 0144 001090E5 		ldr	r1, [r0, #0]
  2354              	.LVL4:
-  64:../timer2.c   **** 	unsigned int num_int_2 = timer2_num_int;
- 2355              		.loc 1 64 0
+  62:../timer2.c   **** 	unsigned int num_int_2 = timer2_num_int;
+ 2355              		.loc 1 62 0
  2356 0148 002090E5 		ldr	r2, [r0, #0]
  2357              	.LVL5:
-  67:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
- 2358              		.loc 1 67 0
+  66:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+ 2358              		.loc 1 66 0
  2359 014c 24009CE5 		ldr	r0, [ip, #36]
  2360 0150 2C309CE5 		ldr	r3, [ip, #44]
-  65:../timer2.c   **** 	if(num_int_2 > num_int_1) //Con esto, evitamos posibles incrementos no deseados en timer2_num_int
- 2361              		.loc 1 65 0
+  64:../timer2.c   **** 	if(num_int_2 > num_int_1)
+ 2361              		.loc 1 64 0
  2362 0154 020051E1 		cmp	r1, r2
-  67:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
- 2363              		.loc 1 67 0
+  66:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+ 2363              		.loc 1 66 0
  2364 0158 8225A031 		movcc	r2, r2, asl #11
  2365              	.LVL6:
  2366 015c 00006330 		rsbcc	r0, r3, r0
@@ -319,17 +318,17 @@
  2368 0160 8115A021 		movcs	r1, r1, asl #11
  2369              	.LVL7:
  2370 0164 00006320 		rsbcs	r0, r3, r0
-  67:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
- 2371              		.loc 1 67 0
+  66:../timer2.c   **** 		return num_int_2 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
+ 2371              		.loc 1 66 0
  2372 0168 A0028230 		addcc	r0, r2, r0, lsr #5
   72:../timer2.c   **** 		return num_int_1 * PERIOD_INT + (rTCNTB2 - rTCNTO2) / CYCLES_EACH_MICROSEC;
  2373              		.loc 1 72 0
  2374 016c A0028120 		addcs	r0, r1, r0, lsr #5
  2375              	.LBE5:
  2376              	.LBE4:
-  80:../timer2.c   **** 	return timer2_leer();
-  81:../timer2.c   **** }
- 2377              		.loc 1 81 0
+  79:../timer2.c   **** 	return timer2_leer();
+  80:../timer2.c   **** }
+ 2377              		.loc 1 80 0
  2378 0170 1EFF2FE1 		bx	lr
  2379              	.L19:
  2380              		.align	2
@@ -347,23 +346,23 @@
  2395              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 timer2.c
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2146   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2149   .text:00000000 timer2_ISR
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2178   .text:0000002c $d
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2182   .text:00000030 $a
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2185   .text:00000030 timer2_inicializar
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2227   .text:00000084 $d
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2233   .text:00000090 $a
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2236   .text:00000090 timer2_empezar
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2278   .text:000000e0 $d
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2284   .text:000000ec $a
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2287   .text:000000ec timer2_leer
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2328   .text:00000128 $d
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2333   .text:00000130 $a
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2336   .text:00000130 timer2_parar
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2382   .text:00000174 $d
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2388   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccxUMWee.s:2392   .bss:00000000 timer2_num_int
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2146   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2149   .text:00000000 timer2_ISR
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2178   .text:0000002c $d
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2182   .text:00000030 $a
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2185   .text:00000030 timer2_inicializar
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2227   .text:00000084 $d
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2233   .text:00000090 $a
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2236   .text:00000090 timer2_empezar
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2278   .text:000000e0 $d
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2284   .text:000000ec $a
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2287   .text:000000ec timer2_leer
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2328   .text:00000128 $d
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2333   .text:00000130 $a
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2336   .text:00000130 timer2_parar
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2382   .text:00000174 $d
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2388   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cc3Za6pI.s:2392   .bss:00000000 timer2_num_int
                      .debug_frame:00000010 $d
 
 NO UNDEFINED SYMBOLS

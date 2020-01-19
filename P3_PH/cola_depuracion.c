@@ -34,8 +34,8 @@ void cola_depuracion_inicializar(int maxElem)
 	timer2_empezar();
 }
 
-
-/* Devuelve, por separado, el ID del evento y la información adicional de este, tal y como le fueron suministrados a push_debug */
+/* Devuelve, por separado, el ID del evento y la información adicional de este,
+ * 						 tal y como le fueron suministrados a push_debug */
 void push_debug(uint8_t ID_evento, uint32_t auxData)
 {
 	uint32_t dato = (uint32_t) ID_evento << 24;
@@ -44,7 +44,7 @@ void push_debug(uint8_t ID_evento, uint32_t auxData)
 	if(numElem < maxAsignado)	//Si no hay que gestionar de forma circular
 	{
 		//encolar en cima y cima -=8
-		//Y numElem--
+		//Y numElem++
 		if((int)cima <= limite_sup)
 		{
 			cima = (uint32_t *)_COLA_DEP_STARTADDRESS;

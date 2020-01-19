@@ -33,39 +33,38 @@
   16:../tsp_antirebotes.c **** #include "jugada_por_botones.h"
   17:../tsp_antirebotes.c **** 
   18:../tsp_antirebotes.c **** /*--- variables del módulo ---*/
-  19:../tsp_antirebotes.c **** 
-  20:../tsp_antirebotes.c **** static const int t_espera_ticks_timer0 = 30;	//TODO para probarlo usa un valor exagerado
-  21:../tsp_antirebotes.c **** static int cuenta_ticks_tsp = 0;
-  22:../tsp_antirebotes.c **** static int atendiendo_pulsacion_tsp = 0;
-  23:../tsp_antirebotes.c **** 
-  24:../tsp_antirebotes.c **** /*
-  25:../tsp_antirebotes.c ****    Los valores se pueden cambiar en función de la placa para controlar mejor los rebotes
-  26:../tsp_antirebotes.c **** 	Desactivamos las interrupciones durante 30 ticks = 30 * 1/60 seg = 0.5 segundos.
-  27:../tsp_antirebotes.c **** */
-  28:../tsp_antirebotes.c **** static enum estados_tsp_antirebotes{Inicio, deshabilitadas_int} maquina_estados_tsp;
-  29:../tsp_antirebotes.c **** //Estados de la máquina de estados
-  30:../tsp_antirebotes.c **** 
-  31:../tsp_antirebotes.c **** void tsp_antirebotes_inicializar()
-  32:../tsp_antirebotes.c **** {
- 2260              		.loc 1 32 0
+  19:../tsp_antirebotes.c **** enum {t_espera_ticks_timer0 = 30};
+  20:../tsp_antirebotes.c **** static int cuenta_ticks_tsp = 0;
+  21:../tsp_antirebotes.c **** static int atendiendo_pulsacion_tsp = 0;
+  22:../tsp_antirebotes.c **** /*
+  23:../tsp_antirebotes.c ****    Los valores se pueden cambiar en función de la placa para controlar mejor los rebotes
+  24:../tsp_antirebotes.c **** 	Desactivamos las interrupciones durante 30 ticks = 30 * 1/60 seg = 0.5 segundos.
+  25:../tsp_antirebotes.c **** */
+  26:../tsp_antirebotes.c **** static enum estados_tsp_antirebotes{Inicio, deshabilitadas_int} maquina_estados_tsp;
+  27:../tsp_antirebotes.c **** //Estados de la máquina de estados
+  28:../tsp_antirebotes.c **** 
+  29:../tsp_antirebotes.c **** void tsp_antirebotes_inicializar()
+  30:../tsp_antirebotes.c **** {
+ 2260              		.loc 1 30 0
  2261              		.cfi_startproc
  2262              		@ Function supports interworking.
  2263              		@ args = 0, pretend = 0, frame = 0
  2264              		@ frame_needed = 0, uses_anonymous_args = 0
  2265              		@ link register save eliminated.
-  33:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
- 2266              		.loc 1 33 0
+  31:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
+ 2266              		.loc 1 31 0
  2267 0000 10309FE5 		ldr	r3, .L2
  2268 0004 0020A0E3 		mov	r2, #0
  2269 0008 0020C3E5 		strb	r2, [r3, #0]
-  34:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
- 2270              		.loc 1 34 0
+  32:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
+ 2270              		.loc 1 32 0
  2271 000c 042083E5 		str	r2, [r3, #4]
-  35:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 			//Inicialmente no se está atendiendo ninguna pulsación, por eso s
- 2272              		.loc 1 35 0
+  33:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 		//Inicialmente no se está atendiendo
+ 2272              		.loc 1 33 0
  2273 0010 082083E5 		str	r2, [r3, #8]
-  36:../tsp_antirebotes.c **** }
- 2274              		.loc 1 36 0
+  34:../tsp_antirebotes.c **** 										//ninguna pulsación, por eso se inicializa a 0
+  35:../tsp_antirebotes.c **** }
+ 2274              		.loc 1 35 0
  2275 0014 1EFF2FE1 		bx	lr
  2276              	.L3:
  2277              		.align	2
@@ -77,10 +76,10 @@
  2284              		.global	tsp_antirebotes
  2286              	tsp_antirebotes:
  2287              	.LFB1:
-  37:../tsp_antirebotes.c **** 
-  38:../tsp_antirebotes.c **** void tsp_antirebotes(void)
-  39:../tsp_antirebotes.c **** {
- 2288              		.loc 1 39 0
+  36:../tsp_antirebotes.c **** 
+  37:../tsp_antirebotes.c **** void tsp_antirebotes(void)
+  38:../tsp_antirebotes.c **** {
+ 2288              		.loc 1 38 0
  2289              		.cfi_startproc
  2290              		@ Function supports interworking.
  2291              		@ args = 0, pretend = 0, frame = 0
@@ -89,8 +88,8 @@
  2294              	.LCFI0:
  2295              		.cfi_def_cfa_register 12
  2296 0020 18D82DE9 		stmfd	sp!, {r3, r4, fp, ip, lr, pc}
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2297              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2297              		.loc 1 39 0
  2298 0024 4C409FE5 		ldr	r4, .L10
  2299              		.cfi_offset 14, -8
  2300              		.cfi_offset 13, -12
@@ -99,31 +98,32 @@
  2303              		.cfi_offset 3, -24
  2304 0028 0030D4E5 		ldrb	r3, [r4, #0]	@ zero_extendqisi2
  2305 002c 000053E3 		cmp	r3, #0
-  39:../tsp_antirebotes.c **** {
- 2306              		.loc 1 39 0
+  38:../tsp_antirebotes.c **** {
+ 2306              		.loc 1 38 0
  2307 0030 04B04CE2 		sub	fp, ip, #4
  2308              	.LCFI1:
  2309              		.cfi_def_cfa 11, 4
- 2310              		.loc 1 40 0
+ 2310              		.loc 1 39 0
  2311 0034 0600001A 		bne	.L8
-  41:../tsp_antirebotes.c **** 	{
-  42:../tsp_antirebotes.c **** 		case Inicio :
-  43:../tsp_antirebotes.c **** 			if(atendiendo_pulsacion_tsp)
- 2312              		.loc 1 43 0
+  40:../tsp_antirebotes.c **** 	{
+  41:../tsp_antirebotes.c **** 		case Inicio :
+  42:../tsp_antirebotes.c **** 			if(atendiendo_pulsacion_tsp)
+ 2312              		.loc 1 42 0
  2313 0038 080094E5 		ldr	r0, [r4, #8]
  2314 003c 000050E3 		cmp	r0, #0
-  44:../tsp_antirebotes.c **** 			{
-  45:../tsp_antirebotes.c **** 				//Las interrupciones de tsp se deshabilitan en el propio tsp por si acaso
-  46:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
- 2315              		.loc 1 46 0
+  43:../tsp_antirebotes.c **** 			{
+  44:../tsp_antirebotes.c **** 				//Las interrupciones de tsp se deshabilitan en el propio tsp por si acaso
+  45:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
+ 2315              		.loc 1 45 0
  2316 0040 0100A013 		movne	r0, #1
  2317 0044 0000C415 		strneb	r0, [r4, #0]
  2318              	.L4:
-  47:../tsp_antirebotes.c **** 			}
-  48:../tsp_antirebotes.c **** 			break;
-  49:../tsp_antirebotes.c **** 		default: //Si estamos en deshabilitadas_int
-  50:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
-  51:../tsp_antirebotes.c **** 			{	//Si ha pasado trd, rehabilitamos interrupciones tsp y volvemos a admitir el procesado de otra
+  46:../tsp_antirebotes.c **** 			}
+  47:../tsp_antirebotes.c **** 			break;
+  48:../tsp_antirebotes.c **** 		default: //Si estamos en deshabilitadas_int
+  49:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
+  50:../tsp_antirebotes.c **** 			{	//Si ha pasado trd, rehabilitamos interrupciones tsp
+  51:../tsp_antirebotes.c **** 				// y volvemos a admitir el procesado de otras pulsaciones
   52:../tsp_antirebotes.c **** 				tsp_resetear();
   53:../tsp_antirebotes.c **** 				tsp_antirebotes_inicializar();
   54:../tsp_antirebotes.c **** 			}
@@ -135,8 +135,8 @@
  2321 004c 18689DE8 		ldmfd	sp, {r3, r4, fp, sp, lr}
  2322 0050 1EFF2FE1 		bx	lr
  2323              	.L8:
-  50:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
- 2324              		.loc 1 50 0
+  49:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
+ 2324              		.loc 1 49 0
  2325 0054 041094E5 		ldr	r1, [r4, #4]
  2326 0058 1E0051E3 		cmp	r1, #30
  2327 005c F9FFFF1A 		bne	.L4
@@ -145,15 +145,15 @@
  2329 0060 FEFFFFEB 		bl	tsp_resetear
  2330              	.LBB8:
  2331              	.LBB9:
-  33:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
- 2332              		.loc 1 33 0
+  31:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
+ 2332              		.loc 1 31 0
  2333 0064 0020A0E3 		mov	r2, #0
  2334 0068 0020C4E5 		strb	r2, [r4, #0]
-  34:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
- 2335              		.loc 1 34 0
+  32:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
+ 2335              		.loc 1 32 0
  2336 006c 042084E5 		str	r2, [r4, #4]
-  35:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 			//Inicialmente no se está atendiendo ninguna pulsación, por eso s
- 2337              		.loc 1 35 0
+  33:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 		//Inicialmente no se está atendiendo
+ 2337              		.loc 1 33 0
  2338 0070 082084E5 		str	r2, [r4, #8]
  2339 0074 F3FFFFEA 		b	.L4
  2340              	.L11:
@@ -210,8 +210,8 @@
  2383              	.L17:
  2384              	.LBB14:
  2385              	.LBB16:
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2386              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2386              		.loc 1 39 0
  2387 00a4 0020D4E5 		ldrb	r2, [r4, #0]	@ zero_extendqisi2
  2388              	.LBE16:
  2389              	.LBE14:
@@ -220,8 +220,8 @@
  2391 00a8 0130A0E3 		mov	r3, #1
  2392              	.LBB20:
  2393              	.LBB15:
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2394              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2394              		.loc 1 39 0
  2395 00ac 000052E3 		cmp	r2, #0
  2396              	.LBE15:
  2397              	.LBE20:
@@ -230,14 +230,14 @@
  2399 00b0 083084E5 		str	r3, [r4, #8]
  2400              	.LBB21:
  2401              	.LBB19:
-  46:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
- 2402              		.loc 1 46 0
+  45:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
+ 2402              		.loc 1 45 0
  2403 00b4 0030C405 		streqb	r3, [r4, #0]
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2404              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2404              		.loc 1 39 0
  2405 00b8 F6FFFF0A 		beq	.L12
-  50:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
- 2406              		.loc 1 50 0
+  49:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
+ 2406              		.loc 1 49 0
  2407 00bc 040094E5 		ldr	r0, [r4, #4]
  2408 00c0 1E0050E3 		cmp	r0, #30
  2409 00c4 F3FFFF1A 		bne	.L12
@@ -246,14 +246,14 @@
  2411 00c8 FEFFFFEB 		bl	tsp_resetear
  2412              	.LBB17:
  2413              	.LBB18:
-  33:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
- 2414              		.loc 1 33 0
+  31:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
+ 2414              		.loc 1 31 0
  2415 00cc 0050C4E5 		strb	r5, [r4, #0]
-  34:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
- 2416              		.loc 1 34 0
+  32:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
+ 2416              		.loc 1 32 0
  2417 00d0 045084E5 		str	r5, [r4, #4]
-  35:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 			//Inicialmente no se está atendiendo ninguna pulsación, por eso s
- 2418              		.loc 1 35 0
+  33:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 		//Inicialmente no se está atendiendo
+ 2418              		.loc 1 33 0
  2419 00d4 085084E5 		str	r5, [r4, #8]
  2420 00d8 EEFFFFEA 		b	.L12
  2421              	.L19:
@@ -317,8 +317,8 @@
  2468 0108 040094E5 		ldr	r0, [r4, #4]
  2469              	.LBB26:
  2470              	.LBB28:
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2471              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2471              		.loc 1 39 0
  2472 010c 0020D4E5 		ldrb	r2, [r4, #0]	@ zero_extendqisi2
  2473              	.LBE28:
  2474              	.LBE26:
@@ -327,8 +327,8 @@
  2476 0110 013080E2 		add	r3, r0, #1
  2477              	.LBB32:
  2478              	.LBB27:
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2479              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2479              		.loc 1 39 0
  2480 0114 000052E3 		cmp	r2, #0
  2481              	.LBE27:
  2482              	.LBE32:
@@ -337,15 +337,15 @@
  2484 0118 043084E5 		str	r3, [r4, #4]
  2485              	.LBB33:
  2486              	.LBB31:
-  46:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
- 2487              		.loc 1 46 0
+  45:../tsp_antirebotes.c **** 				maquina_estados_tsp = deshabilitadas_int;
+ 2487              		.loc 1 45 0
  2488 011c 0130A003 		moveq	r3, #1
  2489 0120 0030C405 		streqb	r3, [r4, #0]
-  40:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
- 2490              		.loc 1 40 0
+  39:../tsp_antirebotes.c **** 	switch(maquina_estados_tsp)
+ 2490              		.loc 1 39 0
  2491 0124 F4FFFF0A 		beq	.L20
-  50:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
- 2492              		.loc 1 50 0
+  49:../tsp_antirebotes.c **** 			if(cuenta_ticks_tsp == t_espera_ticks_timer0)
+ 2492              		.loc 1 49 0
  2493 0128 1E0053E3 		cmp	r3, #30
  2494 012c F2FFFF1A 		bne	.L20
   52:../tsp_antirebotes.c **** 				tsp_resetear();
@@ -353,15 +353,15 @@
  2496 0130 FEFFFFEB 		bl	tsp_resetear
  2497              	.LBB29:
  2498              	.LBB30:
-  33:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
- 2499              		.loc 1 33 0
+  31:../tsp_antirebotes.c **** 	maquina_estados_tsp = Inicio;
+ 2499              		.loc 1 31 0
  2500 0134 0010A0E3 		mov	r1, #0
  2501 0138 0010C4E5 		strb	r1, [r4, #0]
-  34:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
- 2502              		.loc 1 34 0
+  32:../tsp_antirebotes.c **** 	cuenta_ticks_tsp = 0;
+ 2502              		.loc 1 32 0
  2503 013c 041084E5 		str	r1, [r4, #4]
-  35:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 			//Inicialmente no se está atendiendo ninguna pulsación, por eso s
- 2504              		.loc 1 35 0
+  33:../tsp_antirebotes.c **** 	atendiendo_pulsacion_tsp = 0; 		//Inicialmente no se está atendiendo
+ 2504              		.loc 1 33 0
  2505 0140 081084E5 		str	r1, [r4, #8]
  2506 0144 ECFFFFEA 		b	.L20
  2507              	.L27:
@@ -396,18 +396,18 @@
  2543              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 tsp_antirebotes.c
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2255   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2258   .text:00000000 tsp_antirebotes_inicializar
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2279   .text:00000018 $d
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2283   .text:0000001c $a
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2286   .text:0000001c tsp_antirebotes
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2343   .text:00000078 $d
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2349   .text:0000007c $a
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2352   .text:0000007c tsp_ev_pulsacion
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2424   .text:000000dc $d
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2432   .text:000000e0 $a
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2435   .text:000000e0 tsp_ev_tick0
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2510   .text:00000148 $d
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2255   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2258   .text:00000000 tsp_antirebotes_inicializar
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2279   .text:00000018 $d
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2283   .text:0000001c $a
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2286   .text:0000001c tsp_antirebotes
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2343   .text:00000078 $d
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2349   .text:0000007c $a
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2352   .text:0000007c tsp_ev_pulsacion
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2424   .text:000000dc $d
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2432   .text:000000e0 $a
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2435   .text:000000e0 tsp_ev_tick0
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2510   .text:00000148 $d
                             *COM*:00000004 CheckTSP
                             *COM*:00000004 oneTouch
                             *COM*:00000004 Vx
@@ -416,10 +416,10 @@ C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2510   .text:00000148 $d
                             *COM*:00000004 Ymax
                             *COM*:00000004 Xmin
                             *COM*:00000004 Ymin
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2527   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2531   .bss:00000000 maquina_estados_tsp
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2536   .bss:00000004 cuenta_ticks_tsp
-C:\Users\guest\AppData\Local\Temp\ccbrqnyv.s:2540   .bss:00000008 atendiendo_pulsacion_tsp
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2527   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2531   .bss:00000000 maquina_estados_tsp
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2536   .bss:00000004 cuenta_ticks_tsp
+C:\Users\pjper\AppData\Local\Temp\cceDYWzs.s:2540   .bss:00000008 atendiendo_pulsacion_tsp
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

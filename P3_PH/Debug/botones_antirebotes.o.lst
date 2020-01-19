@@ -144,7 +144,7 @@
   71:../botones_antirebotes.c **** 					hay_autoincremento = 0;
   72:../botones_antirebotes.c **** 					maquina_estados = contando_trd;
   73:../botones_antirebotes.c **** 				}
-  74:../botones_antirebotes.c **** 				if(cuenta_autoincremento == int_timer0_enable_autoincr)		//TODO poner autoincemento para boton 
+  74:../botones_antirebotes.c **** 				if(cuenta_autoincremento == int_timer0_enable_autoincr)
   75:../botones_antirebotes.c **** 				{	//Tras mantener pulsado durante 1/3 de segundo
   76:../botones_antirebotes.c **** 					//	autoincremento cada 180ms a partir de ahora
   77:../botones_antirebotes.c **** 					cuenta_autoincremento = 0;
@@ -310,7 +310,7 @@
  2339 011c 10C084E5 		str	ip, [r4, #16]
  2340 0120 CBFFFFEA 		b	.L4
  2341              	.L19:
-  74:../botones_antirebotes.c **** 				if(cuenta_autoincremento == int_timer0_enable_autoincr)		//TODO poner autoincemento para boton 
+  74:../botones_antirebotes.c **** 				if(cuenta_autoincremento == int_timer0_enable_autoincr)
  2342              		.loc 1 74 0
  2343 0124 04E094E5 		ldr	lr, [r4, #4]
  2344 0128 14005EE3 		cmp	lr, #20
@@ -471,25 +471,25 @@
  2478              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 botones_antirebotes.c
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2186   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2189   .text:00000000 botones_antirebotes_inicializar
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2212   .text:0000001c $d
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2216   .text:00000020 $a
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2219   .text:00000020 antirebotes
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2373   .text:00000164 $d
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2377   .text:00000168 $a
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2380   .text:00000168 button_ev_pulsacion
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2407   .text:00000188 $d
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2411   .text:0000018c $a
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2414   .text:0000018c button_ev_tick0
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2445   .text:000001b8 $d
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2450   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2454   .bss:00000000 maquina_estados
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2459   .bss:00000004 cuenta_autoincremento
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2463   .bss:00000008 hay_autoincremento
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2467   .bss:0000000c atendiendoPulsacion
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2471   .bss:00000010 cuenta_ticks
-C:\Users\guest\AppData\Local\Temp\ccWLx5pS.s:2475   .bss:00000014 que_button
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2186   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2189   .text:00000000 botones_antirebotes_inicializar
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2212   .text:0000001c $d
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2216   .text:00000020 $a
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2219   .text:00000020 antirebotes
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2373   .text:00000164 $d
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2377   .text:00000168 $a
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2380   .text:00000168 button_ev_pulsacion
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2407   .text:00000188 $d
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2411   .text:0000018c $a
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2414   .text:0000018c button_ev_tick0
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2445   .text:000001b8 $d
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2450   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2454   .bss:00000000 maquina_estados
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2459   .bss:00000004 cuenta_autoincremento
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2463   .bss:00000008 hay_autoincremento
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2467   .bss:0000000c atendiendoPulsacion
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2471   .bss:00000010 cuenta_ticks
+C:\Users\pjper\AppData\Local\Temp\ccOn4bXz.s:2475   .bss:00000014 que_button
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

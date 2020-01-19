@@ -116,8 +116,8 @@
  1357              	push_debug:
  1358              	.LFB1:
   36:../cola_depuracion.c **** 
-  37:../cola_depuracion.c **** 
-  38:../cola_depuracion.c **** /* Devuelve, por separado, el ID del evento y la información adicional de este, tal y como le fuero
+  37:../cola_depuracion.c **** /* Devuelve, por separado, el ID del evento y la información adicional de este,
+  38:../cola_depuracion.c ****  * 						 tal y como le fueron suministrados a push_debug */
   39:../cola_depuracion.c **** void push_debug(uint8_t ID_evento, uint32_t auxData)
   40:../cola_depuracion.c **** {
  1359              		.loc 1 40 0
@@ -162,7 +162,7 @@
  1391 007c 120000AA 		bge	.L5
   45:../cola_depuracion.c **** 	{
   46:../cola_depuracion.c **** 		//encolar en cima y cima -=8
-  47:../cola_depuracion.c **** 		//Y numElem--
+  47:../cola_depuracion.c **** 		//Y numElem++
   48:../cola_depuracion.c **** 		if((int)cima <= limite_sup)
  1392              		.loc 1 48 0
  1393 0080 00E094E5 		ldr	lr, [r4, #0]
@@ -441,26 +441,26 @@
  1596              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 cola_depuracion.c
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1293   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1296   .text:00000000 cola_depuracion_inicializar
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1348   .text:0000004c $d
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1354   .text:00000058 $a
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1357   .text:00000058 push_debug
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1458   .text:0000010c $d
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1464   .text:00000118 $a
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1467   .text:00000118 pop_debug
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1535   .text:00000170 $d
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1540   .text:00000178 $a
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1543   .text:00000178 esVacia
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1561   .text:0000018c $d
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1570   .rodata:00000000 _COLA_DEP_STARTADDRESS
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1567   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1573   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1577   .bss:00000000 cima
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1581   .bss:00000004 base
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1585   .bss:00000008 limite_sup
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1589   .bss:0000000c numElem
-C:\Users\guest\AppData\Local\Temp\ccUcDZA9.s:1593   .bss:00000010 maxAsignado
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1293   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1296   .text:00000000 cola_depuracion_inicializar
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1348   .text:0000004c $d
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1354   .text:00000058 $a
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1357   .text:00000058 push_debug
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1458   .text:0000010c $d
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1464   .text:00000118 $a
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1467   .text:00000118 pop_debug
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1535   .text:00000170 $d
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1540   .text:00000178 $a
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1543   .text:00000178 esVacia
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1561   .text:0000018c $d
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1570   .rodata:00000000 _COLA_DEP_STARTADDRESS
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1567   .rodata:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1573   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1577   .bss:00000000 cima
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1581   .bss:00000004 base
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1585   .bss:00000008 limite_sup
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1589   .bss:0000000c numElem
+C:\Users\pjper\AppData\Local\Temp\ccf4DKPK.s:1593   .bss:00000010 maxAsignado
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

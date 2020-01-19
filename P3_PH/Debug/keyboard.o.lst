@@ -776,23 +776,23 @@
  2719              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 keyboard.c
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2234   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2237   .text:00000000 KeyboardInt
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2436   .text:00000188 $d
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2443   .text:00000190 $a
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2446   .text:00000190 init_keyboard
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2504   .text:00000210 $d
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2510   .text:0000021c $a
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2513   .text:0000021c close_keyboard
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2538   .text:0000023c $d
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2542   .text:00000240 $a
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2545   .text:00000240 tec_resetear
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2570   .text:00000260 key_read
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2699   .text:00000370 $d
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2709   .data:00000000 keyboard_base
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2705   .data:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2712   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccP3cote.s:2716   .bss:00000000 teclaPulsada
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2234   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2237   .text:00000000 KeyboardInt
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2436   .text:00000188 $d
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2443   .text:00000190 $a
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2446   .text:00000190 init_keyboard
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2504   .text:00000210 $d
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2510   .text:0000021c $a
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2513   .text:0000021c close_keyboard
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2538   .text:0000023c $d
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2542   .text:00000240 $a
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2545   .text:00000240 tec_resetear
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2570   .text:00000260 key_read
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2699   .text:00000370 $d
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2709   .data:00000000 keyboard_base
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2705   .data:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2712   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccnxXj4d.s:2716   .bss:00000000 teclaPulsada
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

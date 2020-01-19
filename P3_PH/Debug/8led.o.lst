@@ -109,12 +109,12 @@
  1953              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 8led.c
-C:\Users\guest\AppData\Local\Temp\cci5kQys.s:1882   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\cci5kQys.s:1885   .text:00000000 D8Led_init
-C:\Users\guest\AppData\Local\Temp\cci5kQys.s:1905   .text:00000010 D8Led_symbol
-C:\Users\guest\AppData\Local\Temp\cci5kQys.s:1925   .text:00000028 $d
-C:\Users\guest\AppData\Local\Temp\cci5kQys.s:1930   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\cci5kQys.s:1934   .rodata:00000000 Symbol
+C:\Users\pjper\AppData\Local\Temp\cctxPLyC.s:1882   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\cctxPLyC.s:1885   .text:00000000 D8Led_init
+C:\Users\pjper\AppData\Local\Temp\cctxPLyC.s:1905   .text:00000010 D8Led_symbol
+C:\Users\pjper\AppData\Local\Temp\cctxPLyC.s:1925   .text:00000028 $d
+C:\Users\pjper\AppData\Local\Temp\cctxPLyC.s:1930   .rodata:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\cctxPLyC.s:1934   .rodata:00000000 Symbol
                      .debug_frame:00000010 $d
 
 NO UNDEFINED SYMBOLS

@@ -9,7 +9,7 @@
 #define _RUTINAS_EXCEPCIONES_H_
 
 //Valores posibles que puede tomar la variable compartida hay_excepcion
-volatile enum {NO_EXCEPT = 0, SWI = 1, DABORT = 2, UNDEF = 3};
+enum {NO_EXCEPT = 0, SWI = 1, DABORT = 2, UNDEF = 3};
 
 /*--- declaracion de funciones visibles del módulo ---*/
 volatile void Gestion_excepciones_init(void);

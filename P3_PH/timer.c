@@ -20,7 +20,7 @@ void timer_ISR(void) __attribute__((interrupt("IRQ")));
 /*--- codigo de las funciones ---*/
 void timer_ISR(void)
 {
-	push_debug(ev_tick_timer0, no_info);		//TODO recuerda quitarlo cuando tengas que probar más cosas
+	push_debug(ev_tick_timer0, no_info);
 
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción*/
 	rI_ISPC |= BIT_TIMER0; // BIT_TIMER0 está definido en 44b.h y pone un uno en el bit 13 que correponde al Timer0
@@ -40,10 +40,11 @@ void timer_init(void)
 	rTCFG0 &= 0xffffff00;
 	rTCFG0 |= 0xc7; 		// ajusta el preescalado del timer 0 a 199 (200 de forma interna) para el latido
 	rTCFG1 &= 0xffffff0;
-	rTCFG1 |= 0xffffff7;    // selecciona la entrada del mux que proporciona el reloj 0. La 1xx (0x...7) corresponde a un divisor de 1/32.
+	rTCFG1 |= 0xffffff7;    // Selecciona la entrada del mux que proporciona el reloj 0.
+							// La 1xx (0x...7) corresponde a un divisor de 1/32.
 	rTCNTB0 = 166;			// valor inicial de cuenta. Con esto hay una interrupción cada 1/60 de segundo.
 	rTCMPB0 = 0;			// valor de comparación
-	/* establecer update=manual (bit 1) + inverter=on (¿? será inverter off un cero en el bit 2 pone el inverter en off)*/
+	/* establecer update=manual (bit 1) + inverter=on */
 	rTCON &= 0xfffffff0;
 	rTCON |= 0x00000002;
 	/* iniciar timer (bit 0) con auto-reload (bit 3)*/

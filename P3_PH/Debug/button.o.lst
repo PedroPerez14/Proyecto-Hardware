@@ -360,18 +360,18 @@
  2481              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 button.c
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2239   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2242   .text:00000000 button_ISR
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2318   .text:000000a4 $d
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2322   .text:000000a8 $a
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2325   .text:000000a8 button_iniciar
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2390   .text:00000138 $d
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2396   .text:00000144 $a
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2399   .text:00000144 button_resetear
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2425   .text:00000170 $d
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2429   .text:00000174 $a
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2432   .text:00000174 button_estado
-C:\Users\guest\AppData\Local\Temp\ccOxgKMZ.s:2477   .text:000001c4 $d
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2239   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2242   .text:00000000 button_ISR
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2318   .text:000000a4 $d
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2322   .text:000000a8 $a
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2325   .text:000000a8 button_iniciar
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2390   .text:00000138 $d
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2396   .text:00000144 $a
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2399   .text:00000144 button_resetear
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2425   .text:00000170 $d
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2429   .text:00000174 $a
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2432   .text:00000174 button_estado
+C:\Users\pjper\AppData\Local\Temp\ccXtIgu4.s:2477   .text:000001c4 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

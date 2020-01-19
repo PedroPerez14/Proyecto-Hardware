@@ -45,8 +45,8 @@
   28:../main.c     **** {
   29:../main.c     **** 	uint32_t _cpsr;
   30:../main.c     **** 	asm volatile (" mrs %0, cpsr\n" : "=r" (_cpsr));
-  31:../main.c     **** 	_cpsr &= 0xFFFFFFE0;
-  32:../main.c     **** 	_cpsr |= 0x00000010;
+  31:../main.c     **** 	_cpsr &= 0xFFFFFFE0;	//El modo son los 5 bits de menos peso
+  32:../main.c     **** 	_cpsr |= 0x00000010;	//0x10 = modo usuario
   33:../main.c     **** 	asm volatile (" msr cpsr,%0\n" :: "r" (_cpsr));
   34:../main.c     **** 	asm volatile (" ldr sp, =0xc7ff000 ");
   35:../main.c     **** 	return;
@@ -111,11 +111,11 @@
  2515              	
  2516              	@ 0 "" 2
  2517              	.LVL0:
-  31:../main.c     **** 	_cpsr &= 0xFFFFFFE0;
+  31:../main.c     **** 	_cpsr &= 0xFFFFFFE0;	//El modo son los 5 bits de menos peso
  2518              		.loc 1 31 0
  2519 003c 1F00C1E3 		bic	r0, r1, #31
  2520              	.LVL1:
-  32:../main.c     **** 	_cpsr |= 0x00000010;
+  32:../main.c     **** 	_cpsr |= 0x00000010;	//0x10 = modo usuario
  2521              		.loc 1 32 0
  2522 0040 103080E3 		orr	r3, r0, #16
   33:../main.c     **** 	asm volatile (" msr cpsr,%0\n" :: "r" (_cpsr));
@@ -134,11 +134,11 @@
   52:../main.c     **** 
   53:../main.c     **** 	//Delay(250);
   54:../main.c     **** 	/// Pruebas de excepciones ///
-  55:../main.c     **** 	//asm volatile ("SWI 0x55");			//lanzar SWI
-  56:../main.c     **** 	//asm volatile ("mov r3, #3");
-  57:../main.c     **** 	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
-  58:../main.c     **** 	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
-  59:../main.c     **** 
+  55:../main.c     **** 	/*asm volatile ("SWI 0x55");			//lanzar SWI
+  56:../main.c     **** 	asm volatile ("mov r3, #3");
+  57:../main.c     **** 	asm volatile ("ldr r2,[r3]");			//Forzar DABORT
+  58:../main.c     **** 	asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
+  59:../main.c     **** 	*/
   60:../main.c     **** 	pasar_a_user();
   61:../main.c     **** 	//pintar_prueba();
   62:../main.c     **** 	reversi_main();
@@ -176,8 +176,8 @@
  2552              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2469   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2472   .text:00000000 Main
+C:\Users\pjper\AppData\Local\Temp\ccS2yp9z.s:2469   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccS2yp9z.s:2472   .text:00000000 Main
                             *COM*:00000004 CheckTSP
                             *COM*:00000004 oneTouch
                             *COM*:00000004 Vx
@@ -186,7 +186,7 @@ C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2472   .text:00000000 Main
                             *COM*:00000004 Ymax
                             *COM*:00000004 Xmin
                             *COM*:00000004 Ymin
-C:\Users\guest\AppData\Local\Temp\ccC19vvh.s:2553   .text:0000005c $d
+C:\Users\pjper\AppData\Local\Temp\ccS2yp9z.s:2553   .text:0000005c $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

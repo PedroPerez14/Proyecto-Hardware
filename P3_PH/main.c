@@ -28,8 +28,8 @@ static volatile inline void pasar_a_user()
 {
 	uint32_t _cpsr;
 	asm volatile (" mrs %0, cpsr\n" : "=r" (_cpsr));
-	_cpsr &= 0xFFFFFFE0;
-	_cpsr |= 0x00000010;
+	_cpsr &= 0xFFFFFFE0;	//El modo son los 5 bits de menos peso
+	_cpsr |= 0x00000010;	//0x10 = modo usuario
 	asm volatile (" msr cpsr,%0\n" :: "r" (_cpsr));
 	asm volatile (" ldr sp, =0xc7ff000 ");
 	return;
@@ -52,11 +52,11 @@ void Main(void)
 
 	//Delay(250);
 	/// Pruebas de excepciones ///
-	//asm volatile ("SWI 0x55");			//lanzar SWI
-	//asm volatile ("mov r3, #3");
-	//asm volatile ("ldr r2,[r3]");			//Forzar DABORT
-	//asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
-
+	/*asm volatile ("SWI 0x55");			//lanzar SWI
+	asm volatile ("mov r3, #3");
+	asm volatile ("ldr r2,[r3]");			//Forzar DABORT
+	asm volatile (".word 0xe7f000f0\n");	//Forzar UNDEF
+	*/
 	pasar_a_user();
 	//pintar_prueba();
 	reversi_main();

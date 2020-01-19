@@ -386,22 +386,22 @@
  2459              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 teclado_antirebotes.c
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2181   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2184   .text:00000000 tec_antirebotes_inicializar
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2205   .text:00000018 $d
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2209   .text:0000001c $a
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2212   .text:0000001c tec_antirebotes
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2268   .text:00000074 $d
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2274   .text:00000078 $a
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2277   .text:00000078 tec_ev_pulsacion
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2349   .text:000000d8 $d
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2357   .text:000000dc $a
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2360   .text:000000dc tec_ev_tick0
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2434   .text:00000140 $d
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2443   .bss:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2447   .bss:00000000 maquina_estados_tec
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2452   .bss:00000004 cuenta_ticks_tec
-C:\Users\guest\AppData\Local\Temp\ccAsByV2.s:2456   .bss:00000008 atendiendo_pulsacion_tec
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2181   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2184   .text:00000000 tec_antirebotes_inicializar
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2205   .text:00000018 $d
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2209   .text:0000001c $a
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2212   .text:0000001c tec_antirebotes
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2268   .text:00000074 $d
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2274   .text:00000078 $a
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2277   .text:00000078 tec_ev_pulsacion
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2349   .text:000000d8 $d
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2357   .text:000000dc $a
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2360   .text:000000dc tec_ev_tick0
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2434   .text:00000140 $d
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2443   .bss:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2447   .bss:00000000 maquina_estados_tec
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2452   .bss:00000004 cuenta_ticks_tec
+C:\Users\pjper\AppData\Local\Temp\ccoFnCnM.s:2456   .bss:00000008 atendiendo_pulsacion_tec
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

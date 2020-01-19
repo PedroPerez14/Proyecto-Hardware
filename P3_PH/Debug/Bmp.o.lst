@@ -2416,32 +2416,32 @@
  3160              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 Bmp.c
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:1208   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:1211   .text:00000000 BitmapView
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:1487   .text:000002c4 BitmapPush
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:1805   .text:000005a8 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:1208   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:1211   .text:00000000 BitmapView
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:1487   .text:000002c4 BitmapPush
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:1805   .text:000005a8 $d
                             *COM*:00000002 ulMouseX
                             *COM*:00000002 ulMouseY
                             *COM*:00000078 ucCursorBackUp
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:1811   .text:000005b4 $a
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:1814   .text:000005b4 BitmapPop
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2129   .text:000008a0 $d
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2133   .text:000008a4 $a
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2136   .text:000008a4 CursorInit
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2443   .text:00000b1c $d
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2449   .text:00000b28 $a
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2452   .text:00000b28 CursorPush
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2496   .text:00000b70 $d
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2500   .text:00000b74 $a
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2503   .text:00000b74 CursorPop
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2544   .text:00000bc4 $d
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2550   .text:00000bd0 $a
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2553   .text:00000bd0 CursorView
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2892   .text:00000ec0 $d
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2905   .rodata:00000000 ucMouseMap
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:3151   .data:00000000 Stru_Bitmap_gbMouse
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:2902   .rodata:00000000 $d
-C:\Users\guest\AppData\Local\Temp\ccqIfHfs.s:3147   .data:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:1811   .text:000005b4 $a
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:1814   .text:000005b4 BitmapPop
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2129   .text:000008a0 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2133   .text:000008a4 $a
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2136   .text:000008a4 CursorInit
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2443   .text:00000b1c $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2449   .text:00000b28 $a
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2452   .text:00000b28 CursorPush
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2496   .text:00000b70 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2500   .text:00000b74 $a
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2503   .text:00000b74 CursorPop
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2544   .text:00000bc4 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2550   .text:00000bd0 $a
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2553   .text:00000bd0 CursorView
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2892   .text:00000ec0 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2905   .rodata:00000000 ucMouseMap
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:3151   .data:00000000 Stru_Bitmap_gbMouse
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:2902   .rodata:00000000 $d
+C:\Users\pjper\AppData\Local\Temp\ccGEcJzT.s:3147   .data:00000000 $d
                      .debug_frame:00000010 $d
 
 NO UNDEFINED SYMBOLS

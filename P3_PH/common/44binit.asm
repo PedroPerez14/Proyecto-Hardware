@@ -223,6 +223,40 @@ ResetHandler:
     ldr	    r1,=0x07ffffff  	/* all interrupt disable */
     str	    r1,[r0]
 
+/*********** inicio añadido */
+
+    /* RAM es resuelto por el enlazador como si el programa comenzase en la dirección
+       0x0C000000, pero lo cargamos en la flash a partir de la 0x00000000  */
+    ldr	    r0,=(SMRDATA-0xc000000)
+    ldmia   r0,{r1-r13}
+    /* establecer valores de los registros del controlador de memoria */
+    ldr	    r0,=0x01c80000  	/* BWSCON Address */
+    stmia   r0,{r1-r13}
+
+	LDR r0,=0x0
+	LDR r1,=Image_RO_Base
+	LDR r3,=Image_ZI_Base
+
+    /* Copiar todo lo que hay desde el comienzo de la flash a la memoria RAM */
+    /* El bucle termina cuando la posición destino conincide con Image_ZI_Limit */
+    LoopRw:
+        cmp         r1, r3
+        ldrcc       r2, [r0], #4
+        strcc       r2, [r1], #4
+        bcc         LoopRw
+
+    /* código nuevo (Darío) */
+            LDR r0, =Image_ZI_Base
+            LDR r1, =Image_ZI_Limit
+            mov r3, #0
+    LoopZI:
+            cmp r0, r1
+            strcc r3, [r0], #4
+            bcc LoopZI
+    /* fin código nuevo (Darío) */
+
+/*********** fin añadido */
+
     #****************************************************
     #*	Set clock control registers						*
     #****************************************************
@@ -254,10 +288,10 @@ ResetHandler:
     #****************************************************
     #*	Set memory control registers					* 	
     #****************************************************
-    ldr	    r0,=SMRDATA
-    ldmia   r0,{r1-r13}
-    ldr	    r0,=0x01c80000  	/* BWSCON Address */
-    stmia   r0,{r1-r13}
+    // ldr	    r0,=SMRDATA
+    // ldmia   r0,{r1-r13}
+    // ldr	    r0,=0x01c80000  	/* BWSCON Address */
+    // stmia   r0,{r1-r13}
 
     #;****************************************************
     #;*	Initialize stacks								* 

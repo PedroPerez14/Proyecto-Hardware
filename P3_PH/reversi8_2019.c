@@ -157,12 +157,12 @@ int contar_negras(void){return negras;}
 
 int reversi_t_pv(void)
 {
-	return veces_pv;
+	return t_pv;
 }
 
 int reversi_veces_pv(void)
 {
-	return t_pv;
+	return veces_pv;
 }
 
 void reversi_procesar(char f, char c)
@@ -361,7 +361,8 @@ int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         if (patron == PATRON_ENCONTRADO )
         {
             voltear(tablero, f, c, SF, SC, flip, color);
-            jugada_valida = 1;          //TODO explicar
+            jugada_valida = 1;
+            //Para avisar reversi8 por si hay que deshacer la jugada
         }
     }
     return 0;
@@ -510,10 +511,6 @@ void reversi8_inicializar()
 {
 	init_table(tablero, candidatas);
 	fin = 0;
-	/* Se comenta porque contamos en init_table y esto lo sobreescribe de forma errónea
-	blancas = 0;
-	negras = 0;
-	*/
 }
 
 void mover_IA()
@@ -585,13 +582,3 @@ void reversi8()
     }
     contar(tablero, &blancas, &negras);
 }
-
-//TODO lista de cosas pendientes
-/*
-	Poner bien las pantallas de las reglas y las fichas --WIP
-
-	-O3
-	Flashear
-	PIKA-CHUUUUUU
-	Reparar lo que se caiga a trozos
-*/

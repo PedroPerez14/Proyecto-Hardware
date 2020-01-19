@@ -71,7 +71,7 @@ void antirebotes(void)
 					hay_autoincremento = 0;
 					maquina_estados = contando_trd;
 				}
-				if(cuenta_autoincremento == int_timer0_enable_autoincr)		//TODO poner autoincemento para boton derecho
+				if(cuenta_autoincremento == int_timer0_enable_autoincr)
 				{	//Tras mantener pulsado durante 1/3 de segundo
 					//	autoincremento cada 180ms a partir de ahora
 					cuenta_autoincremento = 0;

@@ -621,9 +621,9 @@
  1445              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 pruebas_timer2.c
-C:\Users\guest\AppData\Local\Temp\ccPu8b6I.s:1025   .text:00000000 $a
-C:\Users\guest\AppData\Local\Temp\ccPu8b6I.s:1028   .text:00000000 pruebas_timer2
-C:\Users\guest\AppData\Local\Temp\ccPu8b6I.s:1440   .text:00000344 $d
+C:\Users\pjper\AppData\Local\Temp\ccM4TUgd.s:1025   .text:00000000 $a
+C:\Users\pjper\AppData\Local\Temp\ccM4TUgd.s:1028   .text:00000000 pruebas_timer2
+C:\Users\pjper\AppData\Local\Temp\ccM4TUgd.s:1440   .text:00000344 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

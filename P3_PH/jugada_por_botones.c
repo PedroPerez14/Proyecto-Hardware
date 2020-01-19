@@ -12,7 +12,6 @@
 #include "44b.h"
 #include "44blib.h"
 #include "botones_antirebotes.h"
-#include "8led.h"
 #include "button.h"
 #include "codigos_eventos.h"
 #include "reversi8_2019.h"
@@ -23,7 +22,7 @@
 /*--- variables del módulo ---*/
 
 static enum estados{Reglas, Jugando, Fin} jugada_botones;
-static int ev_bot_izq = 0;			//Indica cuándo hay que  actualizar el valor que aparece en el 8led, por nueva pulsación del botón izquierdo o porque hay que autoincrementar, puede valer más de 1
+static int ev_bot_izq = 0;			//Indica cuándo hay que actualizar la posición de la ficha gris, por nueva pulsación del botón izquierdo o porque hay que autoincrementar, puede valer más de 1
 static int ev_bot_der = 0;			//Flag que señaliza cuándo han pulsado el botón derecho, y cuántas veces
 static int ev_tp = 0;				//Indica que hay que atender un toque del touchpad de alguien
 static char mi_fila = 0;			//La fila donde queremos poner ficha
@@ -64,6 +63,134 @@ void inicializar_jugada_botones()
 	pintar_reglas();
 }
 
+//Hace los cálculos necesarios para mover la ficha gris a la derecha en pantalla
+void calcular_mov_gris_der()
+{
+	if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la partida
+	{
+		contar_fichas_final();
+	}
+	else
+	{
+		volatile int aux = mi_fila;
+		volatile int aux2 = mi_columna;
+		mi_fila = ((mi_fila + 1) % 8);
+		while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_columna) == FICHA_NEGRA) && mi_fila != aux)
+		{
+			mi_fila = ((mi_fila + 1) % 8);			//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_columnas
+		}
+		if(mi_fila == aux)							//Si la ficha gris se queda atrapada
+		{
+			volatile int i;
+			volatile int j;
+			for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+			{										// se mueve a esa casilla libre para ver si se puede 'liberar'
+				for(j = 0; j < num_columnas; j++)
+				{
+					if(tablero_actual[i][j] == CASILLA_VACIA)
+					{
+						mi_fila = i;
+						mi_columna = j;
+					}
+				}
+			}
+		}
+		while(haciendo_DMA != 0)
+		{
+		}
+		haciendo_DMA = 1;
+		//DMA act ficha gris
+		mover_gris(mi_fila, mi_columna, aux, aux2);		//Mover en la pantalla
+	}
+}
+
+void calcular_mov_gris_izq()
+{
+	if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la partida
+	{
+		contar_fichas_final();
+	}
+	else
+	{
+		volatile int aux = mi_columna;
+		volatile int aux2 = mi_fila;
+		mi_columna = ((mi_columna + 1) % 8);
+		while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_columna) == FICHA_NEGRA) && mi_columna != aux)
+		{
+			mi_columna = ((mi_columna + 1) % 8);		//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_filas
+		}
+		if(mi_columna == aux)							//Si la ficha gris se queda atrapada
+		{
+			volatile int i;
+			volatile int j;
+			for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
+			{										// se mueve a esa casilla libre para ver si se puede 'liberar'
+				for(j = 0; j < num_columnas; j++)
+				{
+					if(tablero_actual[i][j] == CASILLA_VACIA)
+					{
+						mi_fila = i;
+						mi_columna = j;
+					}
+				}
+			}
+		}
+
+		while(haciendo_DMA != 0)
+		{
+		}
+		haciendo_DMA = 1;
+		mover_gris(mi_fila, mi_columna, aux2, aux);	//Mover en la pantalla
+	}
+}
+
+//Función encargada de gestionar la confirmación de movimientos del usuario
+void procesar_jugada()
+{
+	unsigned int delta1 = timer2_leer();
+	reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de procesamiento
+	unsigned int delta2 = timer2_leer();
+	tiempo_calc += (delta2-delta1);
+	if(obtener_jugada_valida() == 1)
+	{
+		borrar_ficha(mi_fila, mi_columna);
+		actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y voltea lo que haga falta
+		reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera casilla libre
+		//obtener datos de profiling
+		tiempo_pv += reversi_t_pv();
+		veces_pv += reversi_veces_pv();
+		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+		haciendo_DMA = 1;
+		iniciar_DMA();
+	}
+	else
+	{
+		tiempo_pv += reversi_t_pv();
+		veces_pv += reversi_veces_pv();
+		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
+		haciendo_DMA = 1;
+		iniciar_DMA();
+	}
+	final = obtener_fin();
+}
+
+void pintar_fin()
+{
+	if(final == jugador_gana)
+	{
+		pintar_fin_victoria(contar_blancas(), contar_negras());
+	}
+	else if(final == cpu_gana)
+	{
+		pintar_fin_derrota(contar_blancas(), contar_negras());
+	}
+	else	//En caso de empate
+	{
+		pintar_fin_empate(contar_blancas(), contar_negras());
+	}
+}
+
+//El autómata de estados como tal
 void jugada_por_botones()
 {
 	switch(jugada_botones)
@@ -92,18 +219,7 @@ void jugada_por_botones()
 		if(haciendo_DMA == 0 && final != no_fin)
 		{
 			haciendo_DMA = 1;
-			if(final == jugador_gana)
-			{
-				pintar_fin_victoria(contar_blancas(), contar_negras());
-			}
-			else if(final == cpu_gana)
-			{
-				pintar_fin_derrota(contar_blancas(), contar_negras());
-			}
-			else	//En caso de empate
-			{
-				pintar_fin_empate(contar_blancas(), contar_negras());
-			}
+			pintar_fin();
 			jugada_botones = Fin;
 		}
 		if(haciendo_DMA == 0 && ev_timer > 0)
@@ -119,118 +235,25 @@ void jugada_por_botones()
 		if(ev_bot_der == 1)		//Incrementar fila
 		{
 			ev_bot_der = 0;
-			if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la partida
-			{
-				contar_fichas_final();
-			}
-			else
-			{
-				volatile int aux = mi_fila;
-				volatile int aux2 = mi_columna;
-				mi_fila = ((mi_fila + 1) % 8);
-				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_columna) == FICHA_NEGRA) && mi_fila != aux)
-				{
-					mi_fila = ((mi_fila + 1) % 8);			//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_columnas
-				}
-				if(mi_fila == aux)							//Si la ficha gris se queda atrapada
-				{
-					volatile int i;
-					volatile int j;
-					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
-					{										// se mueve a esa casilla libre para ver si se puede 'liberar'
-						for(j = 0; j < num_columnas; j++)
-						{
-							if(tablero_actual[i][j] == CASILLA_VACIA)
-							{
-								mi_fila = i;
-								mi_columna = j;
-							}
-						}
-					}
-				}
-				while(haciendo_DMA != 0)
-				{
-				}
-				haciendo_DMA = 1;
-				//DMA act ficha gris
-				mover_gris(mi_fila, mi_columna, aux, aux2);		//Mover en la pantalla
-			}
+			calcular_mov_gris_der();
 		}
 		if(ev_bot_izq == 1)		//Incrementar columna
 		{
 			ev_bot_izq = 0;
-			if((contar_blancas() + contar_negras()) == num_filas * num_columnas)	//Si no hay que terminar la partida
-			{
-				contar_fichas_final();
-			}
-			else
-			{
-				volatile int aux = mi_columna;
-				volatile int aux2 = mi_fila;
-				mi_columna = ((mi_columna + 1) % 8);
-				while((obtener_ficha_en(mi_fila, mi_columna) == FICHA_BLANCA) || (obtener_ficha_en(mi_fila, mi_columna) == FICHA_NEGRA) && mi_columna != aux)
-				{
-					mi_columna = ((mi_columna + 1) % 8);		//8 porque hay 8 columnas en el tablero, [0-7], 0x7 = num_filas
-				}
-				if(mi_columna == aux)							//Si la ficha gris se queda atrapada
-				{
-					volatile int i;
-					volatile int j;
-					for(i = 0; i < num_filas; i++)			//se recorre el tablero buscando otra posición libre y
-					{										// se mueve a esa casilla libre para ver si se puede 'liberar'
-						for(j = 0; j < num_columnas; j++)
-						{
-							if(tablero_actual[i][j] == CASILLA_VACIA)
-							{
-								mi_fila = i;
-								mi_columna = j;
-							}
-						}
-					}
-				}
-
-				while(haciendo_DMA != 0)
-				{
-				}
-				haciendo_DMA = 1;
-				mover_gris(mi_fila, mi_columna, aux2, aux);	//Mover en la pantalla
-			}
+			calcular_mov_gris_izq();
 		}
 		if(ev_tp == 1)
 		{
 			ev_tp = 0;
 			if(haciendo_DMA == 0)
 			{
-				unsigned int delta1 = timer2_leer();
-				reversi_procesar(mi_fila, mi_columna);		//Calcula la jugada de la IA y calcula tiempos de procesamiento
-				unsigned int delta2 = timer2_leer();
-				tiempo_calc += (delta2-delta1);
-				if(obtener_jugada_valida() == 1)
-				{
-					borrar_ficha(mi_fila, mi_columna);
-					actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y voltea lo que haga falta
-					reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera casilla libre
-					//obtener datos de profiling
-					tiempo_pv += reversi_t_pv();
-					veces_pv += reversi_veces_pv();
-					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
-					haciendo_DMA = 1;
-					iniciar_DMA();
-				}
-				else
-				{
-					tiempo_pv += reversi_t_pv();
-					veces_pv += reversi_veces_pv();
-					pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
-					haciendo_DMA = 1;
-					iniciar_DMA();
-				}
-				final = obtener_fin();
+				procesar_jugada();
 			}
 		}
 		break;
 	default:	//case Fin
-		if(haciendo_DMA == 0 && ev_tp == 1)		//Reiniciar partida, restaurando el estado inicial del autómata
+		if(haciendo_DMA == 0 && ev_tp == 1)
+		//Reiniciar partida, restaurando el estado inicial del autómata
 		{
 			Lcd_Clr();
 			inicializar_jugada_botones();
@@ -253,8 +276,7 @@ void jugada_ev_der()
 	jugada_por_botones();
 }
 
-//Se llama cuando, por autoincremento o por pulsación nueva,
-//	hay que incrementar el valor del 8Led y la variable asociada a él.
+//Se llama por autoincremento o por pulsación nueva
 void jugada_ev_izq()
 {
 	ev_bot_izq = 1;
@@ -308,9 +330,10 @@ void actualizar_movimientos_pantalla()
 		for(j = 0; j < num_columnas; j++)
 		{
 			if(tablero_actual[i][j] != tablero_anterior[i][j])
-			{
+			{	//Si algo ha cambiado al mover lo actualizamos
 				borrar_ficha(i,j);
 				pintar_ficha(i, j, tablero_actual[i][j]);
+				//Y de paso actualizamos esto para la siguiente vez
 				tablero_anterior[i][j] = tablero_actual[i][j];
 			}
 		}
@@ -326,10 +349,11 @@ void jugada_ev_tecla0(void)		//Pasar turno de jugador
 		unsigned int delta2 = timer2_leer();
 		tiempo_calc += (delta2-delta1);
 		borrar_ficha(mi_fila, mi_columna);
-		actualizar_movimientos_pantalla();		//Pone la ficha que hemos jugado, la ficha de la cpu, y voltea lo que haga falta
-		reiniciar_posicion_gris();				//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera casilla libre
-		//obtener datos de profiling
-		tiempo_pv += reversi_t_pv();
+		actualizar_movimientos_pantalla();
+		//Pone la ficha de la cpu, y voltea lo que haga falta
+		reiniciar_posicion_gris();
+		//Devuelve la ficha gris a 0,0, y si está ocupada, a la primera casilla libre
+		tiempo_pv += reversi_t_pv();	//obtener datos de profiling
 		veces_pv += reversi_veces_pv();
 		pintar_profiling(tiempo_total, tiempo_calc, tiempo_pv, veces_pv);
 		haciendo_DMA = 1;
