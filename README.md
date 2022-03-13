@@ -1,5 +1,4 @@
 # Proyecto-Hardware
-DOLOR POR TODAS PARTES
 ------------------------------------------------------------------
 Matrícula de honor en el curso 2019-2020 de Ingeniería Informática.
 
